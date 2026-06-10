@@ -1,0 +1,986 @@
+/* =============================================================================
+   TOKEN WAR — Incremental game stylesheet
+   Theme: refined "AI control room / terminal" — dark, neon cyan/violet accents.
+   Pure CSS, no external deps, system font stacks only. GitHub Pages ready.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. DESIGN TOKENS (palette, typography, spacing) — tweak everything here
+   -------------------------------------------------------------------------- */
+:root {
+  /* --- Base surfaces (very dark, slightly blue) --- */
+  --bg-0: #070a0f;          /* page background, deepest */
+  --bg-1: #0a0e14;          /* main shell */
+  --bg-2: #0f1420;          /* panels */
+  --bg-3: #141b2b;          /* raised elements / inputs */
+  --bg-hover: #1a2336;
+
+  /* --- Borders & lines --- */
+  --line: #1d2738;
+  --line-strong: #2a3850;
+
+  /* --- Text --- */
+  --text: #dbe4f0;
+  --text-dim: #93a1b8;
+  --text-mute: #5d6b82;
+
+  /* --- Accents (phase-driven; defaults = startup/cyan) --- */
+  --accent: #2ee6d6;        /* primary neon */
+  --accent-2: #7c5cff;      /* secondary neon (violet) */
+  --accent-soft: rgba(46, 230, 214, 0.14);
+  --accent-line: rgba(46, 230, 214, 0.45);
+  --glow: rgba(46, 230, 214, 0.55);
+
+  /* --- Semantic --- */
+  --good: #4ade80;
+  --bad: #ff5c6c;
+  --warn: #ffb454;
+  --info: #56b6ff;
+
+  /* --- Resource hues (stat tints) --- */
+  --c-tokens: #2ee6d6;
+  --c-money: #4ade80;
+  --c-compute: #7c5cff;
+  --c-energy: #ffb454;
+  --c-matter: #ff7ac6;
+
+  /* --- Typography --- */
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Code",
+    ui-monospace, "Menlo", "Consolas", monospace;
+
+  /* --- Radii & shadows --- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --shadow-soft: 0 6px 24px -10px rgba(0, 0, 0, 0.7);
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 12px 36px -18px rgba(0, 0, 0, 0.85);
+
+  /* --- Motion --- */
+  --t-fast: 120ms;
+  --t-med: 220ms;
+  --t-slow: 420ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* --- Layout --- */
+  --gutter: clamp(0.75rem, 1.6vw, 1.4rem);
+  --topbar-h: 64px;
+}
+
+/* -----------------------------------------------------------------------------
+   2. PHASE THEMES — body classes shift the accent identity over time
+   -------------------------------------------------------------------------- */
+body.phase-startup {
+  --accent: #2ee6d6;
+  --accent-2: #7c5cff;
+  --accent-soft: rgba(46, 230, 214, 0.14);
+  --accent-line: rgba(46, 230, 214, 0.45);
+  --glow: rgba(46, 230, 214, 0.55);
+}
+body.phase-agi {
+  --accent: #9d7bff;
+  --accent-2: #2ee6d6;
+  --accent-soft: rgba(157, 123, 255, 0.16);
+  --accent-line: rgba(157, 123, 255, 0.5);
+  --glow: rgba(157, 123, 255, 0.6);
+}
+body.phase-cosmic {
+  --accent: #ffd166;
+  --accent-2: #ff7ac6;
+  --accent-soft: rgba(255, 209, 102, 0.15);
+  --accent-line: rgba(255, 209, 102, 0.5);
+  --glow: rgba(255, 209, 102, 0.6);
+}
+body.phase-bigbang {
+  --accent: #ffffff;
+  --accent-2: #ff5c6c;
+  --accent-soft: rgba(255, 92, 108, 0.18);
+  --accent-line: rgba(255, 255, 255, 0.6);
+  --glow: rgba(255, 92, 108, 0.7);
+  --bg-0: #0d0608;
+  --bg-1: #120709;
+}
+
+/* -----------------------------------------------------------------------------
+   3. RESET & BASE
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--line-strong) transparent;
+}
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-size: clamp(14px, 0.9rem + 0.1vw, 16px);
+  line-height: 1.5;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 80% -10%, var(--accent-soft), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(124, 92, 255, 0.08), transparent 55%),
+    var(--bg-1);
+  background-attachment: fixed;
+  transition: background var(--t-slow) var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 {
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Focus accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* -----------------------------------------------------------------------------
+   4. SCROLLBARS — discrete, themed (for .log / .item-list mainly)
+   -------------------------------------------------------------------------- */
+.log::-webkit-scrollbar,
+.item-list::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar {
+  width: 9px;
+}
+.log::-webkit-scrollbar-track,
+.item-list::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.log::-webkit-scrollbar-thumb,
+.item-list::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.log::-webkit-scrollbar-thumb:hover,
+.item-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-line);
+  background-clip: padding-box;
+}
+
+/* -----------------------------------------------------------------------------
+   5. TOPBAR — fixed header with brand + key stats
+   -------------------------------------------------------------------------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: var(--gutter);
+  flex-wrap: wrap;
+  padding: 0.55rem var(--gutter);
+  min-height: var(--topbar-h);
+  background: linear-gradient(180deg, rgba(10, 14, 20, 0.92), rgba(10, 14, 20, 0.78));
+  backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.9);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+.brand-logo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background:
+    radial-gradient(circle at 30% 25%, var(--accent), transparent 70%),
+    linear-gradient(135deg, var(--accent-2), var(--accent));
+  box-shadow: 0 0 18px -4px var(--glow);
+  color: #06080c;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+.brand-name {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, var(--text), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.brand-phase {
+  display: inline-block;
+  margin-top: 1px;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+/* --- Stats bar --- */
+.stats-bar {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  justify-content: flex-end;
+}
+.stat {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-items: baseline;
+  column-gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  min-width: 116px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  border-left: 3px solid var(--stat-c, var(--accent));
+  transition: border-color var(--t-med), transform var(--t-fast);
+}
+.stat:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-strong);
+}
+.stat-label {
+  grid-column: 1 / -1;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  font-weight: 600;
+  color: var(--stat-c, var(--text));
+}
+.stat-rate {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.stat-rate::before { content: "+"; opacity: 0.6; }
+
+.stat.tokens  { --stat-c: var(--c-tokens); }
+.stat.money   { --stat-c: var(--c-money); }
+.stat.compute { --stat-c: var(--c-compute); }
+.stat.energy  { --stat-c: var(--c-energy); }
+.stat.matter  { --stat-c: var(--c-matter); }
+
+/* -----------------------------------------------------------------------------
+   6. GAME GRID — 3-column dashboard layout
+   -------------------------------------------------------------------------- */
+.game-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--gutter);
+  align-items: start;
+  width: min(1500px, 100%);
+  margin-inline: auto;
+  padding: var(--gutter);
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter);
+  min-width: 0;
+}
+
+/* -----------------------------------------------------------------------------
+   7. PANELS — generic dashboard cards
+   -------------------------------------------------------------------------- */
+.panel {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+  transition: border-color var(--t-med), box-shadow var(--t-med);
+}
+.panel::before {
+  /* hairline gradient top edge */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-line), transparent);
+  opacity: 0.7;
+}
+.panel:hover {
+  border-color: var(--line-strong);
+}
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--line);
+  cursor: default;
+}
+.panel-title::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--glow);
+}
+.panel-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Collapsed state */
+.panel.collapsed .panel-body { display: none; }
+.panel.collapsed .panel-title { border-bottom-color: transparent; cursor: pointer; }
+
+/* -----------------------------------------------------------------------------
+   8. BUTTONS
+   -------------------------------------------------------------------------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.05rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--bg-3);
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform var(--t-fast) var(--ease),
+    box-shadow var(--t-med), background var(--t-med), border-color var(--t-med);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--accent-line);
+  box-shadow: 0 0 0 1px var(--accent-soft), 0 0 18px -6px var(--glow);
+  transform: translateY(-1px);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+
+/* Primary */
+.btn-primary {
+  border: none;
+  color: #05070b;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 6px 20px -8px var(--glow);
+}
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 8px 28px -6px var(--glow);
+}
+
+/* Buy */
+.btn-buy {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.btn-buy:hover:not(:disabled) {
+  background: var(--accent);
+  color: #05070b;
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--text-dim);
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--line-strong);
+  box-shadow: none;
+}
+
+/* Cost sub-label */
+.btn-cost {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.74rem;
+  font-weight: 600;
+  opacity: 0.85;
+  padding-left: 0.4rem;
+  border-left: 1px solid currentColor;
+}
+
+/* Big central generator button */
+.btn-generate {
+  width: 100%;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(255, 255, 255, 0.18), transparent 60%),
+    linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 10px 40px -10px var(--glow), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  animation: breathe 3.5s var(--ease) infinite;
+}
+.btn-generate:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 16px 50px -8px var(--glow);
+}
+.btn-generate:active:not(:disabled) {
+  transform: scale(0.97);
+  box-shadow: 0 4px 18px -6px var(--glow);
+}
+
+/* -----------------------------------------------------------------------------
+   9. CONTROLS — sliders & allocation
+   -------------------------------------------------------------------------- */
+.control-row {
+  display: grid;
+  grid-template-columns: minmax(90px, auto) 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+.control-row label {
+  color: var(--text-dim);
+}
+.control-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  font-size: 0.85rem;
+  min-width: 3.5ch;
+  text-align: right;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2)) no-repeat,
+    var(--bg-3);
+  background-size: var(--fill, 50%) 100%;
+  cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 12px -2px var(--glow);
+  transition: transform var(--t-fast);
+}
+.slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 12px -2px var(--glow);
+}
+
+/* Compute allocation bar */
+.alloc {
+  display: flex;
+  width: 100%;
+  height: 26px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-3);
+}
+.alloc-seg {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #05070b;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  transition: flex-basis var(--t-med) var(--ease);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.alloc-seg:last-child { border-right: none; }
+.alloc-seg:nth-child(2) { background: linear-gradient(135deg, var(--c-compute), var(--accent-2)); }
+.alloc-seg:nth-child(3) { background: linear-gradient(135deg, var(--c-energy), var(--c-matter)); }
+
+/* -----------------------------------------------------------------------------
+   10. PROGRESS & METERS
+   -------------------------------------------------------------------------- */
+.progress {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  border-radius: 99px;
+  background: var(--bg-3);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 12px -2px var(--glow);
+  transition: width var(--t-med) var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill::after {
+  /* sweeping shimmer */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-100%);
+  animation: sweep 2.2s linear infinite;
+}
+
+.meter {
+  width: 100%;
+  height: 14px;
+  border-radius: var(--r-sm);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 7px, rgba(0,0,0,0.25) 7px 8px),
+    var(--bg-3);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+}
+.meter > .progress-fill { box-shadow: none; }
+
+/* -----------------------------------------------------------------------------
+   11. ITEM LISTS — upgrades / purchases / projects
+   -------------------------------------------------------------------------- */
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-height: clamp(260px, 42vh, 520px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.item {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  padding: 0.7rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: border-color var(--t-med), transform var(--t-fast),
+    box-shadow var(--t-med), opacity var(--t-med);
+}
+.item-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.item-name {
+  font-weight: 650;
+  color: var(--text);
+}
+.item-cost {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.item-desc {
+  font-size: 0.82rem;
+  color: var(--text-mute);
+  line-height: 1.45;
+}
+.item-effect {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--accent);
+}
+
+/* States */
+.item.affordable {
+  cursor: pointer;
+  border-color: var(--accent-line);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+.item.affordable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px -10px var(--glow), 0 0 0 1px var(--accent-line);
+}
+.item.affordable .item-cost { color: var(--good); }
+.item.locked {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+.item.locked .item-cost { color: var(--bad); }
+.item.owned {
+  border-color: var(--line);
+  background: linear-gradient(180deg, var(--accent-soft), transparent);
+}
+.item.owned .item-name::after {
+  content: "✓";
+  margin-left: 0.4rem;
+  color: var(--good);
+}
+
+/* -----------------------------------------------------------------------------
+   12. BADGES
+   -------------------------------------------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 99px;
+  background: var(--bg-3);
+  color: var(--text-dim);
+  border: 1px solid var(--line-strong);
+}
+.badge-new    { color: #05070b; background: var(--accent); border-color: transparent; }
+.badge-warn   { color: #1a1306; background: var(--warn); border-color: transparent; }
+.badge-danger {
+  color: #fff; background: var(--bad); border-color: transparent;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+/* -----------------------------------------------------------------------------
+   13. EVENT LOG
+   -------------------------------------------------------------------------- */
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: clamp(220px, 40vh, 460px);
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.log-entry {
+  padding: 0.4rem 0.6rem;
+  border-left: 2px solid var(--line-strong);
+  color: var(--text-dim);
+  background: linear-gradient(90deg, var(--bg-3), transparent 60%);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  animation: slidein var(--t-med) var(--ease);
+}
+.log-entry::before {
+  content: attr(data-time);
+  color: var(--text-mute);
+  margin-right: 0.5rem;
+}
+.log-entry.good      { border-left-color: var(--good); color: var(--good); }
+.log-entry.bad       { border-left-color: var(--bad); color: var(--bad); }
+.log-entry.info      { border-left-color: var(--info); color: var(--info); }
+.log-entry.milestone {
+  border-left-color: var(--accent);
+  color: var(--text);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 70%);
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+   14. MODAL — decision events
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(5, 7, 11, 0.6);
+  backdrop-filter: blur(8px) saturate(120%);
+  animation: fade var(--t-med) var(--ease);
+}
+.modal {
+  width: min(520px, 100%);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.9), 0 0 40px -16px var(--glow);
+  overflow: hidden;
+  animation: pop var(--t-med) var(--ease);
+}
+.modal-title {
+  padding: 1.1rem 1.3rem;
+  font-size: 1.1rem;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, var(--accent-soft), transparent);
+}
+.modal-body {
+  padding: 1.3rem;
+  color: var(--text-dim);
+  max-height: 60vh;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+.modal-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 1.1rem 1.3rem;
+  border-top: 1px solid var(--line);
+}
+.modal-choices .btn.choice { flex: 1 1 160px; }
+.modal.urgent {
+  border-color: var(--bad);
+  animation: pop var(--t-med) var(--ease), urgent-ring 1.3s ease-in-out infinite;
+}
+
+/* -----------------------------------------------------------------------------
+   15. TOASTS
+   -------------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: var(--gutter);
+  right: var(--gutter);
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: min(360px, 90vw);
+}
+.toast {
+  padding: 0.75rem 1rem;
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-soft);
+  font-size: 0.85rem;
+  animation: toastin var(--t-med) var(--ease);
+}
+.toast.good { border-left-color: var(--good); }
+.toast.bad  { border-left-color: var(--bad); }
+.toast.info { border-left-color: var(--info); }
+
+/* -----------------------------------------------------------------------------
+   16. TABS
+   -------------------------------------------------------------------------- */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: var(--r-md);
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+}
+.tab {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-mute);
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.tab:hover { color: var(--text-dim); }
+.tab.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+}
+
+/* -----------------------------------------------------------------------------
+   17. ENDING / BIG BANG SCREEN
+   -------------------------------------------------------------------------- */
+.ending-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding: var(--gutter);
+  background:
+    radial-gradient(800px 600px at 50% 40%, var(--accent-soft), transparent 70%),
+    var(--bg-0);
+  animation: fade var(--t-slow) var(--ease);
+}
+.ending-title {
+  font-size: clamp(2rem, 7vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2), var(--accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+.ending-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  max-width: 640px;
+  margin-inline: auto;
+}
+.ending-stats > * {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-2);
+}
+
+/* -----------------------------------------------------------------------------
+   18. HELPERS
+   -------------------------------------------------------------------------- */
+.hidden { display: none !important; }
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.text-good { color: var(--good); }
+.text-bad  { color: var(--bad); }
+.text-muted { color: var(--text-mute); }
+.glow { text-shadow: 0 0 12px var(--glow); }
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+
+/* -----------------------------------------------------------------------------
+   19. KEYFRAMES
+   -------------------------------------------------------------------------- */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 10px 40px -10px var(--glow), 0 0 0 1px rgba(255,255,255,0.06) inset; }
+  50% { box-shadow: 0 14px 52px -8px var(--glow), 0 0 0 1px rgba(255,255,255,0.12) inset; }
+}
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  60%, 100% { transform: translateX(100%); }
+}
+@keyframes slidein {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastin {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes urgent-ring {
+  0%, 100% { box-shadow: 0 30px 80px -20px rgba(0,0,0,0.9), 0 0 0 0 rgba(255,92,108,0.5); }
+  50% { box-shadow: 0 30px 80px -20px rgba(0,0,0,0.9), 0 0 0 6px rgba(255,92,108,0); }
+}
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+/* -----------------------------------------------------------------------------
+   20. RESPONSIVE — tablet then mobile collapse
+   -------------------------------------------------------------------------- */
+@media (max-width: 1080px) {
+  /* Tablet: 2 columns, right column drops below */
+  .game-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .col-right { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  /* Mobile: single column, compact header */
+  :root { --topbar-h: auto; }
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+  .col-right { grid-column: auto; }
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+  .brand { justify-content: center; }
+  .stats-bar { justify-content: stretch; }
+  .stat {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 0;
+  }
+  .modal-choices .btn.choice { flex: 1 1 100%; }
+}
+
+@media (max-width: 420px) {
+  .stat { flex: 1 1 100%; }
+}
+
+/* -----------------------------------------------------------------------------
+   21. REDUCED MOTION — accessibility
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

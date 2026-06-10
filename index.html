@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TokenWar — Le Jeu du Token</title>
+  <meta name="description" content="Un jeu incrémental : produisez le plus de tokens possible, de la startup IA jusqu'à la consommation de l'univers et un nouveau Big Bang." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>" />
+</head>
+<body class="phase-startup">
+
+  <!-- ============ TOPBAR ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">◈</span>
+      <span class="brand-name">TokenWar</span>
+      <span class="brand-phase" id="brand-phase">Startup</span>
+    </div>
+    <div class="stats-bar" id="stats-bar">
+      <div class="stat tokens">
+        <span class="stat-label">Tokens produits</span>
+        <span class="stat-value num" id="stat-tokens">0</span>
+        <span class="stat-rate num" id="stat-tokens-rate">0 /s</span>
+      </div>
+      <div class="stat money">
+        <span class="stat-label">Trésorerie</span>
+        <span class="stat-value num" id="stat-money">$0</span>
+        <span class="stat-rate num" id="stat-money-rate">$0 /s</span>
+      </div>
+      <div class="stat compute">
+        <span class="stat-label">Compute</span>
+        <span class="stat-value num" id="stat-compute">0</span>
+        <span class="stat-rate num" id="stat-compute-sub">0 GPU</span>
+      </div>
+      <div class="stat energy">
+        <span class="stat-label">Énergie</span>
+        <span class="stat-value num" id="stat-energy">0 MW</span>
+        <span class="stat-rate num" id="stat-energy-sub">0% utilisé</span>
+      </div>
+      <div class="stat matter hidden" id="stat-matter-wrap">
+        <span class="stat-label">Matière convertie</span>
+        <span class="stat-value num" id="stat-matter">0 kg</span>
+        <span class="stat-rate num" id="stat-matter-sub">univers</span>
+      </div>
+    </div>
+    <div class="topbar-controls">
+      <button class="btn-ghost" id="btn-speed" title="Vitesse de simulation">⏩ x1</button>
+      <button class="btn-ghost" id="btn-save" title="Sauvegarder">💾</button>
+      <button class="btn-ghost" id="btn-help" title="Aide">?</button>
+    </div>
+  </header>
+
+  <!-- ============ GAME GRID ============ -->
+  <main class="game-grid">
+
+    <!-- ---------- LEFT : PRODUCTION ---------- -->
+    <section class="col col-left">
+
+      <div class="panel" id="panel-produce">
+        <div class="panel-title">Production de tokens</div>
+        <div class="panel-body">
+          <button class="btn btn-primary btn-generate" id="btn-generate">
+            <span class="btn-generate-label">Lancer une inférence</span>
+            <span class="btn-generate-sub num" id="btn-generate-sub">+1 token</span>
+          </button>
+          <div class="model-card" id="model-card">
+            <div class="model-head">
+              <span class="model-name" id="model-name">GPT-2</span>
+              <span class="badge" id="model-era">Scaling brut</span>
+            </div>
+            <div class="model-meta num" id="model-meta">1,5 G params · ctx 1K · 2019</div>
+            <div class="model-stats" id="model-stats"></div>
+          </div>
+          <div class="inventory-row">
+            <span class="text-muted">Stock invendu</span>
+            <span class="num" id="inv-tokens">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-market">
+        <div class="panel-title">Marché &amp; tarification</div>
+        <div class="panel-body">
+          <div class="control-row">
+            <label for="price-slider">Prix <span class="text-muted">($/Mtok)</span></label>
+            <input type="range" class="slider" id="price-slider" min="0" max="100" value="68" />
+            <span class="control-value num" id="price-value">$10,00</span>
+          </div>
+          <div class="meter-row">
+            <span class="text-muted">Demande</span>
+            <div class="progress"><div class="progress-fill" id="demand-fill" style="width:0%"></div></div>
+            <span class="num" id="demand-value">0 /s</span>
+          </div>
+          <div class="meter-row">
+            <span class="text-muted">Ventes</span>
+            <span class="num" id="sales-value">0 /s</span>
+          </div>
+          <button class="btn btn-buy" id="btn-marketing">
+            <span>Marketing — niv. <span id="marketing-lvl">1</span></span>
+            <span class="btn-cost num" id="marketing-cost">$100</span>
+          </button>
+          <div class="meter-row">
+            <span class="text-muted">Réputation</span>
+            <div class="progress"><div class="progress-fill" id="rep-fill" style="width:50%"></div></div>
+            <span class="num" id="rep-value">50</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-funding">
+        <div class="panel-title">Financement</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted">Valorisation</span>
+            <span class="num" id="valuation-value">$0</span>
+          </div>
+          <button class="btn btn-buy" id="btn-funding" disabled>
+            <span id="funding-label">Lever des fonds</span>
+            <span class="btn-cost num" id="funding-sub">verrouillé</span>
+          </button>
+          <div class="item-list" id="funding-list"></div>
+        </div>
+      </div>
+
+      <!-- PHASE 2+ : allocation -->
+      <div class="panel hidden" id="panel-alloc">
+        <div class="panel-title">Allocation du compute</div>
+        <div class="panel-body" id="alloc-body"></div>
+      </div>
+
+    </section>
+
+    <!-- ---------- CENTER : INFRASTRUCTURE ---------- -->
+    <section class="col col-center">
+
+      <div class="panel" id="panel-compute">
+        <div class="panel-title">Infrastructure de calcul</div>
+        <div class="panel-body">
+          <div class="item-list" id="gpu-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-energy">
+        <div class="panel-title">Énergie</div>
+        <div class="panel-body">
+          <div class="meter-row energy-meter">
+            <span class="text-muted">Charge réseau</span>
+            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
+            <span class="num" id="energy-load-value">0 / 0 MW</span>
+          </div>
+          <div class="item-list" id="energy-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-training">
+        <div class="panel-title">R&amp;D — Entraînement de modèles</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted">Recherche</span>
+            <span class="num" id="research-value">0</span>
+            <span class="text-muted">·</span>
+            <span class="num" id="research-rate">0 /s</span>
+          </div>
+          <div class="meter-row">
+            <span class="text-muted">Données</span>
+            <span class="num" id="data-value">0</span>
+          </div>
+          <div class="item-list" id="train-list"></div>
+        </div>
+      </div>
+
+      <!-- PHASE 3+ : cosmos -->
+      <div class="panel hidden" id="panel-cosmos">
+        <div class="panel-title">Expansion cosmique</div>
+        <div class="panel-body" id="cosmos-body"></div>
+      </div>
+
+    </section>
+
+    <!-- ---------- RIGHT : PROJECTS & LOG ---------- -->
+    <section class="col col-right">
+
+      <div class="panel" id="panel-projects">
+        <div class="panel-title">Projets &amp; percées</div>
+        <div class="panel-body">
+          <div class="item-list" id="project-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-log">
+        <div class="panel-title">Journal</div>
+        <div class="panel-body">
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ============ EVENT MODAL ============ -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-title" id="modal-title">Événement</div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-choices" id="modal-choices"></div>
+    </div>
+  </div>
+
+  <!-- ============ TOASTS ============ -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ============ ENDING ============ -->
+  <div class="ending-screen hidden" id="ending-screen">
+    <div class="ending-inner">
+      <div class="ending-title" id="ending-title">Un nouveau Big Bang</div>
+      <div class="ending-body" id="ending-body"></div>
+      <div class="ending-stats" id="ending-stats"></div>
+      <button class="btn btn-primary" id="ending-restart">Réamorcer l'univers (New Game+)</button>
+    </div>
+  </div>
+
+  <!-- ============ HELP ============ -->
+  <div class="modal-overlay hidden" id="help-overlay">
+    <div class="modal">
+      <div class="modal-title">Comment jouer</div>
+      <div class="modal-body" id="help-body"></div>
+      <div class="modal-choices">
+        <button class="btn choice" id="help-close">Compris</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
