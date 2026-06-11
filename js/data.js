@@ -224,7 +224,7 @@ export const PROBE_SPECS = [
 //  choices: [{label, desc, apply(g)}]
 // ---------------------------------------------------------------------
 export const EVENTS = [
-  { id:'gpu_shortage', title:'Pénurie de GPU H100', phase:1, weight:3,
+  { id:'gpu_shortage', title:'Pénurie de GPU H100', phase:1, weight:2,
     body:'NVIDIA est en rupture. Les délais explosent à plus d’un an et un marché gris apparaît.',
     choices:[
       { label:'Payer le marché gris', desc:'Coût matériel ×2 pendant 60s, production maintenue.',

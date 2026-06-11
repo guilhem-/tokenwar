@@ -51,6 +51,8 @@ export class Game {
     s.projectsDone = {};
     s.fundingDone = {};
     s.eventsSeen = {};
+    s.eventCooldown = {};   // id -> playSeconds du dernier déclenchement
+    s.lastEventId = null;
     // allocation du compute (normalisée)
     s.alloc = { serve:0.7, research:0.3, improve:0, harvest:0 };
     // modificateurs permanents (multiplicatifs)
@@ -364,17 +366,28 @@ export class Game {
     this.state.eventTimer = 28 + Math.random() * 22; // ~30-50s entre événements
     if (ev) {
       this.state.eventsSeen[ev.id] = (this.state.eventsSeen[ev.id] || 0) + 1;
+      this.state.eventCooldown[ev.id] = this.state.playSeconds; // pour le temps de recharge
+      this.state.lastEventId = ev.id;
       this.ui && this.ui.showEvent(ev);
     }
   }
   pickEvent() {
-    const pool = EVENTS.filter(e => {
+    const COOLDOWN = 180; // un même événement répétable ne peut pas revenir avant 3 min
+    const eligible = (relax) => EVENTS.filter(e => {
       if (e.phase !== this.phase) return false;
       if (e.minTier && this.state.modelTier < e.minTier) return false;
       if (e.minUniverse && this.state.universeConsumed < e.minUniverse) return false;
       if (e.once && this.state.eventsSeen[e.id]) return false;
+      if (!relax) {
+        if (e.id === this.state.lastEventId) return false; // jamais deux fois de suite
+        const last = this.state.eventCooldown[e.id];
+        if (last != null && this.state.playSeconds - last < COOLDOWN) return false;
+      }
       return true;
     });
+    // on respecte le cooldown ; s'il ne reste rien d'éligible, on relâche la contrainte
+    let pool = eligible(false);
+    if (!pool.length) pool = eligible(true);
     if (!pool.length) return null;
     let total = pool.reduce((t, e) => t + (e.weight || 1), 0);
     let r = Math.random() * total;
