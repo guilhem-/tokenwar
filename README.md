@@ -21,6 +21,15 @@ Un seul but : **maximiser les tokens produits**. Pour y arriver, vous traversez 
 | 3 | **Cosmos** | Sondes de von Neumann auto‑réplicantes, consommation du système solaire → galaxie → **univers observable**. |
 | 4 | **Big Bang** | Singularité de recompression : tout converge, l'espace‑temps se replie, un nouvel univers naît (New Game +). |
 
+## Un calendrier qui défile
+
+Une **année de simulation passe toutes les 5 minutes** (× la vitesse ⏩). Le temps pilote tout :
+les **GPU, modèles et levées de fonds** n'apparaissent qu'à **leur année de sortie réelle**
+(impossible d'acheter une H100 en 2019 ou d'entraîner GPT‑4 avant 2023), les **événements**
+ne surviennent que dans leur fenêtre historique, et un panneau **📰 La Une** fait défiler des
+**titres de presse d'époque** qui font monter (+1) ou descendre (−1) votre réputation.
+Une action indisponible s'affiche grisée avec « dispo 20XX » et explique pourquoi.
+
 ## Des décisions, tout le temps
 
 Le jeu vous tient occupé : tarification (volume vs marge), achat et équilibrage

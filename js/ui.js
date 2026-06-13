@@ -21,6 +21,8 @@ export class UI {
     this.el = {
       body: document.body,
       brandPhase: $('brand-phase'),
+      simDate: $('sim-date'),
+      headlines: $('headlines'),
       statTokens: $('stat-tokens'), statTokensRate: $('stat-tokens-rate'),
       statMoney: $('stat-money'), statMoneyRate: $('stat-money-rate'),
       statCompute: $('stat-compute'), statComputeSub: $('stat-compute-sub'),
@@ -60,7 +62,13 @@ export class UI {
     this.buildTrainRow();
     this.onPhaseChange(game.phase);
     this.fillHelp();
+    this.rebuildHeadlines();
     this.render(true);
+  }
+
+  rebuildHeadlines() {
+    this.el.headlines.innerHTML = '';
+    [...this.game.state.headlines].reverse().forEach(h => this.onHeadline(h));
   }
 
   bind() {
@@ -68,7 +76,7 @@ export class UI {
     this.el.btnGenerate.addEventListener('click', () => g.manualGenerate());
     this.el.priceSlider.value = g.state.priceSlider;
     this.el.priceSlider.addEventListener('input', e => { g.state.priceSlider = +e.target.value; });
-    this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.flash(this.el.btnMarketing); });
+    this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.deny(this.el.btnMarketing, 'Trésorerie insuffisante'); });
     this.el.btnFunding.addEventListener('click', () => this.claimBestFunding());
     this.el.btnSave.addEventListener('click', () => { g.save(); this.toast('Partie sauvegardée', 'info'); });
     this.el.btnHelp.addEventListener('click', () => this.el.helpOverlay.classList.remove('hidden'));
@@ -113,7 +121,10 @@ export class UI {
       const r = this.makeRow(this.el.gpuList, g.id, this.rows.gpu);
       r.name.textContent = g.name;
       r.desc.textContent = g.desc;
-      r.el.addEventListener('click', () => { if (!this.game.buyGPU(g.id)) this.flash(r.el); });
+      r.el.addEventListener('click', () => {
+        if (!this.game.dateUnlocked(g)) return this.deny(r.el, `Pas encore disponible (sortie ${g.year})`);
+        if (!this.game.buyGPU(g.id)) this.deny(r.el, 'Trésorerie insuffisante');
+      });
     });
     // Energy
     this.el.energyList.innerHTML = ''; this.rows.energy = {};
@@ -121,7 +132,10 @@ export class UI {
       const r = this.makeRow(this.el.energyList, e.id, this.rows.energy);
       r.name.textContent = e.name;
       r.desc.textContent = e.desc;
-      r.el.addEventListener('click', () => { if (!this.game.buyEnergy(e.id)) this.flash(r.el); });
+      r.el.addEventListener('click', () => {
+        if (!this.game.dateUnlocked(e)) return this.deny(r.el, `Pas encore disponible (${e.year})`);
+        if (!this.game.buyEnergy(e.id)) this.deny(r.el, 'Trésorerie insuffisante');
+      });
     });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
@@ -129,7 +143,7 @@ export class UI {
       const r = this.makeRow(this.el.projectList, p.id, this.rows.project);
       r.name.textContent = p.name;
       r.desc.textContent = p.desc;
-      r.el.addEventListener('click', () => { if (!this.game.buyProject(p.id)) this.flash(r.el); });
+      r.el.addEventListener('click', () => { if (!this.game.buyProject(p.id)) this.deny(r.el, 'Conditions non remplies'); });
     });
     // Funding
     this.el.fundingList.innerHTML = ''; this.rows.funding = {};
@@ -137,7 +151,7 @@ export class UI {
       const r = this.makeRow(this.el.fundingList, f.id, this.rows.funding);
       r.name.textContent = f.name;
       r.desc.textContent = f.desc;
-      r.el.addEventListener('click', () => { if (!this.game.claimFunding(f.id)) this.flash(r.el); });
+      r.el.addEventListener('click', () => { if (!this.game.claimFunding(f.id)) this.deny(r.el, 'Pas encore atteignable'); });
     });
   }
 
@@ -150,7 +164,11 @@ export class UI {
       <div class="item-desc"></div>
       <div class="item-effect"></div>`;
     this.el.trainList.appendChild(el);
-    el.addEventListener('click', () => { if (!this.game.trainNext()) this.flash(el); });
+    el.addEventListener('click', () => {
+      const g = this.game;
+      if (g.canTrainNext() && !g.dateUnlocked(g.nextModel())) return this.deny(el, `Modèle pas encore disponible (${g.nextModel().year})`);
+      if (!g.trainNext()) this.deny(el, 'Ressources insuffisantes');
+    });
     this.trainRow = { el, name: el.querySelector('.item-name'), cost: el.querySelector('.item-cost'),
       desc: el.querySelector('.item-desc'), effect: el.querySelector('.item-effect') };
   }
@@ -205,6 +223,7 @@ export class UI {
   // ------------------------------------------------------------------
   render(force) {
     const g = this.game, s = g.state;
+    this.el.simDate.textContent = g.dateLabel();
     // stats
     this.el.statTokens.textContent = fmt(s.lifetimeTokens);
     this.el.statTokensRate.textContent = fmt(s.rates.tokens) + ' /s';
@@ -291,9 +310,20 @@ export class UI {
     GPUS.forEach((gpu, i) => {
       const r = this.rows.gpu[gpu.id];
       if (gpu.phase && g.phase < gpu.phase) { r.el.classList.add('hidden'); return; }
-      const cost = g.gpuCost(gpu);
       const owned = s.gpuCounts[gpu.id] || 0;
-      const show = this.reveal(g, i, GPUS, id => s.gpuCounts[id] || 0, cost, s.money);
+      const unlocked = g.dateUnlocked(gpu);
+      if (!unlocked) {
+        // pas encore sorti : on l'annonce s'il arrive bientôt (≤ 2 ans)
+        const soon = gpu.year <= g.simYear() + 2;
+        r.el.classList.toggle('hidden', !soon);
+        if (!soon) return;
+        r.cost.innerHTML = `<span class="badge badge-warn">dispo ${gpu.year}</span>`;
+        r.effect.innerHTML = `<span class="text-muted">perf <b class="num">${fmt(gpu.perf)}</b> · sortie en ${gpu.year}</span>`;
+        r.el.classList.add('locked'); r.el.classList.remove('affordable');
+        return;
+      }
+      const cost = g.gpuCost(gpu);
+      const show = this.reveal(g, i, GPUS, id => s.gpuCounts[id] || 0, cost, s.money) || gpu.year >= g.simYear() - 1;
       r.el.classList.toggle('hidden', !show);
       if (!show) return;
       r.cost.textContent = fmtMoney(cost);
@@ -306,8 +336,18 @@ export class UI {
     ENERGY.forEach((e, i) => {
       const r = this.rows.energy[e.id];
       if (e.phase && g.phase < e.phase) { r.el.classList.add('hidden'); return; }
+      const unlocked = g.dateUnlocked(e);
+      if (!unlocked) {
+        const soon = e.year <= g.simYear() + 2;
+        r.el.classList.toggle('hidden', !soon);
+        if (!soon) return;
+        r.cost.innerHTML = `<span class="badge badge-warn">dispo ${e.year}</span>`;
+        r.effect.innerHTML = `<span class="text-muted">+<b class="num">${fmt(e.mw)}</b> MW · sortie en ${e.year}</span>`;
+        r.el.classList.add('locked'); r.el.classList.remove('affordable');
+        return;
+      }
       const cost = g.energyCost(e);
-      const show = this.reveal(g, i, ENERGY, id => s.energyCounts[id] || 0, cost, s.money);
+      const show = this.reveal(g, i, ENERGY, id => s.energyCounts[id] || 0, cost, s.money) || e.year >= g.simYear() - 1;
       r.el.classList.toggle('hidden', !show);
       if (!show) return;
       r.cost.textContent = fmtMoney(cost);
@@ -352,9 +392,10 @@ export class UI {
     FUNDING.forEach(f => {
       const r = this.rows.funding[f.id];
       const done = s.fundingDone[f.id];
-      const ready = !done && s.lifetimeTokens >= f.need;
+      const yearOk = g.simYear() >= (f.year || 0);
+      const ready = !done && s.lifetimeTokens >= f.need && yearOk;
       if (done) { r.el.classList.add('owned'); r.el.classList.remove('affordable', 'locked'); r.cost.textContent = '✓'; r.effect.textContent = 'bouclée'; return; }
-      r.cost.innerHTML = `<span class="num">${fmt(f.need)} tok</span>`;
+      r.cost.innerHTML = !yearOk ? `<span class="badge badge-warn">dispo ${f.year}</span>` : `<span class="num">${fmt(f.need)} tok</span>`;
       r.effect.innerHTML = `+${fmtMoney(f.cash)} · ${f.desc}`;
       this.setAfford(r.el, ready);
       if (ready && !nextRound) nextRound = f;
@@ -385,6 +426,15 @@ export class UI {
       return;
     }
     const m = g.nextModel(), c = m.cost;
+    this.trainRow.el.classList.remove('owned');
+    if (!g.dateUnlocked(m)) {
+      this.trainRow.name.textContent = 'Prochain modèle : ' + m.name;
+      this.trainRow.desc.textContent = m.flavor;
+      this.trainRow.cost.innerHTML = `<span class="badge badge-warn">dispo ${m.year}</span>`;
+      this.trainRow.effect.innerHTML = `<span class="text-muted">recherche en cours… percée attendue en ${m.year}</span>`;
+      this.trainRow.el.classList.add('locked'); this.trainRow.el.classList.remove('affordable');
+      return;
+    }
     this.trainRow.name.textContent = 'Entraîner : ' + m.name;
     this.trainRow.desc.textContent = m.flavor;
     const parts = [];
@@ -490,6 +540,17 @@ export class UI {
   flash(el) {
     el.classList.remove('flash-bad'); void el.offsetWidth; el.classList.add('flash-bad');
   }
+  deny(el, reason) {
+    this.flash(el);
+    if (reason) this.toast(reason, 'bad');
+  }
+  onHeadline(entry) {
+    const e = document.createElement('div');
+    e.className = 'headline ' + entry.p;
+    e.innerHTML = `<span class="headline-date num">${entry.date}</span> <span class="headline-text">${entry.text}</span>`;
+    this.el.headlines.prepend(e);
+    while (this.el.headlines.children.length > 30) this.el.headlines.lastChild.remove();
+  }
   toast(msg, kind = 'info') {
     const t = document.createElement('div');
     t.className = 'toast ' + kind;
@@ -511,7 +572,9 @@ export class UI {
       <p><b>But :</b> produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.</p>
       <p><b>Phase 1 — Startup :</b> cliquez pour générer des tokens, fixez le <b>prix</b> (bas = plus de volume, haut = plus de marge), faites du <b>marketing</b>, achetez des <b>GPU</b> et de l’<b>énergie</b> (plafond dur !), accumulez de la <b>recherche</b> pour les <b>projets</b>, et <b>entraînez</b> des modèles de plus en plus puissants. Levez des <b>fonds</b> aux paliers.</p>
       <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
-      <p><b>Événements :</b> pannes, régulations, pénuries… chaque décision compte.</p>
+      <p><b>Calendrier :</b> une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie — un élément grisé « dispo 20XX » arrive bientôt.</p>
+      <p><b>📰 La Une :</b> les titres de presse de l’époque montent (+1) ou descendent (−1) votre réputation. Surveillez-les.</p>
+      <p><b>Événements :</b> pannes, régulations, pénuries… cohérents avec la date, chaque décision compte.</p>
       <p><b>Astuce :</b> le bouton <b>⏩</b> accélère la simulation. Sauvegarde automatique toutes les 10 s.</p>
       <p class="text-muted">Inspiré de « Universal Paperclips ». Données de prix/IA basées sur des faits réels (2019-2026).</p>`;
   }

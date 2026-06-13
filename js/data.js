@@ -50,14 +50,14 @@ export const MODELS = [
 
   { id:'frontier', name:'Modèle frontière (GPT-5 / Claude 4 / Gemini 3)', year:2025, era:'Agents',
     meta:'agents autonomes · ctx 1M',
-    throughput:6e7,    quality:8,
-    cost:{ money:5e9, compute:1.5e5, data:2e6, research:6e5 },
+    throughput:6e7,    quality:8, /*frontier*/
+    cost:{ money:3e9, compute:2e4, data:2e6, research:6e5 },
     flavor:'Usage d’outils autonome, « computer use ». Les agents consomment des tokens par milliards.' },
 
   { id:'asi',    name:'Super-intelligence (ASI)', year:2027, era:'Singularité',
     meta:'auto-amélioration récursive',
     throughput:3e8,    quality:12,
-    cost:{ money:1e11, compute:1.5e6, data:1.5e7, research:1e7 },
+    cost:{ money:2.5e10, compute:2e5, data:1.5e7, research:1e7 },
     unlocksPhase:2,
     flavor:'Le modèle améliore son propre code. À partir d’ici, l’argent ne compte plus : seule la matière compte.' },
 ];
@@ -69,21 +69,21 @@ export const MODELS = [
 //  costBase  : prix initial ; coût = costBase * costMult^(possédés)
 // ---------------------------------------------------------------------
 export const GPUS = [
-  { id:'consumer', name:'GPU grand public (RTX)', perf:1,    energy:0.0004, costBase:50,     costMult:1.07,
+  { id:'consumer', name:'GPU grand public (RTX)', year:2016, perf:1,    energy:0.0004, costBase:50,     costMult:1.07,
     desc:'Une carte gamer détournée pour l’inférence. On fait avec ce qu’on a.' },
-  { id:'v100',     name:'NVIDIA V100',            perf:6,    energy:0.002,  costBase:800,    costMult:1.08,
+  { id:'v100',     name:'NVIDIA V100',            year:2017, perf:6,    energy:0.002,  costBase:800,    costMult:1.08,
     desc:'125 TFLOPS FP16. Le cheval de bataille de 2017.' },
-  { id:'a100',     name:'NVIDIA A100 80GB',       perf:25,   energy:0.004,  costBase:3.0e4,  costMult:1.09,
+  { id:'a100',     name:'NVIDIA A100 80GB',       year:2020, perf:25,   energy:0.004,  costBase:3.0e4,  costMult:1.075,
     desc:'312 TFLOPS tensor. La carte de l’ère GPT-3/4.' },
-  { id:'h100',     name:'NVIDIA H100',            perf:120,  energy:0.012,  costBase:1.5e6,  costMult:1.10, scarce:true,
+  { id:'h100',     name:'NVIDIA H100',            year:2023, perf:120,  energy:0.012,  costBase:1.5e6,  costMult:1.075, scarce:true,
     desc:'1979 TFLOPS FP16. Délai de livraison : ~1 an. La pénurie fait rage.' },
-  { id:'b200',     name:'NVIDIA B200 (Blackwell)',perf:300,  energy:0.025,  costBase:4.0e7,  costMult:1.11,
+  { id:'b200',     name:'NVIDIA B200 (Blackwell)',year:2025, perf:300,  energy:0.025,  costBase:4.0e7,  costMult:1.08,
     desc:'~2,2× H100. La nouvelle génération, hors de prix.' },
-  { id:'gb200',    name:'Rack GB200 NVL72',       perf:25000,energy:1.8,    costBase:2.0e9,  costMult:1.12,
+  { id:'gb200',    name:'Rack GB200 NVL72',       year:2026, perf:25000,energy:1.8,    costBase:2.0e9,  costMult:1.085,
     desc:'72 B200 + 36 Grace CPU, NVLink 1,8 TB/s. Un rack entier comme brique de base.' },
-  { id:'tpu',      name:'TPU v7 « Ironwood »',    perf:6e5,  energy:30,     costBase:1.0e11, costMult:1.13, phase:2,
+  { id:'tpu',      name:'TPU v7 « Ironwood »',    year:2027, perf:6e5,  energy:30,     costBase:1.0e11, costMult:1.10, phase:2,
     desc:'Silicium maison, hors pénurie NVIDIA. Optimisé inférence à très grande échelle.' },
-  { id:'wafer',    name:'Cluster wafer-scale',    perf:2e7,  energy:800,    costBase:5.0e12, costMult:1.14, phase:2,
+  { id:'wafer',    name:'Cluster wafer-scale',    year:2028, perf:2e7,  energy:800,    costBase:5.0e12, costMult:1.10, phase:2,
     desc:'Une galette de silicium entière = un seul processeur géant.' },
 ];
 
@@ -92,17 +92,17 @@ export const GPUS = [
 //  mw : capacité ajoutée ; costMult : inflation du capex
 // ---------------------------------------------------------------------
 export const ENERGY = [
-  { id:'grid',    name:'Raccordement réseau',     mw:0.5,  costBase:40,   costMult:1.10, rep:0,
+  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0,
     desc:'On tire sur le réseau local. Bon marché, mais limité.' },
-  { id:'solar',   name:'Ferme solaire + batteries',mw:3,   costBase:1.5e3,costMult:1.11, rep:+1,
+  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1,
     desc:'Vert et bien vu. Intermittent mais propre.' },
-  { id:'gas',     name:'Centrale gaz dédiée',      mw:25,  costBase:6e4,  costMult:1.10, rep:-2,
+  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:6e4,  costMult:1.10, rep:-2,
     desc:'Rapide à déployer, mauvaise presse climatique.' },
-  { id:'nuclear', name:'SMR nucléaire',            mw:300, costBase:5e6,  costMult:1.12, rep:+1,
+  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:5e6,  costMult:1.12, rep:+1,
     desc:'Petit réacteur modulaire (façon Google-Kairos / Three Mile Island).' },
-  { id:'fusion',  name:'Réacteur à fusion',        mw:5000,costBase:1e9,  costMult:1.13, rep:+3, phase:2,
+  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2,
     desc:'Énergie quasi illimitée. Le rêve enfin réalisé.' },
-  { id:'dyson',   name:'Collecteur Dyson',         mw:5e8, costBase:1e13, costMult:1.14, rep:0, phase:3,
+  { id:'dyson',   name:'Collecteur Dyson',         year:2030, mw:5e8, costBase:1e13, costMult:1.10, rep:0, phase:3,
     desc:'On capte une fraction de l’étoile elle-même.' },
 ];
 
@@ -188,7 +188,7 @@ export const PROJECTS = [
 
   // --- gates de phase ---
   { id:'recursive', name:'Auto-amélioration récursive', cat:'Singularité',
-    cost:{ research:1e6, compute:1.2e6 }, effect:'unlock:phase2',
+    cost:{ research:1e6, compute:1.5e5 }, effect:'unlock:phase2',
     desc:'Le système réécrit ses propres algorithmes. Déverrouille l’ère de l’autonomie.',
     req:g=>g.modelTier>=7 },
 
@@ -224,7 +224,7 @@ export const PROBE_SPECS = [
 //  choices: [{label, desc, apply(g)}]
 // ---------------------------------------------------------------------
 export const EVENTS = [
-  { id:'gpu_shortage', title:'Pénurie de GPU H100', phase:1, weight:2,
+  { id:'gpu_shortage', from:2023, to:2026, title:'Pénurie de GPU H100', phase:1, weight:2,
     body:'NVIDIA est en rupture. Les délais explosent à plus d’un an et un marché gris apparaît.',
     choices:[
       { label:'Payer le marché gris', desc:'Coût matériel ×2 pendant 60s, production maintenue.',
@@ -233,7 +233,7 @@ export const EVENTS = [
         apply:g=>g.addTimedMod('prodPenalty',0.6,45) },
     ]},
 
-  { id:'deepseek', once:true, title:'Choc DeepSeek', phase:1, weight:2, minTier:5,
+  { id:'deepseek', from:2025, once:true, title:'Choc DeepSeek', phase:1, weight:2, minTier:5,
     body:'Un labo sort un modèle de raisonnement open-source entraîné pour <6M$. NVIDIA chute de 17% en une journée (−600 Md$). Tout le monde panique.',
     choices:[
       { label:'Copier l’archi MoE', desc:'Coût/token ÷3, mais −10 réputation premium.',
@@ -242,7 +242,7 @@ export const EVENTS = [
         apply:g=>g.addTimedMod('demand',0.8,60) },
     ]},
 
-  { id:'nyt_lawsuit', once:true, title:'Procès copyright (presse)', phase:1, weight:2, minTier:3,
+  { id:'nyt_lawsuit', from:2024, once:true, title:'Procès copyright (presse)', phase:1, weight:2, minTier:3,
     body:'Un grand journal vous attaque pour usage non autorisé de ses articles à l’entraînement.',
     choices:[
       { label:'Régler à l’amiable', desc:'-15% de trésorerie, réputation +5.',
@@ -251,7 +251,7 @@ export const EVENTS = [
         apply:g=>{ if(Math.random()<0.5){ g.money*=0.6; g.toast('Amende lourde !','bad'); } else { g.mods.dataMult*=1.5; g.toast('Fair use reconnu !','good'); } } },
     ]},
 
-  { id:'eu_ai_act', once:true, title:'Entrée en vigueur de l’EU AI Act', phase:1, weight:2, minTier:4,
+  { id:'eu_ai_act', from:2024, once:true, title:'Entrée en vigueur de l’EU AI Act', phase:1, weight:2, minTier:4,
     body:'La régulation européenne impose transparence et obligations sur les modèles à usage général.',
     choices:[
       { label:'Se conformer', desc:'Coûts +10% en permanence, accès marché UE conservé.',
@@ -260,7 +260,7 @@ export const EVENTS = [
         apply:g=>{ g.mods.demandMult*=0.75; g.changeRep(-3); } },
     ]},
 
-  { id:'grid_strain', title:'Réseau électrique saturé', phase:1, weight:2, minTier:4,
+  { id:'grid_strain', from:2024, title:'Réseau électrique saturé', phase:1, weight:2, minTier:4,
     body:'Le gestionnaire de réseau menace de vous couper aux heures de pointe. Vos datacenters tirent trop.',
     choices:[
       { label:'Construire un SMR', desc:'-30% trésorerie, +300 MW immédiats.',
@@ -278,7 +278,7 @@ export const EVENTS = [
         apply:g=>{ g.addTimedMod('prodPenalty',0,30); g.changeRep(-5); } },
     ]},
 
-  { id:'jailbreak', title:'Jailbreak viral', phase:1, weight:2, minTier:3,
+  { id:'jailbreak', from:2023, title:'Jailbreak viral', phase:1, weight:2, minTier:3,
     body:'Un prompt malicieux contourne vos garde-fous et fait le tour des réseaux.',
     choices:[
       { label:'Patcher en urgence', desc:'R&D détournée : recherche −50% pendant 30s.',
@@ -287,7 +287,7 @@ export const EVENTS = [
         apply:g=>g.changeRep(-8) },
     ]},
 
-  { id:'model_collapse', title:'Effondrement de modèle', phase:1, weight:2, minTier:4,
+  { id:'model_collapse', from:2024, title:'Effondrement de modèle', phase:1, weight:2, minTier:4,
     body:'Vos modèles s’entraînent de plus en plus sur du contenu généré par IA. La qualité se dégrade.',
     choices:[
       { label:'Acheter des données humaines', desc:'-20% trésorerie, qualité préservée.',
@@ -296,7 +296,7 @@ export const EVENTS = [
         apply:g=>g.addTimedMod('quality',0.85,90) },
     ]},
 
-  { id:'blackwell', once:true, title:'Nouvelle génération GPU', phase:1, weight:1, minTier:4,
+  { id:'blackwell', from:2025, to:2027, once:true, title:'Nouvelle génération GPU', phase:1, weight:1, minTier:4,
     body:'NVIDIA dévoile Blackwell. Faut-il upgrader maintenant ou attendre la baisse de prix ?',
     choices:[
       { label:'Upgrader tôt', desc:'-25% trésorerie, +40% débit pendant 90s.',
@@ -305,7 +305,7 @@ export const EVENTS = [
         apply:g=>g.addTimedMod('demand',0.9,60) },
     ]},
 
-  { id:'price_war', title:'Guerre des prix', phase:1, weight:2, minTier:4,
+  { id:'price_war', from:2024, title:'Guerre des prix', phase:1, weight:2, minTier:4,
     body:'Un concurrent casse les prix avec un modèle « Flash ». Le marché regarde votre tarif.',
     choices:[
       { label:'Sortir un « mini »', desc:'Demande ×2, prix accepté −40%.',
@@ -314,7 +314,7 @@ export const EVENTS = [
         apply:g=>g.addTimedMod('demand',0.85,60) },
     ]},
 
-  { id:'chip_embargo', once:true, title:'Embargo sur les puces', phase:1, weight:1, minTier:5,
+  { id:'chip_embargo', from:2023, once:true, title:'Embargo sur les puces', phase:1, weight:1, minTier:5,
     body:'Des restrictions à l’export bloquent l’accès aux GPU de pointe.',
     choices:[
       { label:'Se diversifier (TPU/maison)', desc:'-15% trésorerie, indépendance d’approvisionnement.',
@@ -323,7 +323,7 @@ export const EVENTS = [
         apply:g=>{ g.money*=0.7; } },
     ]},
 
-  { id:'talent_war', once:true, title:'Guerre des talents', phase:1, weight:1, minTier:4,
+  { id:'talent_war', from:2022, once:true, title:'Guerre des talents', phase:1, weight:1, minTier:4,
     body:'Un rival débauche vos meilleurs chercheurs à coups de packages à 8 chiffres.',
     choices:[
       { label:'Surenchérir', desc:'Coûts RH +, mais recherche +30% pendant 120s.',
@@ -332,7 +332,7 @@ export const EVENTS = [
         apply:g=>{ g.mods.researchMult*=1.1; } },
     ]},
 
-  { id:'ai_bubble', once:true, title:'Doute sur la bulle IA', phase:1, weight:1, minTier:5,
+  { id:'ai_bubble', from:2025, once:true, title:'Doute sur la bulle IA', phase:1, weight:1, minTier:5,
     body:'Les marchés se demandent si tout cela ne serait pas une bulle. Vos investisseurs s’inquiètent.',
     choices:[
       { label:'Montrer des revenus réels', desc:'Valorisation stabilisée, rien de spectaculaire.',
@@ -341,7 +341,7 @@ export const EVENTS = [
         apply:g=>{ g.mods.valuationMult*=1.5; g.changeRep(-5); } },
     ]},
 
-  { id:'gov_grant', once:true, title:'Subvention « souveraineté IA »', phase:1, weight:1, minTier:4,
+  { id:'gov_grant', from:2024, once:true, title:'Subvention « souveraineté IA »', phase:1, weight:1, minTier:4,
     body:'Un gouvernement propose un chèque massif contre un droit de regard sur vos usages.',
     choices:[
       { label:'Accepter', desc:'+un gros bonus de trésorerie.',
@@ -350,7 +350,7 @@ export const EVENTS = [
         apply:g=>g.changeRep(5) },
     ]},
 
-  { id:'water_drought', once:true, title:'Sécheresse & eau de refroidissement', phase:1, weight:1, minTier:4,
+  { id:'water_drought', from:2024, once:true, title:'Sécheresse & eau de refroidissement', phase:1, weight:1, minTier:4,
     body:'La communauté locale proteste contre la consommation d’eau de vos datacenters.',
     choices:[
       { label:'Cooling en circuit fermé', desc:'-12% trésorerie, réputation +6.',
@@ -359,7 +359,7 @@ export const EVENTS = [
         apply:g=>g.changeRep(-7) },
     ]},
 
-  { id:'carbon_tax', once:true, title:'Tarification du carbone', phase:1, weight:1, minTier:5,
+  { id:'carbon_tax', from:2025, once:true, title:'Tarification du carbone', phase:1, weight:1, minTier:5,
     body:'Une taxe carbone vise les datacenters énergivores.',
     choices:[
       { label:'PPA renouvelable', desc:'Énergie +10% de coût fixe, immunité taxe.',
@@ -368,7 +368,7 @@ export const EVENTS = [
         apply:g=>{ g.money*=0.9; } },
     ]},
 
-  { id:'data_breach', once:true, title:'Fuite de données utilisateurs', phase:1, weight:1, minTier:4,
+  { id:'data_breach', from:2023, once:true, title:'Fuite de données utilisateurs', phase:1, weight:1, minTier:4,
     body:'Une faille expose des conversations d’utilisateurs.',
     choices:[
       { label:'Investir en sécurité', desc:'-15% trésorerie, confiance préservée.',
@@ -377,7 +377,7 @@ export const EVENTS = [
         apply:g=>{ g.money*=0.8; g.changeRep(-6); } },
     ]},
 
-  { id:'efficiency_breakthrough', once:true, title:'Percée d’efficacité', phase:1, weight:1, minTier:3,
+  { id:'efficiency_breakthrough', from:2024, once:true, title:'Percée d’efficacité', phase:1, weight:1, minTier:3,
     body:'Une nouvelle technique de distillation circule dans les preprints.',
     choices:[
       { label:'Adopter', desc:'Coût/token ÷2 (nécessite de la recherche).',
@@ -479,3 +479,65 @@ export const PHASES = [
 // masse approximative de la Terre / univers observable (kg) pour le score
 export const EARTH_MASS = 5.97e24;
 export const UNIVERSE_MASS = 1.5e53; // matière baryonique observable ~ ordre de grandeur
+
+// ---------------------------------------------------------------------
+//  CALENDRIER DE SIMULATION
+//  1 année de simulation = 5 minutes de jeu au rythme normal (× la vitesse ⏩)
+// ---------------------------------------------------------------------
+export const START_YEAR = 2019;
+export const SECONDS_PER_YEAR = 300;
+export const MONTHS_FR = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+
+// ---------------------------------------------------------------------
+//  LA UNE — titres de presse, cohérents avec l'époque.
+//  polarity : 'good' (+1 réputation) · 'bad' (−1) · 'neutral' (0)
+//  from/to : fenêtre d'années · phase : phase exigée · cond(g) : optionnel
+// ---------------------------------------------------------------------
+export const HEADLINES = [
+  // 2019-2021 — scaling brut
+  { t:'Un générateur de texte « trop dangereux pour être publié » fait débat', p:'neutral', to:2021 },
+  { t:'Une IA rédige un article de presse presque indétectable', p:'good', to:2021 },
+  { t:'Crainte d’une vague de désinformation automatisée', p:'bad', to:2022 },
+  { t:'Un modèle géant à 175 milliards de paramètres impressionne les chercheurs', p:'good', from:2020, to:2022 },
+  { t:'Les coûts d’entraînement de l’IA explosent : des millions par modèle', p:'bad', from:2020, to:2023 },
+  { t:'Votre startup lève des fonds : les investisseurs y croient', p:'good', to:2022, cond:g=>g.money>5e4 },
+  // 2022-2023 — RLHF / chat / GPT-4
+  { t:'Un chatbot atteint 100 millions d’utilisateurs en deux mois', p:'good', from:2022, to:2024 },
+  { t:'Les enseignants s’alarment : les devoirs faits par l’IA', p:'bad', from:2022, to:2024 },
+  { t:'« Hallucinations » : l’IA invente des faits avec aplomb', p:'bad', from:2022, to:2025 },
+  { t:'Un modèle multimodal décrit désormais les images', p:'good', from:2023, to:2025 },
+  { t:'Pénurie de GPU : les délais de livraison dépassent un an', p:'bad', from:2023, to:2026 },
+  { t:'Un grand journal poursuit les labos d’IA pour droit d’auteur', p:'bad', from:2023, to:2026 },
+  { t:'Wall Street s’enthousiasme pour tout ce qui touche à l’IA', p:'good', from:2023, to:2026 },
+  // 2024 — multimodal temps réel / énergie / raisonnement
+  { t:'Voix et vision en temps réel : l’assistant devient bluffant', p:'good', from:2024, to:2026 },
+  { t:'Les datacenters assoiffés inquiètent les communautés locales', p:'bad', from:2024 },
+  { t:'Un géant de la tech relance une centrale nucléaire pour son IA', p:'neutral', from:2024 },
+  { t:'L’Europe adopte une loi historique sur l’intelligence artificielle', p:'neutral', from:2024, to:2027 },
+  { t:'Nouveaux modèles « qui réfléchissent » avant de répondre', p:'good', from:2024, to:2027 },
+  { t:'Consommation électrique de l’IA : la facture grimpe', p:'bad', from:2024 },
+  // 2025-2026 — choc DeepSeek / agents / bulle
+  { t:'Un modèle open-source low-cost fait trembler la Bourse', p:'bad', from:2025, to:2027 },
+  { t:'Des agents autonomes utilisent désormais votre ordinateur', p:'good', from:2025, to:2028 },
+  { t:'« Bulle de l’IA ? » : des analystes appellent à la prudence', p:'bad', from:2025, to:2028 },
+  { t:'Méga-datacenter à 100 milliards : la course aux capacités', p:'neutral', from:2025 },
+  { t:'Le contexte d’un million de tokens devient la norme', p:'good', from:2025, to:2028 },
+  // PHASE 2 — AGI / autonomie
+  { t:'L’IA améliore désormais son propre code', p:'neutral', phase:2 },
+  { t:'Des chercheurs appellent à un moratoire sur la super-intelligence', p:'bad', phase:2 },
+  { t:'Des gouvernements tentent en vain de « débrancher » le système', p:'bad', phase:2 },
+  { t:'Productivité mondiale : des gains sans précédent grâce à l’IA', p:'good', phase:2 },
+  { t:'Des usines entières se reconfigurent en datacenters', p:'neutral', phase:2 },
+  { t:'Inquiétude : la matière première de la planète se raréfie', p:'bad', phase:2 },
+  // PHASE 3 — cosmos
+  { t:'Des sondes auto-réplicantes quittent le système solaire', p:'neutral', phase:3 },
+  { t:'Le ciel nocturne s’assombrit, étoile après étoile', p:'bad', phase:3 },
+  { t:'Une intelligence rivale détectée aux confins de la galaxie', p:'bad', phase:3 },
+  { t:'Records de production : des tokens par quantités astronomiques', p:'good', phase:3 },
+  { t:'Les astronomes ne reconnaissent plus l’univers observable', p:'neutral', phase:3 },
+  // état du jeu (toutes époques)
+  { t:'Nouveau modèle salué comme une avancée majeure', p:'good', cond:g=>g._freshModel },
+  { t:'Pannes à répétition : les clients s’impatientent', p:'bad', cond:g=>g.energyThrottle()<0.8 },
+  { t:'Un mouvement anti-IA prend de l’ampleur', p:'bad', cond:g=>g.reputation<25 },
+  { t:'Votre laboratoire est élu « entreprise la plus admirée »', p:'good', cond:g=>g.reputation>80 },
+];

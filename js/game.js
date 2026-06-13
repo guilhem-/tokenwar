@@ -1,21 +1,24 @@
 // =====================================================================
 //  TokenWar — MOTEUR DE JEU
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, EARTH_MASS, UNIVERSE_MASS } from './data.js';
+import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, EARTH_MASS, UNIVERSE_MASS,
+         START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
 
 // Levées de fonds (analogue du « Trust ») : déblocages par paliers de tokens
+// Les levées sont gardées par les tokens cumulés ET par l'année (les tours de table
+// s'étalent dans le temps), pour que le capital arrive quand le matériel existe.
 export const FUNDING = [
-  { id:'preseed', name:'Pre-seed',   need:2e3,  cash:6e4,  bonus:{ demandMult:1.15 },    desc:'+15% demande' },
-  { id:'seed',    name:'Seed',       need:5e4,  cash:6e5,  bonus:{ researchMult:1.2 },   desc:'+20% recherche' },
-  { id:'serieA',  name:'Série A',    need:1e6,  cash:6e6,  bonus:{ computeMult:1.25 },   desc:'+25% compute' },
-  { id:'serieB',  name:'Série B',    need:5e7,  cash:6e7,  bonus:{ demandMult:1.3 },     desc:'+30% demande' },
-  { id:'serieC',  name:'Série C',    need:2e9,  cash:7e8,  bonus:{ valuationMult:1.5 },  desc:'+50% valorisation' },
-  { id:'serieD',  name:'Série D',    need:5e10, cash:8e9,  bonus:{ computeMult:1.5 },    desc:'+50% compute' },
-  { id:'mega',    name:'Méga-levée', need:1e12, cash:6e10, bonus:{ researchMult:1.5 },   desc:'+50% recherche' },
-  { id:'ipo',     name:'IPO',        need:5e13, cash:8e11, bonus:{ demandMult:2 },       desc:'×2 demande' },
+  { id:'preseed', name:'Pre-seed',   year:2019, need:2e3,  cash:6e4,  bonus:{ demandMult:1.15 },    desc:'+15% demande' },
+  { id:'seed',    name:'Seed',       year:2020, need:5e4,  cash:6e5,  bonus:{ researchMult:1.2 },   desc:'+20% recherche' },
+  { id:'serieA',  name:'Série A',    year:2021, need:1e6,  cash:6e6,  bonus:{ computeMult:1.25 },   desc:'+25% compute' },
+  { id:'serieB',  name:'Série B',    year:2022, need:5e7,  cash:6e7,  bonus:{ demandMult:1.3 },     desc:'+30% demande' },
+  { id:'serieC',  name:'Série C',    year:2023, need:2e9,  cash:7e8,  bonus:{ valuationMult:1.5 },  desc:'+50% valorisation' },
+  { id:'serieD',  name:'Série D',    year:2024, need:5e10, cash:8e9,  bonus:{ computeMult:1.5 },    desc:'+50% compute' },
+  { id:'mega',    name:'Méga-levée', year:2025, need:1e12, cash:6e10, bonus:{ researchMult:1.5 },   desc:'+50% recherche' },
+  { id:'ipo',     name:'IPO',        year:2026, need:5e13, cash:8e11, bonus:{ demandMult:2 },       desc:'×2 demande' },
 ];
 
 export class Game {
@@ -53,6 +56,12 @@ export class Game {
     s.eventsSeen = {};
     s.eventCooldown = {};   // id -> playSeconds du dernier déclenchement
     s.lastEventId = null;
+    // presse / calendrier
+    s.headlineTimer = 6;
+    s.headlines = [];       // fil de titres {text, p, date}
+    s.lastHeadlineText = null;
+    s._freshModelUntil = 0; // pour les titres réactifs à un nouvel entraînement
+    s._freshModel = false;
     // allocation du compute (normalisée)
     s.alloc = { serve:0.7, research:0.3, improve:0, harvest:0 };
     // modificateurs permanents (multiplicatifs)
@@ -91,6 +100,7 @@ export class Game {
   get energyCap() { return this.state.energyCap; }
   set energyCap(v) { this.state.energyCap = v; }
   get model() { return MODELS[this.state.modelTier]; }
+  get _freshModel() { return this.state._freshModel; }
 
   // ---- modificateurs temporaires ----
   addTimedMod(key, factor, seconds) {
@@ -105,6 +115,17 @@ export class Game {
   changeRep(d) {
     this.state.reputation = clamp(this.state.reputation + d, 0, 100);
   }
+
+  // ---- calendrier de simulation ----
+  simYear() { return START_YEAR + this.state.playSeconds / SECONDS_PER_YEAR; }
+  simYearInt() { return Math.floor(this.simYear()); }
+  dateLabel() {
+    const y = this.simYear();
+    const month = Math.min(11, Math.floor((y - Math.floor(y)) * 12));
+    return `${MONTHS_FR[month]} ${Math.floor(y)}`;
+  }
+  // un élément (GPU/énergie/modèle) est-il sorti à la date courante ?
+  dateUnlocked(item) { return !item.year || this.simYear() >= item.year; }
   toast(msg, kind = 'info') { this.ui && this.ui.toast(msg, kind); }
   log(msg, kind = 'info') { this.ui && this.ui.log(msg, kind); }
 
@@ -163,7 +184,7 @@ export class Game {
       * this.getTimed('demand');
   }
   marketingCost() {
-    return 80 * Math.pow(2.3, this.state.marketingLvl - 1);
+    return 80 * Math.pow(2.1, this.state.marketingLvl - 1);
   }
   valuation() {
     const s = this.state;
@@ -193,6 +214,7 @@ export class Game {
 
   buyGPU(id) {
     const g = GPUS.find(x => x.id === id);
+    if (!this.dateUnlocked(g)) return false;
     const cost = this.gpuCost(g);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
@@ -201,6 +223,7 @@ export class Game {
   }
   buyEnergy(id) {
     const e = ENERGY.find(x => x.id === id);
+    if (!this.dateUnlocked(e)) return false;
     const cost = this.energyCost(e);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
@@ -223,6 +246,7 @@ export class Game {
   trainNext() {
     if (!this.canTrainNext()) return false;
     const m = this.nextModel();
+    if (!this.dateUnlocked(m)) return false;
     const c = m.cost;
     if (this.state.money < (c.money || 0)) return false;
     if (this.computeRaw() < (c.compute || 0)) return false; // besoin de capacité
@@ -232,6 +256,7 @@ export class Game {
     this.state.data -= (c.data || 0);
     this.state.research -= (c.research || 0);
     this.state.modelTier++;
+    this.state._freshModelUntil = this.state.playSeconds + 18; // titres de presse réactifs
     this.log(`Modèle entraîné : ${m.name}`, 'milestone');
     this.toast(`Nouveau modèle : ${m.name}`, 'good');
     return true;
@@ -240,6 +265,7 @@ export class Game {
     const f = FUNDING.find(x => x.id === id);
     if (this.state.fundingDone[id]) return false;
     if (this.state.lifetimeTokens < f.need) return false;
+    if (f.year && this.simYear() < f.year) return false;
     this.state.fundingDone[id] = true;
     this.state.money += f.cash;
     for (const k in f.bonus) this.state.mods[k] *= f.bonus[k];
@@ -378,6 +404,9 @@ export class Game {
       if (e.minTier && this.state.modelTier < e.minTier) return false;
       if (e.minUniverse && this.state.universeConsumed < e.minUniverse) return false;
       if (e.once && this.state.eventsSeen[e.id]) return false;
+      // cohérence avec la date (fenêtre from/to en années)
+      if (e.from != null && this.simYear() < e.from) return false;
+      if (e.to != null && this.simYear() >= e.to + 1) return false;
       if (!relax) {
         if (e.id === this.state.lastEventId) return false; // jamais deux fois de suite
         const last = this.state.eventCooldown[e.id];
@@ -393,6 +422,44 @@ export class Game {
     let r = Math.random() * total;
     for (const e of pool) { r -= (e.weight || 1); if (r <= 0) return e; }
     return pool[pool.length - 1];
+  }
+
+  // =================================================================
+  //  LA UNE — titres de presse (ajustent la réputation : +1 / −1 / 0)
+  // =================================================================
+  tickHeadlines(dt) {
+    const s = this.state;
+    if (s.ended) return;
+    s._freshModel = s.playSeconds < s._freshModelUntil;
+    s.headlineTimer -= dt;
+    if (s.headlineTimer > 0) return;
+    s.headlineTimer = 12 + Math.random() * 9;
+    const h = this.pickHeadline();
+    if (!h) return;
+    const delta = h.p === 'good' ? 1 : (h.p === 'bad' ? -1 : 0);
+    if (delta) this.changeRep(delta);
+    const entry = { text: h.t, p: h.p, date: this.dateLabel() };
+    s.headlines.unshift(entry);
+    if (s.headlines.length > 40) s.headlines.pop();
+    s.lastHeadlineText = h.t;
+    this.ui && this.ui.onHeadline && this.ui.onHeadline(entry);
+  }
+  pickHeadline() {
+    const y = this.simYear();
+    const pool = HEADLINES.filter(h => {
+      if (h.t === this.state.lastHeadlineText) return false;       // pas deux fois de suite
+      if (h.phase != null) { if (this.phase !== h.phase) return false; }
+      else {
+        // titre daté (phase 1) vs titre d'état (cond, toutes phases)
+        if ((h.from != null || h.to != null) && this.phase !== 1) return false;
+        if (h.from != null && y < h.from) return false;
+        if (h.to != null && y >= h.to + 1) return false;
+      }
+      if (h.cond && !h.cond(this)) return false;
+      return true;
+    });
+    if (!pool.length) return null;
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   // =================================================================
@@ -489,6 +556,7 @@ export class Game {
     }
 
     this.tickEvents(dt);
+    this.tickHeadlines(dt);
     this.checkMilestones();
   }
 

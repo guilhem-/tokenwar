@@ -43,7 +43,7 @@ function bot() {
   s.priceSlider = 100 * Math.log(price / 0.02) / Math.log(15000);
 
   // 5) marketing modéré
-  while (s.money >= g.marketingCost() * 8 && s.marketingLvl < 26) g.buyMarketing();
+  while (s.money >= g.marketingCost() * 8 && s.marketingLvl < 45) g.buyMarketing();
 
   // 6) infra : on garde une RÉSERVE pour le prochain modèle, puis on investit le reste
   const reserve = g.canTrainNext() ? (g.nextModel().cost.money || 0) * 1.1 : 0;
@@ -53,11 +53,11 @@ function bot() {
       let best = null, bestRatio = Infinity;
       for (const e of ENERGY) {
         if (e.phase && g.phase < e.phase) continue;
+        if (!g.dateUnlocked(e)) continue;
         const c = g.energyCost(e);
         if (c <= s.money - reserve) { const r = c / e.mw; if (r < bestRatio) { bestRatio = r; best = e; } }
       }
-      if (!best) break;
-      g.buyEnergy(best.id);
+      if (!best || !g.buyEnergy(best.id)) break;
     }
   };
   let safety = 0;
@@ -68,7 +68,8 @@ function bot() {
     for (let i = GPUS.length - 1; i >= 0; i--) {
       const gpu = GPUS[i];
       if (gpu.phase && g.phase < gpu.phase) continue;
-      if (s.money - reserve >= g.gpuCost(gpu) * 2.5) { g.buyGPU(gpu.id); bought = true; break; }
+      if (!g.dateUnlocked(gpu)) continue;          // respecter la date de sortie
+      if (s.money - reserve >= g.gpuCost(gpu) * 2.5) { if (g.buyGPU(gpu.id)) bought = true; break; }
     }
     if (!bought) break;
   }
