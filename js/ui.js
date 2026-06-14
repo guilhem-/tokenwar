@@ -164,6 +164,19 @@ export class UI {
       r.name.textContent = it.name;
       r.desc.textContent = it.desc;
       r.el.addEventListener('click', () => { this.game.buyInfra(it.id); }); // grisé → no-op
+      // location (datacenter uniquement) : pas de capex, coût journalier
+      if (it.rentDaily) {
+        const rent = document.createElement('div');
+        rent.className = 'rent-row';
+        rent.innerHTML = `<span class="rent-info text-muted num"></span>` +
+          `<button class="btn-ghost rent-btn" data-act="rent">Louer +1</button>` +
+          `<button class="btn-ghost rent-btn" data-act="unrent">Résilier</button>`;
+        rent.querySelector('[data-act=rent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.rentDC(); });
+        rent.querySelector('[data-act=unrent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.unrentDC(); });
+        r.el.appendChild(rent);
+        r.rentInfo = rent.querySelector('.rent-info');
+        r.unrentBtn = rent.querySelector('[data-act=unrent]');
+      }
     });
     // GPUs (avec bouton de revente)
     this.el.gpuList.innerHTML = ''; this.rows.gpu = {};
@@ -222,9 +235,15 @@ export class UI {
       const noParent = it.needs && g.freeSlots(it.id) < 1;
       r.cost.textContent = fmtMoney(cost);
       r.effect.innerHTML = `<span class="badge">×${fmt(count)}</span> ` +
-        `<span class="text-muted">accueille ${fmt(childUsed)}/${fmt(childCap)} ${it.child === 'gpu' ? 'GPU' : (INFRA.find(x => x.id === it.child)?.unit || it.child)}</span>` +
+        `<span class="text-muted">accueille ${fmt(childUsed)}/${fmt(childCap)} ${it.child === 'gpu' ? 'GPU' : (INFRA.find(x => x.id === it.child)?.unit || it.child)}</span> ` +
+        `<span class="text-muted">· ${fmtPower(it.energy)}/u</span>` +
         (noParent ? ` <span class="badge badge-warn">place ${INFRA.find(x => x.id === it.needs).unit} requise</span>` : '');
       this.setAfford(r.el, g.canBuyInfra(it.id));
+      if (r.rentInfo) {
+        const rented = s.rentedDC || 0;
+        r.rentInfo.textContent = `loué ×${rented} · ${fmtMoney(g.dcRentDaily())}/j` + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
+        r.unrentBtn.classList.toggle('locked', rented <= 0);
+      }
     });
   }
 
@@ -571,8 +590,12 @@ export class UI {
     ev.choices.forEach(ch => {
       const b = document.createElement('button');
       b.className = 'btn choice';
+      // un choix au coût fixe non finançable est grisé (et non sélectionnable)
+      const unaffordable = ch.cost && this.game.money < ch.cost;
+      if (unaffordable) b.classList.add('locked');
       b.innerHTML = `<span class="choice-label">${ch.label}</span><span class="choice-desc">${ch.desc}</span>`;
       b.addEventListener('click', () => {
+        if (ch.cost && this.game.money < ch.cost) return; // pas les moyens
         ch.apply(this.game);
         this.log(`${ev.title} → ${ch.label}`, 'info');
         this.closeModal();
@@ -668,7 +691,7 @@ export class UI {
     this.el.helpBody.innerHTML = `
       <p><b>But :</b> produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.</p>
       <p><b>Phase 1 — Startup :</b> cliquez pour générer des tokens, fixez le <b>prix</b> (bas = plus de volume, haut = plus de marge), faites du <b>marketing</b>, achetez des <b>GPU</b> et de l’<b>énergie</b> (plafond dur !), accumulez de la <b>recherche</b> pour les <b>projets</b>, et <b>entraînez</b> des modèles de plus en plus puissants. Levez des <b>fonds</b> aux paliers.</p>
-      <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b>. Construisez la chaîne avant d’acheter des cartes. Le matériel obsolète se <b>revend</b>.</p>
+      <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b> — qui consomment aussi de l’énergie. Construisez la chaîne avant d’acheter des cartes (prix réels et fixes). Le matériel obsolète se <b>revend</b>. Vous pouvez <b>louer</b> des datacenters (coût journalier) au lieu de les acheter.</p>
       <p><b>Bourse :</b> placez votre trésorerie (risque réglable) pour la faire fructifier — ou la perdre.</p>
       <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
       <p><b>Calendrier :</b> une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie — un élément grisé « dispo 20XX » arrive bientôt.</p>

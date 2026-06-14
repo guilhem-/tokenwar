@@ -45,6 +45,15 @@ step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.disp
 step('buyInfra serveur', () => { game.state.money = 1e9; const before = game.capacityFor('gpu'); game.buyInfra('server'); ui.render(); if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée'); });
 step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
 step('sellGPU (revente)', () => { const n = game.state.gpuCounts['consumer'] || 0; if (n < 1) game.buyGPU('consumer'); ui.rows.gpu['consumer'].sell.dispatchEvent(new window.Event('click')); ui.render(); });
+// location de datacenter
+step('location datacenter (coût journalier)', () => {
+  const before = game.capacityFor('rack');
+  ui.rows.infra['datacenter'].el.querySelector('[data-act=rent]').dispatchEvent(new window.Event('click'));
+  if (game.capacityFor('rack') <= before) throw new Error('capacité baies non augmentée par location');
+  ui.render();
+  if (!/loué/.test(ui.rows.infra['datacenter'].rentInfo.textContent)) throw new Error('info location absente');
+  ui.rows.infra['datacenter'].el.querySelector('[data-act=unrent]').dispatchEvent(new window.Event('click'));
+});
 // bourse
 step('bourse dépôt/retrait + risque', () => {
   game.state.money = 1e6;

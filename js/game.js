@@ -32,7 +32,7 @@ export class Game {
     // score & ressources
     s.lifetimeTokens = 0;
     s.unsold = 0;
-    s.money = 100;
+    s.money = 1500;          // petit capital de départ (vos économies) pour amorcer l'infra + 1ʳᵉ carte
     s.research = 0;
     s.data = 0;
     s.reputation = 50;
@@ -44,6 +44,7 @@ export class Game {
     // infrastructure
     s.gpuCounts = {};        // id -> nombre
     s.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 }; // chaîne d'hébergement (1 de chaque offert)
+    s.rentedDC = 0;          // datacenters loués (coût journalier)
     s.stock = { invested:0, basis:0, risk:1 };  // bourse : valeur de marché, total investi, niveau de risque
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
@@ -148,6 +149,7 @@ export class Game {
   energyUse() {
     let e = 0;
     for (const g of GPUS) e += (this.state.gpuCounts[g.id] || 0) * g.energy;
+    for (const it of INFRA) e += (this.infraCount(it.id) || 0) * (it.energy || 0); // datacenters, baies, serveurs
     return e * this.state.mods.energyEff * this.getTimed('energyEff');
   }
   energyThrottle() {
@@ -195,9 +197,8 @@ export class Game {
       * (0.5 + s.reputation / 100) * s.mods.valuationMult;
   }
   gpuCost(g) {
-    const owned = this.state.gpuCounts[g.id] || 0;
-    let c = g.costBase * Math.pow(g.costMult, owned);
-    if (g.scarce) c *= this.getTimed('gpuPrice');
+    let c = g.cost;                              // prix FIXE et réaliste (non exponentiel)
+    if (g.scarce) c *= this.getTimed('gpuPrice'); // sauf flambée temporaire de pénurie
     return c * this.state.mods.opex;
   }
   energyCost(e) {
@@ -217,11 +218,17 @@ export class Game {
 
   // ---- chaîne d'hébergement : immobilier > datacenter > baie > serveur > GPU ----
   infraCount(id) { return this.state.infraCounts[id] || 0; }
-  infraCost(item) { return item.costBase * Math.pow(item.costMult, this.infraCount(item.id)) * this.state.mods.opex; }
-  capacityFor(childId) {                       // emplacements offerts par les parents
+  infraCost(item) {                              // prix FIXE (réaliste) ; le serveur suit la flambée mémoire
+    let c = item.cost;
+    if (item.eraPrice) { const y = this.simYear(); for (const [from, price] of item.eraPrice) if (y >= from) c = price; }
+    return c * this.state.mods.opex;
+  }
+  capacityFor(childId) {                        // emplacements offerts par les parents
     const parent = INFRA.find(x => x.child === childId);
-    if (!parent) return Infinity;              // l'immobilier n'a pas de parent
-    return this.infraCount(parent.id) * parent.capacity;
+    if (!parent) return Infinity;               // l'immobilier n'a pas de parent
+    let count = this.infraCount(parent.id);
+    if (parent.id === 'datacenter') count += this.state.rentedDC || 0; // les datacenters loués comptent aussi
+    return count * parent.capacity;
   }
   usedFor(childId) { return childId === 'gpu' ? this.gpuCount() : this.infraCount(childId); }
   freeSlots(childId) { return this.capacityFor(childId) - this.usedFor(childId); }
@@ -240,6 +247,22 @@ export class Game {
     const item = INFRA.find(x => x.id === id);
     if (this.hostingActive() && this.freeSlots(id) < 1) return false;
     return this.state.money >= this.infraCost(item);
+  }
+  // ---- location de datacenter : pas de capex, mais un coût journalier ----
+  rentDC() { this.state.rentedDC = (this.state.rentedDC || 0) + 1; return true; }
+  unrentDC() {
+    const r = this.state.rentedDC || 0;
+    if (r <= 0) return false;
+    const dc = INFRA.find(x => x.id === 'datacenter');
+    const newCap = (this.infraCount('datacenter') + r - 1) * dc.capacity;
+    if (this.usedFor('rack') > newCap) return false; // ne pas priver des baies installées
+    this.state.rentedDC = r - 1;
+    return true;
+  }
+  dcRentDaily() { return INFRA.find(x => x.id === 'datacenter').rentDaily; }
+  dcRentPerSec() {                               // loyer total par seconde de jeu
+    const secPerDay = SECONDS_PER_YEAR / 365;
+    return (this.state.rentedDC || 0) * this.dcRentDaily() / secPerDay;
   }
 
   buyGPU(id) {
@@ -551,6 +574,8 @@ export class Game {
     s.playSeconds += dt;
     // purge des modificateurs temporaires expirés
     if (s.timed.length) s.timed = s.timed.filter(m => m.until > s.playSeconds);
+    // loyer des datacenters loués (coût journalier)
+    if (s.rentedDC > 0) s.money = Math.max(0, s.money - this.dcRentPerSec() * dt);
 
     const compute = this.computeEffective();
     const a = s.alloc;

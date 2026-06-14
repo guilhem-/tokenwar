@@ -1279,3 +1279,13 @@ a {
 .risk-row { align-items: center; }
 .risk-row .tabs { display: flex; gap: 0.3rem; flex: 1 1 auto; }
 .risk-row .tab { flex: 1 1 auto; min-height: 38px; }
+
+/* Location de datacenter */
+.rent-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin-top: 0.45rem; padding-top: 0.45rem;
+  border-top: 1px dashed var(--line);
+}
+.rent-info { flex: 1 1 100%; font-size: 0.74rem; }
+.rent-btn { font-size: 0.72rem; padding: 0.3rem 0.6rem; min-height: 34px; }
+.rent-btn.locked { opacity: 0.4; pointer-events: none; }
