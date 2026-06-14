@@ -97,7 +97,7 @@ function bot() {
     for (let i = GPUS.length - 1; i >= 0; i--) {
       const gpu = GPUS[i];
       if (gpu.phase && g.phase < gpu.phase) continue;
-      if (!g.dateUnlocked(gpu)) continue;          // respecter la date de sortie
+      if (!g.dateUnlocked(gpu) || g.discontinued(gpu)) continue; // date / hors-marché
       if (g.hostingActive() && g.freeSlots('gpu') < 1) continue; // pas d'emplacement
       if (s.money - reserve >= g.gpuCost(gpu) * 2.5) { if (g.buyGPU(gpu.id)) bought = true; break; }
     }

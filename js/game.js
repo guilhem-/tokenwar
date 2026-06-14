@@ -3,7 +3,7 @@
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
-         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO } from './data.js';
+         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -50,6 +50,9 @@ export class Game {
     s.employees = { hr:0, rnd:0, marketer:0, ops:0, data:0 }; // ressources humaines
     s.stock = { invested:0, basis:0, risk:1 };  // bourse : valeur de marché, total investi, niveau de risque
     s.stockUnlocked = false; // la bourse se débloque à 100 000$ de trésorerie
+    // automatisations (auto-clickers payants, activables/désactivables)
+    s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true }, infra:{ owned:false, on:true }, energy:{ owned:false, on:true } };
+    s.autoTimer = 0;
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
     s.modelTier = 0;
@@ -305,6 +308,58 @@ export class Game {
   opsMult() { return 1 + Math.min(0.5, this.empCount('ops') * 0.02); }     // +2%/ops, plafonné +50%
   salaryPerDay() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id) * e.salary, 0); }
 
+  // ---- AUTOMATISATIONS (auto-clickers payants) ----
+  buyAuto(id) {
+    const a = AUTOMATIONS.find(x => x.id === id);
+    const st = this.state.auto[id];
+    if (st.owned || this.state.money < a.cost) return false;
+    this.state.money -= a.cost; st.owned = true; st.on = true;
+    return true;
+  }
+  toggleAuto(id) { const st = this.state.auto[id]; if (!st.owned) return false; st.on = !st.on; return true; }
+  autoBuyGPU() {                                  // achète la meilleure carte abordable disponible
+    let best = null;
+    for (const g of GPUS) {
+      if (g.phase && this.phase < g.phase) continue;
+      if (!this.canBuyGPU(g.id)) continue;        // date, hors-marché, emplacement, budget
+      if (!best || g.perf > best.perf) best = g;
+    }
+    if (best) this.buyGPU(best.id);
+  }
+  autoBuyEnergy() {                               // source la moins chère par MW, abordable
+    let best = null, bestRatio = Infinity;
+    for (const e of ENERGY) {
+      if (e.phase && this.phase < e.phase) continue;
+      if (!this.dateUnlocked(e)) continue;
+      const c = this.energyCost(e);
+      if (c <= this.state.money) { const r = c / e.mw; if (r < bestRatio) { bestRatio = r; best = e; } }
+    }
+    if (best) this.buyEnergy(best.id);
+  }
+  autoBuyInfra() {                                // achète le niveau qui va devenir limitant
+    const target = this.freeSlots('server') >= 1 ? 'server'
+      : this.freeSlots('rack') >= 1 ? 'rack'
+      : this.freeSlots('datacenter') >= 1 ? 'datacenter' : 'realestate';
+    if (this.canBuyInfra(target)) this.buyInfra(target);
+  }
+  tickAuto(dt) {
+    const s = this.state, au = s.auto;
+    // clic d'inférence + achat GPU : « par seconde »
+    s.autoTimer += dt;
+    let guard = 0;
+    while (s.autoTimer >= 1 && guard++ < 100) {
+      s.autoTimer -= 1;
+      if (au.click.owned && au.click.on) this.manualGenerate();
+      if (this.phase < 2 && au.gpu.owned && au.gpu.on) this.autoBuyGPU();
+    }
+    if (this.phase < 2) {
+      // énergie : dès que la consommation dépasse (presque) la production
+      if (au.energy.owned && au.energy.on && this.energyUse() > s.energyCap * 0.98) this.autoBuyEnergy();
+      // hébergement : avant qu'un niveau ne bloque (emplacements GPU bientôt épuisés)
+      if (au.infra.owned && au.infra.on && this.freeSlots('gpu') < 4) this.autoBuyInfra();
+    }
+  }
+
   // ---- CHARGES JOURNALIÈRES (électricité + salaires + loyers) ----
   // L'électricité dépend du MIX : on sert la demande avec les sources les moins chères
   // d'abord (solaire/fusion/Dyson quasi gratuits, réseau/gaz onéreux).
@@ -329,9 +384,11 @@ export class Game {
     return (this.state.rentedDC || 0) * this.dcRentDaily() / (SECONDS_PER_YEAR / 365);
   }
 
+  // une carte sortie depuis plus de 5 ans n'est plus commercialisée (retirée du marché)
+  discontinued(g) { return this.simYear() > g.year + 5; }
   buyGPU(id) {
     const g = GPUS.find(x => x.id === id);
-    if (!this.dateUnlocked(g)) return false;
+    if (!this.dateUnlocked(g) || this.discontinued(g)) return false;
     if (this.hostingActive() && this.freeSlots('gpu') < 1) return false; // aucun emplacement serveur libre
     const cost = this.gpuCost(g);
     if (this.state.money < cost) return false;
@@ -341,7 +398,7 @@ export class Game {
   }
   canBuyGPU(id) {
     const g = GPUS.find(x => x.id === id);
-    if (!this.dateUnlocked(g)) return false;
+    if (!this.dateUnlocked(g) || this.discontinued(g)) return false;
     if (this.hostingActive() && this.freeSlots('gpu') < 1) return false;
     return this.state.money >= this.gpuCost(g);
   }
@@ -735,6 +792,7 @@ export class Game {
       }
     }
 
+    this.tickAuto(dt);
     this.tickStock(dt);
     this.tickEvents(dt);
     this.tickHeadlines(dt);

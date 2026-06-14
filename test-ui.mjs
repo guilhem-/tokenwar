@@ -41,6 +41,19 @@ step('buyEnergy grid', () => { game.buyEnergy('grid'); ui.render(); });
 step('buyMarketing', () => { game.buyMarketing(); ui.render(); });
 step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.dispatchEvent(new window.Event('input')); ui.render(); });
 
+// automatisations (auto-clickers : achat + activation/désactivation)
+step('automatisations : achat + toggle', () => {
+  game.state.money = 1e6;
+  const r = ui.rows.auto['gpu'];
+  r.btn.dispatchEvent(new window.Event('click'));          // acheter
+  if (!game.state.auto.gpu.owned) throw new Error('auto-GPU non acheté');
+  ui.render();
+  if (!/activé/.test(r.cost.textContent)) throw new Error('état activé non affiché');
+  r.btn.dispatchEvent(new window.Event('click'));          // désactiver
+  if (game.state.auto.gpu.on) throw new Error('toggle off échoué');
+  ui.render();
+});
+
 // boutons d'achat groupé ×10 / ×100
 step('boutons ×10 (≥20) et ×100 (≥200)', () => {
   game.state.money = 1e12;

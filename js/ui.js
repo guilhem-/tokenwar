@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, UNIVERSE_MASS } from './data.js';
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, UNIVERSE_MASS } from './data.js';
 import { FUNDING } from './game.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
 
@@ -41,6 +41,7 @@ export class UI {
       panelAlloc: $('panel-alloc'), allocBody: $('alloc-body'),
       moneyStat: $('stat-money') ? $('stat-money').closest('.stat') : null,
       panelMarket: $('panel-market'),
+      panelAuto: $('panel-auto'), autoList: $('auto-list'),
       panelHosting: $('panel-hosting'),
       infraList: $('infra-list'),
       panelTeam: $('panel-team'), headcount: $('headcount'), teamList: $('team-list'),
@@ -184,6 +185,24 @@ export class UI {
   }
 
   buildStaticRows() {
+    // Automatisations (auto-clickers payants, activables/désactivables)
+    this.el.autoList.innerHTML = ''; this.rows.auto = {};
+    AUTOMATIONS.forEach(a => {
+      const r = this.makeRow(this.el.autoList, a.id, this.rows.auto);
+      r.name.textContent = a.name;
+      r.desc.textContent = a.desc;
+      const actions = document.createElement('div');
+      actions.className = 'rent-row';
+      actions.innerHTML = `<button class="btn-ghost rent-btn" data-act="auto"></button>`;
+      const btn = actions.querySelector('button');
+      btn.addEventListener('click', ev => {
+        ev.stopPropagation();
+        const st = this.game.state.auto[a.id];
+        if (!st.owned) this.game.buyAuto(a.id); else this.game.toggleAuto(a.id);
+      });
+      r.el.appendChild(actions);
+      r.btn = btn;
+    });
     // Hébergement (chaîne immobilier > datacenter > baie > serveur)
     this.el.infraList.innerHTML = ''; this.rows.infra = {};
     INFRA.forEach(it => {
@@ -326,6 +345,25 @@ export class UI {
       r.hireBtn.classList.toggle('locked', !canHire);
       r.fireBtn.classList.toggle('locked', count < 1);
       this.updateBulk(r, count, canHire);
+    });
+  }
+
+  renderAuto() {
+    const g = this.game, s = g.state;
+    AUTOMATIONS.forEach(a => {
+      const r = this.rows.auto[a.id];
+      const st = s.auto[a.id];
+      if (!st.owned) {
+        r.cost.textContent = fmtMoney(a.cost);
+        r.btn.textContent = 'Acheter';
+        r.btn.classList.toggle('locked', s.money < a.cost);
+        this.setAfford(r.el, s.money >= a.cost);
+      } else {
+        r.cost.innerHTML = `<span class="badge ${st.on ? '' : 'badge-warn'}">${st.on ? 'activé' : 'désactivé'}</span>`;
+        r.btn.textContent = st.on ? 'Désactiver' : 'Activer';
+        r.btn.classList.remove('locked');
+        r.el.classList.remove('locked', 'affordable');
+      }
     });
   }
 
@@ -490,6 +528,7 @@ export class UI {
     this.renderTrain();
 
     // listes
+    this.renderAuto();
     this.renderInfra();
     this.renderTeam();
     this.renderCharges();
@@ -511,6 +550,7 @@ export class UI {
     const moneyHidden = g.phase >= 2;
     if (this.el.moneyStat) this.el.moneyStat.classList.toggle('hidden', moneyHidden);
     this.el.panelMarket.classList.toggle('hidden', moneyHidden);
+    this.el.panelAuto.classList.toggle('hidden', moneyHidden);
     this.el.panelCharges.classList.toggle('hidden', moneyHidden);
     this.el.panelTeam.classList.toggle('hidden', moneyHidden);
     if (moneyHidden) { this.el.panelFunding.classList.add('hidden'); this.el.panelStock.classList.add('hidden'); }
@@ -535,6 +575,8 @@ export class UI {
       const r = this.rows.gpu[gpu.id];
       if (gpu.phase && g.phase < gpu.phase) { r.el.classList.add('hidden'); return; }
       const owned = s.gpuCounts[gpu.id] || 0;
+      // carte sortie depuis +5 ans et non possédée → retirée du marché (supprimée de la liste)
+      if (g.discontinued(gpu) && owned < 1) { r.el.classList.add('hidden'); return; }
       if (r.sell) r.sell.classList.toggle('hidden', owned < 1);
       const unlocked = g.dateUnlocked(gpu);
       if (!unlocked) {
