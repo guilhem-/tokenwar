@@ -52,6 +52,7 @@ export class Game {
     s.stockUnlocked = false; // la bourse se débloque à 100 000$ de trésorerie
     // automatisations (auto-clickers payants, activables/désactivables)
     s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true }, infra:{ owned:false, on:true }, energy:{ owned:false, on:true } };
+    s.autoItems = { gpu:{}, energy:{}, infra:{} }; // auto-achat PAR élément (id -> bool), mémorisé individuellement
     s.autoTimer = 0;
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
@@ -317,46 +318,40 @@ export class Game {
     return true;
   }
   toggleAuto(id) { const st = this.state.auto[id]; if (!st.owned) return false; st.on = !st.on; return true; }
-  autoBuyGPU() {                                  // achète la meilleure carte abordable disponible
-    let best = null;
-    for (const g of GPUS) {
-      if (g.phase && this.phase < g.phase) continue;
-      if (!this.canBuyGPU(g.id)) continue;        // date, hors-marché, emplacement, budget
-      if (!best || g.perf > best.perf) best = g;
-    }
-    if (best) this.buyGPU(best.id);
-  }
-  autoBuyEnergy() {                               // source la moins chère par MW, abordable
-    let best = null, bestRatio = Infinity;
-    for (const e of ENERGY) {
-      if (e.phase && this.phase < e.phase) continue;
-      if (!this.dateUnlocked(e)) continue;
-      const c = this.energyCost(e);
-      if (c <= this.state.money) { const r = c / e.mw; if (r < bestRatio) { bestRatio = r; best = e; } }
-    }
-    if (best) this.buyEnergy(best.id);
-  }
-  autoBuyInfra() {                                // achète le niveau qui va devenir limitant
-    const target = this.freeSlots('server') >= 1 ? 'server'
-      : this.freeSlots('rack') >= 1 ? 'rack'
-      : this.freeSlots('datacenter') >= 1 ? 'datacenter' : 'realestate';
-    if (this.canBuyInfra(target)) this.buyInfra(target);
+  // auto-achat ciblé sur UN élément précis (carte, source, niveau d'infra), mémorisé individuellement
+  isAutoItem(family, id) { return !!(this.state.autoItems[family] && this.state.autoItems[family][id]); }
+  toggleAutoItem(family, id) {
+    if (!this.state.auto[family] || !this.state.auto[family].owned) return false;
+    this.state.autoItems[family][id] = !this.isAutoItem(family, id);
+    return true;
   }
   tickAuto(dt) {
     const s = this.state, au = s.auto;
-    // clic d'inférence + achat GPU : « par seconde »
+    // inférence + achat des GPU sélectionnés : « par seconde »
     s.autoTimer += dt;
     let guard = 0;
     while (s.autoTimer >= 1 && guard++ < 100) {
       s.autoTimer -= 1;
       if (au.click.owned && au.click.on) this.manualGenerate();
-      if (this.phase < 2 && au.gpu.owned && au.gpu.on) this.autoBuyGPU();
+      if (this.phase < 2 && au.gpu.owned && au.gpu.on) {
+        for (const g of GPUS) if (this.isAutoItem('gpu', g.id) && this.canBuyGPU(g.id)) this.buyGPU(g.id);
+      }
     }
     if (this.phase < 2) {
-      // énergie : dès que la consommation dépasse (presque) la production
-      if (au.energy.owned && au.energy.on && this.energyUse() > s.energyCap * 0.98) this.autoBuyEnergy();
-      // hébergement : avant qu'un niveau ne bloque (emplacements GPU bientôt épuisés)
-      if (au.infra.owned && au.infra.on && this.freeSlots('gpu') < 4) this.autoBuyInfra();
+      // énergie : on achète les sources cochées dès que la conso dépasse la production
+      if (au.energy.owned && au.energy.on) {
+        for (const e of ENERGY) {
+          if (!this.isAutoItem('energy', e.id)) continue;
+          if (this.energyUse() <= s.energyCap * 0.98) break;
+          if ((!e.phase || this.phase >= e.phase) && this.dateUnlocked(e) && s.money >= this.energyCost(e)) this.buyEnergy(e.id);
+        }
+      }
+      // hébergement : on achète un niveau coché quand IL va devenir limitant
+      if (au.infra.owned && au.infra.on) {
+        for (const it of INFRA) {
+          if (this.isAutoItem('infra', it.id) && this.freeSlots(it.child) < 4 && this.canBuyInfra(it.id)) this.buyInfra(it.id);
+        }
+      }
     }
   }
 

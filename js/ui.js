@@ -183,6 +183,22 @@ export class UI {
     r.bulk10.classList.toggle('locked', !canBuy);
     r.bulk100.classList.toggle('locked', !canBuy);
   }
+  // bouton d'auto-achat ciblé sur CET élément précis (visible si l'automatisation est achetée)
+  addAutoToggle(r, family, id) {
+    const b = document.createElement('button');
+    b.className = 'auto-btn hidden';
+    b.textContent = '⟳ auto';
+    b.title = 'Auto-achat de cet élément précis';
+    b.addEventListener('click', ev => { ev.stopPropagation(); this.game.toggleAutoItem(family, id); });
+    r.el.querySelector('.item-header').appendChild(b);
+    r.autoBtn = b;
+  }
+  updateAutoToggle(r, family, id) {
+    if (!r.autoBtn) return;
+    const cap = this.game.state.auto[family] && this.game.state.auto[family].owned;
+    r.autoBtn.classList.toggle('hidden', !cap);
+    r.autoBtn.classList.toggle('on', this.game.isAutoItem(family, id));
+  }
 
   buildStaticRows() {
     // Automatisations (auto-clickers payants, activables/désactivables)
@@ -211,6 +227,7 @@ export class UI {
       r.desc.textContent = it.desc;
       r.el.addEventListener('click', () => { this.game.buyInfra(it.id); }); // grisé → no-op
       this.addBulk(r, () => this.game.buyInfra(it.id));
+      this.addAutoToggle(r, 'infra', it.id);
       // location (datacenter uniquement) : pas de capex, coût journalier
       if (it.rentDaily) {
         const rent = document.createElement('div');
@@ -273,6 +290,7 @@ export class UI {
         this.game.buyGPU(g.id);                   // non achetable → no-op (grisé)
       });
       this.addBulk(r, () => this.game.buyGPU(g.id));
+      this.addAutoToggle(r, 'gpu', g.id);
     });
     // Energy
     this.el.energyList.innerHTML = ''; this.rows.energy = {};
@@ -282,6 +300,7 @@ export class UI {
       r.desc.textContent = e.desc;
       r.el.addEventListener('click', () => { if (this.game.dateUnlocked(e)) this.game.buyEnergy(e.id); });
       this.addBulk(r, () => this.game.buyEnergy(e.id));
+      this.addAutoToggle(r, 'energy', e.id);
     });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
@@ -319,6 +338,7 @@ export class UI {
         (noParent ? ` <span class="badge badge-warn">place ${INFRA.find(x => x.id === it.needs).unit} requise</span>` : '');
       this.setAfford(r.el, g.canBuyInfra(it.id));
       this.updateBulk(r, count, g.canBuyInfra(it.id));
+      this.updateAutoToggle(r, 'infra', it.id);
       if (r.rentInfo) {
         const rented = s.rentedDC || 0;
         r.rentInfo.textContent = `loué ×${rented} · ${fmtMoney(g.dcRentDaily())}/j` + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
@@ -600,6 +620,7 @@ export class UI {
         + (noSlot ? ` <span class="badge badge-warn">aucun emplacement serveur</span>` : '');
       this.setAfford(r.el, g.canBuyGPU(gpu.id));
       this.updateBulk(r, owned, g.canBuyGPU(gpu.id));
+      this.updateAutoToggle(r, 'gpu', gpu.id);
     });
   }
   renderEnergy() {
@@ -626,6 +647,7 @@ export class UI {
       r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">rép ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`;
       this.setAfford(r.el, s.money >= cost);
       this.updateBulk(r, owned, s.money >= cost);
+      this.updateAutoToggle(r, 'energy', e.id);
     });
   }
   renderProjects() {

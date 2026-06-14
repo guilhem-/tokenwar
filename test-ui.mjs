@@ -54,6 +54,20 @@ step('automatisations : achat + toggle', () => {
   ui.render();
 });
 
+// auto-achat PAR élément (toggle sur une carte précise)
+step('auto-achat par élément (toggle sur une carte)', () => {
+  game.state.auto.gpu.owned = true; game.state.auto.gpu.on = true;
+  const r = ui.rows.gpu['consumer'];
+  ui.render();
+  if (r.autoBtn.classList.contains('hidden')) throw new Error('toggle auto absent alors que capacité achetée');
+  r.autoBtn.dispatchEvent(new window.Event('click'));
+  if (!game.isAutoItem('gpu', 'consumer')) throw new Error('auto élément non activé');
+  ui.render();
+  if (!r.autoBtn.classList.contains('on')) throw new Error('état actif non affiché');
+  // une autre carte non cochée ne doit pas être auto
+  if (game.isAutoItem('gpu', 'v100')) throw new Error('auto appliqué à toute la famille');
+});
+
 // boutons d'achat groupé ×10 / ×100
 step('boutons ×10 (≥20) et ×100 (≥200)', () => {
   game.state.money = 1e12;

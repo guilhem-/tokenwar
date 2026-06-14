@@ -1307,3 +1307,13 @@ a {
 }
 .bulk-btn:hover { background: var(--accent); color: #06131a; }
 .bulk-btn.locked { opacity: 0.4; pointer-events: none; }
+
+/* Toggle d'auto-achat par élément */
+.auto-btn {
+  margin-left: 0.4rem; font-size: 0.64rem; font-weight: 700; line-height: 1;
+  padding: 0.2rem 0.42rem; min-height: 30px;
+  background: transparent; color: var(--text-dim);
+  border: 1px solid var(--line-strong); border-radius: 6px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.auto-btn.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); box-shadow: 0 0 0 1px var(--accent-line); }

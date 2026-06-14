@@ -540,9 +540,9 @@ export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (coloca
 // ---------------------------------------------------------------------
 export const AUTOMATIONS = [
   { id:'click',  name:'Auto-inference',   cost:1000,  desc:'Lance une inference chaque seconde.' },
-  { id:'gpu',    name:'Auto-achat GPU',   cost:20000, desc:'Achete une carte par seconde si le budget le permet.' },
-  { id:'infra',  name:'Auto-hebergement', cost:10000, desc:'Construit l infrastructure manquante avant qu un niveau ne bloque.' },
-  { id:'energy', name:'Auto-energie',     cost:5000,  desc:'Achete une source des que la consommation depasse la production.' },
+  { id:'gpu',    name:'Auto-achat GPU',   cost:20000, desc:'Active l auto-achat par carte (sur les modeles coches). Une carte/seconde si budget.' },
+  { id:'infra',  name:'Auto-hebergement', cost:10000, desc:'Active l auto-achat par niveau (coche). Achete quand ce niveau va devenir limitant.' },
+  { id:'energy', name:'Auto-energie',     cost:5000,  desc:'Active l auto-achat par source (cochee), des que la conso depasse la production.' },
 ];
 
 export const START_YEAR = 2019;
