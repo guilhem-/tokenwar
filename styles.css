@@ -1244,3 +1244,38 @@ a {
   .modal { width: min(96vw, 560px); }
   .ending-stats { grid-template-columns: 1fr 1fr; }
 }
+
+/* =============================================================================
+   CHAÎNE D'HÉBERGEMENT · REVENTE · BOURSE · BOUTONS GRISÉS
+   ============================================================================= */
+/* Boutons non activables : grisés (pas de message d'erreur) */
+.btn.locked, .btn-buy.locked {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+  pointer-events: none;
+}
+/* Bouton de revente du matériel obsolète */
+.sell-btn {
+  margin-top: 0.45rem;
+  padding: 0.34rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--bad);
+  color: var(--bad);
+  border-radius: 7px;
+  cursor: pointer;
+  opacity: 1;
+  transition: background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.sell-btn:hover { background: rgba(255, 92, 108, 0.14); }
+.item.locked .sell-btn { opacity: 1; pointer-events: auto; filter: none; } /* la revente reste possible */
+
+/* Bourse */
+.stock-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+.stock-actions .btn { flex: 1 1 8rem; }
+.risk-row { align-items: center; }
+.risk-row .tabs { display: flex; gap: 0.3rem; flex: 1 1 auto; }
+.risk-row .tab { flex: 1 1 auto; min-height: 38px; }

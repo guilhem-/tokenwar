@@ -48,6 +48,7 @@
     <div class="topbar-controls">
       <button class="btn-ghost" id="btn-speed" title="Vitesse de simulation">⏩ x1</button>
       <button class="btn-ghost" id="btn-save" title="Sauvegarder">💾</button>
+      <button class="btn-ghost" id="btn-restart" title="Recommencer depuis le début">🔄</button>
       <button class="btn-ghost" id="btn-help" title="Aide">?</button>
     </div>
   </header>
@@ -124,6 +125,33 @@
         </div>
       </div>
 
+      <div class="panel" id="panel-stock">
+        <div class="panel-title">Bourse</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted">Portefeuille</span>
+            <span class="num" id="stock-value">$0</span>
+          </div>
+          <div class="meter-row">
+            <span class="text-muted">Plus/moins-value</span>
+            <span class="num" id="stock-pl">—</span>
+          </div>
+          <div class="control-row risk-row">
+            <label>Risque</label>
+            <div class="tabs" id="risk-tabs">
+              <button class="tab" data-risk="0">Prudent</button>
+              <button class="tab active" data-risk="1">Équilibré</button>
+              <button class="tab" data-risk="2">Agressif</button>
+            </div>
+          </div>
+          <div class="stock-actions">
+            <button class="btn btn-buy" id="btn-stock-dep10">Investir 10%</button>
+            <button class="btn btn-buy" id="btn-stock-depmax">Investir max</button>
+            <button class="btn btn-ghost" id="btn-stock-withdraw">Tout retirer</button>
+          </div>
+        </div>
+      </div>
+
       <!-- PHASE 2+ : allocation -->
       <div class="panel hidden" id="panel-alloc">
         <div class="panel-title">Allocation du compute</div>
@@ -135,9 +163,20 @@
     <!-- ---------- CENTER : INFRASTRUCTURE ---------- -->
     <section class="col col-center">
 
+      <div class="panel" id="panel-hosting">
+        <div class="panel-title">Hébergement</div>
+        <div class="panel-body">
+          <div class="item-list" id="infra-list"></div>
+        </div>
+      </div>
+
       <div class="panel" id="panel-compute">
         <div class="panel-title">Infrastructure de calcul</div>
         <div class="panel-body">
+          <div class="meter-row" id="gpu-cap-row">
+            <span class="text-muted">Emplacements GPU</span>
+            <span class="num" id="gpu-cap">0 / 0</span>
+          </div>
           <div class="item-list" id="gpu-list"></div>
         </div>
       </div>
@@ -225,6 +264,18 @@
       <div class="ending-body" id="ending-body"></div>
       <div class="ending-stats" id="ending-stats"></div>
       <button class="btn btn-primary" id="ending-restart">Réamorcer l'univers (New Game+)</button>
+    </div>
+  </div>
+
+  <!-- ============ RESTART CONFIRM ============ -->
+  <div class="modal-overlay hidden" id="restart-overlay">
+    <div class="modal urgent">
+      <div class="modal-title">Recommencer depuis le début ?</div>
+      <div class="modal-body">Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.</div>
+      <div class="modal-choices">
+        <button class="btn choice" id="restart-cancel">Annuler</button>
+        <button class="btn choice" id="restart-confirm">Tout effacer et recommencer</button>
+      </div>
     </div>
   </div>
 

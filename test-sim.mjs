@@ -1,6 +1,6 @@
 // Simulateur headless : joue automatiquement pour valider l'équilibrage et la robustesse.
 import { Game } from './js/game.js';
-import { GPUS, ENERGY, PROJECTS, MODELS } from './js/data.js';
+import { GPUS, ENERGY, PROJECTS, MODELS, INFRA } from './js/data.js';
 import { fmt } from './js/util.js';
 
 const stub = {
@@ -60,15 +60,29 @@ function bot() {
       if (!best || !g.buyEnergy(best.id)) break;
     }
   };
+  // chaîne d'hébergement : garder des emplacements GPU libres devant soi
+  const ensureHosting = () => {
+    let guard = 0;
+    while (guard++ < 800 && g.hostingActive() && g.freeSlots('gpu') < 16) {
+      let target = g.freeSlots('server') >= 1 ? 'server'
+        : g.freeSlots('rack') >= 1 ? 'rack'
+        : g.freeSlots('datacenter') >= 1 ? 'datacenter' : 'realestate';
+      const item = INFRA.find(x => x.id === target);
+      if (s.money - reserve < g.infraCost(item)) break;
+      if (!g.buyInfra(target)) break;
+    }
+  };
   let safety = 0;
   while (safety++ < 600) {
     buyEnergyHeadroom();
+    ensureHosting();
     if (g.energyThrottle() <= 0.9) break;
     let bought = false;
     for (let i = GPUS.length - 1; i >= 0; i--) {
       const gpu = GPUS[i];
       if (gpu.phase && g.phase < gpu.phase) continue;
       if (!g.dateUnlocked(gpu)) continue;          // respecter la date de sortie
+      if (g.hostingActive() && g.freeSlots('gpu') < 1) continue; // pas d'emplacement
       if (s.money - reserve >= g.gpuCost(gpu) * 2.5) { if (g.buyGPU(gpu.id)) bought = true; break; }
     }
     if (!bought) break;

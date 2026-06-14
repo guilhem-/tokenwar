@@ -41,6 +41,34 @@ step('buyEnergy grid', () => { game.buyEnergy('grid'); ui.render(); });
 step('buyMarketing', () => { game.buyMarketing(); ui.render(); });
 step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.dispatchEvent(new window.Event('input')); ui.render(); });
 
+// chaîne d'hébergement + GPU + revente
+step('buyInfra serveur', () => { game.state.money = 1e9; const before = game.capacityFor('gpu'); game.buyInfra('server'); ui.render(); if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée'); });
+step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
+step('sellGPU (revente)', () => { const n = game.state.gpuCounts['consumer'] || 0; if (n < 1) game.buyGPU('consumer'); ui.rows.gpu['consumer'].sell.dispatchEvent(new window.Event('click')); ui.render(); });
+// bourse
+step('bourse dépôt/retrait + risque', () => {
+  game.state.money = 1e6;
+  ui.el.btnStockDepMax.dispatchEvent(new window.Event('click'));
+  if (game.state.stock.invested <= 0) throw new Error('dépôt échoué');
+  for (let i = 0; i < 20; i++) game.tick(0.5);          // le portefeuille évolue
+  ui.el.riskTabs.querySelector('[data-risk="2"]').dispatchEvent(new window.Event('click'));
+  if (game.state.stock.risk !== 2) throw new Error('risque non appliqué');
+  ui.el.btnStockWithdraw.dispatchEvent(new window.Event('click'));
+  if (game.state.stock.invested !== 0) throw new Error('retrait échoué');
+  ui.render();
+});
+// énergie en kW affichée
+step('énergie affichée en kW/MW', () => { if (!/kW|MW/.test(ui.el.statEnergy.textContent)) throw new Error('format puissance absent'); });
+// redémarrage depuis le début
+step('redémarrage (restart)', () => {
+  game.state.lifetimeTokens = 5e6; game.state.modelTier = 4;
+  ui.el.btnRestart.dispatchEvent(new window.Event('click'));
+  if (ui.el.restartOverlay.classList.contains('hidden')) throw new Error('confirmation non affichée');
+  ui.el.restartConfirm.dispatchEvent(new window.Event('click'));
+  if (game.state.lifetimeTokens !== 0 || game.state.modelTier !== 0) throw new Error('partie non réinitialisée');
+  ui.render();
+});
+
 // événement → modale → choix
 step('showEvent + choisir option 0', () => {
   const ev = game.pickEvent() || { id:'t', title:'Test', body:'b', phase:1, choices:[{label:'A',desc:'d',apply:()=>{}},{label:'B',desc:'d',apply:()=>{}}] };

@@ -51,6 +51,27 @@ export function pct(x) {
   return Math.max(0, Math.min(100, x * 100));
 }
 
+// Puissance : kW quand faible, puis MW / GW / TW
+export function fmtPower(mw) {
+  if (mw == null || isNaN(mw)) return '0 kW';
+  if (mw < 1) {
+    const kw = mw * 1000;
+    return (kw < 10 ? kw.toFixed(2) : kw.toFixed(0)).replace('.', ',') + ' kW';
+  }
+  if (mw < 1000) return (mw < 10 ? mw.toFixed(1) : mw.toFixed(0)).replace('.', ',') + ' MW';
+  if (mw < 1e6) return (mw / 1e3).toFixed(1).replace('.', ',') + ' GW';
+  if (mw < 1e9) return (mw / 1e6).toFixed(1).replace('.', ',') + ' TW';
+  return fmt(mw / 1e6) + ' TW';
+}
+
+// Nombre entier avec TOUS les chiffres (groupés) tant qu'il reste raisonnable,
+// sinon repli sur la notation abrégée (au-delà du domaine de précision exact).
+export function fmtFull(n) {
+  if (n == null || isNaN(n)) return '0';
+  if (n < 1e15) return Math.floor(n).toLocaleString('fr-FR');
+  return fmt(n);
+}
+
 export function clamp(x, lo, hi) {
   return Math.max(lo, Math.min(hi, x));
 }

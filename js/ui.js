@@ -1,9 +1,9 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, UNIVERSE_MASS } from './data.js';
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, UNIVERSE_MASS } from './data.js';
 import { FUNDING } from './game.js';
-import { fmt, fmtMoney, fmtMass, fmtPrice, pct, clamp } from './util.js';
+import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
 
 const $ = id => document.getElementById(id);
 
@@ -39,7 +39,15 @@ export class UI {
       valuationValue: $('valuation-value'), btnFunding: $('btn-funding'),
       fundingLabel: $('funding-label'), fundingSub: $('funding-sub'), fundingList: $('funding-list'),
       panelAlloc: $('panel-alloc'), allocBody: $('alloc-body'),
+      panelHosting: $('panel-hosting'),
+      infraList: $('infra-list'),
+      gpuCap: $('gpu-cap'),
       gpuList: $('gpu-list'),
+      panelStock: $('panel-stock'),
+      stockValue: $('stock-value'), stockPl: $('stock-pl'), riskTabs: $('risk-tabs'),
+      btnStockDep10: $('btn-stock-dep10'), btnStockDepMax: $('btn-stock-depmax'), btnStockWithdraw: $('btn-stock-withdraw'),
+      btnRestart: $('btn-restart'),
+      restartOverlay: $('restart-overlay'), restartCancel: $('restart-cancel'), restartConfirm: $('restart-confirm'),
       energyLoadFill: $('energy-load-fill'), energyLoadValue: $('energy-load-value'), energyList: $('energy-list'),
       researchValue: $('research-value'), researchRate: $('research-rate'), dataValue: $('data-value'), trainList: $('train-list'),
       panelCosmos: $('panel-cosmos'), cosmosBody: $('cosmos-body'),
@@ -84,6 +92,39 @@ export class UI {
     this.el.helpClose.addEventListener('click', () => this.el.helpOverlay.classList.add('hidden'));
     this.el.endingRestart.addEventListener('click', () => { g.hardReset(); this.el.endingScreen.classList.add('hidden'); this.onPhaseChange(1); this.buildStaticRows(); this.render(true); });
     this.el.btnSpeed.addEventListener('click', () => this.cycleSpeed());
+    // bourse
+    this.el.btnStockDep10.addEventListener('click', () => g.stockDeposit(g.money * 0.10));
+    this.el.btnStockDepMax.addEventListener('click', () => g.stockDeposit(g.money));
+    this.el.btnStockWithdraw.addEventListener('click', () => g.stockWithdraw());
+    this.el.riskTabs.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => { g.setRisk(+tab.dataset.risk); this.syncRiskTabs(); });
+    });
+    // redémarrage depuis le début (avec confirmation)
+    this.el.btnRestart.addEventListener('click', () => this.el.restartOverlay.classList.remove('hidden'));
+    this.el.restartCancel.addEventListener('click', () => this.el.restartOverlay.classList.add('hidden'));
+    this.el.restartConfirm.addEventListener('click', () => {
+      this.el.restartOverlay.classList.add('hidden');
+      this.closeModal();
+      g.restartFresh();
+      this.fullRebuild();
+      this.toast('Nouvelle partie — an 2019', 'info');
+    });
+    this.syncRiskTabs();
+  }
+
+  syncRiskTabs() {
+    const r = this.game.state.stock.risk;
+    this.el.riskTabs.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', +t.dataset.risk === r));
+  }
+
+  // reconstruction complète de l'UI (après un redémarrage / New Game+)
+  fullRebuild() {
+    this.onPhaseChange(this.game.phase);
+    this.buildStaticRows();
+    this.buildTrainRow();
+    this.rebuildHeadlines();
+    this.el.endingScreen.classList.add('hidden');
+    this.render(true);
   }
 
   cycleSpeed() {
@@ -116,15 +157,30 @@ export class UI {
   }
 
   buildStaticRows() {
-    // GPUs
+    // Hébergement (chaîne immobilier > datacenter > baie > serveur)
+    this.el.infraList.innerHTML = ''; this.rows.infra = {};
+    INFRA.forEach(it => {
+      const r = this.makeRow(this.el.infraList, it.id, this.rows.infra);
+      r.name.textContent = it.name;
+      r.desc.textContent = it.desc;
+      r.el.addEventListener('click', () => { this.game.buyInfra(it.id); }); // grisé → no-op
+    });
+    // GPUs (avec bouton de revente)
     this.el.gpuList.innerHTML = ''; this.rows.gpu = {};
     GPUS.forEach(g => {
       const r = this.makeRow(this.el.gpuList, g.id, this.rows.gpu);
       r.name.textContent = g.name;
       r.desc.textContent = g.desc;
+      const sell = document.createElement('button');
+      sell.className = 'sell-btn hidden';
+      sell.textContent = 'Revendre';
+      sell.title = 'Revendre une carte (libère un emplacement)';
+      sell.addEventListener('click', ev => { ev.stopPropagation(); this.game.sellGPU(g.id); });
+      r.effect.parentElement.appendChild(sell);
+      r.sell = sell;
       r.el.addEventListener('click', () => {
-        if (!this.game.dateUnlocked(g)) return this.deny(r.el, `Pas encore disponible (sortie ${g.year})`);
-        if (!this.game.buyGPU(g.id)) this.deny(r.el, 'Trésorerie insuffisante');
+        if (!this.game.dateUnlocked(g)) return;   // verrouillé par date → silencieux (grisé/label)
+        this.game.buyGPU(g.id);                   // non achetable → no-op (grisé)
       });
     });
     // Energy
@@ -133,10 +189,7 @@ export class UI {
       const r = this.makeRow(this.el.energyList, e.id, this.rows.energy);
       r.name.textContent = e.name;
       r.desc.textContent = e.desc;
-      r.el.addEventListener('click', () => {
-        if (!this.game.dateUnlocked(e)) return this.deny(r.el, `Pas encore disponible (${e.year})`);
-        if (!this.game.buyEnergy(e.id)) this.deny(r.el, 'Trésorerie insuffisante');
-      });
+      r.el.addEventListener('click', () => { if (this.game.dateUnlocked(e)) this.game.buyEnergy(e.id); });
     });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
@@ -144,7 +197,7 @@ export class UI {
       const r = this.makeRow(this.el.projectList, p.id, this.rows.project);
       r.name.textContent = p.name;
       r.desc.textContent = p.desc;
-      r.el.addEventListener('click', () => { if (!this.game.buyProject(p.id)) this.deny(r.el, 'Conditions non remplies'); });
+      r.el.addEventListener('click', () => { this.game.buyProject(p.id); });
     });
     // Funding
     this.el.fundingList.innerHTML = ''; this.rows.funding = {};
@@ -152,8 +205,44 @@ export class UI {
       const r = this.makeRow(this.el.fundingList, f.id, this.rows.funding);
       r.name.textContent = f.name;
       r.desc.textContent = f.desc;
-      r.el.addEventListener('click', () => { if (!this.game.claimFunding(f.id)) this.deny(r.el, 'Pas encore atteignable'); });
+      r.el.addEventListener('click', () => { this.game.claimFunding(f.id); });
     });
+  }
+
+  renderInfra() {
+    const g = this.game, s = g.state;
+    const hosting = g.hostingActive();
+    this.el.panelHosting && this.el.panelHosting.classList.toggle('hidden', !hosting);
+    INFRA.forEach(it => {
+      const r = this.rows.infra[it.id];
+      const count = g.infraCount(it.id);
+      const cost = g.infraCost(it);
+      const childCap = count * it.capacity;
+      const childUsed = g.usedFor(it.child);
+      const noParent = it.needs && g.freeSlots(it.id) < 1;
+      r.cost.textContent = fmtMoney(cost);
+      r.effect.innerHTML = `<span class="badge">×${fmt(count)}</span> ` +
+        `<span class="text-muted">accueille ${fmt(childUsed)}/${fmt(childCap)} ${it.child === 'gpu' ? 'GPU' : (INFRA.find(x => x.id === it.child)?.unit || it.child)}</span>` +
+        (noParent ? ` <span class="badge badge-warn">place ${INFRA.find(x => x.id === it.needs).unit} requise</span>` : '');
+      this.setAfford(r.el, g.canBuyInfra(it.id));
+    });
+  }
+
+  renderStock() {
+    const g = this.game, s = g.state;
+    const st = s.stock;
+    this.el.stockValue.textContent = fmtMoney(st.invested);
+    if (st.basis > 0 || st.invested > 0) {
+      const pl = st.invested - st.basis;
+      const pct2 = st.basis > 0 ? (pl / st.basis * 100) : 0;
+      this.el.stockPl.textContent = (pl >= 0 ? '+' : '') + fmtMoney(pl) + ` (${pl >= 0 ? '+' : ''}${pct2.toFixed(0)}%)`;
+      this.el.stockPl.className = 'num ' + (pl >= 0 ? 'text-good' : 'text-bad');
+    } else {
+      this.el.stockPl.textContent = '—'; this.el.stockPl.className = 'num text-muted';
+    }
+    this.setAfford(this.el.btnStockDep10, s.money > 0);
+    this.setAfford(this.el.btnStockDepMax, s.money > 0);
+    this.el.btnStockWithdraw.classList.toggle('locked', st.invested <= 0);
   }
 
   buildTrainRow() {
@@ -225,14 +314,14 @@ export class UI {
   render(force) {
     const g = this.game, s = g.state;
     this.el.simDate.textContent = g.dateLabel();
-    // stats
-    this.el.statTokens.textContent = fmt(s.lifetimeTokens);
+    // stats — le compteur de tokens produits est affiché avec TOUS ses chiffres
+    this.el.statTokens.textContent = fmtFull(s.lifetimeTokens);
     this.el.statTokensRate.textContent = fmt(s.rates.tokens) + ' /s';
     this.el.statMoney.textContent = fmtMoney(s.money);
     this.el.statMoneyRate.textContent = fmtMoney(s.rates.money) + ' /s';
     this.el.statCompute.textContent = fmt(g.computeRaw());
     this.el.statComputeSub.textContent = fmt(g.gpuCount()) + ' unités';
-    this.el.statEnergy.textContent = fmt(s.energyCap) + ' MW';
+    this.el.statEnergy.textContent = fmtPower(s.energyCap);
     const use = g.energyUse();
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + '% utilisé';
 
@@ -269,8 +358,16 @@ export class UI {
 
     // énergie meter
     this.el.energyLoadFill.style.width = pct(use / (s.energyCap || 1)) + '%';
-    this.el.energyLoadValue.textContent = fmt(use) + ' / ' + fmt(s.energyCap) + ' MW';
+    this.el.energyLoadValue.textContent = fmtPower(use) + ' / ' + fmtPower(s.energyCap);
     if (g.energyThrottle() < 0.999) this.el.energyLoadFill.classList.add('over'); else this.el.energyLoadFill.classList.remove('over');
+
+    // emplacements GPU (chaîne d'hébergement)
+    if (g.hostingActive()) {
+      this.el.gpuCap.textContent = fmt(g.gpuCount()) + ' / ' + fmt(g.capacityFor('gpu'));
+      this.el.gpuCap.parentElement.classList.remove('hidden');
+    } else {
+      this.el.gpuCap.parentElement.classList.add('hidden');
+    }
 
     // R&D
     this.el.researchValue.textContent = fmt(s.research);
@@ -279,6 +376,8 @@ export class UI {
     this.renderTrain();
 
     // listes
+    this.renderInfra();
+    this.renderStock();
     this.renderGPUs();
     this.renderEnergy();
     this.renderProjects();
@@ -312,6 +411,7 @@ export class UI {
       const r = this.rows.gpu[gpu.id];
       if (gpu.phase && g.phase < gpu.phase) { r.el.classList.add('hidden'); return; }
       const owned = s.gpuCounts[gpu.id] || 0;
+      if (r.sell) r.sell.classList.toggle('hidden', owned < 1);
       const unlocked = g.dateUnlocked(gpu);
       if (!unlocked) {
         // pas encore sorti : on l'annonce s'il arrive bientôt (≤ 2 ans)
@@ -319,17 +419,20 @@ export class UI {
         r.el.classList.toggle('hidden', !soon);
         if (!soon) return;
         r.cost.innerHTML = `<span class="badge badge-warn">dispo ${gpu.year}</span>`;
-        r.effect.innerHTML = `<span class="text-muted">perf <b class="num">${fmt(gpu.perf)}</b> · sortie en ${gpu.year}</span>`;
+        r.effect.innerHTML = `<span class="text-muted">perf <b class="num">${fmt(gpu.perf)}</b> · ${fmtPower(gpu.energy)} · sortie en ${gpu.year}</span>`;
         r.el.classList.add('locked'); r.el.classList.remove('affordable');
         return;
       }
       const cost = g.gpuCost(gpu);
-      const show = this.reveal(g, i, GPUS, id => s.gpuCounts[id] || 0, cost, s.money) || gpu.year >= g.simYear() - 1;
+      const show = owned > 0 || this.reveal(g, i, GPUS, id => s.gpuCounts[id] || 0, cost, s.money) || gpu.year >= g.simYear() - 1;
       r.el.classList.toggle('hidden', !show);
       if (!show) return;
+      const noSlot = g.hostingActive() && g.freeSlots('gpu') < 1;
       r.cost.textContent = fmtMoney(cost);
-      r.effect.innerHTML = `<span>perf <b class="num">${fmt(gpu.perf)}</b></span> <span>énergie <b class="num">${fmt(gpu.energy)} MW</b></span> <span class="badge">×${fmt(owned)}</span>` + (gpu.scarce && g.getTimed('gpuPrice') > 1 ? ` <span class="badge badge-danger">pénurie</span>` : '');
-      this.setAfford(r.el, s.money >= cost);
+      r.effect.innerHTML = `<span>perf <b class="num">${fmt(gpu.perf)}</b></span> <span>énergie <b class="num">${fmtPower(gpu.energy)}</b></span> <span class="badge">×${fmt(Math.floor(owned))}</span>`
+        + (gpu.scarce && g.getTimed('gpuPrice') > 1 ? ` <span class="badge badge-danger">pénurie</span>` : '')
+        + (noSlot ? ` <span class="badge badge-warn">aucun emplacement serveur</span>` : '');
+      this.setAfford(r.el, g.canBuyGPU(gpu.id));
     });
   }
   renderEnergy() {
@@ -343,7 +446,7 @@ export class UI {
         r.el.classList.toggle('hidden', !soon);
         if (!soon) return;
         r.cost.innerHTML = `<span class="badge badge-warn">dispo ${e.year}</span>`;
-        r.effect.innerHTML = `<span class="text-muted">+<b class="num">${fmt(e.mw)}</b> MW · sortie en ${e.year}</span>`;
+        r.effect.innerHTML = `<span class="text-muted">+<b class="num">${fmtPower(e.mw)}</b> · sortie en ${e.year}</span>`;
         r.el.classList.add('locked'); r.el.classList.remove('affordable');
         return;
       }
@@ -353,7 +456,7 @@ export class UI {
       if (!show) return;
       r.cost.textContent = fmtMoney(cost);
       const owned = s.energyCounts[e.id] || 0;
-      r.effect.innerHTML = `<span>+<b class="num">${fmt(e.mw)}</b> MW</span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">rép ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`;
+      r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">rép ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`;
       this.setAfford(r.el, s.money >= cost);
     });
   }
@@ -565,6 +668,8 @@ export class UI {
     this.el.helpBody.innerHTML = `
       <p><b>But :</b> produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.</p>
       <p><b>Phase 1 — Startup :</b> cliquez pour générer des tokens, fixez le <b>prix</b> (bas = plus de volume, haut = plus de marge), faites du <b>marketing</b>, achetez des <b>GPU</b> et de l’<b>énergie</b> (plafond dur !), accumulez de la <b>recherche</b> pour les <b>projets</b>, et <b>entraînez</b> des modèles de plus en plus puissants. Levez des <b>fonds</b> aux paliers.</p>
+      <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b>. Construisez la chaîne avant d’acheter des cartes. Le matériel obsolète se <b>revend</b>.</p>
+      <p><b>Bourse :</b> placez votre trésorerie (risque réglable) pour la faire fructifier — ou la perdre.</p>
       <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
       <p><b>Calendrier :</b> une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie — un élément grisé « dispo 20XX » arrive bientôt.</p>
       <p><b>📰 La Une :</b> les titres de presse de l’époque montent (+1) ou descendent (−1) votre réputation. Surveillez-les.</p>

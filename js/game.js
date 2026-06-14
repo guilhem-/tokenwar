@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — MOTEUR DE JEU
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, EARTH_MASS, UNIVERSE_MASS,
+import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES } from './data.js';
 import { clamp } from './util.js';
 
@@ -43,6 +43,8 @@ export class Game {
     s.probes = 0;            // phase 3
     // infrastructure
     s.gpuCounts = {};        // id -> nombre
+    s.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 }; // chaîne d'hébergement (1 de chaque offert)
+    s.stock = { invested:0, basis:0, risk:1 };  // bourse : valeur de marché, total investi, niveau de risque
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
     s.modelTier = 0;
@@ -56,6 +58,7 @@ export class Game {
     s.eventsSeen = {};
     s.eventCooldown = {};   // id -> playSeconds du dernier déclenchement
     s.lastEventId = null;
+    s.lastEventAt = -100;    // pour garantir un délai minimal entre deux événements
     // presse / calendrier
     s.headlineTimer = 6;
     s.headlines = [];       // fil de titres {text, p, date}
@@ -212,13 +215,58 @@ export class Game {
     this.ui && this.ui.pingGenerate(amt);
   }
 
+  // ---- chaîne d'hébergement : immobilier > datacenter > baie > serveur > GPU ----
+  infraCount(id) { return this.state.infraCounts[id] || 0; }
+  infraCost(item) { return item.costBase * Math.pow(item.costMult, this.infraCount(item.id)) * this.state.mods.opex; }
+  capacityFor(childId) {                       // emplacements offerts par les parents
+    const parent = INFRA.find(x => x.child === childId);
+    if (!parent) return Infinity;              // l'immobilier n'a pas de parent
+    return this.infraCount(parent.id) * parent.capacity;
+  }
+  usedFor(childId) { return childId === 'gpu' ? this.gpuCount() : this.infraCount(childId); }
+  freeSlots(childId) { return this.capacityFor(childId) - this.usedFor(childId); }
+  hostingActive() { return this.phase < 2; }   // contrainte d'hébergement en phase 1 (l'ASI auto-construit ensuite)
+
+  buyInfra(id) {
+    const item = INFRA.find(x => x.id === id);
+    if (this.hostingActive() && this.freeSlots(id) < 1) return false; // pas de place chez le parent
+    const cost = this.infraCost(item);
+    if (this.state.money < cost) return false;
+    this.state.money -= cost;
+    this.state.infraCounts[id] = (this.state.infraCounts[id] || 0) + 1;
+    return true;
+  }
+  canBuyInfra(id) {
+    const item = INFRA.find(x => x.id === id);
+    if (this.hostingActive() && this.freeSlots(id) < 1) return false;
+    return this.state.money >= this.infraCost(item);
+  }
+
   buyGPU(id) {
     const g = GPUS.find(x => x.id === id);
     if (!this.dateUnlocked(g)) return false;
+    if (this.hostingActive() && this.freeSlots('gpu') < 1) return false; // aucun emplacement serveur libre
     const cost = this.gpuCost(g);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
     this.state.gpuCounts[id] = (this.state.gpuCounts[id] || 0) + 1;
+    return true;
+  }
+  canBuyGPU(id) {
+    const g = GPUS.find(x => x.id === id);
+    if (!this.dateUnlocked(g)) return false;
+    if (this.hostingActive() && this.freeSlots('gpu') < 1) return false;
+    return this.state.money >= this.gpuCost(g);
+  }
+  // revente du matériel obsolète : rembourse une fraction, libère un emplacement
+  sellGPU(id) {
+    const owned = this.state.gpuCounts[id] || 0;
+    if (owned < 1) return false;
+    const g = GPUS.find(x => x.id === id);
+    const refund = g.costBase * Math.pow(g.costMult, Math.max(0, Math.ceil(owned) - 1)) * 0.45;
+    this.state.gpuCounts[id] = owned - 1;
+    if (this.state.gpuCounts[id] < 1e-9) delete this.state.gpuCounts[id];
+    this.state.money += refund;
     return true;
   }
   buyEnergy(id) {
@@ -232,6 +280,34 @@ export class Game {
     if (e.rep) this.changeRep(e.rep);
     return true;
   }
+  // ---- BOURSE (placer de l'argent, façon Paperclips) ----
+  _randn() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  stockRiskCfg() { return [{ d: 0.00035, v: 0.008 }, { d: 0.00065, v: 0.025 }, { d: 0.0013, v: 0.06 }][this.state.stock.risk] || { d: 0.0005, v: 0.02 }; }
+  tickStock(dt) {
+    const st = this.state.stock;
+    if (st.invested <= 0) return;
+    const c = this.stockRiskCfg();
+    const change = c.d * dt + c.v * Math.sqrt(dt) * this._randn();
+    st.invested = Math.max(0, st.invested * (1 + change));
+    if (!isFinite(st.invested)) st.invested = 0;
+  }
+  stockDeposit(amount) {
+    amount = Math.min(amount, this.state.money);
+    if (amount <= 0) return false;
+    this.state.money -= amount;
+    this.state.stock.invested += amount;
+    this.state.stock.basis += amount;
+    return true;
+  }
+  stockWithdraw() {
+    const st = this.state.stock;
+    if (st.invested <= 0) return false;
+    this.state.money += st.invested;
+    st.invested = 0; st.basis = 0;
+    return true;
+  }
+  setRisk(r) { this.state.stock.risk = r; }
+
   buyMarketing() {
     const cost = this.marketingCost();
     if (this.state.money < cost) return false;
@@ -387,13 +463,17 @@ export class Game {
     if (this.state.ended || this._offline) return;
     this.state.eventTimer -= dt;
     if (this.state.eventTimer > 0) return;
-    if (this.ui && this.ui.modalOpen) { this.state.eventTimer = 5; return; }
+    if (this.ui && this.ui.modalOpen) { this.state.eventTimer = 3; return; }
+    // garantie d'au moins 15 s entre deux événements affichés
+    const since = this.state.playSeconds - this.state.lastEventAt;
+    if (since < 15) { this.state.eventTimer = 15 - since; return; }
     const ev = this.pickEvent();
-    this.state.eventTimer = 28 + Math.random() * 22; // ~30-50s entre événements
+    this.state.eventTimer = 18 + Math.random() * 16; // ~18-34s (plancher dur de 15s garanti ci-dessus)
     if (ev) {
       this.state.eventsSeen[ev.id] = (this.state.eventsSeen[ev.id] || 0) + 1;
-      this.state.eventCooldown[ev.id] = this.state.playSeconds; // pour le temps de recharge
+      this.state.eventCooldown[ev.id] = this.state.playSeconds; // temps de recharge par événement
       this.state.lastEventId = ev.id;
+      this.state.lastEventAt = this.state.playSeconds;
       this.ui && this.ui.showEvent(ev);
     }
   }
@@ -555,6 +635,7 @@ export class Game {
       }
     }
 
+    this.tickStock(dt);
     this.tickEvents(dt);
     this.tickHeadlines(dt);
     this.checkMilestones();
@@ -602,6 +683,12 @@ export class Game {
       this.state.headlineTimer = Math.max(this.state.headlineTimer || 0, 8);
       return true;
     } catch (e) { return false; }
+  }
+  // redémarrage propre depuis le tout début (sans bonus New Game+)
+  restartFresh() {
+    localStorage.removeItem(SAVE_KEY);
+    this.reset();
+    this.state.ngPlus = 0;
   }
   hardReset() {
     const ng = (this.state.ngPlus || 0) + 1;
