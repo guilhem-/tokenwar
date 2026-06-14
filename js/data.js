@@ -12,49 +12,49 @@
 // ---------------------------------------------------------------------
 // throughput = tokens/s par unité de compute ; quality = prix « juste » en $/Mtok
 export const MODELS = [
-  { id:'gpt2',   name:'GPT-2',        year:2019, era:'Scaling brut',
+  { id:'gpt2', minRnd:0,   name:'GPT-2',        year:2019, era:'Scaling brut',
     meta:'1,5 G params · ctx 1K',
     throughput:5e4,    quality:25,     // novelté : on peut facturer cher le peu qu'on produit
     cost:{ money:0, compute:0, data:0, research:0 },
     flavor:'« Trop dangereux pour être publié. » Vous générez vos premiers tokens à la main.' },
 
-  { id:'gpt3',   name:'GPT-3',        year:2020, era:'Scaling brut',
+  { id:'gpt3', minRnd:0,   name:'GPT-3',        year:2020, era:'Scaling brut',
     meta:'175 G params · ctx 4K',
     throughput:1.5e5,  quality:60,
     cost:{ money:300, compute:5, data:50, research:20 },
     flavor:'Few-shot learning. Naissance de l’économie du token : $60/Mtok.' },
 
-  { id:'gpt35',  name:'GPT-3.5 / ChatGPT', year:2022, era:'RLHF / Chat',
+  { id:'gpt35', minRnd:1,  name:'GPT-3.5 / ChatGPT', year:2022, era:'RLHF / Chat',
     meta:'~175 G · RLHF · ctx 4K',
     throughput:5e5,    quality:2,      // LLMflation : effondrement du prix unitaire, volume ↑↑
     cost:{ money:6e3, compute:35, data:500, research:150 },
     flavor:'RLHF + interface chat. 100M d’utilisateurs en deux mois. Le prix s’effondre à $2/Mtok mais le volume explose.' },
 
-  { id:'gpt4',   name:'GPT-4',        year:2023, era:'Multimodal',
+  { id:'gpt4', minRnd:3,   name:'GPT-4',        year:2023, era:'Multimodal',
     meta:'~1,8 T (MoE) · ctx 128K',
     throughput:1.5e6,  quality:30,
     cost:{ money:2e5, compute:300, data:5e3, research:1200 },
     flavor:'Vision + raisonnement. La frontière repousse, $30/Mtok pour le haut de gamme.' },
 
-  { id:'gpt4o',  name:'GPT-4o',       year:2024, era:'Multimodal',
+  { id:'gpt4o', minRnd:6,  name:'GPT-4o',       year:2024, era:'Multimodal',
     meta:'multimodal natif · ctx 128K',
     throughput:5e6,    quality:5,
     cost:{ money:8e6, compute:2500, data:4e4, research:1e4 },
     flavor:'Voix + vision temps réel. $5/Mtok. La famille « mini » casse encore les prix.' },
 
-  { id:'o1',     name:'o1 — raisonnement', year:2024, era:'Raisonnement',
+  { id:'o1', minRnd:10,     name:'o1 — raisonnement', year:2024, era:'Raisonnement',
     meta:'test-time compute · ctx 128K',
     throughput:1.5e7,  quality:15,
     cost:{ money:2e8, compute:2e4, data:3e5, research:8e4 },
     flavor:'« Reasoning tokens » : le modèle réfléchit avant de répondre. Plus de tokens par requête.' },
 
-  { id:'frontier', name:'Modèle frontière (GPT-5 / Claude 4 / Gemini 3)', year:2025, era:'Agents',
+  { id:'frontier', minRnd:20, name:'Modèle frontière (GPT-5 / Claude 4 / Gemini 3)', year:2025, era:'Agents',
     meta:'agents autonomes · ctx 1M',
     throughput:6e7,    quality:8, /*frontier*/
     cost:{ money:3e9, compute:2e4, data:2e6, research:6e5 },
     flavor:'Usage d’outils autonome, « computer use ». Les agents consomment des tokens par milliards.' },
 
-  { id:'asi',    name:'Super-intelligence (ASI)', year:2027, era:'Singularité',
+  { id:'asi', minRnd:40,    name:'Super-intelligence (ASI)', year:2027, era:'Singularité',
     meta:'auto-amélioration récursive',
     throughput:3e8,    quality:12,
     cost:{ money:2.5e10, compute:2e5, data:1.5e7, research:1e7 },
@@ -502,6 +502,23 @@ export const PHASES = [
 // masse approximative de la Terre / univers observable (kg) pour le score
 export const EARTH_MASS = 5.97e24;
 export const UNIVERSE_MASS = 1.5e53; // matière baryonique observable ~ ordre de grandeur
+
+// ---------------------------------------------------------------------
+//  RESSOURCES HUMAINES — chaque type debloque/ameliore une capacite.
+//  salary = cout journalier ($/jour). Embauches limitees par les RH (headcount).
+// ---------------------------------------------------------------------
+export const EMPLOYEES = [
+  { id:'hr',       name:'Responsable RH',     salary:250, desc:'Chaque RH permet d embaucher davantage (+5 postes).' },
+  { id:'rnd',      name:'Ingenieur R&D',      salary:400, desc:'Indispensable pour entrainer les modeles avances. Accelere la recherche.' },
+  { id:'marketer', name:'Marketeur',          salary:250, desc:'Releve le plafond du niveau de marketing (+1 par marketeur).' },
+  { id:'ops',      name:'Ingenieur SRE/Ops',  salary:350, desc:'Fiabilise le parc : +2% de debit compute par ingenieur (max +50%).' },
+  { id:'data',     name:'Data engineer',      salary:300, desc:'Multiplie la production de donnees d entrainement.' },
+];
+export const BASE_HEADCOUNT = 3;     // postes disponibles sans RH (le fondateur + amis)
+export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
+export const BASE_MARKETING = 10;     // niveau de marketing atteignable sans marketeur
+export const ELEC_PRICE_MWH = 80;    // prix de l electricite ($/MWh) -> charge journaliere
+export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (colocation)
 
 // ---------------------------------------------------------------------
 //  CALENDRIER DE SIMULATION

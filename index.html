@@ -75,8 +75,8 @@
             <div class="model-stats" id="model-stats"></div>
           </div>
           <div class="inventory-row">
-            <span class="text-muted">Stock invendu</span>
-            <span class="num" id="inv-tokens">0</span>
+            <span class="text-muted">Tokens perdus (invendus)</span>
+            <span class="num text-bad" id="inv-tokens">0 /s</span>
           </div>
         </div>
       </div>
@@ -149,6 +149,28 @@
             <button class="btn btn-buy" id="btn-stock-depmax">Investir max</button>
             <button class="btn btn-ghost" id="btn-stock-withdraw">Tout retirer</button>
           </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-team">
+        <div class="panel-title">Équipe</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted">Effectif</span>
+            <span class="num" id="headcount">0 / 3</span>
+          </div>
+          <div class="item-list" id="team-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-charges">
+        <div class="panel-title">Charges journalières</div>
+        <div class="panel-body">
+          <div class="meter-row"><span class="text-muted">⚡ Électricité</span><span class="num" id="charge-elec">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">👥 Salaires</span><span class="num" id="charge-salary">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🏢 Loyers</span><span class="num" id="charge-rent">$0 /j</span></div>
+          <div class="meter-row charge-total"><span class="text-muted">Total</span><span class="num" id="charge-total">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">soit</span><span class="num" id="charge-sec">$0 /s</span></div>
         </div>
       </div>
 

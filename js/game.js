@@ -2,7 +2,8 @@
 //  TokenWar — MOTEUR DE JEU
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
-         START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES } from './data.js';
+         START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
+         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -45,7 +46,10 @@ export class Game {
     s.gpuCounts = {};        // id -> nombre
     s.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 }; // chaîne d'hébergement (1 de chaque offert)
     s.rentedDC = 0;          // datacenters loués (coût journalier)
+    s.rentedSpace = 0;       // espaces de colocation loués (coût journalier)
+    s.employees = { hr:0, rnd:0, marketer:0, ops:0, data:0 }; // ressources humaines
     s.stock = { invested:0, basis:0, risk:1 };  // bourse : valeur de marché, total investi, niveau de risque
+    s.stockUnlocked = false; // la bourse se débloque à 100 000$ de trésorerie
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
     s.modelTier = 0;
@@ -123,10 +127,12 @@ export class Game {
   // ---- calendrier de simulation ----
   simYear() { return START_YEAR + this.state.playSeconds / SECONDS_PER_YEAR; }
   simYearInt() { return Math.floor(this.simYear()); }
-  dateLabel() {
+  dateLabel() {                                  // date au jour près (jour mois année)
     const y = this.simYear();
-    const month = Math.min(11, Math.floor((y - Math.floor(y)) * 12));
-    return `${MONTHS_FR[month]} ${Math.floor(y)}`;
+    const year = Math.floor(y);
+    const dayOfYear = Math.min(364, Math.floor((y - year) * 365));
+    const d = new Date(2001, 0, 1 + dayOfYear);  // 2001 : année non bissextile, pour jour↔mois
+    return `${d.getDate()} ${MONTHS_FR[d.getMonth()]} ${year}`;
   }
   // un élément (GPU/énergie/modèle) est-il sorti à la date courante ?
   dateUnlocked(item) { return !item.year || this.simYear() >= item.year; }
@@ -161,6 +167,7 @@ export class Game {
   computeEffective() {
     return this.computeRaw()
       * this.state.mods.computeMult
+      * this.opsMult()                 // fiabilité apportée par les ingénieurs Ops
       * this.state.intelligence
       * this.energyThrottle()
       * this.getTimed('prodPenalty');
@@ -189,7 +196,7 @@ export class Game {
       * this.getTimed('demand');
   }
   marketingCost() {
-    return 80 * Math.pow(2.1, this.state.marketingLvl - 1);
+    return 50 * Math.pow(1.6, this.state.marketingLvl - 1);
   }
   valuation() {
     const s = this.state;
@@ -228,7 +235,9 @@ export class Game {
     if (!parent) return Infinity;               // l'immobilier n'a pas de parent
     let count = this.infraCount(parent.id);
     if (parent.id === 'datacenter') count += this.state.rentedDC || 0; // les datacenters loués comptent aussi
-    return count * parent.capacity;
+    let cap = count * parent.capacity;
+    if (childId === 'rack') cap += (this.state.rentedSpace || 0) * COLO.racks; // colocation = baies louées
+    return cap;
   }
   usedFor(childId) { return childId === 'gpu' ? this.gpuCount() : this.infraCount(childId); }
   freeSlots(childId) { return this.capacityFor(childId) - this.usedFor(childId); }
@@ -260,9 +269,53 @@ export class Game {
     return true;
   }
   dcRentDaily() { return INFRA.find(x => x.id === 'datacenter').rentDaily; }
-  dcRentPerSec() {                               // loyer total par seconde de jeu
-    const secPerDay = SECONDS_PER_YEAR / 365;
-    return (this.state.rentedDC || 0) * this.dcRentDaily() / secPerDay;
+  // ---- location : datacenter entier + espace de colocation ----
+  rentSpace() { this.state.rentedSpace = (this.state.rentedSpace || 0) + 1; return true; }
+  unrentSpace() {
+    const r = this.state.rentedSpace || 0;
+    if (r <= 0) return false;
+    const newCap = this.capacityFor('rack') - COLO.racks;
+    if (this.usedFor('rack') > newCap) return false;
+    this.state.rentedSpace = r - 1;
+    return true;
+  }
+  rentDailyTotal() {                             // loyers ($/jour) : datacenters + colocation
+    return (this.state.rentedDC || 0) * this.dcRentDaily() + (this.state.rentedSpace || 0) * COLO.daily;
+  }
+
+  // ---- RESSOURCES HUMAINES ----
+  empCount(id) { return this.state.employees[id] || 0; }
+  headcount() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id), 0); }
+  headcountCap() { return BASE_HEADCOUNT + this.empCount('hr') * HR_HEADCOUNT; }
+  // les RH créent leur propre capacité → toujours embauchables ; les autres sont plafonnés
+  canHire(id) { return id === 'hr' || this.headcount() < this.headcountCap(); }
+  hire(id) { if (!this.canHire(id)) return false; this.state.employees[id] = this.empCount(id) + 1; return true; }
+  fire(id) {
+    if (this.empCount(id) < 1) return false;
+    if (id === 'hr') {                           // ne pas licencier un RH si cela dépasserait la capacité
+      const cap = BASE_HEADCOUNT + (this.empCount('hr') - 1) * HR_HEADCOUNT;
+      if (this.headcount() - 1 > cap) return false;
+    }
+    this.state.employees[id]--;
+    return true;
+  }
+  marketingCap() { return BASE_MARKETING + this.empCount('marketer'); }   // plafond marketing
+  rndMult() { return 1 + this.empCount('rnd') * 0.5; }                     // recherche ×(1+0.5/ing.)
+  dataEmpMult() { return 1 + this.empCount('data') * 0.6; }
+  opsMult() { return 1 + Math.min(0.5, this.empCount('ops') * 0.02); }     // +2%/ops, plafonné +50%
+  salaryPerDay() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id) * e.salary, 0); }
+
+  // ---- CHARGES JOURNALIÈRES (électricité + salaires + loyers) ----
+  elecDaily() { return this.energyUse() * 24 * ELEC_PRICE_MWH; }          // MW × 24h × $/MWh
+  dailyCharges() {
+    return { elec: this.elecDaily(), salary: this.salaryPerDay(), rent: this.rentDailyTotal() };
+  }
+  chargesPerSec() {
+    const c = this.dailyCharges();
+    return (c.elec + c.salary + c.rent) / (SECONDS_PER_YEAR / 365);
+  }
+  dcRentPerSec() {                               // (conservé) loyer datacenters seul, par seconde
+    return (this.state.rentedDC || 0) * this.dcRentDaily() / (SECONDS_PER_YEAR / 365);
   }
 
   buyGPU(id) {
@@ -286,7 +339,7 @@ export class Game {
     const owned = this.state.gpuCounts[id] || 0;
     if (owned < 1) return false;
     const g = GPUS.find(x => x.id === id);
-    const refund = g.costBase * Math.pow(g.costMult, Math.max(0, Math.ceil(owned) - 1)) * 0.45;
+    const refund = g.cost * 0.45;              // prix fixe → remboursement = 45% du prix réel
     this.state.gpuCounts[id] = owned - 1;
     if (this.state.gpuCounts[id] < 1e-9) delete this.state.gpuCounts[id];
     this.state.money += refund;
@@ -315,6 +368,7 @@ export class Game {
     if (!isFinite(st.invested)) st.invested = 0;
   }
   stockDeposit(amount) {
+    if (!this.state.stockUnlocked) return false;   // bourse débloquée à 100 000$
     amount = Math.min(amount, this.state.money);
     if (amount <= 0) return false;
     this.state.money -= amount;
@@ -331,8 +385,10 @@ export class Game {
   }
   setRisk(r) { this.state.stock.risk = r; }
 
+  canBuyMarketing() { return this.state.marketingLvl < this.marketingCap() && this.state.money >= this.marketingCost(); }
   buyMarketing() {
     const cost = this.marketingCost();
+    if (this.state.marketingLvl >= this.marketingCap()) return false; // limité par les marketeurs
     if (this.state.money < cost) return false;
     this.state.money -= cost;
     this.state.marketingLvl++;
@@ -346,6 +402,7 @@ export class Game {
     if (!this.canTrainNext()) return false;
     const m = this.nextModel();
     if (!this.dateUnlocked(m)) return false;
+    if (this.empCount('rnd') < (m.minRnd || 0)) return false; // limité par les ingénieurs R&D
     const c = m.cost;
     if (this.state.money < (c.money || 0)) return false;
     if (this.computeRaw() < (c.compute || 0)) return false; // besoin de capacité
@@ -574,8 +631,10 @@ export class Game {
     s.playSeconds += dt;
     // purge des modificateurs temporaires expirés
     if (s.timed.length) s.timed = s.timed.filter(m => m.until > s.playSeconds);
-    // loyer des datacenters loués (coût journalier)
-    if (s.rentedDC > 0) s.money = Math.max(0, s.money - this.dcRentPerSec() * dt);
+    // charges journalières : électricité + salaires + loyers
+    const chargesSec = this.chargesPerSec();
+    if (chargesSec > 0) s.money = Math.max(0, s.money - chargesSec * dt);
+    s.rates.charges = chargesSec;
 
     const compute = this.computeEffective();
     const a = s.alloc;
@@ -591,22 +650,25 @@ export class Game {
 
     // --- recherche & données (découplées du débit pour rester équilibrées) ---
     const researchCompute = compute * a.research;
-    const researchPerSec = researchCompute * 2.5 * s.mods.researchMult * this.getTimed('research');
+    const researchPerSec = researchCompute * 2.5 * s.mods.researchMult * this.rndMult() * this.getTimed('research');
     s.research += researchPerSec * dt;
     s.rates.research = researchPerSec;
-    const dataPerSec = (researchCompute * 5 + tokensPerSec * 1e-7) * s.mods.dataMult;
+    const dataPerSec = (researchCompute * 5 + tokensPerSec * 1e-7) * s.mods.dataMult * this.dataEmpMult();
     s.data += dataPerSec * dt;
 
-    // --- ventes (phase 1 surtout, mais continue partout) ---
+    // --- ventes : on vend jusqu'à la demande ; les tokens NON VENDUS sont PERDUS ---
     const demand = this.demandPerSec();
     const sell = Math.min(s.unsold, demand * dt);
     const pricePerToken = (this.priceMtok() / 1e6) * s.mods.costPerToken;
     const revenue = sell * pricePerToken;
     s.money += revenue;
-    s.unsold -= sell;
+    const lost = s.unsold - sell;            // production non absorbée par la demande = perdue
+    s.unsold = 0;                            // aucun stock : non vendu = non récupérable
     s.rates.money = (dt > 0 ? revenue / dt : 0);
+    s.rates.lost = (dt > 0 ? lost / dt : 0);
     s.lastDemand = demand;
     s.lastSell = (dt > 0 ? sell / dt : 0);
+    if (!s.stockUnlocked && s.money >= 1e5) s.stockUnlocked = true; // déblocage bourse à 100 000$
 
     // --- phase 2+ : auto-amélioration, conversion de matière, auto-scaling ---
     if (this.phase >= 2) {

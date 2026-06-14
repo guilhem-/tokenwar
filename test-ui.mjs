@@ -45,6 +45,29 @@ step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.disp
 step('buyInfra serveur', () => { game.state.money = 1e9; const before = game.capacityFor('gpu'); game.buyInfra('server'); ui.render(); if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée'); });
 step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
 step('sellGPU (revente)', () => { const n = game.state.gpuCounts['consumer'] || 0; if (n < 1) game.buyGPU('consumer'); ui.rows.gpu['consumer'].sell.dispatchEvent(new window.Event('click')); ui.render(); });
+// équipe (RH) + charges + dépendances
+step('embauche/licenciement + charges affichées', () => {
+  ui.rows.team['hr'].hireBtn.dispatchEvent(new window.Event('click'));
+  ui.rows.team['rnd'].hireBtn.dispatchEvent(new window.Event('click'));
+  ui.render();
+  if (game.headcount() < 2) throw new Error('embauche échouée');
+  if (!/\/j/.test(ui.el.chargeTotal.textContent)) throw new Error('charges journalières non affichées');
+  if (!/\d/.test(ui.el.headcount.textContent)) throw new Error('effectif non affiché');
+  ui.rows.team['rnd'].fireBtn.dispatchEvent(new window.Event('click'));
+  if (game.empCount('rnd') !== 0) throw new Error('licenciement échoué');
+});
+// tokens invendus perdus affichés
+step('affichage tokens perdus + date au jour', () => {
+  if (!/\/s/.test(ui.el.invTokens.textContent)) throw new Error('débit de tokens perdus non affiché');
+  if (!/\d+ \w+ \d{4}/.test(ui.el.simDate.textContent)) throw new Error('date jour-mois-année absente');
+});
+// colocation (espace en datacenter)
+step('colocation : espace loué (+baies)', () => {
+  const before = game.capacityFor('rack');
+  ui.rows.infra['rack'].el.querySelector('[data-act=rent]').dispatchEvent(new window.Event('click'));
+  if (game.capacityFor('rack') <= before) throw new Error('colocation sans effet');
+  ui.render();
+});
 // location de datacenter
 step('location datacenter (coût journalier)', () => {
   const before = game.capacityFor('rack');
@@ -56,7 +79,7 @@ step('location datacenter (coût journalier)', () => {
 });
 // bourse
 step('bourse dépôt/retrait + risque', () => {
-  game.state.money = 1e6;
+  game.state.money = 1e6; game.state.stockUnlocked = true; // débloquée à 100k$
   ui.el.btnStockDepMax.dispatchEvent(new window.Event('click'));
   if (game.state.stock.invested <= 0) throw new Error('dépôt échoué');
   for (let i = 0; i < 20; i++) game.tick(0.5);          // le portefeuille évolue

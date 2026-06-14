@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, UNIVERSE_MASS } from './data.js';
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, UNIVERSE_MASS } from './data.js';
 import { FUNDING } from './game.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
 
@@ -41,6 +41,9 @@ export class UI {
       panelAlloc: $('panel-alloc'), allocBody: $('alloc-body'),
       panelHosting: $('panel-hosting'),
       infraList: $('infra-list'),
+      panelTeam: $('panel-team'), headcount: $('headcount'), teamList: $('team-list'),
+      panelCharges: $('panel-charges'), chargeElec: $('charge-elec'), chargeSalary: $('charge-salary'),
+      chargeRent: $('charge-rent'), chargeTotal: $('charge-total'), chargeSec: $('charge-sec'),
       gpuCap: $('gpu-cap'),
       gpuList: $('gpu-list'),
       panelStock: $('panel-stock'),
@@ -177,6 +180,35 @@ export class UI {
         r.rentInfo = rent.querySelector('.rent-info');
         r.unrentBtn = rent.querySelector('[data-act=unrent]');
       }
+      // colocation : louer de l'espace (baies) directement, au coût journalier
+      if (it.id === 'rack') {
+        const colo = document.createElement('div');
+        colo.className = 'rent-row';
+        colo.innerHTML = `<span class="rent-info text-muted num"></span>` +
+          `<button class="btn-ghost rent-btn" data-act="rent">Louer espace (+${COLO.racks} baies)</button>` +
+          `<button class="btn-ghost rent-btn" data-act="unrent">Résilier</button>`;
+        colo.querySelector('[data-act=rent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.rentSpace(); });
+        colo.querySelector('[data-act=unrent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.unrentSpace(); });
+        r.el.appendChild(colo);
+        r.coloInfo = colo.querySelector('.rent-info');
+        r.coloUnrent = colo.querySelector('[data-act=unrent]');
+      }
+    });
+    // Équipe (employés : embauche/licenciement)
+    this.el.teamList.innerHTML = ''; this.rows.team = {};
+    EMPLOYEES.forEach(e => {
+      const r = this.makeRow(this.el.teamList, e.id, this.rows.team);
+      r.name.textContent = e.name;
+      r.desc.textContent = e.desc;
+      const actions = document.createElement('div');
+      actions.className = 'rent-row';
+      actions.innerHTML = `<button class="btn-ghost rent-btn" data-act="hire">Embaucher</button>` +
+        `<button class="btn-ghost rent-btn" data-act="fire">Licencier</button>`;
+      actions.querySelector('[data-act=hire]').addEventListener('click', ev => { ev.stopPropagation(); this.game.hire(e.id); });
+      actions.querySelector('[data-act=fire]').addEventListener('click', ev => { ev.stopPropagation(); this.game.fire(e.id); });
+      r.hireBtn = actions.querySelector('[data-act=hire]');
+      r.fireBtn = actions.querySelector('[data-act=fire]');
+      r.el.appendChild(actions);
     });
     // GPUs (avec bouton de revente)
     this.el.gpuList.innerHTML = ''; this.rows.gpu = {};
@@ -244,10 +276,41 @@ export class UI {
         r.rentInfo.textContent = `loué ×${rented} · ${fmtMoney(g.dcRentDaily())}/j` + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
         r.unrentBtn.classList.toggle('locked', rented <= 0);
       }
+      if (r.coloInfo) {
+        const rs = s.rentedSpace || 0;
+        r.coloInfo.textContent = `espace loué ×${rs} · ${fmtMoney(COLO.daily)}/j`;
+        r.coloUnrent.classList.toggle('locked', rs <= 0);
+      }
     });
   }
 
+  renderTeam() {
+    const g = this.game;
+    this.el.headcount.textContent = fmt(g.headcount()) + ' / ' + fmt(g.headcountCap());
+    EMPLOYEES.forEach(e => {
+      const r = this.rows.team[e.id];
+      const count = g.empCount(e.id);
+      r.cost.innerHTML = `<span class="badge">×${count}</span>`;
+      const canHire = g.canHire(e.id);
+      r.effect.innerHTML = `<span class="text-muted">${fmtMoney(e.salary)}/j par poste</span>` +
+        (!canHire ? ` <span class="badge badge-warn">limité par RH</span>` : '');
+      r.hireBtn.classList.toggle('locked', !canHire);
+      r.fireBtn.classList.toggle('locked', count < 1);
+    });
+  }
+
+  renderCharges() {
+    const g = this.game;
+    const c = g.dailyCharges();
+    this.el.chargeElec.textContent = fmtMoney(c.elec) + ' /j';
+    this.el.chargeSalary.textContent = fmtMoney(c.salary) + ' /j';
+    this.el.chargeRent.textContent = fmtMoney(c.rent) + ' /j';
+    this.el.chargeTotal.textContent = fmtMoney(c.elec + c.salary + c.rent) + ' /j';
+    this.el.chargeSec.textContent = '−' + fmtMoney(g.chargesPerSec()) + ' /s';
+  }
+
   renderStock() {
+    this.el.panelStock.classList.toggle('hidden', !this.game.state.stockUnlocked); // débloquée à 100k$
     const g = this.game, s = g.state;
     const st = s.stock;
     this.el.stockValue.textContent = fmtMoney(st.invested);
@@ -346,7 +409,8 @@ export class UI {
 
     // bouton générer
     this.el.btnGenerateSub.textContent = '+' + fmt(Math.max(1, g.model.throughput) * (g.phase >= 2 ? s.intelligence : 1)) + ' tokens';
-    this.el.invTokens.textContent = fmt(s.unsold);
+    // les tokens non vendus sont perdus : on affiche le débit perdu plutôt qu'un stock
+    this.el.invTokens.textContent = fmt(s.rates.lost || 0) + ' /s';
 
     // modèle
     const m = g.model;
@@ -366,8 +430,9 @@ export class UI {
     this.el.demandValue.textContent = fmt(demand) + ' /s';
     this.el.salesValue.textContent = fmt(sell) + ' /s';
     this.el.marketingLvl.textContent = s.marketingLvl;
-    this.el.marketingCost.textContent = fmtMoney(g.marketingCost());
-    this.setAfford(this.el.btnMarketing, s.money >= g.marketingCost());
+    const mktCapped = s.marketingLvl >= g.marketingCap();
+    this.el.marketingCost.textContent = mktCapped ? 'limité par marketeurs' : fmtMoney(g.marketingCost());
+    this.setAfford(this.el.btnMarketing, g.canBuyMarketing());
     this.el.repFill.style.width = s.reputation + '%';
     this.el.repValue.textContent = Math.round(s.reputation);
 
@@ -396,6 +461,8 @@ export class UI {
 
     // listes
     this.renderInfra();
+    this.renderTeam();
+    this.renderCharges();
     this.renderStock();
     this.renderGPUs();
     this.renderEnergy();
@@ -559,9 +626,12 @@ export class UI {
     need('compute', c.compute, g.computeRaw());
     need('données', c.data, s.data);
     need('recherche', c.research, s.research);
+    if (m.minRnd) parts.push(`<span class="${g.empCount('rnd') >= m.minRnd ? 'text-good' : 'text-bad'}">ing. R&D ${m.minRnd}</span>`);
     this.trainRow.cost.innerHTML = `<span class="badge">${m.era}</span>`;
-    this.trainRow.effect.innerHTML = parts.join(' · ') + ` · <span>débit ×${(m.throughput / g.model.throughput).toFixed(1)}</span>`;
-    const ok = (c.money || 0) <= s.money && (c.compute || 0) <= g.computeRaw() && (c.data || 0) <= s.data && (c.research || 0) <= s.research;
+    const rndOk = g.empCount('rnd') >= (m.minRnd || 0);
+    this.trainRow.effect.innerHTML = parts.join(' · ') + ` · <span>débit ×${(m.throughput / g.model.throughput).toFixed(1)}</span>`
+      + (!rndOk ? ` <span class="badge badge-warn">limité par ing. R&D</span>` : '');
+    const ok = (c.money || 0) <= s.money && (c.compute || 0) <= g.computeRaw() && (c.data || 0) <= s.data && (c.research || 0) <= s.research && rndOk;
     this.setAfford(this.trainRow.el, ok);
   }
 

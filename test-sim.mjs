@@ -26,6 +26,19 @@ function bot() {
   // 1) lever tous les fonds disponibles
   for (const f of FUNDING) if (!s.fundingDone[f.id] && s.lifetimeTokens >= f.need) g.claimFunding(f.id);
 
+  // 1b) RESSOURCES HUMAINES : embaucher selon les besoins (R&D pour le prochain modèle,
+  //     marketeurs pour absorber la production via la demande, RH pour la capacité)
+  const prod0 = Math.max(g.computeEffective() * s.alloc.serve * g.model.throughput, 1);
+  const repF0 = 0.4 + s.reputation / 80;
+  const desiredL = Math.min(60, Math.max(3, Math.ceil(1 + Math.log(prod0 / (6e4 * s.mods.demandMult * repF0)) / Math.log(1.9))));
+  const wantRnd = g.canTrainNext() ? (g.nextModel().minRnd || 0) : g.empCount('rnd');
+  const baseMkt = g.marketingCap() - g.empCount('marketer'); // = BASE_MARKETING
+  const wantMkt = Math.max(0, desiredL - baseMkt);
+  const desiredHead = 1 + wantRnd + wantMkt + 4;
+  while (g.headcountCap() < desiredHead && g.canHire('hr')) g.hire('hr');
+  while (g.empCount('rnd') < wantRnd && g.canHire('rnd')) g.hire('rnd');
+  while (g.empCount('marketer') < wantMkt && g.canHire('marketer')) g.hire('marketer');
+
   // 2) PRIORITÉ : entraîner tous les modèles abordables (garde le capital pour ça)
   let trained = true;
   while (trained) trained = g.trainNext();
@@ -42,8 +55,8 @@ function bot() {
   price = Math.max(0.02, Math.min(300, price));
   s.priceSlider = 100 * Math.log(price / 0.02) / Math.log(15000);
 
-  // 5) marketing modéré
-  while (s.money >= g.marketingCost() * 8 && s.marketingLvl < 45) g.buyMarketing();
+  // 5) marketing : monter jusqu'au plafond (limité par les marketeurs)
+  while (g.canBuyMarketing() && s.money >= g.marketingCost() * 8) g.buyMarketing();
 
   // 6) infra : on garde une RÉSERVE pour le prochain modèle, puis on investit le reste
   const reserve = g.canTrainNext() ? (g.nextModel().cost.money || 0) * 1.1 : 0;
@@ -74,6 +87,9 @@ function bot() {
   };
   let safety = 0;
   while (safety++ < 600) {
+    // ne pas sur-produire : au-delà de ~2× la demande, les tokens seraient perdus
+    const prodNow = g.computeEffective() * s.alloc.serve * g.model.throughput;
+    if (g.phase < 2 && prodNow > g.demandPerSec() * 2) break;
     buyEnergyHeadroom();
     ensureHosting();
     if (g.energyThrottle() <= 0.9) break;

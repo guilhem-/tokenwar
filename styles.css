@@ -1289,3 +1289,9 @@ a {
 .rent-info { flex: 1 1 100%; font-size: 0.74rem; }
 .rent-btn { font-size: 0.72rem; padding: 0.3rem 0.6rem; min-height: 34px; }
 .rent-btn.locked { opacity: 0.4; pointer-events: none; }
+
+/* Charges journalières + équipe */
+.charge-total { border-top: 1px solid var(--line); margin-top: 0.3rem; padding-top: 0.4rem; font-weight: 600; }
+#charge-total, #charge-sec { color: var(--bad); }
+.rent-row .rent-btn[data-act="hire"] { border-color: var(--good); color: var(--good); }
+.rent-row .rent-btn[data-act="hire"]:hover { background: rgba(74,222,128,0.12); }
