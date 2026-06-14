@@ -161,6 +161,28 @@ export class UI {
     return store[key];
   }
 
+  // boutons d'achat groupé : ×10 dès 20 exemplaires, ×100 dès 200
+  addBulk(r, buyFn) {
+    const bulk = document.createElement('span');
+    bulk.className = 'bulk';
+    bulk.innerHTML = `<button class="bulk-btn hidden" data-n="10">×10</button><button class="bulk-btn hidden" data-n="100">×100</button>`;
+    bulk.querySelectorAll('.bulk-btn').forEach(b => {
+      const n = +b.dataset.n;
+      b.addEventListener('click', ev => { ev.stopPropagation(); for (let i = 0; i < n; i++) if (!buyFn()) break; });
+    });
+    r.el.querySelector('.item-header').appendChild(bulk);
+    r.bulk10 = bulk.querySelector('[data-n="10"]');
+    r.bulk100 = bulk.querySelector('[data-n="100"]');
+  }
+  updateBulk(r, owned, canBuy) {
+    if (!r.bulk10) return;
+    owned = Math.floor(owned);
+    r.bulk10.classList.toggle('hidden', owned < 20);
+    r.bulk100.classList.toggle('hidden', owned < 200);
+    r.bulk10.classList.toggle('locked', !canBuy);
+    r.bulk100.classList.toggle('locked', !canBuy);
+  }
+
   buildStaticRows() {
     // Hébergement (chaîne immobilier > datacenter > baie > serveur)
     this.el.infraList.innerHTML = ''; this.rows.infra = {};
@@ -169,6 +191,7 @@ export class UI {
       r.name.textContent = it.name;
       r.desc.textContent = it.desc;
       r.el.addEventListener('click', () => { this.game.buyInfra(it.id); }); // grisé → no-op
+      this.addBulk(r, () => this.game.buyInfra(it.id));
       // location (datacenter uniquement) : pas de capex, coût journalier
       if (it.rentDaily) {
         const rent = document.createElement('div');
@@ -211,6 +234,7 @@ export class UI {
       r.hireBtn = actions.querySelector('[data-act=hire]');
       r.fireBtn = actions.querySelector('[data-act=fire]');
       r.el.appendChild(actions);
+      this.addBulk(r, () => this.game.hire(e.id));
     });
     // GPUs (avec bouton de revente)
     this.el.gpuList.innerHTML = ''; this.rows.gpu = {};
@@ -229,6 +253,7 @@ export class UI {
         if (!this.game.dateUnlocked(g)) return;   // verrouillé par date → silencieux (grisé/label)
         this.game.buyGPU(g.id);                   // non achetable → no-op (grisé)
       });
+      this.addBulk(r, () => this.game.buyGPU(g.id));
     });
     // Energy
     this.el.energyList.innerHTML = ''; this.rows.energy = {};
@@ -237,6 +262,7 @@ export class UI {
       r.name.textContent = e.name;
       r.desc.textContent = e.desc;
       r.el.addEventListener('click', () => { if (this.game.dateUnlocked(e)) this.game.buyEnergy(e.id); });
+      this.addBulk(r, () => this.game.buyEnergy(e.id));
     });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
@@ -273,6 +299,7 @@ export class UI {
         `<span class="text-muted">· ${fmtPower(it.energy)}/u</span>` +
         (noParent ? ` <span class="badge badge-warn">place ${INFRA.find(x => x.id === it.needs).unit} requise</span>` : '');
       this.setAfford(r.el, g.canBuyInfra(it.id));
+      this.updateBulk(r, count, g.canBuyInfra(it.id));
       if (r.rentInfo) {
         const rented = s.rentedDC || 0;
         r.rentInfo.textContent = `loué ×${rented} · ${fmtMoney(g.dcRentDaily())}/j` + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
@@ -298,6 +325,7 @@ export class UI {
         (!canHire ? ` <span class="badge badge-warn">limité par RH</span>` : '');
       r.hireBtn.classList.toggle('locked', !canHire);
       r.fireBtn.classList.toggle('locked', count < 1);
+      this.updateBulk(r, count, canHire);
     });
   }
 
@@ -529,6 +557,7 @@ export class UI {
         + (gpu.scarce && g.getTimed('gpuPrice') > 1 ? ` <span class="badge badge-danger">pénurie</span>` : '')
         + (noSlot ? ` <span class="badge badge-warn">aucun emplacement serveur</span>` : '');
       this.setAfford(r.el, g.canBuyGPU(gpu.id));
+      this.updateBulk(r, owned, g.canBuyGPU(gpu.id));
     });
   }
   renderEnergy() {
@@ -554,6 +583,7 @@ export class UI {
       const owned = s.energyCounts[e.id] || 0;
       r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">rép ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`;
       this.setAfford(r.el, s.money >= cost);
+      this.updateBulk(r, owned, s.money >= cost);
     });
   }
   renderProjects() {

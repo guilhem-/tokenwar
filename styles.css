@@ -1295,3 +1295,15 @@ a {
 #charge-total, #charge-sec { color: var(--bad); }
 .rent-row .rent-btn[data-act="hire"] { border-color: var(--good); color: var(--good); }
 .rent-row .rent-btn[data-act="hire"]:hover { background: rgba(74,222,128,0.12); }
+
+/* Achat groupé ×10 / ×100 */
+.bulk { display: inline-flex; gap: 0.25rem; margin-left: 0.4rem; }
+.bulk-btn {
+  font-size: 0.66rem; font-weight: 700; line-height: 1;
+  padding: 0.2rem 0.4rem; min-height: 30px;
+  background: var(--accent-soft); color: var(--accent);
+  border: 1px solid var(--accent-line); border-radius: 6px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.bulk-btn:hover { background: var(--accent); color: #06131a; }
+.bulk-btn.locked { opacity: 0.4; pointer-events: none; }

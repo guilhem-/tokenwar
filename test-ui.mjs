@@ -41,6 +41,23 @@ step('buyEnergy grid', () => { game.buyEnergy('grid'); ui.render(); });
 step('buyMarketing', () => { game.buyMarketing(); ui.render(); });
 step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.dispatchEvent(new window.Event('input')); ui.render(); });
 
+// boutons d'achat groupé ×10 / ×100
+step('boutons ×10 (≥20) et ×100 (≥200)', () => {
+  game.state.money = 1e12;
+  game.state.infraCounts.realestate = 50; game.state.infraCounts.datacenter = 50; game.state.infraCounts.rack = 50; game.state.infraCounts.server = 500;
+  const r = ui.rows.gpu['consumer'];
+  game.state.gpuCounts['consumer'] = 25;          // ≥20 → ×10 visible, ×100 caché
+  ui.render();
+  if (r.bulk10.classList.contains('hidden')) throw new Error('×10 caché alors que ≥20');
+  if (!r.bulk100.classList.contains('hidden')) throw new Error('×100 visible alors que <200');
+  const before = game.state.gpuCounts['consumer'];
+  r.bulk10.dispatchEvent(new window.Event('click'));
+  if (game.state.gpuCounts['consumer'] !== before + 10) throw new Error('×10 n a pas acheté 10');
+  game.state.gpuCounts['consumer'] = 250;         // ≥200 → ×100 visible
+  ui.render();
+  if (r.bulk100.classList.contains('hidden')) throw new Error('×100 caché alors que ≥200');
+});
+
 // chaîne d'hébergement + GPU + revente
 step('buyInfra serveur', () => { game.state.money = 1e9; const before = game.capacityFor('gpu'); game.buyInfra('server'); ui.render(); if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée'); });
 step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
