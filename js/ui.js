@@ -35,6 +35,7 @@ export class UI {
       demandFill: $('demand-fill'), demandValue: $('demand-value'), salesValue: $('sales-value'),
       btnMarketing: $('btn-marketing'), marketingLvl: $('marketing-lvl'), marketingCost: $('marketing-cost'),
       repFill: $('rep-fill'), repValue: $('rep-value'),
+      panelFunding: $('panel-funding'),
       valuationValue: $('valuation-value'), btnFunding: $('btn-funding'),
       fundingLabel: $('funding-label'), fundingSub: $('funding-sub'), fundingList: $('funding-list'),
       panelAlloc: $('panel-alloc'), allocBody: $('alloc-body'),
@@ -362,14 +363,9 @@ export class UI {
       const r = this.rows.project[p.id];
       const done = s.projectsDone[p.id];
       const avail = p.req(g);
-      if (!avail && !done) { r.el.classList.add('hidden'); return; }
+      // projet acquis (épuisé) ou non encore disponible → on le retire de la liste
+      if (done || !avail) { r.el.classList.add('hidden'); return; }
       r.el.classList.remove('hidden');
-      if (done) {
-        r.el.classList.add('owned'); r.el.classList.remove('locked', 'affordable');
-        r.cost.textContent = '✓';
-        r.effect.innerHTML = `<span class="badge badge-new">acquis</span>`;
-        return;
-      }
       const c = p.cost;
       const parts = [];
       const need = (label, val, have) => { if (val) parts.push(`<span class="${have >= val ? 'text-good' : 'text-bad'}">${label} ${fmt(val)}</span>`); };
@@ -388,13 +384,15 @@ export class UI {
   }
   renderFunding() {
     const g = this.game, s = g.state;
+    // toutes les levées bouclées → on retire entièrement le panneau Financement
+    this.el.panelFunding.classList.toggle('hidden', FUNDING.every(f => s.fundingDone[f.id]));
     let nextRound = null;
     FUNDING.forEach(f => {
       const r = this.rows.funding[f.id];
       const done = s.fundingDone[f.id];
       const yearOk = g.simYear() >= (f.year || 0);
       const ready = !done && s.lifetimeTokens >= f.need && yearOk;
-      if (done) { r.el.classList.add('owned'); r.el.classList.remove('affordable', 'locked'); r.cost.textContent = '✓'; r.effect.textContent = 'bouclée'; return; }
+      if (done) { r.el.classList.add('hidden'); return; } // levée bouclée → retirée
       r.cost.innerHTML = !yearOk ? `<span class="badge badge-warn">dispo ${f.year}</span>` : `<span class="num">${fmt(f.need)} tok</span>`;
       r.effect.innerHTML = `+${fmtMoney(f.cash)} · ${f.desc}`;
       this.setAfford(r.el, ready);
@@ -418,15 +416,11 @@ export class UI {
   renderTrain() {
     const g = this.game, s = g.state;
     if (!g.canTrainNext()) {
-      this.trainRow.name.textContent = 'Modèle maximal atteint';
-      this.trainRow.cost.textContent = '✓';
-      this.trainRow.desc.textContent = g.model.flavor;
-      this.trainRow.effect.textContent = '';
-      this.trainRow.el.classList.add('owned');
+      this.trainRow.el.classList.add('hidden'); // plus rien à entraîner → retiré
       return;
     }
+    this.trainRow.el.classList.remove('hidden', 'owned');
     const m = g.nextModel(), c = m.cost;
-    this.trainRow.el.classList.remove('owned');
     if (!g.dateUnlocked(m)) {
       this.trainRow.name.textContent = 'Prochain modèle : ' + m.name;
       this.trainRow.desc.textContent = m.flavor;

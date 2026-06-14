@@ -384,7 +384,7 @@ export class Game {
   //  ÉVÉNEMENTS
   // =================================================================
   tickEvents(dt) {
-    if (this.state.ended) return;
+    if (this.state.ended || this._offline) return;
     this.state.eventTimer -= dt;
     if (this.state.eventTimer > 0) return;
     if (this.ui && this.ui.modalOpen) { this.state.eventTimer = 5; return; }
@@ -429,7 +429,7 @@ export class Game {
   // =================================================================
   tickHeadlines(dt) {
     const s = this.state;
-    if (s.ended) return;
+    if (s.ended || this._offline) return;
     s._freshModel = s.playSeconds < s._freshModelUntil;
     s.headlineTimer -= dt;
     if (s.headlineTimer > 0) return;
@@ -590,11 +590,16 @@ export class Game {
       if (!this.state.rates) this.state.rates = { tokens:0, money:0, research:0, matter:0 };
       const offline = Math.min((Date.now() - (data.savedAt || Date.now())) / 1000, 8 * 3600);
       if (offline > 5 && !data.ended) {
-        // simulation hors-ligne rapide à 50%
+        // simulation hors-ligne rapide à 50% — sans déclencher d'événements ni de titres
+        this._offline = true;
         let t = offline * 0.5, step = Math.min(t, 60);
         while (t > 0) { this.tick(Math.min(step, t)); t -= step; }
+        this._offline = false;
         this.log(`Progression hors-ligne : ${Math.round(offline / 60)} min simulées (50%).`, 'info');
       }
+      // grâce : aucune boîte de dialogue (événement) pendant les 25 premières secondes
+      this.state.eventTimer = Math.max(this.state.eventTimer || 0, 25);
+      this.state.headlineTimer = Math.max(this.state.headlineTimer || 0, 8);
       return true;
     } catch (e) { return false; }
   }
