@@ -121,6 +121,12 @@ step('enterPhase 2 + alloc UI', () => {
   ui.render();
 });
 step('ticks phase 2', () => { game.state.alloc={serve:0.3,research:0.1,improve:0.2,harvest:0.4}; for(let i=0;i<40;i++){ game.tick(0.25); if(i%10===0) ui.render(); } });
+step('phase 2 : marqueurs argent masqués', () => {
+  ui.render();
+  if (!ui.el.moneyStat.classList.contains('hidden')) throw new Error('stat argent encore visible en phase 2');
+  if (!ui.el.panelMarket.classList.contains('hidden')) throw new Error('panneau marché encore visible en phase 2');
+  if (!ui.el.panelCharges.classList.contains('hidden')) throw new Error('panneau charges encore visible en phase 2');
+});
 step('slider alloc', () => { const k=Object.keys(ui.allocInputs)[0]; ui.allocInputs[k].input.value=60; ui.allocInputs[k].input.dispatchEvent(new window.Event('input')); ui.render(); });
 
 // passage phase 3 + cosmos

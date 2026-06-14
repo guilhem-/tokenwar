@@ -306,7 +306,18 @@ export class Game {
   salaryPerDay() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id) * e.salary, 0); }
 
   // ---- CHARGES JOURNALIÈRES (électricité + salaires + loyers) ----
-  elecDaily() { return this.energyUse() * 24 * ELEC_PRICE_MWH; }          // MW × 24h × $/MWh
+  // L'électricité dépend du MIX : on sert la demande avec les sources les moins chères
+  // d'abord (solaire/fusion/Dyson quasi gratuits, réseau/gaz onéreux).
+  elecDaily() {
+    let need = this.energyUse();
+    if (need <= 0) return 0;
+    const caps = ENERGY.map(e => ({ mw: (this.state.energyCounts[e.id] || 0) * e.mw, cost: (e.costMWh != null ? e.costMWh : ELEC_PRICE_MWH) }));
+    caps.push({ mw: 0.5, cost: 120 });            // raccordement réseau de base (offert)
+    caps.sort((a, b) => a.cost - b.cost);
+    let cost = 0, rem = need;
+    for (const c of caps) { if (rem <= 0) break; const u = Math.min(c.mw, rem); cost += u * 24 * c.cost; rem -= u; }
+    return cost;
+  }
   dailyCharges() {
     return { elec: this.elecDaily(), salary: this.salaryPerDay(), rent: this.rentDailyTotal() };
   }
@@ -563,6 +574,8 @@ export class Game {
       if (e.phase !== this.phase) return false;
       if (e.minTier && this.state.modelTier < e.minTier) return false;
       if (e.minUniverse && this.state.universeConsumed < e.minUniverse) return false;
+      if (e.minEarth && this.state.earthConsumed < e.minEarth) return false;
+      if (e.cond && !e.cond(this)) return false;
       if (e.once && this.state.eventsSeen[e.id]) return false;
       // cohérence avec la date (fenêtre from/to en années)
       if (e.from != null && this.simYear() < e.from) return false;
@@ -735,6 +748,14 @@ export class Game {
     if (!s._m2 && s.lifetimeTokens >= 1e9) { s._m2 = true; this.log('1 milliard de tokens. Les agents prennent le relais.', 'good'); }
     if (!s._m3 && s.earthConsumed >= 0.5 && this.phase === 2) { s._m3 = true; this.log('La moitié de la croûte terrestre est devenue du calcul.', 'good'); }
     if (!s._m4 && s.universeConsumed >= 0.5 && this.phase === 3) { s._m4 = true; this.log('La moitié de l’univers observable a été convertie.', 'good'); }
+    // à 85% de la Terre, on rappelle la promesse du sanctuaire (si elle a été faite)
+    if (!s._sanctuaryAsked && s.flags.sanctuary && this.phase === 2 && s.earthConsumed >= 0.85 && !s.ended) {
+      if (!this.ui || !this.ui.modalOpen) {
+        s._sanctuaryAsked = true;
+        const ev = EVENTS.find(e => e.id === 'biosphere_final');
+        if (ev) { s.eventsSeen[ev.id] = (s.eventsSeen[ev.id] || 0) + 1; this.ui && this.ui.showEvent(ev); }
+      }
+    }
   }
 
   // =================================================================

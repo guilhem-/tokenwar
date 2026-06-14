@@ -39,6 +39,8 @@ export class UI {
       valuationValue: $('valuation-value'), btnFunding: $('btn-funding'),
       fundingLabel: $('funding-label'), fundingSub: $('funding-sub'), fundingList: $('funding-list'),
       panelAlloc: $('panel-alloc'), allocBody: $('alloc-body'),
+      moneyStat: $('stat-money') ? $('stat-money').closest('.stat') : null,
+      panelMarket: $('panel-market'),
       panelHosting: $('panel-hosting'),
       infraList: $('infra-list'),
       panelTeam: $('panel-team'), headcount: $('headcount'), teamList: $('team-list'),
@@ -476,6 +478,14 @@ export class UI {
       this.refreshAllocLabels();
     }
     if (g.phase >= 3) this.renderCosmos();
+
+    // phase 2+ : l'argent ne compte plus — tout se monnaie en tokens. On masque les marqueurs $.
+    const moneyHidden = g.phase >= 2;
+    if (this.el.moneyStat) this.el.moneyStat.classList.toggle('hidden', moneyHidden);
+    this.el.panelMarket.classList.toggle('hidden', moneyHidden);
+    this.el.panelCharges.classList.toggle('hidden', moneyHidden);
+    this.el.panelTeam.classList.toggle('hidden', moneyHidden);
+    if (moneyHidden) { this.el.panelFunding.classList.add('hidden'); this.el.panelStock.classList.add('hidden'); }
   }
 
   setAfford(el, ok) {

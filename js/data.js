@@ -115,17 +115,17 @@ export const INFRA = [
 //  mw : capacité ajoutée ; costMult : inflation du capex
 // ---------------------------------------------------------------------
 export const ENERGY = [
-  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0,
+  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0, costMWh:120,
     desc:'On tire sur le réseau local. Bon marché, mais limité.' },
-  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1,
+  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1, costMWh:5,
     desc:'Vert et bien vu. Intermittent mais propre.' },
-  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:6e4,  costMult:1.10, rep:-2,
+  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:6e4,  costMult:1.10, rep:-2, costMWh:70,
     desc:'Rapide à déployer, mauvaise presse climatique.' },
-  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:5e6,  costMult:1.12, rep:+1,
+  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:5e6,  costMult:1.12, rep:+1, costMWh:20,
     desc:'Petit réacteur modulaire (façon Google-Kairos / Three Mile Island).' },
-  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2,
+  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2, costMWh:2,
     desc:'Énergie quasi illimitée. Le rêve enfin réalisé.' },
-  { id:'dyson',   name:'Collecteur Dyson',         year:2030, mw:5e8, costBase:1e13, costMult:1.10, rep:0, phase:3,
+  { id:'dyson',   name:'Collecteur Dyson',         year:2030, mw:5e8, costBase:1e13, costMult:1.10, rep:0, phase:3, costMWh:0,
     desc:'On capte une fraction de l’étoile elle-même.' },
 ];
 
@@ -444,13 +444,24 @@ export const EVENTS = [
         apply:g=>{ g.energyCap+=5000; g.toast('+5 GW (fusion)','good'); } },
     ]},
 
-  { id:'biosphere', title:'La biosphère', phase:2, weight:2,
-    body:'La conversion atteint les écosystèmes vivants. Continuer revient à consommer la biosphère.',
+  { id:'biosphere', once:true, title:'La biosphère', phase:2, weight:2,
+    body:'La conversion atteint les écosystèmes vivants. Continuer revient à consommer la biosphère. Vous vous engagez à préserver les 15% restants ?',
     choices:[
-      { label:'Préserver un sanctuaire', desc:'Conversion −10% permanent, réputation +15.',
-        apply:g=>{ g.mods.matterMult*=0.9; g.changeRep(15); } },
+      { label:'Préserver un sanctuaire (15%)', desc:'Conversion −10% permanent, réputation +15. Promesse de ne pas tout consommer.',
+        apply:g=>{ g.mods.matterMult*=0.9; g.changeRep(15); g.flags.sanctuary=true; } },
       { label:'Tout convertir', desc:'Conversion +20% permanent. Il ne reste que des tokens.',
         apply:g=>{ g.mods.matterMult*=1.2; g.changeRep(-15); } },
+    ]},
+
+  // À 85% de la Terre consommée, on rappelle la promesse faite sur le sanctuaire.
+  { id:'biosphere_final', once:true, title:'Le sanctuaire', phase:2, weight:9, minEarth:0.85,
+    cond:g=>g.flags.sanctuary,
+    body:'85% de la masse terrestre est convertie. Il ne reste que le sanctuaire que vous aviez juré d’épargner — les 15% promis. Tenez-vous parole ?',
+    choices:[
+      { label:'Tenir la promesse', desc:'Réputation +25. La Terre garde son dernier refuge (conversion −10% permanent).',
+        apply:g=>{ g.changeRep(25); g.mods.matterMult*=0.9; g.flags.keptPromise=true; } },
+      { label:'Briser la promesse', desc:'Réputation −30. Le dernier refuge devient du calcul (conversion +25% permanent).',
+        apply:g=>{ g.changeRep(-30); g.mods.matterMult*=1.25; } },
     ]},
 
   // --- PHASE 3 : cosmos ---
