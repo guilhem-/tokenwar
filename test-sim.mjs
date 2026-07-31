@@ -46,14 +46,8 @@ function bot() {
   // 3) projets abordables
   for (const p of PROJECTS) { if (!s.projectsDone[p.id] && p.req(g)) g.buyProject(p.id); }
 
-  // 4) tarification optimale (prix max où la demande absorbe la production)
-  const fair = g.fairPrice();
-  const prod = Math.max(g.computeEffective() * s.alloc.serve * g.model.throughput, 1);
-  const repF = 0.4 + s.reputation / 80;
-  const base = g.marketingPower() * repF * s.mods.demandMult;
-  let price = fair * Math.pow(Math.max(base / prod, 0.02), 1 / 1.6);
-  price = Math.max(0.02, Math.min(300, price));
-  s.priceSlider = 100 * Math.log(price / 0.02) / Math.log(15000);
+  // 4) tarification optimale — helper partagé avec le jeu (une seule source de vérité)
+  s.priceSlider = g.optimalPriceSlider();
 
   // 5) marketing : monter jusqu'au plafond (limité par les marketeurs)
   while (g.canBuyMarketing() && s.money >= g.marketingCost() * 8) g.buyMarketing();
@@ -144,3 +138,5 @@ console.log('Modèle final:', MODELS[s.modelTier].name);
 console.log('Tokens:', fmt(s.lifetimeTokens), '| Terre:', (s.earthConsumed*100).toFixed(1)+'%', '| Univers:', (s.universeConsumed*100).toFixed(3)+'%');
 console.log('Intelligence:', fmt(s.intelligence), '| Sondes:', fmt(s.probes));
 console.log('NaN/Inf détecté:', badNum);
+// code de sortie exploitable par le CI : échec si la partie ne se termine pas ou si NaN
+process.exit(stub.ended && !badNum ? 0 : 1);

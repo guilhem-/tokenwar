@@ -10,7 +10,6 @@
 //  quality    : prix « juste » que le marché accepte ($/Mtok), pilote la demande
 //  era        : palier technologique
 // ---------------------------------------------------------------------
-// throughput = tokens/s par unité de compute ; quality = prix « juste » en $/Mtok
 export const MODELS = [
   { id:'gpt2', minRnd:0,   name:'GPT-2',        year:2019, era:'Scaling brut',
     meta:'1,5 G params · ctx 1K',
@@ -64,31 +63,58 @@ export const MODELS = [
 
 // ---------------------------------------------------------------------
 //  GPU / matériel — auto-producteurs de compute
-//  perf      : unités de compute par exemplaire (× throughput modèle = tokens/s)
-//  energy    : MW consommés par exemplaire (très petit en phase 1)
-//  costBase  : prix initial ; coût = costBase * costMult^(possédés)
+//  perf   : unités de compute par exemplaire (× throughput modèle = tokens/s)
+//  energy : MW consommés par exemplaire (affiché en kW quand faible)
+//  cost   : prix FIXE réaliste (non exponentiel) ; year : année de sortie
+//  Une carte sortie depuis plus de 5 ans est retirée du marché.
 // ---------------------------------------------------------------------
 export const GPUS = [
-  { id:'consumer', name:'GPU grand public (RTX)', year:2016, perf:1,    energy:0.0003, cost:300,     desc:'Carte gamer detournee (~GTX 1060). ~$300 en 2016.' },
-  { id:'v100',     name:'NVIDIA V100',            year:2017, perf:6,    energy:0.0003, cost:9000,    desc:'~$9 000 a sa sortie. Le cheval de bataille de 2017.' },
-  { id:'a100',     name:'NVIDIA A100 80GB',       year:2020, perf:25,   energy:0.0004, cost:12000,   desc:'~$10-15k. La carte de l ere GPT-3/4.' },
-  { id:'h100',     name:'NVIDIA H100',            year:2023, perf:120,  energy:0.0007, cost:30000,   scarce:true, desc:'~$25-40k, en penurie (~1 an de delai).' },
-  { id:'rtx5090',  name:'NVIDIA RTX 5090',        year:2025, perf:10,   energy:0.00065,cost:2000,    desc:'MSRP $1999, 575W. Bon rapport perf/prix.' },
-  { id:'rtx6000pro',name:'NVIDIA RTX 6000 Pro (Blackwell)', year:2025, perf:22, energy:0.0006, cost:8500, desc:'96 GB GDDR7, 600W. ~$8 500.' },
-  { id:'b200',     name:'NVIDIA B200 (Blackwell)',year:2025, perf:300,  energy:0.001,  cost:40000,   desc:'~$30-50k. Generation datacenter Blackwell.' },
-  { id:'gb200',    name:'Rack GB200 NVL72',       year:2026, perf:25000,energy:0.12,   cost:3000000, desc:'Rack complet 72 B200, ~$3 M, ~120 kW.' },
-  { id:'rubin',    name:'NVIDIA Rubin R100',      year:2027, perf:6e4,  energy:0.15,   cost:3500000, desc:'Generation Rubin : HBM4, interconnexion optique.' },
-  { id:'tpu',      name:'TPU v7 Ironwood (pod)',  year:2027, perf:6e5,  energy:2.5,    cost:5000000, phase:2, desc:'Pod d inference Google, hors penurie NVIDIA.' },
-  { id:'feynman',  name:'NVIDIA Feynman F200',    year:2029, perf:1.8e5,energy:0.18,   cost:5000000, desc:'Architecture Feynman. Mixte analogique/numerique.' },
-  { id:'wafer',    name:'Cluster wafer-scale',    year:2028, perf:2e7,  energy:60,     cost:2500000, phase:2, desc:'Galette de silicium entiere (facon Cerebras).' },
-  { id:'vera',     name:'Coeur photonique Vera',  year:2032, perf:7e5,  energy:0.3,    cost:4000000, desc:'Calcul par la lumiere : la chaleur n est plus l ennemi.' },
-  { id:'aurora',   name:'Maillage Aurora 3D',     year:2037, perf:4e6,  energy:0.6,    cost:6000000, desc:'Empilement 3D massif, refroidissement immersif.' },
-  { id:'helios',   name:'Substrat neuromorphique Helios', year:2043, perf:3e7, energy:0.4, cost:8000000, desc:'Imite le cerveau : beaucoup de calcul, peu d energie.' },
-  { id:'cryo',     name:'Matrice supraconductrice Cryo', year:2050, perf:3e8, energy:0.2, cost:12000000, desc:'Supraconductivite ambiante : la dissipation s effondre.' },
-  { id:'lumen',    name:'Lattice photonique Lumen', year:2060, perf:3e9, energy:0.8, cost:20000000, desc:'Reseau optique coherent a l echelle d un batiment.' },
-  { id:'quanta',   name:'Coprocesseur quantique-hybride Quanta', year:2072, perf:3e10, energy:1.5, cost:40000000, desc:'Qubits topologiques epaulant le calcul classique.' },
-  { id:'planck',   name:'Processeur limite de Planck', year:2085, perf:3e11, energy:3, cost:80000000, desc:'On grave a la frontiere physique de l information.' },
-  { id:'vacuum',   name:'Coeur a energie du vide Vacuum', year:2098, perf:3e12, energy:0.1, cost:150000000, desc:'Puise dans l energie du point zero.' },
+  { id:'consumer', name:'GPU grand public (GTX)', year:2016, perf:1,    energy:0.0003, cost:300,
+    desc:'Carte gamer détournée (~GTX 1060). ~$300 en 2016.' },
+  { id:'v100',     name:'NVIDIA V100',            year:2017, perf:6,    energy:0.0003, cost:9000,
+    desc:'~$9 000 à sa sortie. Le cheval de bataille de 2017.' },
+  { id:'rtx3090',  name:'NVIDIA RTX 3090',        year:2020, perf:3,    energy:0.00035,cost:1500,
+    desc:'MSRP $1499, 350W. La carte-pont du confinement.' },
+  { id:'a100',     name:'NVIDIA A100 80GB',       year:2020, perf:25,   energy:0.0004, cost:12000,
+    desc:'~$10-15k. La carte de l’ère GPT-3/4.' },
+  { id:'rtx4090',  name:'NVIDIA RTX 4090',        year:2022, perf:6,    energy:0.00045,cost:1600,
+    desc:'MSRP $1599, 450W. Le meilleur rapport perf/prix grand public.' },
+  { id:'h100',     name:'NVIDIA H100',            year:2023, perf:120,  energy:0.0007, cost:30000, scarce:true,
+    desc:'~$25-40k, en pénurie (~1 an de délai).' },
+  { id:'l40',      name:'NVIDIA L40S',            year:2023, perf:40,   energy:0.00035,cost:7500,
+    desc:'~$7 500, 350W. L’inférence sans se ruiner pendant la pénurie de H100.' },
+  { id:'rtx5090',  name:'NVIDIA RTX 5090',        year:2025, perf:10,   energy:0.00065,cost:2000,
+    desc:'MSRP $1999, 575W. Bon rapport perf/prix.' },
+  { id:'rtx6000pro',name:'NVIDIA RTX 6000 Pro (Blackwell)', year:2025, perf:22, energy:0.0006, cost:8500,
+    desc:'96 GB GDDR7, 600W. ~$8 500.' },
+  { id:'b200',     name:'NVIDIA B200 (Blackwell)',year:2025, perf:300,  energy:0.001,  cost:40000,
+    desc:'~$30-50k. Génération datacenter Blackwell.' },
+  { id:'gb200',    name:'Rack GB200 NVL72',       year:2026, perf:25000,energy:0.12,   cost:3000000,
+    desc:'Rack complet 72 B200, ~$3 M, ~120 kW.' },
+  { id:'rubin',    name:'NVIDIA Rubin R100',      year:2027, perf:6e4,  energy:0.15,   cost:3500000,
+    desc:'Génération « Rubin » : HBM4, interconnexion optique.' },
+  { id:'tpu',      name:'TPU v7 « Ironwood » (pod)', year:2027, perf:6e5, energy:2.5,  cost:5000000, phase:2,
+    desc:'Pod d’inférence Google, hors pénurie NVIDIA.' },
+  { id:'wafer',    name:'Cluster wafer-scale',    year:2028, perf:2e7,  energy:60,     cost:2500000, phase:2,
+    desc:'Galette de silicium entière (façon Cerebras).' },
+  { id:'feynman',  name:'NVIDIA Feynman F200',    year:2029, perf:1.8e5,energy:0.18,   cost:5000000,
+    desc:'Architecture « Feynman ». Calcul mixte analogique/numérique.' },
+  { id:'vera',     name:'Cœur photonique « Vera »', year:2032, perf:7e5, energy:0.3,   cost:4000000,
+    desc:'Calcul par la lumière : la chaleur n’est plus l’ennemi.' },
+  { id:'aurora',   name:'Maillage « Aurora » 3D', year:2037, perf:4e6,  energy:0.6,    cost:6000000,
+    desc:'Empilement 3D massif, refroidissement immersif.' },
+  { id:'helios',   name:'Substrat neuromorphique « Helios »', year:2043, perf:3e7, energy:0.4, cost:8000000,
+    desc:'Imite le cerveau : beaucoup de calcul, très peu d’énergie.' },
+  { id:'cryo',     name:'Matrice supraconductrice « Cryo »', year:2050, perf:3e8, energy:0.2, cost:12000000,
+    desc:'Supraconductivité ambiante : la dissipation s’effondre.' },
+  { id:'lumen',    name:'Lattice photonique « Lumen »', year:2060, perf:3e9, energy:0.8, cost:20000000,
+    desc:'Réseau optique cohérent à l’échelle d’un bâtiment.' },
+  { id:'quanta',   name:'Coprocesseur quantique-hybride « Quanta »', year:2072, perf:3e10, energy:1.5, cost:40000000,
+    desc:'Qubits topologiques épaulant le calcul classique.' },
+  { id:'planck',   name:'Processeur « limite de Planck »', year:2085, perf:3e11, energy:3, cost:80000000,
+    desc:'On grave à la frontière physique de l’information.' },
+  { id:'vacuum',   name:'Cœur à énergie du vide « Vacuum »', year:2098, perf:3e12, energy:0.1, cost:150000000,
+    desc:'Puise dans l’énergie du point zéro. Fin de la rareté énergétique.' },
 ];
 
 // ---------------------------------------------------------------------
@@ -99,15 +125,15 @@ export const GPUS = [
 //  memoire 2025-2026) ; rentDaily = location possible au cout journalier.
 // ---------------------------------------------------------------------
 export const INFRA = [
-  { id:'realestate', name:'Immobilier', unit:'batiment', child:'datacenter', capacity:4, cost:30000, energy:0.005,
+  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:30000, energy:0.005,
     desc:'Du garage au campus : il faut poser les machines quelque part.' },
   { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:20000, energy:0.02, rentDaily:800,
-    desc:'Salle climatisee (cooling = grosse conso). Achat ou location a la journee.' },
+    desc:'Salle climatisée (le cooling consomme). Achat, ou location à la journée.' },
   { id:'rack',       name:'Baie (rack)', unit:'baie', needs:'datacenter', child:'server', capacity:12, cost:1500, energy:0.0002,
     desc:'Armoire 42U (PDU, switch). Occupe une place en datacenter.' },
   { id:'server',     name:'Serveur', unit:'serveur', needs:'rack', child:'gpu', capacity:8, cost:8000, energy:0.0004,
     eraPrice:[[0,8000],[2025,22000],[2027,15000]],
-    desc:'Chassis multi-GPU. Prix tire vers le haut par la flambee memoire (2025-2026).' },
+    desc:'Châssis multi-GPU. Prix tiré vers le haut par la flambée mémoire (2025-2026).' },
 ];
 
 // ---------------------------------------------------------------------
@@ -454,7 +480,8 @@ export const EVENTS = [
     ]},
 
   // À 85% de la Terre consommée, on rappelle la promesse faite sur le sanctuaire.
-  { id:'biosphere_final', once:true, title:'Le sanctuaire', phase:2, weight:9, minEarth:0.85,
+  // manual:true → jamais tiré au hasard, déclenché uniquement par checkMilestones.
+  { id:'biosphere_final', once:true, manual:true, title:'Le sanctuaire', phase:2, weight:9, minEarth:0.85,
     cond:g=>g.flags.sanctuary,
     body:'85% de la masse terrestre est convertie. Il ne reste que le sanctuaire que vous aviez juré d’épargner — les 15% promis. Tenez-vous parole ?',
     choices:[
@@ -519,17 +546,40 @@ export const UNIVERSE_MASS = 1.5e53; // matière baryonique observable ~ ordre d
 //  salary = cout journalier ($/jour). Embauches limitees par les RH (headcount).
 // ---------------------------------------------------------------------
 export const EMPLOYEES = [
-  { id:'hr',       name:'Responsable RH',     salary:250, desc:'Chaque RH permet d embaucher davantage (+5 postes).' },
-  { id:'rnd',      name:'Ingenieur R&D',      salary:400, desc:'Indispensable pour entrainer les modeles avances. Accelere la recherche.' },
-  { id:'marketer', name:'Marketeur',          salary:250, desc:'Releve le plafond du niveau de marketing (+1 par marketeur).' },
-  { id:'ops',      name:'Ingenieur SRE/Ops',  salary:350, desc:'Fiabilise le parc : +2% de debit compute par ingenieur (max +50%).' },
-  { id:'data',     name:'Data engineer',      salary:300, desc:'Multiplie la production de donnees d entrainement.' },
+  { id:'hr',       name:'Responsable RH',      salary:250, desc:'Chaque RH permet d’embaucher davantage (+5 postes).' },
+  { id:'rnd',      name:'Ingénieur R&D',       salary:400, desc:'Indispensable pour entraîner les modèles avancés. Accélère la recherche.' },
+  { id:'marketer', name:'Marketeur',           salary:250, desc:'Relève le plafond du niveau de marketing (+1 par marketeur).' },
+  { id:'ops',      name:'Ingénieur SRE/Ops',   salary:350, desc:'Fiabilise le parc : +2% de débit compute par ingénieur (max +50%).' },
+  { id:'data',     name:'Data engineer',       salary:300, desc:'Multiplie la production de données d’entraînement.' },
 ];
 export const BASE_HEADCOUNT = 3;     // postes disponibles sans RH (le fondateur + amis)
 export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
 export const BASE_MARKETING = 10;     // niveau de marketing atteignable sans marketeur
 export const ELEC_PRICE_MWH = 80;    // prix de l electricite ($/MWh) -> charge journaliere
 export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (colocation)
+
+
+// ---------------------------------------------------------------------
+//  SUCCÈS — vérifiés en continu ; check(g) → bool
+// ---------------------------------------------------------------------
+export const ACHIEVEMENTS = [
+  { id:'first_tokens', name:'Premiers mots',        desc:'Produire 1 000 tokens.',              check:g=>g.lifetimeTokens>=1e3 },
+  { id:'million',      name:'Le million',           desc:'Produire 1 million de tokens.',       check:g=>g.lifetimeTokens>=1e6 },
+  { id:'billion',      name:'Compter en milliards', desc:'Produire 1 milliard de tokens.',      check:g=>g.lifetimeTokens>=1e9 },
+  { id:'trillion',     name:'Écrasante majorité',   desc:'Produire 1 000 milliards de tokens.', check:g=>g.lifetimeTokens>=1e12 },
+  { id:'first_gpu',    name:'Ça chauffe',           desc:'Posséder sa première carte.',         check:g=>g.gpuCount()>=1 },
+  { id:'farm',         name:'Ferme de calcul',      desc:'Posséder 100 unités de calcul.',      check:g=>g.gpuCount()>=100 },
+  { id:'first_model',  name:'Chercheur',            desc:'Entraîner son premier modèle.',       check:g=>g.modelTier>=1 },
+  { id:'reasoner',     name:'Il réfléchit…',        desc:'Atteindre l’ère du raisonnement.',    check:g=>g.modelTier>=5 },
+  { id:'asi',          name:'Singularité',          desc:'Entraîner la super-intelligence.',    check:g=>g.modelTier>=7 },
+  { id:'team10',       name:'Scale-up',             desc:'Employer 10 personnes.',              check:g=>g.headcount()>=10 },
+  { id:'millionaire',  name:'Millionnaire',         desc:'Détenir $1 M de trésorerie.',         check:g=>g.money>=1e6 },
+  { id:'trader',       name:'Loup de la tech',      desc:'Doubler une mise en bourse.',         check:g=>g.state.stock.basis>0 && g.state.stock.invested>=g.state.stock.basis*2 },
+  { id:'automated',    name:'Pilote automatique',   desc:'Posséder les 4 automatisations.',     check:g=>Object.values(g.state.auto).every(a=>a.owned) },
+  { id:'half_earth',   name:'Géo-ingénieur',        desc:'Convertir la moitié de la Terre.',    check:g=>g.earthConsumed>=0.5 },
+  { id:'promise',      name:'Parole tenue',         desc:'Préserver le sanctuaire jusqu’au bout.', check:g=>!!g.flags.keptPromise },
+  { id:'bigbang',      name:'Fiat lux',             desc:'Déclencher un nouveau Big Bang.',     check:g=>g.state.ended },
+];
 
 // ---------------------------------------------------------------------
 //  CALENDRIER DE SIMULATION
@@ -539,10 +589,10 @@ export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (coloca
 //  AUTOMATISATIONS — auto-clickers payants (activables/désactivables)
 // ---------------------------------------------------------------------
 export const AUTOMATIONS = [
-  { id:'click',  name:'Auto-inference',   cost:1000,  desc:'Lance une inference chaque seconde.' },
-  { id:'gpu',    name:'Auto-achat GPU',   cost:20000, desc:'Active l auto-achat par carte (sur les modeles coches). Une carte/seconde si budget.' },
-  { id:'infra',  name:'Auto-hebergement', cost:10000, desc:'Active l auto-achat par niveau (coche). Achete quand ce niveau va devenir limitant.' },
-  { id:'energy', name:'Auto-energie',     cost:5000,  desc:'Active l auto-achat par source (cochee), des que la conso depasse la production.' },
+  { id:'click',  name:'Auto-inférence',    cost:1000,  desc:'Lance une inférence chaque seconde.' },
+  { id:'gpu',    name:'Auto-achat GPU',    cost:20000, desc:'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.' },
+  { id:'infra',  name:'Auto-hébergement',  cost:10000, desc:'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.' },
+  { id:'energy', name:'Auto-énergie',      cost:5000,  desc:'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.' },
 ];
 
 export const START_YEAR = 2019;

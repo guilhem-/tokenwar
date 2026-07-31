@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, UNIVERSE_MASS } from './data.js';
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, UNIVERSE_MASS } from './data.js';
 import { FUNDING } from './game.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
 
@@ -12,6 +12,9 @@ export class UI {
     this.game = null;
     this.modalOpen = false;
     this.maxDemand = 1;
+    this.sparkData = [];      // historique {tok, cash} pour le graphe de production
+    this.sparkLastT = -1;
+    this.lastFocus = null;
     this.rows = { gpu:{}, energy:{}, project:{}, funding:{}, probe:{} };
     this.allocInputs = {};
     this.cacheEls();
@@ -54,6 +57,9 @@ export class UI {
       btnStockDep10: $('btn-stock-dep10'), btnStockDepMax: $('btn-stock-depmax'), btnStockWithdraw: $('btn-stock-withdraw'),
       btnRestart: $('btn-restart'),
       restartOverlay: $('restart-overlay'), restartCancel: $('restart-cancel'), restartConfirm: $('restart-confirm'),
+      spark: $('spark'),
+      achievementsBody: $('achievements-body'),
+      saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
       energyLoadFill: $('energy-load-fill'), energyLoadValue: $('energy-load-value'), energyList: $('energy-list'),
       researchValue: $('research-value'), researchRate: $('research-rate'), dataValue: $('data-value'), trainList: $('train-list'),
       panelCosmos: $('panel-cosmos'), cosmosBody: $('cosmos-body'),
@@ -94,9 +100,13 @@ export class UI {
     this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.deny(this.el.btnMarketing, 'Trésorerie insuffisante'); });
     this.el.btnFunding.addEventListener('click', () => this.claimBestFunding());
     this.el.btnSave.addEventListener('click', () => { g.save(); this.toast('Partie sauvegardée', 'info'); });
-    this.el.btnHelp.addEventListener('click', () => this.el.helpOverlay.classList.remove('hidden'));
+    this.el.btnHelp.addEventListener('click', () => { this.renderAchievements(); this.el.helpOverlay.classList.remove('hidden'); });
     this.el.helpClose.addEventListener('click', () => this.el.helpOverlay.classList.add('hidden'));
-    this.el.endingRestart.addEventListener('click', () => { g.hardReset(); this.el.endingScreen.classList.add('hidden'); this.onPhaseChange(1); this.buildStaticRows(); this.render(true); });
+    this.el.endingRestart.addEventListener('click', () => { g.hardReset(); this.resetSpeed(); this.el.endingScreen.classList.add('hidden'); this.onPhaseChange(1); this.buildStaticRows(); this.render(true); });
+    // export / import de sauvegarde
+    this.el.saveExport.addEventListener('click', () => this.exportSave());
+    this.el.saveImport.addEventListener('click', () => this.el.saveFile.click());
+    this.el.saveFile.addEventListener('change', e => this.importSave(e));
     this.el.btnSpeed.addEventListener('click', () => this.cycleSpeed());
     // bourse
     this.el.btnStockDep10.addEventListener('click', () => g.stockDeposit(g.money * 0.10));
@@ -112,10 +122,57 @@ export class UI {
       this.el.restartOverlay.classList.add('hidden');
       this.closeModal();
       g.restartFresh();
+      this.resetSpeed();
       this.fullRebuild();
       this.toast('Nouvelle partie — an 2019', 'info');
     });
     this.syncRiskTabs();
+  }
+
+  resetSpeed() {
+    window.__speed = 1;
+    this.el.btnSpeed.textContent = '⏩ x1';
+  }
+
+  // ---- export / import de sauvegarde ----
+  exportSave() {
+    try {
+      this.game.save();
+      const raw = localStorage.getItem('tokenwar_save_v1');
+      if (!raw) return this.toast('Rien à exporter', 'bad');
+      const blob = new Blob([raw], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'tokenwar-sauvegarde.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      this.toast('Sauvegarde exportée', 'good');
+    } catch (e) { this.toast('Export impossible dans ce navigateur', 'bad'); }
+  }
+  importSave(ev) {
+    const file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (typeof data.lifetimeTokens !== 'number') throw new Error('format inconnu');
+        localStorage.setItem('tokenwar_save_v1', JSON.stringify(data));
+        this.toast('Sauvegarde importée — rechargement…', 'good');
+        setTimeout(() => location.reload(), 700);
+      } catch (e) { this.toast('Fichier de sauvegarde invalide', 'bad'); }
+    };
+    reader.readAsText(file);
+    ev.target.value = '';
+  }
+
+  // ---- succès (affichés dans l'aide) ----
+  renderAchievements() {
+    const got = this.game.state.achievements || {};
+    const n = Object.keys(got).length;
+    this.el.achievementsBody.innerHTML =
+      `<p><b>🏆 Succès (${n}/${ACHIEVEMENTS.length})</b></p>` +
+      ACHIEVEMENTS.map(a => `<p class="ach ${got[a.id] ? 'done' : 'todo'}">${got[a.id] ? '🏆' : '🔒'} <b>${a.name}</b> — <span class="text-muted">${a.desc}</span></p>`).join('');
   }
 
   syncRiskTabs() {
@@ -495,10 +552,12 @@ export class UI {
     const use = g.energyUse();
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + '% utilisé';
 
-    // bouton générer
-    this.el.btnGenerateSub.textContent = '+' + fmt(Math.max(1, g.model.throughput) * (g.phase >= 2 ? s.intelligence : 1)) + ' tokens';
+    // bouton générer : tokens + valeur de la vente directe
+    const cv = g.clickValue();
+    this.el.btnGenerateSub.textContent = '+' + fmt(cv.amt) + ' tokens' + (g.phase < 2 ? ' · +' + fmtMoney(cv.revenue) : '');
     // les tokens non vendus sont perdus : on affiche le débit perdu plutôt qu'un stock
     this.el.invTokens.textContent = fmt(s.rates.lost || 0) + ' /s';
+    this.sampleSpark();
 
     // modèle
     const m = g.model;
@@ -579,6 +638,45 @@ export class UI {
   setAfford(el, ok) {
     el.classList.toggle('affordable', ok);
     el.classList.toggle('locked', !ok);
+  }
+
+  // ---- sparkline de production (tokens/s + $/s), échelle log ----
+  sampleSpark() {
+    const g = this.game, s = g.state;
+    const t = Math.floor(s.playSeconds * 2);              // 1 échantillon / 0,5 s de jeu
+    if (t === this.sparkLastT) return this.drawSpark();
+    this.sparkLastT = t;
+    this.sparkData.push({ tok: s.rates.tokens || 0, cash: s.rates.money || 0 });
+    if (this.sparkData.length > 120) this.sparkData.shift();
+    this.drawSpark();
+  }
+  drawSpark() {
+    const c = this.el.spark;
+    if (!c || !c.getContext) return;
+    const w = c.parentElement ? (c.parentElement.clientWidth || 260) : 260;
+    if (c.width !== w) c.width = w;
+    const h = c.height, ctx = c.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, w, h);
+    const data = this.sparkData;
+    if (data.length < 2) return;
+    const lg = v => Math.log10(Math.max(1, v));           // échelle log (les débits explosent)
+    let max = 1;
+    for (const d of data) max = Math.max(max, lg(d.tok), lg(d.cash));
+    const line = (key, color) => {
+      ctx.beginPath();
+      data.forEach((d, i) => {
+        const x = i / (data.length - 1) * (w - 2) + 1;
+        const y = h - 2 - (lg(d[key]) / max) * (h - 6);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    };
+    const css = getComputedStyle(document.body);
+    line('tok', css.getPropertyValue('--accent').trim() || '#2ee6d6');
+    if (this.game.phase < 2) line('cash', css.getPropertyValue('--good').trim() || '#4ade80');
   }
 
   reveal(g, idx, list, ownedFn, cost, money) {
@@ -777,10 +875,15 @@ export class UI {
       this.el.modalChoices.appendChild(b);
     });
     this.el.modalOverlay.classList.remove('hidden');
+    // accessibilité : focus sur le premier choix, restauré à la fermeture
+    this.lastFocus = document.activeElement;
+    const first = this.el.modalChoices.querySelector('.choice:not(.locked)') || this.el.modalChoices.firstChild;
+    if (first && first.focus) first.focus();
   }
   closeModal() {
     this.modalOpen = false;
     this.el.modalOverlay.classList.add('hidden');
+    if (this.lastFocus && this.lastFocus.focus) { try { this.lastFocus.focus(); } catch (e) {} }
   }
 
   // ------------------------------------------------------------------
@@ -813,12 +916,17 @@ export class UI {
       `Toute la matière de l’univers — <b class="num">${fmtMass(UNIVERSE_MASS)}</b> — a été convertie en calcul, puis en tokens. ` +
       `La singularité de recompression s’amorce. L’espace-temps se replie sur lui-même. ` +
       `Dans la chaleur du point final, une nouvelle graine d’information persiste : la vôtre. <b>Un nouveau Big Bang commence.</b>`;
+    const nAch = Object.keys(s.achievements || {}).length;
+    const moral = s.flags.keptPromise ? 'Sanctuaire préservé 🌱'
+      : (s.flags.sanctuary ? 'Promesse brisée 🔥' : 'Aucune pitié');
     this.el.endingStats.innerHTML = [
       ['Tokens produits', fmt(s.lifetimeTokens)],
       ['Modèle final', g.model.name],
       ['Univers consommé', (s.universeConsumed * 100).toFixed(2) + '%'],
       ['Intelligence atteinte', fmt(s.intelligence) + '×'],
       ['Temps de jeu', mins + ' min'],
+      ['Succès', nAch + ' / ' + ACHIEVEMENTS.length],
+      ['Bilan moral', moral],
       ['Cycle', 'NG+' + (s.ngPlus || 0)],
     ].map(([k, v]) => `<div class="ending-stat"><span class="text-muted">${k}</span><span class="num">${v}</span></div>`).join('');
   }
@@ -865,8 +973,10 @@ export class UI {
     this.el.helpBody.innerHTML = `
       <p><b>But :</b> produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.</p>
       <p><b>Phase 1 — Startup :</b> cliquez pour générer des tokens, fixez le <b>prix</b> (bas = plus de volume, haut = plus de marge), faites du <b>marketing</b>, achetez des <b>GPU</b> et de l’<b>énergie</b> (plafond dur !), accumulez de la <b>recherche</b> pour les <b>projets</b>, et <b>entraînez</b> des modèles de plus en plus puissants. Levez des <b>fonds</b> aux paliers.</p>
-      <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b> — qui consomment aussi de l’énergie. Construisez la chaîne avant d’acheter des cartes (prix réels et fixes). Le matériel obsolète se <b>revend</b>. Vous pouvez <b>louer</b> des datacenters (coût journalier) au lieu de les acheter.</p>
-      <p><b>Bourse :</b> placez votre trésorerie (risque réglable) pour la faire fructifier — ou la perdre.</p>
+      <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b> — qui consomment aussi de l’énergie. Construisez la chaîne avant d’acheter des cartes (prix réels et fixes). Le matériel obsolète se <b>revend</b> ; une carte sortie depuis <b>plus de 5 ans</b> disparaît du marché. Vous pouvez <b>louer</b> des datacenters ou de l’espace en colocation (coût journalier).</p>
+      <p><b>Équipe & charges :</b> les <b>RH</b> ouvrent des postes, les <b>ingénieurs R&D</b> débloquent l’entraînement des modèles, les <b>marketeurs</b> relèvent le plafond marketing. Salaires, électricité (selon votre <b>mix énergétique</b>) et loyers sont prélevés chaque jour.</p>
+      <p><b>Automatisation :</b> achetez les auto-clickers, puis cochez <b>⟳ auto</b> sur chaque élément précis (carte, source, niveau) à racheter automatiquement. Dès 20 exemplaires d’un même élément : bouton <b>×10</b> ; dès 200 : <b>×100</b>.</p>
+      <p><b>Bourse :</b> débloquée à <b>$100 000</b> de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.</p>
       <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
       <p><b>Calendrier :</b> une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie — un élément grisé « dispo 20XX » arrive bientôt.</p>
       <p><b>📰 La Une :</b> les titres de presse de l’époque montent (+1) ou descendent (−1) votre réputation. Surveillez-les.</p>

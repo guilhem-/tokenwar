@@ -46,10 +46,10 @@
       </div>
     </div>
     <div class="topbar-controls">
-      <button class="btn-ghost" id="btn-speed" title="Vitesse de simulation">⏩ x1</button>
-      <button class="btn-ghost" id="btn-save" title="Sauvegarder">💾</button>
-      <button class="btn-ghost" id="btn-restart" title="Recommencer depuis le début">🔄</button>
-      <button class="btn-ghost" id="btn-help" title="Aide">?</button>
+      <button class="btn-ghost" id="btn-speed" title="Vitesse de simulation" aria-label="Vitesse de simulation">⏩ x1</button>
+      <button class="btn-ghost" id="btn-save" title="Sauvegarder" aria-label="Sauvegarder la partie">💾</button>
+      <button class="btn-ghost" id="btn-restart" title="Recommencer depuis le début" aria-label="Recommencer depuis le début">🔄</button>
+      <button class="btn-ghost" id="btn-help" title="Aide" aria-label="Aide">?</button>
     </div>
   </header>
 
@@ -77,6 +77,10 @@
           <div class="inventory-row">
             <span class="text-muted">Tokens perdus (invendus)</span>
             <span class="num text-bad" id="inv-tokens">0 /s</span>
+          </div>
+          <div class="spark-wrap">
+            <canvas id="spark" height="46" aria-label="Historique de production (tokens/s)"></canvas>
+            <div class="spark-legend"><span class="spark-dot tok"></span> tokens/s <span class="spark-dot cash"></span> $/s</div>
           </div>
         </div>
       </div>
@@ -276,7 +280,7 @@
 
   <!-- ============ EVENT MODAL ============ -->
   <div class="modal-overlay hidden" id="modal-overlay">
-    <div class="modal" id="modal">
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div class="modal-title" id="modal-title">Événement</div>
       <div class="modal-body" id="modal-body"></div>
       <div class="modal-choices" id="modal-choices"></div>
@@ -298,8 +302,8 @@
 
   <!-- ============ RESTART CONFIRM ============ -->
   <div class="modal-overlay hidden" id="restart-overlay">
-    <div class="modal urgent">
-      <div class="modal-title">Recommencer depuis le début ?</div>
+    <div class="modal urgent" role="dialog" aria-modal="true" aria-labelledby="restart-title">
+      <div class="modal-title" id="restart-title">Recommencer depuis le début ?</div>
       <div class="modal-body">Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.</div>
       <div class="modal-choices">
         <button class="btn choice" id="restart-cancel">Annuler</button>
@@ -310,9 +314,15 @@
 
   <!-- ============ HELP ============ -->
   <div class="modal-overlay hidden" id="help-overlay">
-    <div class="modal">
-      <div class="modal-title">Comment jouer</div>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="modal-title" id="help-title">Comment jouer</div>
       <div class="modal-body" id="help-body"></div>
+      <div class="modal-body" id="achievements-body"></div>
+      <div class="modal-choices save-tools">
+        <button class="btn choice" id="save-export">Exporter la sauvegarde</button>
+        <button class="btn choice" id="save-import">Importer…</button>
+        <input type="file" id="save-file" accept=".json,application/json" class="hidden" />
+      </div>
       <div class="modal-choices">
         <button class="btn choice" id="help-close">Compris</button>
       </div>

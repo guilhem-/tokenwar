@@ -41,6 +41,34 @@ step('buyEnergy grid', () => { game.buyEnergy('grid'); ui.render(); });
 step('buyMarketing', () => { game.buyMarketing(); ui.render(); });
 step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.dispatchEvent(new window.Event('input')); ui.render(); });
 
+// clic manuel = vente directe (l'argent monte immédiatement)
+step('clic manuel vend directement', () => {
+  const m0 = game.money;
+  game.manualGenerate();
+  if (game.money <= m0) throw new Error('le clic ne rapporte pas d argent');
+  if (!/\$/.test(ui.el.btnGenerateSub.textContent || '') && ui.render()) {}
+  ui.render();
+  if (!/\$/.test(ui.el.btnGenerateSub.textContent)) throw new Error('valeur du clic non affichée');
+});
+// sparkline présente et échantillonnée
+step('sparkline de production', () => {
+  if (!ui.el.spark) throw new Error('canvas sparkline absent');
+  for (let i = 0; i < 10; i++) { game.tick(0.25); ui.render(); }
+  if (ui.sparkData.length < 2) throw new Error('aucun échantillon collecté');
+});
+// succès : déblocage + affichage dans l'aide
+step('succès débloqués + affichage', () => {
+  game.state.lifetimeTokens = Math.max(game.state.lifetimeTokens, 2e6);
+  game.checkAchievements();
+  if (!game.state.achievements['million']) throw new Error('succès "million" non débloqué');
+  ui.renderAchievements();
+  if (!/🏆/.test(ui.el.achievementsBody.innerHTML)) throw new Error('succès non affichés dans l aide');
+});
+// export/import : présents et sans crash (jsdom n'a pas URL.createObjectURL)
+step('export/import de sauvegarde', () => {
+  if (!ui.el.saveExport || !ui.el.saveImport || !ui.el.saveFile) throw new Error('boutons export/import absents');
+  ui.exportSave();   // ne doit pas jeter (toast d erreur acceptable en jsdom)
+});
 // automatisations (auto-clickers : achat + activation/désactivation)
 step('automatisations : achat + toggle', () => {
   game.state.money = 1e6;

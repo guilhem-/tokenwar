@@ -18,7 +18,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Vérifier la syntaxe JS
+        run: |
+          for f in js/*.js; do node --check "$f"; done
+
+      - name: Test UI (jsdom)
+        run: |
+          npm install jsdom --no-save --no-audit --no-fund
+          node test-ui.mjs
+
+      - name: Test simulation (partie complète)
+        timeout-minutes: 6
+        run: node test-sim.mjs | tail -8
+
   deploy:
+    needs: test
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -3,10 +3,11 @@
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
-         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS } from './data.js';
+         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
+const SAVE_VERSION = 2;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
 
 // Levées de fonds (analogue du « Trust ») : déblocages par paliers de tokens
 // Les levées sont gardées par les tokens cumulés ET par l'année (les tours de table
@@ -54,6 +55,7 @@ export class Game {
     s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true }, infra:{ owned:false, on:true }, energy:{ owned:false, on:true } };
     s.autoItems = { gpu:{}, energy:{}, infra:{} }; // auto-achat PAR élément (id -> bool), mémorisé individuellement
     s.autoTimer = 0;
+    s.achievements = {};     // succès débloqués (id -> true)
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
     s.modelTier = 0;
@@ -202,6 +204,18 @@ export class Game {
   marketingCost() {
     return 50 * Math.pow(1.6, this.state.marketingLvl - 1);
   }
+  // prix optimal : le plus haut où la demande absorbe encore toute la production.
+  // Utilisé par l'UI (indicatif) et par le bot de test (source unique de vérité).
+  optimalPriceSlider() {
+    const s = this.state;
+    const fair = this.fairPrice();
+    const prod = Math.max(this.computeEffective() * s.alloc.serve * this.model.throughput, 1);
+    const repF = 0.4 + s.reputation / 80;
+    const base = this.marketingPower() * repF * s.mods.demandMult;
+    let price = fair * Math.pow(Math.max(base / prod, 0.02), 1 / 1.6);
+    price = Math.max(0.02, Math.min(300, price));
+    return 100 * Math.log(price / 0.02) / Math.log(15000);
+  }
   valuation() {
     const s = this.state;
     return (s.lifetimeTokens * 0.02 + s.money * 2 + this.computeRaw() * 1000)
@@ -220,10 +234,18 @@ export class Game {
   // =================================================================
   //  ACTIONS JOUEUR
   // =================================================================
-  manualGenerate() {
+  // Une inférence manuelle est une vente « à la demande » : les tokens sont vendus
+  // immédiatement au prix du marché (plafonné au prix juste — pas d'exploit de slider),
+  // au lieu de tomber dans la production périssable.
+  clickValue() {
     const amt = Math.max(1, this.model.throughput) * (this.phase >= 2 ? this.state.intelligence : 1);
-    this.state.unsold += amt;
+    const price = Math.min(this.priceMtok(), this.fairPrice());
+    return { amt, revenue: amt * (price / 1e6) * this.state.mods.costPerToken };
+  }
+  manualGenerate() {
+    const { amt, revenue } = this.clickValue();
     this.state.lifetimeTokens += amt;
+    if (this.phase < 2) this.state.money += revenue;   // en phase 2+, l'argent ne compte plus
     this.ui && this.ui.pingGenerate(amt);
   }
 
@@ -267,7 +289,8 @@ export class Game {
     const r = this.state.rentedDC || 0;
     if (r <= 0) return false;
     const dc = INFRA.find(x => x.id === 'datacenter');
-    const newCap = (this.infraCount('datacenter') + r - 1) * dc.capacity;
+    // capacité restante = capacité actuelle (colocation incluse) moins ce datacenter
+    const newCap = this.capacityFor('rack') - dc.capacity;
     if (this.usedFor('rack') > newCap) return false; // ne pas priver des baies installées
     this.state.rentedDC = r - 1;
     return true;
@@ -421,7 +444,9 @@ export class Game {
   }
   // ---- BOURSE (placer de l'argent, façon Paperclips) ----
   _randn() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
-  stockRiskCfg() { return [{ d: 0.00035, v: 0.008 }, { d: 0.00065, v: 0.025 }, { d: 0.0013, v: 0.06 }][this.state.stock.risk] || { d: 0.0005, v: 0.02 }; }
+  // dérive/volatilité par profil. La dérive LOG (d − v²/2) doit croître avec le risque,
+  // sinon le profil agressif serait perdant en médiane (volatility drag).
+  stockRiskCfg() { return [{ d: 0.00035, v: 0.008 }, { d: 0.0007, v: 0.025 }, { d: 0.0025, v: 0.06 }][this.state.stock.risk] || { d: 0.0005, v: 0.02 }; }
   tickStock(dt) {
     const st = this.state.stock;
     if (st.invested <= 0) return;
@@ -595,6 +620,7 @@ export class Game {
     this.enterPhase(4);
     this.state.phase = 4;
     this.state.ended = true;
+    this.checkAchievements();   // le tick s'arrête ici : valider les derniers succès (Big Bang…)
     this.log('SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…', 'milestone');
     this.ui && this.ui.showEnding();
   }
@@ -623,6 +649,7 @@ export class Game {
   pickEvent() {
     const COOLDOWN = 180; // un même événement répétable ne peut pas revenir avant 3 min
     const eligible = (relax) => EVENTS.filter(e => {
+      if (e.manual) return false;                 // déclenché uniquement par le moteur (jamais au hasard)
       if (e.phase !== this.phase) return false;
       if (e.minTier && this.state.modelTier < e.minTier) return false;
       if (e.minUniverse && this.state.universeConsumed < e.minUniverse) return false;
@@ -696,10 +723,13 @@ export class Game {
     s.playSeconds += dt;
     // purge des modificateurs temporaires expirés
     if (s.timed.length) s.timed = s.timed.filter(m => m.until > s.playSeconds);
-    // charges journalières : électricité + salaires + loyers
-    const chargesSec = this.chargesPerSec();
-    if (chargesSec > 0) s.money = Math.max(0, s.money - chargesSec * dt);
-    s.rates.charges = chargesSec;
+    // charges journalières : électricité + salaires + loyers.
+    // Suspendues hors-ligne (le joueur ne peut pas réagir) et en phase 2+ (l'argent ne compte plus).
+    if (!this._offline && this.phase < 2) {
+      const chargesSec = this.chargesPerSec();
+      if (chargesSec > 0) s.money = Math.max(0, s.money - chargesSec * dt);
+      s.rates.charges = chargesSec;
+    }
 
     const compute = this.computeEffective();
     const a = s.alloc;
@@ -788,7 +818,7 @@ export class Game {
     }
 
     this.tickAuto(dt);
-    this.tickStock(dt);
+    if (this.phase < 2) this.tickStock(dt);       // la bourse n'a plus de sens quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);
     this.checkMilestones();
@@ -801,12 +831,31 @@ export class Game {
     if (!s._m2 && s.lifetimeTokens >= 1e9) { s._m2 = true; this.log('1 milliard de tokens. Les agents prennent le relais.', 'good'); }
     if (!s._m3 && s.earthConsumed >= 0.5 && this.phase === 2) { s._m3 = true; this.log('La moitié de la croûte terrestre est devenue du calcul.', 'good'); }
     if (!s._m4 && s.universeConsumed >= 0.5 && this.phase === 3) { s._m4 = true; this.log('La moitié de l’univers observable a été convertie.', 'good'); }
-    // à 85% de la Terre, on rappelle la promesse du sanctuaire (si elle a été faite)
-    if (!s._sanctuaryAsked && s.flags.sanctuary && this.phase === 2 && s.earthConsumed >= 0.85 && !s.ended) {
+    // à 85% de la Terre, on rappelle la promesse du sanctuaire (si elle a été faite).
+    // Garde-fou double : _sanctuaryAsked ET eventsSeen (l'événement est aussi marqué manual
+    // pour ne jamais sortir du tirage aléatoire → une seule apparition possible).
+    if (!s._sanctuaryAsked && !s.eventsSeen['biosphere_final'] && s.flags.sanctuary
+        && this.phase === 2 && s.earthConsumed >= 0.85 && !s.ended) {
       if (!this.ui || !this.ui.modalOpen) {
         s._sanctuaryAsked = true;
         const ev = EVENTS.find(e => e.id === 'biosphere_final');
         if (ev) { s.eventsSeen[ev.id] = (s.eventsSeen[ev.id] || 0) + 1; this.ui && this.ui.showEvent(ev); }
+      }
+    }
+    this.checkAchievements();
+  }
+
+  // ---- SUCCÈS ----
+  checkAchievements() {
+    const s = this.state;
+    for (const a of ACHIEVEMENTS) {
+      if (s.achievements[a.id]) continue;
+      let ok = false;
+      try { ok = a.check(this); } catch (e) { ok = false; }
+      if (ok) {
+        s.achievements[a.id] = true;
+        this.log(`Succès : ${a.name} — ${a.desc}`, 'milestone');
+        this.toast(`🏆 ${a.name}`, 'good');
       }
     }
   }
@@ -818,26 +867,55 @@ export class Game {
     try {
       const copy = JSON.parse(JSON.stringify(this.state));
       copy.savedAt = Date.now();
+      copy.v = SAVE_VERSION;
       localStorage.setItem(SAVE_KEY, JSON.stringify(copy));
       return true;
     } catch (e) { return false; }
+  }
+  // Sanitation récursive : toute valeur numérique non finie (NaN/Infinity, ex. sauvegarde
+  // empoisonnée par un ancien bug) est remplacée par le défaut ; les sous-objets absents
+  // sont recréés. `defaults` = état frais issu de reset().
+  sanitize(defaults, target) {
+    for (const k in defaults) {
+      const d = defaults[k];
+      if (typeof d === 'number') {
+        if (typeof target[k] !== 'number' || !isFinite(target[k])) target[k] = d;
+      } else if (Array.isArray(d)) {
+        if (!Array.isArray(target[k])) target[k] = JSON.parse(JSON.stringify(d));
+      } else if (d && typeof d === 'object') {
+        if (!target[k] || typeof target[k] !== 'object') target[k] = JSON.parse(JSON.stringify(d));
+        else this.sanitize(d, target[k]);
+      } else if (target[k] === undefined) {
+        target[k] = d;
+      }
+    }
   }
   load() {
     try {
       const raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return false;
       const data = JSON.parse(raw);
-      // calcul du temps hors-ligne (plafonné à 8h, rendement réduit)
+      const defaults = JSON.parse(JSON.stringify(this.state)); // état frais (reset() vient d'être appelé)
       this.state = Object.assign(this.state, data);
-      if (!this.state.rates) this.state.rates = { tokens:0, money:0, research:0, matter:0 };
+      this.sanitize(defaults, this.state);
+      this.state.reputation = clamp(this.state.reputation, 0, 100);
+      // simulation hors-ligne (plafonnée à 8h, rendement 50%, charges suspendues)
       const offline = Math.min((Date.now() - (data.savedAt || Date.now())) / 1000, 8 * 3600);
       if (offline > 5 && !data.ended) {
-        // simulation hors-ligne rapide à 50% — sans déclencher d'événements ni de titres
+        const before = { tokens: this.state.lifetimeTokens, money: this.state.money };
         this._offline = true;
         let t = offline * 0.5, step = Math.min(t, 60);
         while (t > 0) { this.tick(Math.min(step, t)); t -= step; }
         this._offline = false;
-        this.log(`Progression hors-ligne : ${Math.round(offline / 60)} min simulées (50%).`, 'info');
+        // résumé « pendant votre absence »
+        const dTok = this.state.lifetimeTokens - before.tokens;
+        const dMoney = this.state.money - before.money;
+        const h = Math.floor(offline / 3600), m = Math.round((offline % 3600) / 60);
+        const dur = h > 0 ? `${h} h ${m.toString().padStart(2, '0')}` : `${m} min`;
+        this.log(`Pendant votre absence (${dur}, rendement 50%, charges suspendues) : `
+          + `+${Math.round(dTok).toLocaleString('fr-FR')} tokens`
+          + (this.phase < 2 ? `, ${dMoney >= 0 ? '+' : '−'}$${Math.abs(Math.round(dMoney)).toLocaleString('fr-FR')}` : '')
+          + `.`, 'milestone');
       }
       // grâce : aucune boîte de dialogue (événement) pendant les 25 premières secondes
       this.state.eventTimer = Math.max(this.state.eventTimer || 0, 25);
