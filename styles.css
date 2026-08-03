@@ -427,6 +427,10 @@ a {
   box-shadow: 0 6px 20px -8px var(--glow);
 }
 .btn-primary:hover:not(:disabled) {
+  /* ré-affirme le dégradé : .btn:hover posait un fond sombre sous un texte sombre (illisible) */
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #05070b;
+  border-color: transparent;
   box-shadow: 0 8px 28px -6px var(--glow);
 }
 
@@ -1328,3 +1332,38 @@ a {
 .ach { margin: 0.25rem 0; font-size: 0.85rem; }
 .ach.todo { opacity: 0.55; }
 .save-tools { border-top: 1px dashed var(--line); padding-top: 0.6rem; }
+
+/* =============================================================================
+   CINÉMATIQUE DE FIN · DIRECTIVES PERMANENTES · DATACENTER ORBITAL
+   ============================================================================= */
+.cine {
+  position: fixed; inset: 0; z-index: 300;
+  background: #000;
+}
+.cine canvas { display: block; width: 100%; height: 100%; }
+.cine-skip {
+  position: absolute; right: clamp(0.8rem, 3vw, 2rem); bottom: clamp(0.8rem, 3vw, 2rem);
+  min-height: 44px; padding: 0.5rem 1.1rem;
+  background: rgba(10, 14, 20, 0.55); border: 1px solid var(--line-strong);
+  color: var(--text-dim); border-radius: 999px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.cine-skip:hover { color: var(--accent); border-color: var(--accent-line); }
+
+.ending-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+.ending-actions .btn { min-width: 11rem; min-height: 48px; }
+#ending-getalife:disabled { opacity: 0.5; cursor: default; }
+
+/* case « désormais, faire cela » dans les modales */
+.auto-choice {
+  display: flex; align-items: flex-start; gap: 0.55rem;
+  width: 100%; padding: 0.55rem 0.7rem; margin-bottom: 0.2rem;
+  font-size: 0.8rem; color: var(--text-dim);
+  background: var(--bg-2); border: 1px dashed var(--line-strong); border-radius: 8px;
+  cursor: pointer; user-select: none;
+}
+.auto-choice input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--accent); cursor: pointer; }
+
+/* barre du chantier orbital (se réduit avec le temps) */
+.spacedc-bar { margin-top: 0.5rem; }
+.spacedc-bar .progress-fill { transition: width 0.4s linear; }

@@ -178,8 +178,49 @@ step('showEvent + choisir option 0', () => {
   const ev = game.pickEvent() || { id:'t', title:'Test', body:'b', phase:1, choices:[{label:'A',desc:'d',apply:()=>{}},{label:'B',desc:'d',apply:()=>{}}] };
   ui.showEvent(ev);
   if (ui.el.modalOverlay.classList.contains('hidden')) throw new Error('modale non affichée');
-  ui.el.modalChoices.children[0].dispatchEvent(new window.Event('click'));
+  ui.el.modalChoices.querySelector('.choice').dispatchEvent(new window.Event('click'));
   if (!ui.el.modalOverlay.classList.contains('hidden')) throw new Error('modale non fermée après choix');
+});
+
+// directives permanentes : achat, case à cocher, résolution automatique
+step('addendum : directives + case « désormais » + auto-résolution', () => {
+  game.state.money = 1e6;
+  ui.rows.addendum['directives'].el.dispatchEvent(new window.Event('click'));
+  if (!game.state.addendum) throw new Error('achat des directives échoué');
+  const ev = { id:'test_auto', title:'T', body:'b', phase:1, choices:[{label:'A',desc:'d',apply:g=>{g.state._autoHit=(g.state._autoHit||0)+1;}},{label:'B',desc:'d',apply:()=>{}}] };
+  ui.showEvent(ev);
+  const box = ui.el.modalChoices.querySelector('.auto-choice input');
+  if (!box) throw new Error('case à cocher absente alors que directives actives');
+  box.checked = true;
+  ui.el.modalChoices.querySelector('.choice').dispatchEvent(new window.Event('click'));
+  if (game.state.autoChoices['test_auto'] !== 0) throw new Error('directive non mémorisée');
+  if (!game.autoResolve(ev)) throw new Error('auto-résolution refusée');
+  if (game.state._autoHit !== 2) throw new Error('choix non appliqué automatiquement');
+  ui.render();
+});
+
+// datacenter orbital : commande → 18 mois → retard 6 mois → faillite
+step('datacenter orbital : chrono, retard, faillite', () => {
+  game.state.playSeconds = (2031 - 2019) * 300; // an 2031, fenêtre 2030-2040
+  game.state.money = 1e8;
+  ui.render();
+  const r = ui.rows.addendum['spacedc'];
+  if (r.el.classList.contains('hidden')) throw new Error('offre orbitale invisible en 2031');
+  r.el.dispatchEvent(new window.Event('click'));
+  if (game.state.spaceDC.status !== 'building') throw new Error('commande échouée');
+  if (!game.spaceDCNews('order')) throw new Error('titre « commande » inactif');
+  game.state.playSeconds += 18 * 25 + 1; game.tickSpaceDC();   // 18 mois
+  if (game.state.spaceDC.status !== 'delayed') throw new Error('retard non déclenché à 18 mois');
+  if (!game.spaceDCNews('delay')) throw new Error('titre « retard » inactif');
+  ui.render();
+  if (r.bar.classList.contains('hidden')) throw new Error('barre de chrono absente');
+  game.state.playSeconds += 6 * 25 + 1; game.tickSpaceDC();    // +6 mois
+  if (game.state.spaceDC.status !== 'bankrupt') throw new Error('faillite non déclenchée');
+  if (!game.spaceDCNews('bankrupt')) throw new Error('titre « faillite » inactif');
+  game.checkAchievements();
+  if (!game.state.achievements['spacedc']) throw new Error('succès orbital non débloqué');
+  ui.render();
+  game.state.playSeconds = 60; // retour à une date normale pour la suite des tests
 });
 
 // toast + log
@@ -216,7 +257,15 @@ step('triggerEnding + showEnding', () => {
   game.triggerEnding();
   if (ui.el.endingScreen.classList.contains('hidden')) throw new Error('écran de fin non affiché');
 });
-step('NG+ restart', () => { ui.el.endingRestart.dispatchEvent(new window.Event('click')); ui.render(true); });
+step('écran final : Play again → « Get a life ;-) » → NG+', () => {
+  ui.renderEndingStats();
+  if (ui.el.endingRestart.textContent !== 'Play again') throw new Error('libellé initial incorrect');
+  ui.el.endingRestart.dispatchEvent(new window.Event('click'));
+  if (ui.el.endingRestart.textContent !== 'Get a life ;-)') throw new Error('transformation du bouton absente');
+  ui.el.endingRestart.dispatchEvent(new window.Event('click'));   // second clic → NG+
+  if (game.state.ended) throw new Error('NG+ non relancé');
+  ui.render(true);
+});
 
 // save/load
 step('save', () => { if(!game.save()) throw new Error('save a échoué'); });

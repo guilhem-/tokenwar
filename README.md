@@ -33,7 +33,7 @@ marché, les **événements** ne surviennent que dans leur fenêtre historique, 
 ## Une économie réaliste
 
 - **Prix fixes et réels** : RTX 3090 ~$1 500, RTX 5090 ~$2 000, H100 ~$30k, B200 ~$40k,
-  rack GB200 NVL72 ~$3 M… puis du matériel inventé jusqu'en **2100** (photonique,
+  rack GB200 NVL72 ~$3 M, GB300 Blackwell Ultra, Vera Rubin VR200, AMD MI355X… puis du matériel inventé jusqu'en **2100** (photonique,
   neuromorphique, supraconducteur, quantique-hybride, énergie du vide).
 - **Chaîne d'hébergement** : un GPU tient dans un *serveur* → *baie* → *datacenter* →
   *immobilier*. Achat, **location de datacenter** ou **colocation** au coût journalier.
@@ -52,7 +52,12 @@ marché, les **événements** ne surviennent que dans leur fenêtre historique, 
   (carte précise, source précise, niveau d'infra précis), activables/désactivables.
 - **Achats groupés** : ×10 dès 20 exemplaires possédés, ×100 dès 200.
 - **Graphe de production** (tokens/s et $/s, échelle log).
-- **16 succès** à débloquer, écran de fin avec bilan moral (le sanctuaire de la biosphère…).
+- **17 succès** à débloquer, écran de fin avec bilan moral (le sanctuaire de la biosphère…).
+- **Addendum** : « Directives permanentes » (cochez un choix d’événement pour qu’il s’applique
+  automatiquement — plus d’interruption) et l’offre piège du **datacenter IA orbital**
+  (2030-2040) : 18 mois de chantier, 6 mois de retard… puis la faillite du consortium.
+- **Cinématique de fin** : l’écran se désintègre pixel par pixel, warp d’étoiles, scroller
+  sinusoïdal multicolore façon démo 64k et musique 8-bit (WebAudio).
 - **Hors-ligne** : progression simulée à 50 % (charges suspendues) avec résumé au retour ;
   aucun événement ne s'affiche pendant les 25 premières secondes.
 - **Mobile** : une seule colonne, modales larges, cibles tactiles ≥ 48 px.

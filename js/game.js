@@ -3,11 +3,11 @@
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
-         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS } from './data.js';
+         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
-const SAVE_VERSION = 2;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
+const SAVE_VERSION = 3;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
 
 // Levées de fonds (analogue du « Trust ») : déblocages par paliers de tokens
 // Les levées sont gardées par les tokens cumulés ET par l'année (les tours de table
@@ -56,6 +56,9 @@ export class Game {
     s.autoItems = { gpu:{}, energy:{}, infra:{} }; // auto-achat PAR élément (id -> bool), mémorisé individuellement
     s.autoTimer = 0;
     s.achievements = {};     // succès débloqués (id -> true)
+    s.addendum = false;      // « Directives permanentes » achetées
+    s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
+    s.spaceDC = { status:'none', orderedAt:0, statusAt:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
     s.modelTier = 0;
@@ -643,8 +646,101 @@ export class Game {
       this.state.eventCooldown[ev.id] = this.state.playSeconds; // temps de recharge par événement
       this.state.lastEventId = ev.id;
       this.state.lastEventAt = this.state.playSeconds;
-      this.ui && this.ui.showEvent(ev);
+      if (!this.autoResolve(ev)) this.ui && this.ui.showEvent(ev);
     }
+  }
+
+  // ---- Directives permanentes (addendum) : résolution automatique des événements ----
+  buyAddendum() {
+    if (this.state.addendum || this.state.money < ADDENDUM.cost) return false;
+    this.state.money -= ADDENDUM.cost;
+    this.state.addendum = true;
+    return true;
+  }
+  setAutoChoice(eventId, choiceIndex) {
+    if (!this.state.addendum) return false;
+    if (choiceIndex == null) delete this.state.autoChoices[eventId];
+    else this.state.autoChoices[eventId] = choiceIndex;
+    return true;
+  }
+  clearAutoChoices() { this.state.autoChoices = {}; }
+  // ---- Datacenter IA orbital (2030-2040) : 18 mois → +6 mois de retard → faillite ----
+  spaceDCVisible() {
+    const s = this.state.spaceDC;
+    if (s.status !== 'none') return true;                     // chantier en cours : toujours affiché
+    const y = this.simYear();
+    return this.phase < 2 && y >= SPACE_DC.from && y < SPACE_DC.to;
+  }
+  buySpaceDC() {
+    const s = this.state.spaceDC;
+    if (s.status !== 'none' || !this.spaceDCVisible()) return false;
+    if (this.state.money < SPACE_DC.cost) return false;
+    this.state.money -= SPACE_DC.cost;
+    s.status = 'building'; s.orderedAt = s.statusAt = this.state.playSeconds;
+    this.log(`Contrat signé : ${SPACE_DC.name} — livraison promise dans ${SPACE_DC.buildMonths} mois.`, 'milestone');
+    this.toast('🛰️ Datacenter orbital commandé', 'good');
+    return true;
+  }
+  // barre visuelle : {label, frac} — frac va de 1 → 0 (la barre se réduit)
+  spaceDCProgress() {
+    const s = this.state.spaceDC;
+    const monthSec = SECONDS_PER_YEAR / 12;
+    const el = this.state.playSeconds - s.statusAt;
+    if (s.status === 'building') {
+      const total = SPACE_DC.buildMonths * monthSec;
+      const left = Math.max(0, total - el);
+      return { label: `Assemblage en orbite — ${Math.ceil(left / monthSec)} mois restants`, frac: left / total };
+    }
+    if (s.status === 'delayed') {
+      const total = SPACE_DC.delayMonths * monthSec;
+      const left = Math.max(0, total - el);
+      return { label: `Retard annoncé — ${Math.ceil(left / monthSec)} mois restants`, frac: left / total };
+    }
+    if (s.status === 'bankrupt') return { label: 'Consortium en faillite — investissement perdu', frac: 0 };
+    return null;
+  }
+  tickSpaceDC() {
+    const s = this.state.spaceDC;
+    if (s.status === 'none' || s.status === 'bankrupt') return;
+    const monthSec = SECONDS_PER_YEAR / 12;
+    const el = this.state.playSeconds - s.statusAt;
+    if (s.status === 'building' && el >= SPACE_DC.buildMonths * monthSec) {
+      s.status = 'delayed'; s.statusAt = this.state.playSeconds;
+      this.log('Datacenter orbital : le consortium annonce 6 mois de retard (« problèmes de radiateurs »).', 'bad');
+      this.toast('🛰️ Retard : +6 mois', 'bad');
+    } else if (s.status === 'delayed' && el >= SPACE_DC.delayMonths * monthSec) {
+      s.status = 'bankrupt'; s.statusAt = this.state.playSeconds;
+      this.log(`Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos $${(SPACE_DC.cost / 1e6).toFixed(0)} M sont perdus dans l'espace.`, 'bad');
+      this.toast('🛰️ Faillite du consortium orbital', 'bad');
+      this.changeRep(-3);
+    }
+  }
+  // fenêtres des titres de presse du feuilleton orbital
+  spaceDCNews(kind) {
+    const s = this.state.spaceDC;
+    if (!s || s.status === 'none') return false;
+    const monthSec = SECONDS_PER_YEAR / 12;
+    const since = this.state.playSeconds - s.statusAt;
+    switch (kind) {
+      case 'order':    return s.status === 'building' && since < 3 * monthSec;
+      case 'building': return s.status === 'building' && since >= 3 * monthSec;
+      case 'delay':    return s.status === 'delayed' && since < 3 * monthSec;
+      case 'problems': return s.status === 'delayed' && since >= 3 * monthSec;
+      case 'bankrupt': return s.status === 'bankrupt' && since < 12 * monthSec;
+      default: return false;
+    }
+  }
+
+  // applique le choix mémorisé sans interrompre le joueur ; false → afficher la modale
+  autoResolve(ev) {
+    if (!this.state.addendum) return false;
+    const idx = this.state.autoChoices[ev.id];
+    if (idx == null || !ev.choices[idx]) return false;
+    const ch = ev.choices[idx];
+    if (ch.cost && this.state.money < ch.cost) return false;  // plus les moyens → redemander
+    ch.apply(this);
+    this.log(`${ev.title} → ${ch.label} (directive permanente)`, 'info');
+    return true;
   }
   pickEvent() {
     const COOLDOWN = 180; // un même événement répétable ne peut pas revenir avant 3 min
@@ -818,6 +914,7 @@ export class Game {
     }
 
     this.tickAuto(dt);
+    this.tickSpaceDC();
     if (this.phase < 2) this.tickStock(dt);       // la bourse n'a plus de sens quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);

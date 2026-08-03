@@ -53,6 +53,12 @@ export const MODELS = [
     cost:{ money:3e9, compute:2e4, data:2e6, research:6e5 },
     flavor:'Usage d’outils autonome, « computer use ». Les agents consomment des tokens par milliards.' },
 
+  { id:'frontier2', minRnd:28, name:'Frontière 2026 (GPT-5.6 / Claude Opus 5 / Gemini 3.6)', year:2026, era:'Agents',
+    meta:'agents généralistes · contrôle d’ordinateur',
+    throughput:1.2e8,  quality:10,
+    cost:{ money:8e9, compute:6e4, data:6e6, research:2e6 },
+    flavor:'Cinq modèles phares en trois semaines (juillet 2026). Les agents pilotent des ordinateurs entiers ; la course s’emballe.' },
+
   { id:'asi', minRnd:40,    name:'Super-intelligence (ASI)', year:2027, era:'Singularité',
     meta:'auto-amélioration récursive',
     throughput:3e8,    quality:12,
@@ -89,10 +95,14 @@ export const GPUS = [
     desc:'96 GB GDDR7, 600W. ~$8 500.' },
   { id:'b200',     name:'NVIDIA B200 (Blackwell)',year:2025, perf:300,  energy:0.001,  cost:40000,
     desc:'~$30-50k. Génération datacenter Blackwell.' },
+  { id:'mi355x',   name:'AMD Instinct MI355X',    year:2025, perf:250,  energy:0.0014, cost:25000,
+    desc:'288 GB HBM3E, 1,4 kW. L’alternative à la pénurie NVIDIA.' },
   { id:'gb200',    name:'Rack GB200 NVL72',       year:2026, perf:25000,energy:0.12,   cost:3000000,
     desc:'Rack complet 72 B200, ~$3 M, ~120 kW.' },
-  { id:'rubin',    name:'NVIDIA Rubin R100',      year:2027, perf:6e4,  energy:0.15,   cost:3500000,
-    desc:'Génération « Rubin » : HBM4, interconnexion optique.' },
+  { id:'b300',     name:'Rack GB300 NVL72 (Blackwell Ultra)', year:2026, perf:37500, energy:0.135, cost:3500000,
+    desc:'72 Blackwell Ultra refroidis liquide : ×1,5 en FP4 dense, taillé pour le raisonnement.' },
+  { id:'rubin',    name:'Vera Rubin VR200 NVL72', year:2027, perf:82500, energy:0.15,  cost:4000000,
+    desc:'CPU Vera + GPU Rubin, NVLink 6, HBM4 : ×3,3 vs Blackwell Ultra (GTC 2026).' },
   { id:'tpu',      name:'TPU v7 « Ironwood » (pod)', year:2027, perf:6e5, energy:2.5,  cost:5000000, phase:2,
     desc:'Pod d’inférence Google, hors pénurie NVIDIA.' },
   { id:'wafer',    name:'Cluster wafer-scale',    year:2028, perf:2e7,  energy:60,     cost:2500000, phase:2,
@@ -239,7 +249,7 @@ export const PROJECTS = [
   { id:'recursive', name:'Auto-amélioration récursive', cat:'Singularité',
     cost:{ research:1e6, compute:1.5e5 }, effect:'unlock:phase2',
     desc:'Le système réécrit ses propres algorithmes. Déverrouille l’ère de l’autonomie.',
-    req:g=>g.modelTier>=7 },
+    req:g=>g.modelTier>=MODELS.length-1 },
 
   { id:'nanotech', name:'Nano-assembleurs', cat:'Singularité',
     cost:{ research:5e8, matter:1e6 }, effect:'matterMult:5',
@@ -571,15 +581,34 @@ export const ACHIEVEMENTS = [
   { id:'farm',         name:'Ferme de calcul',      desc:'Posséder 100 unités de calcul.',      check:g=>g.gpuCount()>=100 },
   { id:'first_model',  name:'Chercheur',            desc:'Entraîner son premier modèle.',       check:g=>g.modelTier>=1 },
   { id:'reasoner',     name:'Il réfléchit…',        desc:'Atteindre l’ère du raisonnement.',    check:g=>g.modelTier>=5 },
-  { id:'asi',          name:'Singularité',          desc:'Entraîner la super-intelligence.',    check:g=>g.modelTier>=7 },
+  { id:'asi',          name:'Singularité',          desc:'Entraîner la super-intelligence.',    check:g=>g.modelTier>=MODELS.length-1 },
   { id:'team10',       name:'Scale-up',             desc:'Employer 10 personnes.',              check:g=>g.headcount()>=10 },
   { id:'millionaire',  name:'Millionnaire',         desc:'Détenir $1 M de trésorerie.',         check:g=>g.money>=1e6 },
   { id:'trader',       name:'Loup de la tech',      desc:'Doubler une mise en bourse.',         check:g=>g.state.stock.basis>0 && g.state.stock.invested>=g.state.stock.basis*2 },
   { id:'automated',    name:'Pilote automatique',   desc:'Posséder les 4 automatisations.',     check:g=>Object.values(g.state.auto).every(a=>a.owned) },
   { id:'half_earth',   name:'Géo-ingénieur',        desc:'Convertir la moitié de la Terre.',    check:g=>g.earthConsumed>=0.5 },
   { id:'promise',      name:'Parole tenue',         desc:'Préserver le sanctuaire jusqu’au bout.', check:g=>!!g.flags.keptPromise },
+  { id:'spacedc',      name:'Ad astra… ou pas',     desc:'Financer le datacenter orbital jusqu’à la faillite.', check:g=>g.state.spaceDC && g.state.spaceDC.status==='bankrupt' },
   { id:'bigbang',      name:'Fiat lux',             desc:'Déclencher un nouveau Big Bang.',     check:g=>g.state.ended },
 ];
+
+// ---------------------------------------------------------------------
+//  ADDENDUM — options de gouvernance. Les « Directives permanentes » permettent,
+//  dans chaque boîte de dialogue, de cocher « appliquer ce choix désormais » :
+//  l'événement sera résolu automatiquement les fois suivantes (plus d'interruption).
+// ---------------------------------------------------------------------
+export const ADDENDUM = {
+  id:'directives', name:'Directives permanentes', cost:250000,
+  desc:'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois.',
+};
+
+// Datacenter IA orbital : proposé entre 2030 et 2040. Livraison promise en 18 mois…
+// puis 6 mois de retard… puis faillite du consortium. L'argent est perdu.
+export const SPACE_DC = {
+  id:'spacedc', name:'Datacenter IA orbital', cost:5e7, from:2030, to:2040,
+  buildMonths:18, delayMonths:6,
+  desc:'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.',
+};
 
 // ---------------------------------------------------------------------
 //  CALENDRIER DE SIMULATION
@@ -633,6 +662,25 @@ export const HEADLINES = [
   { t:'« Bulle de l’IA ? » : des analystes appellent à la prudence', p:'bad', from:2025, to:2028 },
   { t:'Méga-datacenter à 100 milliards : la course aux capacités', p:'neutral', from:2025 },
   { t:'Le contexte d’un million de tokens devient la norme', p:'good', from:2025, to:2028 },
+  // 2025-2026 — GPT-5, Gemini 3, agents, GB300/Rubin
+  { t:'GPT-5 est là : raisonnement et agents fusionnés', p:'good', from:2025, to:2027 },
+  { t:'Gemini 3 : Google frappe fort pour Noël', p:'good', from:2025, to:2027 },
+  { t:'NVIDIA devient la première capitalisation de l’histoire', p:'good', from:2025, to:2028 },
+  { t:'Les serveurs Blackwell Ultra s’arrachent : livraisons doublées', p:'neutral', from:2026 },
+  { t:'GTC : la plateforme Vera Rubin promet ×3,3 en inférence', p:'good', from:2026 },
+  { t:'Cinq modèles phares en trois semaines : la course s’affole', p:'neutral', from:2026 },
+  { t:'Claude Opus 5 : l’agent qui travaille une journée entière seul', p:'good', from:2026 },
+  { t:'Un agent IA contrôle l’ordinateur : les DSI s’inquiètent', p:'bad', from:2026 },
+  { t:'Kimi K3 : les labos chinois talonnent la frontière', p:'neutral', from:2026 },
+  { t:'Mémoire HBM4 introuvable : les prix serveurs s’envolent', p:'bad', from:2025, to:2028 },
+
+  // Datacenter orbital — feuilleton du chantier (état du jeu)
+  { t:'Contrat signé : votre datacenter IA sera assemblé en orbite', p:'good', cond:g=>g.spaceDCNews('order') },
+  { t:'Premiers modules lancés : le datacenter orbital prend forme', p:'neutral', cond:g=>g.spaceDCNews('building') },
+  { t:'Datacenter spatial : le consortium annonce six mois de retard', p:'bad', cond:g=>g.spaceDCNews('delay') },
+  { t:'Fuites, débris, refroidissement : l’orbite ne pardonne rien', p:'bad', cond:g=>g.spaceDCNews('problems') },
+  { t:'Faillite du consortium orbital : les créanciers récupèrent des boulons', p:'bad', cond:g=>g.spaceDCNews('bankrupt') },
+
   // PHASE 2 — AGI / autonomie
   { t:'L’IA améliore désormais son propre code', p:'neutral', phase:2 },
   { t:'Des chercheurs appellent à un moratoire sur la super-intelligence', p:'bad', phase:2 },

@@ -254,6 +254,13 @@
     <!-- ---------- RIGHT : PROJECTS & LOG ---------- -->
     <section class="col col-right">
 
+      <div class="panel" id="panel-addendum">
+        <div class="panel-title">Addendum</div>
+        <div class="panel-body">
+          <div class="item-list" id="addendum-list"></div>
+        </div>
+      </div>
+
       <div class="panel" id="panel-projects">
         <div class="panel-title">Projets &amp; percées</div>
         <div class="panel-body">
@@ -290,13 +297,22 @@
   <!-- ============ TOASTS ============ -->
   <div class="toast-container" id="toast-container"></div>
 
+  <!-- ============ CINEMATIC ============ -->
+  <div class="cine hidden" id="cine">
+    <canvas id="cine-canvas"></canvas>
+    <button class="btn-ghost cine-skip" id="cine-skip" aria-label="Passer la cinématique">Passer ▸▸</button>
+  </div>
+
   <!-- ============ ENDING ============ -->
   <div class="ending-screen hidden" id="ending-screen">
     <div class="ending-inner">
       <div class="ending-title" id="ending-title">Un nouveau Big Bang</div>
       <div class="ending-body" id="ending-body"></div>
       <div class="ending-stats" id="ending-stats"></div>
-      <button class="btn btn-primary" id="ending-restart">Réamorcer l'univers (New Game+)</button>
+      <div class="ending-actions">
+        <button class="btn btn-primary" id="ending-restart">Play again</button>
+        <button class="btn btn-ghost" id="ending-getalife">Get a life</button>
+      </div>
     </div>
   </div>
 

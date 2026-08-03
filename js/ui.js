@@ -1,8 +1,9 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, UNIVERSE_MASS } from './data.js';
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS } from './data.js';
 import { FUNDING } from './game.js';
+import { Cinematic } from './ending.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
 
 const $ = id => document.getElementById(id);
@@ -60,6 +61,9 @@ export class UI {
       spark: $('spark'),
       achievementsBody: $('achievements-body'),
       saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
+      addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
+      cine: $('cine'), cineCanvas: $('cine-canvas'), cineSkip: $('cine-skip'),
+      endingGetalife: $('ending-getalife'),
       energyLoadFill: $('energy-load-fill'), energyLoadValue: $('energy-load-value'), energyList: $('energy-list'),
       researchValue: $('research-value'), researchRate: $('research-rate'), dataValue: $('data-value'), trainList: $('train-list'),
       panelCosmos: $('panel-cosmos'), cosmosBody: $('cosmos-body'),
@@ -102,7 +106,21 @@ export class UI {
     this.el.btnSave.addEventListener('click', () => { g.save(); this.toast('Partie sauvegardée', 'info'); });
     this.el.btnHelp.addEventListener('click', () => { this.renderAchievements(); this.el.helpOverlay.classList.remove('hidden'); });
     this.el.helpClose.addEventListener('click', () => this.el.helpOverlay.classList.add('hidden'));
-    this.el.endingRestart.addEventListener('click', () => { g.hardReset(); this.resetSpeed(); this.el.endingScreen.classList.add('hidden'); this.onPhaseChange(1); this.buildStaticRows(); this.render(true); });
+    // « Play again » se transforme d'abord en « Get a life ;-) » ; le second clic relance (NG+)
+    this.el.endingRestart.addEventListener('click', () => {
+      if (!this._playAgainArmed) {
+        this._playAgainArmed = true;
+        this.el.endingRestart.textContent = 'Get a life ;-)';
+        return;
+      }
+      g.hardReset(); this.resetSpeed();
+      this.el.endingScreen.classList.add('hidden');
+      this.onPhaseChange(1); this.buildStaticRows(); this.render(true);
+    });
+    this.el.endingGetalife.addEventListener('click', () => {
+      this.el.endingTitle.textContent = 'Good choice. Enjoy the sun 🌱';
+      this.el.endingGetalife.disabled = true;
+    });
     // export / import de sauvegarde
     this.el.saveExport.addEventListener('click', () => this.exportSave());
     this.el.saveImport.addEventListener('click', () => this.el.saveFile.click());
@@ -258,6 +276,31 @@ export class UI {
   }
 
   buildStaticRows() {
+    // Addendum : directives permanentes + datacenter orbital
+    this.el.addendumList.innerHTML = ''; this.rows.addendum = {};
+    {
+      const r = this.makeRow(this.el.addendumList, 'directives', this.rows.addendum);
+      r.name.textContent = ADDENDUM.name;
+      r.desc.textContent = ADDENDUM.desc;
+      r.el.addEventListener('click', () => { this.game.buyAddendum(); });
+      const reset = document.createElement('button');
+      reset.className = 'btn-ghost rent-btn hidden';
+      reset.textContent = 'Réinitialiser les directives';
+      reset.addEventListener('click', ev => { ev.stopPropagation(); this.game.clearAutoChoices(); this.toast('Directives effacées', 'info'); });
+      r.el.appendChild(reset);
+      r.resetBtn = reset;
+    }
+    {
+      const r = this.makeRow(this.el.addendumList, 'spacedc', this.rows.addendum);
+      r.name.textContent = '🛰️ ' + SPACE_DC.name;
+      r.desc.textContent = SPACE_DC.desc;
+      const bar = document.createElement('div');
+      bar.className = 'progress spacedc-bar hidden';
+      bar.innerHTML = '<div class="progress-fill" style="width:100%"></div>';
+      r.el.appendChild(bar);
+      r.bar = bar; r.barFill = bar.querySelector('.progress-fill');
+      r.el.addEventListener('click', () => { this.game.buySpaceDC(); });
+    }
     // Automatisations (auto-clickers payants, activables/désactivables)
     this.el.autoList.innerHTML = ''; this.rows.auto = {};
     AUTOMATIONS.forEach(a => {
@@ -444,6 +487,44 @@ export class UI {
     });
   }
 
+  renderAddendum() {
+    const g = this.game, s = g.state;
+    // Directives permanentes
+    const rd = this.rows.addendum['directives'];
+    if (s.addendum) {
+      rd.cost.innerHTML = '<span class="badge badge-new">actives</span>';
+      rd.effect.innerHTML = `<span class="text-muted">${Object.keys(s.autoChoices).length} directive(s) mémorisée(s) — cochez un choix dans un événement.</span>`;
+      rd.el.classList.remove('locked', 'affordable'); rd.el.classList.add('owned');
+      rd.resetBtn.classList.toggle('hidden', Object.keys(s.autoChoices).length === 0);
+    } else {
+      rd.cost.textContent = fmtMoney(ADDENDUM.cost);
+      rd.effect.innerHTML = '<span class="text-muted">Ne soyez plus jamais interrompu.</span>';
+      this.setAfford(rd.el, s.money >= ADDENDUM.cost);
+      rd.resetBtn.classList.add('hidden');
+    }
+    // Datacenter orbital
+    const rs = this.rows.addendum['spacedc'];
+    if (!g.spaceDCVisible()) { rs.el.classList.add('hidden'); }
+    else {
+      rs.el.classList.remove('hidden');
+      const st = s.spaceDC.status;
+      const prog = g.spaceDCProgress();
+      if (st === 'none') {
+        rs.cost.textContent = fmtMoney(SPACE_DC.cost);
+        rs.effect.innerHTML = `<span class="text-muted">Proposé jusqu'en ${SPACE_DC.to}. Livraison promise : ${SPACE_DC.buildMonths} mois.</span>`;
+        rs.bar.classList.add('hidden');
+        this.setAfford(rs.el, s.money >= SPACE_DC.cost);
+      } else {
+        rs.el.classList.remove('locked', 'affordable');
+        rs.cost.innerHTML = st === 'bankrupt' ? '<span class="badge badge-danger">faillite</span>' : '<span class="badge">en chantier</span>';
+        rs.effect.innerHTML = `<span class="${st === 'bankrupt' ? 'text-bad' : 'text-muted'}">${prog.label}</span>`;
+        rs.bar.classList.toggle('hidden', st === 'bankrupt');
+        rs.barFill.style.width = (prog.frac * 100).toFixed(1) + '%';
+        if (st === 'delayed') rs.barFill.classList.add('over'); else rs.barFill.classList.remove('over');
+      }
+    }
+  }
+
   renderCharges() {
     const g = this.game;
     const c = g.dailyCharges();
@@ -608,6 +689,7 @@ export class UI {
 
     // listes
     this.renderAuto();
+    this.renderAddendum();
     this.renderInfra();
     this.renderTeam();
     this.renderCharges();
@@ -630,6 +712,8 @@ export class UI {
     if (this.el.moneyStat) this.el.moneyStat.classList.toggle('hidden', moneyHidden);
     this.el.panelMarket.classList.toggle('hidden', moneyHidden);
     this.el.panelAuto.classList.toggle('hidden', moneyHidden);
+    // l'Addendum survit à la phase 2 si les directives sont actives ou le chantier orbital en cours
+    this.el.panelAddendum.classList.toggle('hidden', moneyHidden && !s.addendum && s.spaceDC.status === 'none');
     this.el.panelCharges.classList.toggle('hidden', moneyHidden);
     this.el.panelTeam.classList.toggle('hidden', moneyHidden);
     if (moneyHidden) { this.el.panelFunding.classList.add('hidden'); this.el.panelStock.classList.add('hidden'); }
@@ -859,7 +943,16 @@ export class UI {
     this.el.modalBody.textContent = ev.body;
     this.el.modal.classList.toggle('urgent', ev.phase >= 2);
     this.el.modalChoices.innerHTML = '';
-    ev.choices.forEach(ch => {
+    // « Directives permanentes » : case à cocher pour mémoriser le choix cliqué
+    let autoCheck = null;
+    if (this.game.state.addendum) {
+      const lab = document.createElement('label');
+      lab.className = 'auto-choice';
+      lab.innerHTML = `<input type="checkbox" id="auto-choice-box" /> <span>Désormais, appliquer automatiquement le choix que je vais faire (plus d'interruption)</span>`;
+      autoCheck = lab.querySelector('input');
+      this.el.modalChoices.appendChild(lab);
+    }
+    ev.choices.forEach((ch, idx) => {
       const b = document.createElement('button');
       b.className = 'btn choice';
       // un choix au coût fixe non finançable est grisé (et non sélectionnable)
@@ -868,6 +961,10 @@ export class UI {
       b.innerHTML = `<span class="choice-label">${ch.label}</span><span class="choice-desc">${ch.desc}</span>`;
       b.addEventListener('click', () => {
         if (ch.cost && this.game.money < ch.cost) return; // pas les moyens
+        if (autoCheck && autoCheck.checked) {
+          this.game.setAutoChoice(ev.id, idx);
+          this.toast('Directive mémorisée — ce choix sera appliqué automatiquement', 'info');
+        }
         ch.apply(this.game);
         this.log(`${ev.title} → ${ch.label}`, 'info');
         this.closeModal();
@@ -907,10 +1004,30 @@ export class UI {
     }
   }
 
+  // lance la cinématique de fin (destruction pixel → étoiles → scroller + musique 8-bit),
+  // puis fondu au noir et écran final. Repli direct sur l'écran final sans canvas 2D (jsdom).
   showEnding() {
-    const g = this.game, s = g.state;
-    this.el.endingScreen.classList.remove('hidden');
     this.el.body.className = 'phase-bigbang';
+    const ctx = this.el.cineCanvas && this.el.cineCanvas.getContext && this.el.cineCanvas.getContext('2d');
+    if (!ctx || (this.cinematic && !this.cinematic.done)) { this.renderEndingStats(); return; }
+    this.el.cine.classList.remove('hidden');
+    this.el.cineSkip.textContent = 'Passer ▸▸';
+    this.cinematic = new Cinematic(this.el.cineCanvas, {
+      onTextPhase: () => { this.el.cineSkip.textContent = 'Continuer ▸'; },
+    });
+    this.el.cineSkip.onclick = () => this.cinematic.finish();
+    this.cinematic.start(() => {
+      this.el.cine.classList.add('hidden');
+      this.renderEndingStats();
+    });
+  }
+  renderEndingStats() {
+    const g = this.game, s = g.state;
+    this._playAgainArmed = false;
+    this.el.endingRestart.textContent = 'Play again';
+    this.el.endingGetalife.disabled = false;
+    this.el.endingTitle.textContent = 'Un nouveau Big Bang';
+    this.el.endingScreen.classList.remove('hidden');
     const mins = Math.floor(s.playSeconds / 60);
     this.el.endingBody.innerHTML =
       `Toute la matière de l’univers — <b class="num">${fmtMass(UNIVERSE_MASS)}</b> — a été convertie en calcul, puis en tokens. ` +
