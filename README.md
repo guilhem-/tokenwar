@@ -56,8 +56,11 @@ marché, les **événements** ne surviennent que dans leur fenêtre historique, 
 - **Addendum** : « Directives permanentes » (cochez un choix d’événement pour qu’il s’applique
   automatiquement — plus d’interruption) et l’offre piège du **datacenter IA orbital**
   (2030-2040) : 18 mois de chantier, 6 mois de retard… puis la faillite du consortium.
-- **Cinématique de fin** : l’écran se désintègre pixel par pixel, warp d’étoiles, scroller
-  sinusoïdal multicolore façon démo 64k et musique 8-bit (WebAudio).
+- **Cinématique de fin** (aussi accessible par **Ctrl+Shift+E**) : l’écran se désintègre pixel
+  par pixel, hyperespace (chaque étoile trace sa trajectoire complète), scroller sinusoïdal
+  multicolore façon démo 64k, musique 8-bit (WebAudio) et clin d’œil « Nostalgia of 64k demos ».
+  Puis fondu au noir : « Play again » (qui fuit la souris et se transforme en « Get a life ;-) »)
+  et « Get a life » — les deux tentent de fermer la fenêtre.
 - **Hors-ligne** : progression simulée à 50 % (charges suspendues) avec résumé au retour ;
   aucun événement ne s'affiche pendant les 25 premières secondes.
 - **Mobile** : une seule colonne, modales larges, cibles tactiles ≥ 48 px.

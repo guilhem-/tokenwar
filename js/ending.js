@@ -11,10 +11,11 @@
 const TEXT = 'Thanks for playing and dont forget to enjoy life away from your keyboard !      ';
 
 export class Cinematic {
-  constructor(canvas, { onTextPhase } = {}) {
+  constructor(canvas, { onTextPhase, onFade } = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.onTextPhase = onTextPhase || (() => {});
+    this.onFade = onFade || (() => {});
     this.raf = 0;
     this.done = false;
     this.audio = null;
@@ -48,6 +49,7 @@ export class Cinematic {
     if (this.done || this.phase === 'fade') return;
     this.phase = 'fade';
     this.fadeStart = this._lt || 0;
+    this.onFade();
     if (this.master && this.audio) {
       try { this.master.gain.linearRampToValueAtTime(0.0001, this.audio.currentTime + 1.1); } catch (e) {}
     }
@@ -177,26 +179,46 @@ export class Cinematic {
         sp: 12 + Math.random() * 60,
         hue: 180 + Math.random() * 180,
         sz: 0.6 + Math.random() * 1.8,
+        trail: [],                                   // positions successives (effet hyperespace)
       });
     }
   }
+  // Champ d'étoiles « hyperespace » : chaque étoile conserve une trace de ses
+  // dernières positions ; la ligne suit donc réellement tout son parcours (et non
+  // le seul segment de la frame), ce qui donne l'étirement continu façon warp.
   drawStars(t, dt) {
     const { ctx, canvas } = this;
     const cx = canvas.width / 2, cy = canvas.height / 2;
     const maxR = Math.hypot(cx, cy) + 40;
     const accel = Math.min(9, 1 + t * 0.9);          // accélération progressive (warp)
     const spin = 0.12 + Math.min(1.1, t * 0.06);     // la galaxie se met à tourner
-    ctx.fillStyle = 'rgba(0,0,0,0.32)';              // traînées
+    const trail = Math.round(3 + Math.min(11, t * 2.2)); // la traînée s'allonge avec la vitesse
+    ctx.fillStyle = 'rgba(0,0,0,0.30)';              // rémanence du fond
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     for (const s of this.stars) {
-      const px = cx + Math.cos(s.ang) * s.r, py = cy + Math.sin(s.ang) * s.r;
       s.r += s.sp * accel * dt;
       s.ang += spin * dt * (30 / (10 + s.r * 0.05)); // rotation plus vive au centre
-      if (s.r > maxR) { s.r = 2 + Math.random() * 30; s.ang = Math.random() * Math.PI * 2; }
-      const x = cx + Math.cos(s.ang) * s.r, y = cy + Math.sin(s.ang) * s.r;
+      if (s.r > maxR) {                              // recyclage : on repart du centre, trace vidée
+        s.r = 2 + Math.random() * 30;
+        s.ang = Math.random() * Math.PI * 2;
+        s.trail.length = 0;
+      }
+      s.trail.push(cx + Math.cos(s.ang) * s.r, cy + Math.sin(s.ang) * s.r);
+      while (s.trail.length > trail * 2) s.trail.splice(0, 2);
+      if (s.trail.length < 4) continue;
+      // polyligne sur toutes les positions mémorisées = trajectoire complète
       ctx.strokeStyle = `hsla(${(s.hue + t * 30) % 360},90%,${55 + Math.min(30, s.r * 0.04)}%,0.9)`;
-      ctx.lineWidth = s.sz * Math.min(2.2, 0.5 + s.r / 300);
-      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x, y); ctx.stroke();
+      ctx.lineWidth = s.sz * Math.min(2.6, 0.5 + s.r / 260);
+      ctx.beginPath();
+      ctx.moveTo(s.trail[0], s.trail[1]);
+      for (let i = 2; i < s.trail.length; i += 2) ctx.lineTo(s.trail[i], s.trail[i + 1]);
+      ctx.stroke();
+      // pointe lumineuse en tête de traînée
+      ctx.fillStyle = '#fff';
+      ctx.globalAlpha = 0.75;
+      ctx.fillRect(s.trail[s.trail.length - 2] - 0.75, s.trail[s.trail.length - 1] - 0.75, 1.5, 1.5);
+      ctx.globalAlpha = 1;
     }
   }
 

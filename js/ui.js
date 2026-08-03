@@ -62,8 +62,8 @@ export class UI {
       achievementsBody: $('achievements-body'),
       saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
-      cine: $('cine'), cineCanvas: $('cine-canvas'), cineSkip: $('cine-skip'),
-      endingGetalife: $('ending-getalife'),
+      cine: $('cine'), cineCanvas: $('cine-canvas'), cineSkip: $('cine-skip'), cineCredit: $('cine-credit'),
+      endingGetalife: $('ending-getalife'), endingNgplus: $('ending-ngplus'),
       energyLoadFill: $('energy-load-fill'), energyLoadValue: $('energy-load-value'), energyList: $('energy-list'),
       researchValue: $('research-value'), researchRate: $('research-rate'), dataValue: $('data-value'), trainList: $('train-list'),
       panelCosmos: $('panel-cosmos'), cosmosBody: $('cosmos-body'),
@@ -106,20 +106,22 @@ export class UI {
     this.el.btnSave.addEventListener('click', () => { g.save(); this.toast('Partie sauvegardée', 'info'); });
     this.el.btnHelp.addEventListener('click', () => { this.renderAchievements(); this.el.helpOverlay.classList.remove('hidden'); });
     this.el.helpClose.addEventListener('click', () => this.el.helpOverlay.classList.add('hidden'));
-    // « Play again » se transforme d'abord en « Get a life ;-) » ; le second clic relance (NG+)
+    // « Play again » devient « Get a life ;-) » : le second clic tente aussi de fermer la fenêtre
     this.el.endingRestart.addEventListener('click', () => {
       if (!this._playAgainArmed) {
         this._playAgainArmed = true;
         this.el.endingRestart.textContent = 'Get a life ;-)';
         return;
       }
+      this.getALife();
+    });
+    this.el.endingGetalife.addEventListener('click', () => this.getALife());
+    // porte de sortie si le navigateur refuse de fermer l'onglet
+    this.el.endingNgplus.addEventListener('click', () => {
       g.hardReset(); this.resetSpeed();
       this.el.endingScreen.classList.add('hidden');
+      this.el.endingNgplus.classList.add('hidden');
       this.onPhaseChange(1); this.buildStaticRows(); this.render(true);
-    });
-    this.el.endingGetalife.addEventListener('click', () => {
-      this.el.endingTitle.textContent = 'Good choice. Enjoy the sun 🌱';
-      this.el.endingGetalife.disabled = true;
     });
     // export / import de sauvegarde
     this.el.saveExport.addEventListener('click', () => this.exportSave());
@@ -144,12 +146,71 @@ export class UI {
       this.fullRebuild();
       this.toast('Nouvelle partie — an 2019', 'info');
     });
+    // Ctrl+Shift+E : lancer directement la cinématique de fin (démo / test)
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
+        e.preventDefault();
+        if (this.cinematic && !this.cinematic.done) return;
+        this.closeModal();
+        this.el.endingScreen.classList.add('hidden');
+        this.showEnding();
+      }
+    });
     this.syncRiskTabs();
   }
 
   resetSpeed() {
     window.__speed = 1;
     this.el.btnSpeed.textContent = '⏩ x1';
+  }
+
+  // Le bouton « Play again » fuit le curseur : la partie est finie, allez dehors.
+  // Il reste attrapable (esquives de plus en plus courtes, puis il se laisse faire),
+  // et le clavier/tactile ne sont jamais gênés.
+  installEvasion() {
+    const btn = this.el.endingRestart;
+    if (this._evasionInstalled) { this._evadeCount = 0; btn.style.transform = ''; return; }
+    this._evasionInstalled = true;
+    this._evadeCount = 0;
+    const onMove = ev => {
+      if (btn.disabled || this.el.endingScreen.classList.contains('hidden')) return;
+      if (this._evadeCount >= 6) return;              // au bout de 6 esquives, il se rend
+      const r = btn.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const dx = ev.clientX - cx, dy = ev.clientY - cy;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 110) return;                         // le curseur approche seulement
+      this._evadeCount++;
+      const cur = btn._off || { x: 0, y: 0 };
+      const push = 120 - this._evadeCount * 12;
+      let nx = cur.x - (dx / (dist || 1)) * push;
+      let ny = cur.y - (dy / (dist || 1)) * push;
+      const lim = Math.min(220, (window.innerWidth || 800) / 3);
+      nx = clamp(nx, -lim, lim);
+      ny = clamp(ny, -120, 120);
+      btn._off = { x: nx, y: ny };
+      btn.style.transform = `translate(${nx.toFixed(0)}px, ${ny.toFixed(0)}px)`;
+    };
+    document.addEventListener('mousemove', onMove);
+  }
+
+  // « Get a life » : on tente réellement de fermer l'onglet. Les navigateurs ne
+  // l'autorisent que pour les fenêtres ouvertes par script — d'où le repli.
+  getALife() {
+    this.game.save();
+    this.el.endingTitle.textContent = 'Good choice. Enjoy the sun 🌱';
+    this.el.endingGetalife.disabled = true;
+    this.el.endingRestart.disabled = true;
+    try { window.open('', '_self'); } catch (e) {}     // s'auto-désigne comme ouvreur (vieille astuce)
+    try { window.close(); } catch (e) {}
+    setTimeout(() => {
+      if (typeof document === 'undefined' || document.hidden) return;
+      this.el.endingBody.innerHTML =
+        `<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>` +
+        `Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️`;
+      this.el.endingNgplus.classList.remove('hidden');
+      this.el.endingRestart.disabled = false;
+    }, 600);
   }
 
   // ---- export / import de sauvegarde ----
@@ -1012,12 +1073,19 @@ export class UI {
     if (!ctx || (this.cinematic && !this.cinematic.done)) { this.renderEndingStats(); return; }
     this.el.cine.classList.remove('hidden');
     this.el.cineSkip.textContent = 'Passer ▸▸';
+    this.el.cineCredit.classList.add('hidden');
     this.cinematic = new Cinematic(this.el.cineCanvas, {
-      onTextPhase: () => { this.el.cineSkip.textContent = 'Continuer ▸'; },
+      // le crédit « nostalgie 64k » apparaît en même temps que le scroller
+      onTextPhase: () => {
+        this.el.cineSkip.textContent = 'Continuer ▸';
+        this.el.cineCredit.classList.remove('hidden');
+      },
+      onFade: () => this.el.cineCredit.classList.add('hidden'),
     });
     this.el.cineSkip.onclick = () => this.cinematic.finish();
     this.cinematic.start(() => {
       this.el.cine.classList.add('hidden');
+      this.el.cineCredit.classList.add('hidden');
       this.renderEndingStats();
     });
   }
@@ -1025,9 +1093,14 @@ export class UI {
     const g = this.game, s = g.state;
     this._playAgainArmed = false;
     this.el.endingRestart.textContent = 'Play again';
+    this.el.endingRestart.disabled = false;
+    this.el.endingRestart.style.transform = '';
+    this.el.endingRestart._off = { x: 0, y: 0 };
     this.el.endingGetalife.disabled = false;
+    this.el.endingNgplus.classList.add('hidden');
     this.el.endingTitle.textContent = 'Un nouveau Big Bang';
     this.el.endingScreen.classList.remove('hidden');
+    this.installEvasion();
     const mins = Math.floor(s.playSeconds / 60);
     this.el.endingBody.innerHTML =
       `Toute la matière de l’univers — <b class="num">${fmtMass(UNIVERSE_MASS)}</b> — a été convertie en calcul, puis en tokens. ` +

@@ -257,14 +257,43 @@ step('triggerEnding + showEnding', () => {
   game.triggerEnding();
   if (ui.el.endingScreen.classList.contains('hidden')) throw new Error('écran de fin non affiché');
 });
-step('écran final : Play again → « Get a life ;-) » → NG+', () => {
+step('écran final : Play again → « Get a life ;-) » → fermeture tentée', () => {
+  let closeTried = false;
+  const origClose = window.close;
+  window.close = () => { closeTried = true; };
   ui.renderEndingStats();
   if (ui.el.endingRestart.textContent !== 'Play again') throw new Error('libellé initial incorrect');
   ui.el.endingRestart.dispatchEvent(new window.Event('click'));
   if (ui.el.endingRestart.textContent !== 'Get a life ;-)') throw new Error('transformation du bouton absente');
-  ui.el.endingRestart.dispatchEvent(new window.Event('click'));   // second clic → NG+
-  if (game.state.ended) throw new Error('NG+ non relancé');
+  ui.el.endingRestart.dispatchEvent(new window.Event('click'));   // second clic → tente de fermer
+  if (!closeTried) throw new Error('window.close() non tenté par « Get a life ;-) »');
+  closeTried = false;
+  ui.renderEndingStats();
+  ui.el.endingGetalife.dispatchEvent(new window.Event('click'));  // bouton « Get a life »
+  if (!closeTried) throw new Error('window.close() non tenté par « Get a life »');
+  window.close = origClose;
+});
+// bouton fuyant + porte de sortie NG+
+step('Play again fuit la souris, NG+ reste accessible', () => {
+  ui.renderEndingStats();
+  const btn = ui.el.endingRestart;
+  const before = btn.style.transform;
+  // jsdom renvoie un rect nul : le curseur est donc « tout proche » du centre
+  document.dispatchEvent(new window.MouseEvent('mousemove', { clientX: 5, clientY: 5 }));
+  if (btn.style.transform === before) throw new Error('le bouton ne se dérobe pas');
+  ui.el.endingNgplus.classList.remove('hidden');
+  ui.el.endingNgplus.dispatchEvent(new window.Event('click'));
+  if (game.state.ended) throw new Error('NG+ non relancé par la porte de sortie');
   ui.render(true);
+});
+// raccourci Ctrl+Shift+E → cinématique de fin
+step('Ctrl+Shift+E lance la fin', () => {
+  ui.el.endingScreen.classList.add('hidden');
+  document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'E', ctrlKey: true, shiftKey: true }));
+  // sans canvas 2D (jsdom), showEnding() bascule directement sur l'écran final
+  if (ui.el.endingScreen.classList.contains('hidden') && ui.el.cine.classList.contains('hidden'))
+    throw new Error('Ctrl+Shift+E n a pas déclenché la fin');
+  ui.el.endingScreen.classList.add('hidden');
 });
 
 // save/load
