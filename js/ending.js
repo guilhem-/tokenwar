@@ -1,9 +1,10 @@
 // =====================================================================
 //  TokenWar — CINÉMATIQUE DE FIN
-//  1) Capture de l'écran sur un canvas (SVG foreignObject, repli en
-//     peinture par rectangles si le navigateur refuse).
+//  1) Capture de l'écran de jeu en repeignant le DOM réel sur un canvas
+//     (positions, couleurs, polices et VRAI texte).
 //  2) Destruction par groupes de pixels (cellules projetées, rotation, gravité).
-//  3) Champ d'étoiles spatial : rotation globale + accélération (warp).
+//  3) Champ d'étoiles piloté par un scénario de vol : croisière, accélération,
+//     hyperespace, roulis pur (rotation du champ de vision), virage, marche arrière.
 //  4) Scroller sinusoïdal multicolore façon démo 64k + musique 8-bit (WebAudio).
 //  La cinématique tourne jusqu'à finish() (bouton Passer/Continuer).
 // =====================================================================
@@ -23,19 +24,24 @@ export class Cinematic {
     this.reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  async start(onDone) {
+  // Capture l'écran de jeu. À appeler AVANT d'afficher l'overlay de cinématique,
+  // sinon on photographierait l'overlay noir à la place du jeu.
+  capture() {
+    try { this.snap = this.paintDOM(); } catch (e) { this.snap = null; }
+    return this.snap;
+  }
+
+  start(onDone) {
     this.onDone = onDone;
     const c = this.canvas;
-    c.width = innerWidth; c.height = innerHeight;
-    let snap = null;
-    try { snap = await this.snapshot(); } catch (e) { snap = null; }
-    if (!snap) snap = this.rectPaint();
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    const snap = this.snap || this.capture();
     this.startMusic();
-    this.phase = 'dissolve';
     this.t0 = performance.now();
-    this.buildCells(snap);
     this.buildStars();
-    if (this.reduced) { this.phase = 'text'; this.onTextPhase(); }
+    if (snap) { this.phase = 'dissolve'; this.buildCells(snap); }
+    else { this.phase = 'stars'; this._starT0 = 0; }   // capture impossible : on saute au vol
+    if (this.reduced) { this.phase = 'text'; this._starT0 = 0; this.onTextPhase(); }
     const loop = now => {
       if (this.done) return;
       this.frame((now - this.t0) / 1000);
@@ -62,68 +68,116 @@ export class Cinematic {
     this.onDone && this.onDone();
   }
 
-  // ---------- 1. capture d'écran ----------
-  async snapshot() {
-    const w = innerWidth, h = innerHeight;
-    let css = '';
-    try { css = await (await fetch('styles.css')).text(); } catch (e) {}
-    const html = new XMLSerializer().serializeToString(document.body);
-    const bg = getComputedStyle(document.body).backgroundColor || '#0a0e14';
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">` +
-      `<rect width="100%" height="100%" fill="${bg}"/>` +
-      `<style>${css.replace(/</g, '\\3c ')}</style>` +
-      `<foreignObject width="100%" height="100%">${html}</foreignObject></svg>`;
-    const img = new Image();
-    const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    await new Promise((res, rej) => {
-      img.onload = res; img.onerror = rej;
-      img.src = url;
-      setTimeout(rej, 2500);                       // certains navigateurs ne déclenchent jamais onerror
-    });
-    const off = document.createElement('canvas');
-    off.width = w; off.height = h;
-    const octx = off.getContext('2d');
-    octx.fillStyle = bg; octx.fillRect(0, 0, w, h);
-    octx.drawImage(img, 0, 0, w, h);
-    octx.getImageData(0, 0, 1, 1);                 // vérifie que le canvas n'est pas « tainted »
-    return off;
-  }
-  // repli : impression de l'écran par rectangles colorés (robuste partout)
-  rectPaint() {
-    const w = innerWidth, h = innerHeight;
+  // ---------- 1. capture d'écran : peintre DOM fidèle ----------
+  // On repeint l'interface RÉELLE sur un canvas : mêmes positions, mêmes couleurs,
+  // mêmes polices et surtout le VRAI texte (compteurs, journal, titres…), pour que
+  // l'image désintégrée soit bien l'état du jeu au moment de la fin.
+  // (L'ancienne capture SVG/foreignObject sérialisait tout le body — overlay de
+  // cinématique compris — et rendait une image noire ou vide selon le navigateur.)
+  SKIP = /\b(cine|ending-screen|modal-overlay|toast-container|hidden)\b/;
+
+  paintDOM() {
+    const w = window.innerWidth, h = window.innerHeight;
     const off = document.createElement('canvas');
     off.width = w; off.height = h;
     const ctx = off.getContext('2d');
-    ctx.fillStyle = getComputedStyle(document.body).backgroundColor || '#0a0e14';
+    const bodySt = getComputedStyle(document.body);
+    ctx.fillStyle = bodySt.backgroundColor && bodySt.backgroundColor !== 'rgba(0, 0, 0, 0)'
+      ? bodySt.backgroundColor : '#0a0e14';
     ctx.fillRect(0, 0, w, h);
-    const els = document.querySelectorAll('.panel, .topbar, .stat, .btn, .item, .headline, .log-entry, .panel-title, .stat-value');
-    for (const el of els) {
-      const r = el.getBoundingClientRect();
-      if (r.width < 4 || r.height < 4 || r.bottom < 0 || r.top > h) continue;
-      const st = getComputedStyle(el);
-      let fill = st.backgroundColor;
-      if (!fill || fill === 'rgba(0, 0, 0, 0)') fill = 'rgba(30,40,60,0.55)';
-      ctx.fillStyle = fill;
-      ctx.strokeStyle = st.borderColor && st.borderColor !== 'rgba(0, 0, 0, 0)' ? st.borderColor : 'rgba(60,80,110,0.6)';
+    ctx.textBaseline = 'middle';
+
+    const radiusOf = st => {
+      const v = parseFloat(st.borderTopLeftRadius) || 0;
+      return Math.min(v, 24);
+    };
+    const box = (x, y, bw, bh, rad) => {
       ctx.beginPath();
-      ctx.roundRect ? ctx.roundRect(r.left, r.top, r.width, r.height, 8) : ctx.rect(r.left, r.top, r.width, r.height);
-      ctx.fill(); ctx.stroke();
-      // lignes de « texte » suggérées
-      ctx.fillStyle = st.color || '#93a1b8';
-      const lines = Math.min(4, Math.floor(r.height / 18));
-      for (let i = 0; i < lines; i++) {
-        ctx.globalAlpha = 0.35;
-        ctx.fillRect(r.left + 10, r.top + 8 + i * 16, Math.max(10, r.width * (0.3 + 0.4 * Math.random())), 3);
-        ctx.globalAlpha = 1;
+      if (ctx.roundRect) ctx.roundRect(x, y, bw, bh, rad);
+      else ctx.rect(x, y, bw, bh);
+    };
+    // approxime un dégradé CSS par un dégradé diagonal entre ses couleurs
+    const gradientFrom = (img, x, y, bw, bh) => {
+      const cols = img.match(/rgba?\([^)]+\)|#[0-9a-f]{3,8}/gi);
+      if (!cols || cols.length < 2) return null;
+      const g = ctx.createLinearGradient(x, y, x + bw, y + bh);
+      const uniq = cols.filter(c => !/rgba\([^)]*,\s*0\s*\)/i.test(c));
+      if (uniq.length < 2) return null;
+      uniq.slice(0, 4).forEach((c, i, a) => { try { g.addColorStop(i / (a.length - 1), c); } catch (e) {} });
+      return g;
+    };
+
+    const drawText = (node, st) => {
+      const txt = node.textContent.replace(/\s+/g, ' ').trim();
+      if (!txt) return;
+      let rects;
+      try {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        rects = [...range.getClientRects()].filter(r => r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < h);
+      } catch (e) { return; }
+      if (!rects.length) return;
+      ctx.fillStyle = st.color || '#dbe4f0';
+      ctx.font = `${st.fontStyle} ${st.fontWeight} ${st.fontSize} ${st.fontFamily}`;
+      if (rects.length === 1) {
+        ctx.fillText(txt, rects[0].left, rects[0].top + rects[0].height / 2);
+        return;
       }
-    }
+      // texte sur plusieurs lignes : découpage glouton, une ligne par rect
+      const words = txt.split(' ');
+      let wi = 0;
+      for (const r of rects) {
+        let line = '';
+        while (wi < words.length) {
+          const test = line ? line + ' ' + words[wi] : words[wi];
+          if (line && ctx.measureText(test).width > r.width) break;
+          line = test; wi++;
+        }
+        if (line) ctx.fillText(line, r.left, r.top + r.height / 2);
+        if (wi >= words.length) break;
+      }
+    };
+
+    const walk = el => {
+      if (el.nodeType !== 1) return;
+      const cls = typeof el.className === 'string' ? el.className : '';
+      if (this.SKIP.test(cls) || el.id === 'cine' || el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+      const st = getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden' || parseFloat(st.opacity) === 0) return;
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < h && r.right > 0 && r.left < w) {
+        const rad = radiusOf(st);
+        // fond (couleur ou dégradé)
+        const bg = st.backgroundColor;
+        const bgImg = st.backgroundImage;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)') {
+          ctx.fillStyle = bg; box(r.left, r.top, r.width, r.height, rad); ctx.fill();
+        }
+        if (bgImg && bgImg !== 'none' && /gradient/i.test(bgImg)) {
+          const g = gradientFrom(bgImg, r.left, r.top, r.width, r.height);
+          if (g) { ctx.fillStyle = g; box(r.left, r.top, r.width, r.height, rad); ctx.fill(); }
+        }
+        // bordure
+        const bwid = parseFloat(st.borderTopWidth) || 0;
+        if (bwid > 0 && st.borderTopColor && st.borderTopColor !== 'rgba(0, 0, 0, 0)') {
+          ctx.strokeStyle = st.borderTopColor;
+          ctx.lineWidth = Math.min(bwid, 3);
+          box(r.left + bwid / 2, r.top + bwid / 2, Math.max(0, r.width - bwid), Math.max(0, r.height - bwid), rad);
+          ctx.stroke();
+        }
+        // vrai texte des nœuds directs
+        for (const node of el.childNodes) if (node.nodeType === 3) drawText(node, st);
+      }
+      for (const child of el.children) walk(child);
+    };
+    walk(document.body);
     return off;
   }
 
   // ---------- 2. destruction par groupes de pixels ----------
   buildCells(snap) {
     this.snap = snap;
-    const cs = this.cellSize = Math.max(10, Math.round(innerWidth / 90));
+    const cs = this.cellSize = Math.max(10, Math.round(window.innerWidth / 90));
     const cols = Math.ceil(snap.width / cs), rows = Math.ceil(snap.height / cs);
     const cx = snap.width / 2, cy = snap.height / 2;
     const maxD = Math.hypot(cx, cy);
@@ -171,53 +225,109 @@ export class Cinematic {
 
   // ---------- 3. champ d'étoiles (rotations + accélérations) ----------
   buildStars() {
+    const TAU = Math.PI * 2;
     this.stars = [];
-    for (let i = 0; i < 420; i++) {
+    for (let i = 0; i < 460; i++) {
       this.stars.push({
-        ang: Math.random() * Math.PI * 2,
-        r: 4 + Math.random() * Math.hypot(innerWidth, innerHeight) * 0.5,
-        sp: 12 + Math.random() * 60,
+        ang: Math.random() * TAU,
+        r: 6 + Math.random() * Math.hypot(window.innerWidth, window.innerHeight) * 0.5,
+        sp: 0.45 + Math.random() * 1.15,             // dispersion des vitesses (profondeur)
         hue: 180 + Math.random() * 180,
         sz: 0.6 + Math.random() * 1.8,
-        trail: [],                                   // positions successives (effet hyperespace)
+        trail: [],                                   // positions successives (traînée réelle)
       });
     }
+    // SCÉNARIO DE VOL — on alterne les configurations pour varier les sensations :
+    //   fwd  : vitesse d'avance (radiale). >0 on avance, <0 on recule, 0 on flotte.
+    //   spin : rotation UNIFORME du champ de vision (rad/s) — pas un tourbillon.
+    //   trail: longueur de la traînée ; fade : rémanence du fond (plus bas = traînées longues).
+    //   vp   : décalage du point de fuite (impression de virage / dérive).
+    this.flight = [
+      { id:'cruise',  dur:4.0, fwd:70,   spin:0,     trail:5,  fade:0.30, vp:[0, 0] },
+      { id:'boost',   dur:4.5, fwd:520,  spin:0,     trail:20, fade:0.17, vp:[0, 0] },
+      { id:'roll',    dur:4.5, fwd:0,    spin:0.70,  trail:9,  fade:0.26, vp:[0, 0] },
+      { id:'bank',    dur:4.0, fwd:170,  spin:0.42,  trail:12, fade:0.22, vp:[0.26, -0.12] },
+      { id:'hyper',   dur:5.5, fwd:1250, spin:0,     trail:34, fade:0.11, vp:[0, 0] },
+      { id:'brake',   dur:3.5, fwd:35,   spin:-0.18, trail:4,  fade:0.34, vp:[0, 0] },
+      { id:'reverse', dur:4.0, fwd:-200, spin:0,     trail:10, fade:0.24, vp:[0, 0] },
+      { id:'yaw',     dur:4.0, fwd:95,   spin:0,     trail:8,  fade:0.26, vp:[-0.30, 0.14] },
+      { id:'tumble',  dur:3.5, fwd:0,    spin:-1.05, trail:11, fade:0.24, vp:[0, 0] },
+    ];
+    this.flightDur = this.flight.reduce((a, m) => a + m.dur, 0);
   }
-  // Champ d'étoiles « hyperespace » : chaque étoile conserve une trace de ses
-  // dernières positions ; la ligne suit donc réellement tout son parcours (et non
-  // le seul segment de la frame), ce qui donne l'étirement continu façon warp.
+
+  // paramètres de vol à l'instant t, avec fondu enchaîné entre deux configurations
+  flightAt(t) {
+    const seq = this.flight;
+    let x = ((t % this.flightDur) + this.flightDur) % this.flightDur, i = 0;
+    while (x > seq[i].dur) { x -= seq[i].dur; i = (i + 1) % seq.length; }
+    const cur = seq[i], next = seq[(i + 1) % seq.length];
+    const BLEND = 1.3;
+    const k = x > cur.dur - BLEND ? (x - (cur.dur - BLEND)) / BLEND : 0;
+    const e = k * k * (3 - 2 * k);                   // smoothstep : pas de à-coup
+    const mix = (a, b) => a + (b - a) * e;
+    return {
+      mode: cur.id,
+      fwd: mix(cur.fwd, next.fwd),
+      spin: mix(cur.spin, next.spin),
+      trail: Math.max(2, Math.round(mix(cur.trail, next.trail))),
+      fade: mix(cur.fade, next.fade),
+      vx: mix(cur.vp[0], next.vp[0]),
+      vy: mix(cur.vp[1], next.vp[1]),
+    };
+  }
+  // Champ d'étoiles piloté par le scénario de vol. Chaque étoile mémorise ses
+  // positions successives : la traînée suit donc EXACTEMENT sa trajectoire —
+  //   • avance pure (spin = 0) → segments radiaux : on fonce tout droit ;
+  //   • rotation pure (fwd = 0, ω uniforme) → arcs concentriques : le champ de
+  //     vision pivote sans qu'on avance.
   drawStars(t, dt) {
     const { ctx, canvas } = this;
-    const cx = canvas.width / 2, cy = canvas.height / 2;
-    const maxR = Math.hypot(cx, cy) + 40;
-    const accel = Math.min(9, 1 + t * 0.9);          // accélération progressive (warp)
-    const spin = 0.12 + Math.min(1.1, t * 0.06);     // la galaxie se met à tourner
-    const trail = Math.round(3 + Math.min(11, t * 2.2)); // la traînée s'allonge avec la vitesse
-    ctx.fillStyle = 'rgba(0,0,0,0.30)';              // rémanence du fond
+    const TAU = Math.PI * 2;
+    const f = this.flightAt(t);
+    // point de fuite (décalé pendant les virages) : c'est vers lui qu'on « vole »
+    const cx = canvas.width / 2 + f.vx * canvas.width * 0.5;
+    const cy = canvas.height / 2 + f.vy * canvas.height * 0.5;
+    const maxR = Math.hypot(canvas.width, canvas.height) * 0.62;
+    const speedN = Math.min(1, Math.abs(f.fwd) / 1250);   // 0 = à l'arrêt, 1 = hyperespace
+
+    ctx.fillStyle = `rgba(0,0,0,${f.fade})`;              // rémanence (traînées plus ou moins longues)
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
     for (const s of this.stars) {
-      s.r += s.sp * accel * dt;
-      s.ang += spin * dt * (30 / (10 + s.r * 0.05)); // rotation plus vive au centre
-      if (s.r > maxR) {                              // recyclage : on repart du centre, trace vidée
-        s.r = 2 + Math.random() * 30;
-        s.ang = Math.random() * Math.PI * 2;
-        s.trail.length = 0;
+      // AVANCE : strictement radiale, avec parallaxe (plus l'étoile est « proche »,
+      // plus elle défile vite) → sensation de translation vers l'avant.
+      if (f.fwd !== 0) s.r += s.sp * f.fwd * dt * (0.30 + (s.r / maxR) * 1.5);
+      // ROTATION : même vitesse angulaire pour toutes = rotation rigide de l'image
+      // (une caméra qui roule), et non un tourbillon.
+      if (f.spin !== 0) s.ang += f.spin * dt;
+
+      if (s.r > maxR) {                                   // sortie d'écran → on renaît au centre
+        s.r = 4 + Math.random() * 26; s.ang = Math.random() * TAU; s.trail.length = 0;
+      } else if (s.r < 3) {                               // marche arrière → on renaît au bord
+        s.r = maxR * (0.75 + Math.random() * 0.2); s.ang = Math.random() * TAU; s.trail.length = 0;
       }
+
       s.trail.push(cx + Math.cos(s.ang) * s.r, cy + Math.sin(s.ang) * s.r);
-      while (s.trail.length > trail * 2) s.trail.splice(0, 2);
+      while (s.trail.length > f.trail * 2) s.trail.splice(0, 2);
       if (s.trail.length < 4) continue;
-      // polyligne sur toutes les positions mémorisées = trajectoire complète
-      ctx.strokeStyle = `hsla(${(s.hue + t * 30) % 360},90%,${55 + Math.min(30, s.r * 0.04)}%,0.9)`;
-      ctx.lineWidth = s.sz * Math.min(2.6, 0.5 + s.r / 260);
+
+      // couleur : bleu/blanc au décollage hyperespace, teintes plus chaudes au repos
+      const light = 55 + Math.min(28, (s.r / maxR) * 34) + speedN * 15;
+      const sat = 92 - speedN * 34;
+      ctx.strokeStyle = `hsla(${(s.hue + t * 22) % 360},${sat}%,${light}%,0.92)`;
+      ctx.lineWidth = s.sz * (0.5 + (s.r / maxR) * 1.7) * (0.75 + speedN * 0.8);
       ctx.beginPath();
       ctx.moveTo(s.trail[0], s.trail[1]);
       for (let i = 2; i < s.trail.length; i += 2) ctx.lineTo(s.trail[i], s.trail[i + 1]);
       ctx.stroke();
       // pointe lumineuse en tête de traînée
+      const hx = s.trail[s.trail.length - 2], hy = s.trail[s.trail.length - 1];
+      ctx.globalAlpha = 0.55 + speedN * 0.4;
       ctx.fillStyle = '#fff';
-      ctx.globalAlpha = 0.75;
-      ctx.fillRect(s.trail[s.trail.length - 2] - 0.75, s.trail[s.trail.length - 1] - 0.75, 1.5, 1.5);
+      const hs = 1.2 + speedN * 1.3;
+      ctx.fillRect(hx - hs / 2, hy - hs / 2, hs, hs);
       ctx.globalAlpha = 1;
     }
   }
@@ -253,7 +363,8 @@ export class Cinematic {
       if (this.drawDissolve(t) || t > 5.5) { this.phase = 'stars'; this._starT0 = t; }
     } else if (this.phase === 'stars') {
       this.drawStars(t - this._starT0, dt);
-      if (t - this._starT0 > 5) { this.phase = 'text'; this.onTextPhase(); }
+      // ~9 s de vol seul : le temps de sentir croisière → accélération → roulis
+      if (t - this._starT0 > 9) { this.phase = 'text'; this.onTextPhase(); }
     } else if (this.phase === 'text') {
       this.drawStars(t - this._starT0, dt);          // les étoiles continuent derrière le texte
       this.drawText(t);

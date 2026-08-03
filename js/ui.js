@@ -1071,7 +1071,6 @@ export class UI {
     this.el.body.className = 'phase-bigbang';
     const ctx = this.el.cineCanvas && this.el.cineCanvas.getContext && this.el.cineCanvas.getContext('2d');
     if (!ctx || (this.cinematic && !this.cinematic.done)) { this.renderEndingStats(); return; }
-    this.el.cine.classList.remove('hidden');
     this.el.cineSkip.textContent = 'Passer ▸▸';
     this.el.cineCredit.classList.add('hidden');
     this.cinematic = new Cinematic(this.el.cineCanvas, {
@@ -1083,6 +1082,9 @@ export class UI {
       onFade: () => this.el.cineCredit.classList.add('hidden'),
     });
     this.el.cineSkip.onclick = () => this.cinematic.finish();
+    // on photographie l'écran de jeu AVANT d'afficher l'overlay noir de la cinématique
+    this.cinematic.capture();
+    this.el.cine.classList.remove('hidden');
     this.cinematic.start(() => {
       this.el.cine.classList.add('hidden');
       this.el.cineCredit.classList.add('hidden');

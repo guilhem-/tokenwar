@@ -15,6 +15,8 @@ globalThis.Node = window.Node;
 globalThis.localStorage = window.localStorage || { getItem(){return null;}, setItem(){}, removeItem(){} };
 globalThis.requestAnimationFrame = () => 0;
 globalThis.performance = window.performance || { now: () => Date.now() };
+globalThis.getComputedStyle = window.getComputedStyle.bind(window);
+globalThis.innerWidth = window.innerWidth; globalThis.innerHeight = window.innerHeight;
 window.__speed = 1;
 
 let errors = [];
@@ -22,6 +24,7 @@ function step(label, fn) { try { fn(); console.log('OK  ' + label); } catch (e) 
 
 const { Game } = await import('./js/game.js');
 const { UI } = await import('./js/ui.js');
+const { Cinematic } = await import('./js/ending.js');
 
 const ui = new UI();
 const game = new Game(ui);
@@ -286,6 +289,50 @@ step('Play again fuit la souris, NG+ reste accessible', () => {
   if (game.state.ended) throw new Error('NG+ non relancé par la porte de sortie');
   ui.render(true);
 });
+// la capture de fin doit refléter l'ÉTAT DU JEU (vrai texte, overlays exclus)
+step('capture de fin fidèle à l écran de jeu', () => {
+  // faux contexte 2D : on enregistre les textes peints et les rectangles de fond
+  const painted = [];
+  const fakeCtx = new Proxy({}, {
+    get: (_, k) => {
+      if (k === 'fillText') return (txt) => painted.push(String(txt));
+      if (k === 'measureText') return () => ({ width: 10 });
+      if (k === 'createLinearGradient') return () => ({ addColorStop() {} });
+      if (k === 'getImageData') return () => ({ data: [0, 0, 0, 0] });
+      return () => {};
+    },
+    set: () => true,
+  });
+  const origCreate = document.createElement.bind(document);
+  document.createElement = tag => {
+    const el = origCreate(tag);
+    if (tag === 'canvas') el.getContext = () => fakeCtx;
+    return el;
+  };
+  // jsdom ne fait pas de mise en page : on simule des rectangles plausibles
+  const origElRect = window.Element.prototype.getBoundingClientRect;
+  const origRangeRects = window.Range.prototype.getClientRects;
+  window.Element.prototype.getBoundingClientRect = () => ({ left:10, top:10, right:210, bottom:50, width:200, height:40 });
+  window.Range.prototype.getClientRects = () => [{ left:10, top:10, right:210, bottom:30, width:200, height:20 }];
+  // un marqueur unique dans le jeu + un marqueur dans un overlay qui doit être ignoré
+  const brand = document.querySelector('.brand-name');
+  brand.textContent = 'MARQUEUR_JEU_42';
+  ui.el.endingTitle.textContent = 'MARQUEUR_OVERLAY';
+  ui.el.endingScreen.classList.remove('hidden');
+  const cine = Object.create(Cinematic.prototype);
+  cine.SKIP = /\b(cine|ending-screen|modal-overlay|toast-container|hidden)\b/;
+  let snap, err = null;
+  try { snap = cine.paintDOM(); } catch (e) { err = e; }
+  document.createElement = origCreate;
+  window.Element.prototype.getBoundingClientRect = origElRect;
+  window.Range.prototype.getClientRects = origRangeRects;
+  ui.el.endingScreen.classList.add('hidden');
+  if (err) throw err;
+  if (!snap) throw new Error('capture nulle');
+  if (!painted.includes('MARQUEUR_JEU_42')) throw new Error('le vrai texte du jeu n est pas peint');
+  if (painted.includes('MARQUEUR_OVERLAY')) throw new Error('un overlay a été photographié (écran final)');
+});
+
 // raccourci Ctrl+Shift+E → cinématique de fin
 step('Ctrl+Shift+E lance la fin', () => {
   ui.el.endingScreen.classList.add('hidden');
