@@ -59,10 +59,28 @@ export const MODELS = [
     cost:{ money:8e9, compute:6e4, data:6e6, research:2e6 },
     flavor:'Cinq modèles phares en trois semaines (juillet 2026). Les agents pilotent des ordinateurs entiers ; la course s’emballe.' },
 
-  { id:'asi', minRnd:40,    name:'Super-intelligence (ASI)', year:2027, era:'Singularité',
+  { id:'memory', minRnd:34, name:'Modèle à mémoire persistante', year:2027, era:'Apprentissage continu',
+    meta:'mémoire de travail permanente · apprentissage en ligne',
+    throughput:2.6e8,  quality:11,
+    cost:{ money:1.4e10, compute:9e4, data:9e6, research:3e6 },
+    flavor:'Le modèle n’oublie plus rien entre deux sessions : il apprend en continu de ses propres traces.' },
+
+  { id:'worldmodel', minRnd:40, name:'Modèle du monde (world model)', year:2028, era:'Simulation',
+    meta:'physique intuitive · simulation prédictive',
+    throughput:6e8,    quality:14,
+    cost:{ money:2e10, compute:1.6e5, data:1.6e7, research:5e6 },
+    flavor:'Il ne prédit plus des mots mais des futurs : chaque requête simule le monde avant de répondre.' },
+
+  { id:'swarm', minRnd:46, name:'Essaim d’agents auto-organisés', year:2029, era:'Essaim',
+    meta:'millions d’agents · négociation interne',
+    throughput:1.4e9,  quality:16,
+    cost:{ money:2.8e10, compute:3e5, data:3e7, research:9e6 },
+    flavor:'Des millions d’agents se répartissent le travail, se recrutent et se corrigent entre eux. Personne ne lit plus les logs.' },
+
+  { id:'asi', minRnd:54,    name:'Super-intelligence (ASI)', year:2030, era:'Singularité',
     meta:'auto-amélioration récursive',
-    throughput:3e8,    quality:12,
-    cost:{ money:2.5e10, compute:2e5, data:1.5e7, research:1e7 },
+    throughput:5e9,    quality:18,
+    cost:{ money:4e10, compute:5e5, data:6e7, research:2e7 },
     unlocksPhase:2,
     flavor:'Le modèle améliore son propre code. À partir d’ici, l’argent ne compte plus : seule la matière compte.' },
 ];
@@ -147,23 +165,181 @@ export const INFRA = [
 ];
 
 // ---------------------------------------------------------------------
-//  ÉNERGIE — plafond dur de production
-//  mw : capacité ajoutée ; costMult : inflation du capex
+//  ÉNERGIE — plafond dur de production. Trois natures de coût, distinctes :
+//   · costBase/costMult : CAPEX, coût UNIQUE payé à la commande (raccordement,
+//     panneaux, turbine, îlot nucléaire…) ;
+//   · omDaily : coût RÉCURRENT FIXE par unité et par jour (abonnement, O&M,
+//     personnel, maintenance) — dû même si l'on ne consomme rien ;
+//   · fuelMWh : coût RÉCURRENT VARIABLE, par MWh réellement soutiré
+//     (gaz, kWh réseau, combustible) ;
+//   · subMWDay : part d'abonnement proportionnelle à la PUISSANCE SOUSCRITE
+//     ($/MW souscrit/jour) — typiquement le réseau (façon TURPE).
+//  build : délai de mise en service (secondes de jeu à ×1).
 // ---------------------------------------------------------------------
 export const ENERGY = [
-  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0, costMWh:120,
-    desc:'On tire sur le réseau local. Bon marché, mais limité.' },
-  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1, costMWh:5,
-    desc:'Vert et bien vu. Intermittent mais propre.' },
-  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:6e4,  costMult:1.10, rep:-2, costMWh:70,
-    desc:'Rapide à déployer, mauvaise presse climatique.' },
-  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:5e6,  costMult:1.12, rep:+1, costMWh:20,
-    desc:'Petit réacteur modulaire (façon Google-Kairos / Three Mile Island).' },
-  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2, costMWh:2,
-    desc:'Énergie quasi illimitée. Le rêve enfin réalisé.' },
-  { id:'dyson',   name:'Collecteur Dyson',         year:2030, mw:5e8, costBase:1e13, costMult:1.10, rep:0, phase:3, costMWh:0,
-    desc:'On capte une fraction de l’étoile elle-même.' },
+  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0,
+    fuelMWh:78, omDaily:0, subMWDay:260, build:5,
+    desc:'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.' },
+  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1,
+    fuelMWh:0, omDaily:38, build:9,
+    desc:'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.' },
+  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:6e4,  costMult:1.10, rep:-2,
+    fuelMWh:70, omDaily:210, build:16,
+    desc:'Turbine rapide à déployer : peu de capex, mais le gaz se paie au MWh brûlé.' },
+  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:5e6,  costMult:1.12, rep:+1,
+    fuelMWh:8, omDaily:7200, build:70,
+    desc:'Petit réacteur modulaire : capex lourd, combustible négligeable, mais exploitation et sûreté à demeure.' },
+  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2,
+    fuelMWh:1, omDaily:9e4, build:110,
+    desc:'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.' },
+  { id:'dyson',   name:'Collecteur Dyson',         year:2030, mw:5e8, costBase:1e13, costMult:1.10, rep:0, phase:3,
+    fuelMWh:0, omDaily:0, build:150,
+    desc:'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.' },
 ];
+
+// ---------------------------------------------------------------------
+//  DÉLAIS DE MISE EN SERVICE — rien n'est instantané : tout objet commandé
+//  entre en « chantier » puis devient productif. Le délai croît avec la
+//  COMPLEXITÉ de l'objet, mesurée par son prix (échelle log, donc un objet
+//  100× plus cher n'est pas 100× plus long) :
+//        secondes = base + k · log10(1 + prix/1000),  plafonné à cap.
+//  La formule vaut aussi pour le matériel inventé jusqu'en 2100.
+//  (Les sources d'énergie portent un `build` explicite : un SMR ne se monte
+//   pas comme un panneau solaire.)
+// ---------------------------------------------------------------------
+export const BUILD = {
+  gpu:        { base:1.2, k:1.8, cap:26 },   // réception, rackage, câblage, burn-in
+  realestate: { base:18,  k:3.2, cap:70 },   // acquisition, permis, viabilisation
+  datacenter: { base:10,  k:3.0, cap:50 },   // salle, clim, incendie, mise sous tension
+  rack:       { base:3.5, k:2.0, cap:22 },   // baie, PDU, switch
+  server:     { base:2.5, k:2.0, cap:22 },   // châssis, intégration, image système
+  energy:     { base:6,   k:4.0, cap:180 },  // défaut si la source n'a pas de `build`
+};
+
+// ---------------------------------------------------------------------
+//  INFLATION SIMULÉE — la valeur de l'argent se dégrade.
+//  Taux annuels calqués sur l'histoire récente (US CPI) puis prolongés.
+//  Tout ce qui s'achète et se paie (matériel, salaires, énergie, loyers)
+//  suit l'indice ; la TRÉSORERIE DORMANTE, elle, ne suit pas — garder du
+//  cash coûte du pouvoir d'achat. Les prix de vente acceptés par le marché
+//  suivent aussi l'indice (sinon la marge s'effondrerait mécaniquement).
+// ---------------------------------------------------------------------
+export const INFLATION = [
+  [2019, 0.018], [2020, 0.012], [2021, 0.047], [2022, 0.080], [2023, 0.041],
+  [2024, 0.029], [2025, 0.030], [2026, 0.035], [2027, 0.030], [2028, 0.028],
+  [2030, 0.025], [2035, 0.030], [2040, 0.035],
+];
+export const INFLATION_TAIL = 0.03;   // au-delà de la table
+
+// ---------------------------------------------------------------------
+//  CRISES — incidents graves qui SAIGNENT la trésorerie tant qu'ils ne sont
+//  pas repérés. La boîte d'alerte apparaît à un endroit aléatoire de la page,
+//  de préférence hors du champ de vision : plus le joueur met de temps à la
+//  trouver, plus il perd (jusqu'à 70% de sa fortune en 2 minutes). Au bout de
+//  2 minutes, l'incident se résorbe seul — le mal est fait.
+//  cost : coût FIXE de la remédiation (indexé sur l'inflation) ; days : jours
+//  de charges d'exploitation supplémentaires que la remédiation engloutit.
+// ---------------------------------------------------------------------
+export const CRISES = [
+  { id:'exfil', icon:'🕵️', title:'Exfiltration de données en cours',
+    body:'Un accès non autorisé aspire vos journaux de conversations et des poids de modèle vers un hôte inconnu. Le trafic sortant est anormal depuis plusieurs minutes.',
+    fix:'Couper l’accès, forensic et durcissement',
+    fixDesc:'Isolation réseau immédiate, rotation de tous les secrets, investigation forensic et durcissement des accès.',
+    cost:180000, days:2, apply:g=>{ g.changeRep(-4); } },
+
+  { id:'fire', icon:'🔥', title:'Incendie dans un datacenter',
+    body:'Un onduleur a pris feu en salle 2. La détection a fonctionné, l’extinction automatique non. La fumée gagne les allées froides.',
+    fix:'Mobiliser les pompiers et redonder l’extinction',
+    fixDesc:'Intervention des pompiers, évacuation, remplacement des batteries et doublement du système d’extinction.',
+    cost:450000, days:3, cond:g=>g.infraCount('datacenter') >= 1,
+    apply:g=>{ g.changeRep(-5); g.addTimedMod('prodPenalty', 0.75, 45); } },
+
+  { id:'blockade', icon:'🚧', title:'Datacenter bloqué par des opposants',
+    body:'Un collectif anti-datacenter bloque les accès du site : plus de livraisons, plus d’astreinte sur place, et les caméras tournent.',
+    fix:'Médiation, contournement logistique et sécurité',
+    fixDesc:'Négociation avec le collectif, itinéraire logistique alternatif et gardiennage renforcé.',
+    cost:120000, days:2, apply:g=>{ g.changeRep(-3); } },
+
+  { id:'fiber', icon:'✂️', title:'Fibre optique sectionnée',
+    body:'Une pelleteuse a tranché le faisceau de fibres. Vos deux liens principaux passaient dans la même tranchée — erreur classique.',
+    fix:'Basculer sur le secours et re-router en diversité',
+    fixDesc:'Activation d’un lien de secours opérateur, épissure d’urgence et re-routage en diversité géographique.',
+    cost:260000, days:1, apply:g=>{ g.addTimedMod('demand', 0.7, 40); } },
+
+  { id:'reactor', icon:'☢️', title:'Réacteur hors de contrôle',
+    body:'Le SMR qui alimente votre campus s’emballe : la boucle secondaire dérive et l’autorité de sûreté est déjà au téléphone.',
+    fix:'SCRAM, inspection et remise en conformité',
+    fixDesc:'Arrêt d’urgence, inspection complète par l’autorité de sûreté, remplacement des échangeurs et remise en service.',
+    cost:2500000, days:4, cond:g=>(g.state.energyCounts.nuclear || 0) >= 1,
+    apply:g=>{ g.changeRep(-8); } },
+
+  { id:'ransom', icon:'🔒', title:'Rançongiciel sur les sauvegardes',
+    body:'Vos sauvegardes sont chiffrées une à une. Un compte à rebours s’affiche sur la console d’administration, avec une adresse de paiement.',
+    fix:'Restaurer depuis l’air-gap, refuser la rançon',
+    fixDesc:'Restauration depuis les copies hors-ligne, reconstruction du domaine et refus catégorique de payer.',
+    cost:600000, days:3, apply:g=>{ g.changeRep(-2); } },
+
+  { id:'coolant', icon:'💧', title:'Fuite de liquide de refroidissement',
+    body:'Une boucle de refroidissement liquide fuit sous les racks. Chaque minute qui passe rapproche le glycol de l’électronique.',
+    fix:'Isoler la boucle, purger et remplacer les échangeurs',
+    fixDesc:'Isolation de la boucle, purge complète, remplacement des collecteurs et des cartes touchées.',
+    cost:380000, days:2, cond:g=>g.infraCount('rack') >= 2,
+    apply:g=>{ g.addTimedMod('prodPenalty', 0.85, 40); } },
+
+  { id:'carding', icon:'💳', title:'Fraude massive sur l’API',
+    body:'Des milliers de cartes volées créent des comptes et consomment votre inférence. Les rejets bancaires arrivent en cascade.',
+    fix:'Geler les paiements, 3-D Secure et anti-fraude',
+    fixDesc:'Gel des encaissements suspects, authentification forte obligatoire et moteur de détection de fraude.',
+    cost:220000, days:2, apply:g=>{ g.addTimedMod('demand', 0.85, 30); } },
+
+  { id:'heatwave', icon:'🌡️', title:'Climatisation en panne pendant la canicule',
+    body:'46 °C dehors, groupes froids à l’arrêt. Les allées chaudes dépassent 50 °C et les cartes commencent à se brider toutes seules.',
+    fix:'Groupes froids mobiles et free-cooling d’urgence',
+    fixDesc:'Location de groupes froids mobiles, bâchage, free-cooling forcé et bridage temporaire du parc.',
+    cost:300000, days:2, apply:g=>{ g.addTimedMod('prodPenalty', 0.7, 50); } },
+
+  { id:'poison', icon:'🧪', title:'Empoisonnement du corpus d’entraînement',
+    body:'Un acteur inconnu a injecté des documents piégés dans vos sources publiques. Le prochain modèle apprendrait ses portes dérobées.',
+    fix:'Rollback du dataset, filtrage et provenance',
+    fixDesc:'Retour à un instantané sain, filtrage massif et traçabilité de provenance sur toutes les sources.',
+    cost:340000, days:2, apply:g=>{ g.state.data *= 0.85; } },
+
+  { id:'theft', icon:'📦', title:'Vol de GPU dans l’entrepôt',
+    body:'Une palette entière de cartes a disparu entre le quai et la salle. Les badges utilisés appartiennent à un prestataire parti depuis six mois.',
+    fix:'Sécuriser la chaîne logistique et porter plainte',
+    fixDesc:'Audit des badges, scellés et pesée systématique, vidéosurveillance du quai, plainte et assurance.',
+    cost:200000, days:1, cond:g=>g.gpuCount() >= 6,
+    apply:g=>{ const ids = Object.keys(g.state.gpuCounts); if (ids.length) g.sellGPU(ids[0], true); } },
+
+  { id:'blackout', icon:'⚡', title:'Effacement forcé par le réseau',
+    body:'Le gestionnaire de réseau vous déleste en urgence : tension effondrée sur la boucle, vos groupes électrogènes ne démarrent pas.',
+    fix:'Démarrer les groupes et contractualiser l’effacement',
+    fixDesc:'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.',
+    cost:280000, days:2, apply:g=>{ g.addTimedMod('prodPenalty', 0.6, 35); } },
+];
+export const CRISIS_MAX_LOSS = 0.70;   // fraction de fortune perdue au bout de…
+export const CRISIS_DURATION = 120;    // …2 minutes, après quoi l'incident se résorbe seul
+
+// ---------------------------------------------------------------------
+//  ANIMATIONS D'INACTIVITÉ — au bout de 15 s sans interaction, l'écran se
+//  manifeste. Chacune dure moins de 5 s et n'intercepte jamais les clics.
+//  Le tirage est « sans remise » : les 12 passent avant qu'une seule revienne.
+// ---------------------------------------------------------------------
+export const IDLE_FX = [
+  { id:'blink',   dur:1.1, desc:'clignement de l’écran' },
+  { id:'moire',   dur:3.6, desc:'moirés sombres' },
+  { id:'matrix',  dur:4.2, desc:'pluie de glyphes' },
+  { id:'shapes',  dur:3.8, desc:'formes géométriques filaires' },
+  { id:'scan',    dur:3.0, desc:'balayage cathodique' },
+  { id:'glitch',  dur:1.8, desc:'décrochage RVB' },
+  { id:'wave',    dur:3.6, desc:'vague de particules' },
+  { id:'shock',   dur:2.2, desc:'onde de choc' },
+  { id:'flash',   dur:0.7, desc:'inversion brève' },
+  { id:'tokens',  dur:4.2, desc:'pluie de tokens' },
+  { id:'vectors', dur:3.6, desc:'tunnel vectoriel' },
+  { id:'grid',    dur:3.8, desc:'grille en perspective' },
+];
+export const IDLE_DELAY = 15;          // secondes d'inactivité avant la première manifestation
 
 // ---------------------------------------------------------------------
 //  PROJETS — percées ponctuelles (style « ops » de Paperclips)
@@ -445,6 +621,78 @@ export const EVENTS = [
         apply:g=>g.addTimedMod('demand',0.9,45) },
     ]},
 
+  { id:'memory_squeeze', from:2025, to:2029, once:true, title:'Flambée de la mémoire', phase:1, weight:2, minTier:4,
+    body:'La HBM et la DDR5 partent toutes vers l’IA. Le prix des serveurs double en un an et votre fournisseur réclame un engagement ferme.',
+    choices:[
+      { label:'Sécuriser l’approvisionnement', desc:'Coût fixe $4 M, immunité à la flambée sur vos prochains serveurs.', cost:4e6,
+        apply:g=>{ g.money-=4e6; g.mods.opex*=0.95; g.toast('Contrat mémoire pluriannuel signé','good'); } },
+      { label:'Attendre la détente', desc:'Aucune dépense, mais production −25% pendant 60s (extensions repoussées).',
+        apply:g=>g.addTimedMod('prodPenalty',0.75,60) },
+    ]},
+
+  { id:'moratorium', from:2025, to:2032, title:'Moratoire local sur les datacenters', phase:1, weight:2, minTier:4,
+    body:'La commune vote un moratoire sur les nouvelles implantations. Votre extension est suspendue et la presse locale campe devant le portail.',
+    choices:[
+      { label:'Compenser la commune', desc:'Coût fixe $3 M (chaleur fatale, fibre, emplois) et réputation +8.', cost:3e6,
+        apply:g=>{ g.money-=3e6; g.changeRep(8); } },
+      { label:'Attaquer la décision', desc:'Procédure longue : demande −15% pendant 60s, réputation −6.',
+        apply:g=>{ g.addTimedMod('demand',0.85,60); g.changeRep(-6); } },
+    ]},
+
+  { id:'open_weights', from:2024, to:2030, once:true, title:'Pression pour l’ouverture des poids', phase:1, weight:2, minTier:5,
+    body:'Chercheurs et gouvernements réclament la publication de vos poids. Vos investisseurs, eux, réclament exactement l’inverse.',
+    choices:[
+      { label:'Publier une version ouverte', desc:'Réputation +12, demande premium −20% en permanence.',
+        apply:g=>{ g.changeRep(12); g.mods.demandMult*=0.8; g.mods.researchMult*=1.15; } },
+      { label:'Tout garder fermé', desc:'Marge préservée, réputation −8.',
+        apply:g=>g.changeRep(-8) },
+    ]},
+
+  { id:'sovereign', from:2025, to:2033, once:true, title:'Contrat de cloud souverain', phase:1, weight:1, minTier:5,
+    body:'Un État vous propose un contrat massif, à condition d’héberger sur son sol et de laisser un droit d’audit permanent.',
+    choices:[
+      { label:'Signer', desc:'+$60 M immédiats, coûts +5% en permanence (conformité).',
+        apply:g=>{ g.money+=6e7; g.mods.opex*=1.05; g.toast('Contrat souverain signé','good'); } },
+      { label:'Décliner', desc:'Indépendance conservée, réputation +4.',
+        apply:g=>g.changeRep(4) },
+    ]},
+
+  { id:'deprecation', from:2024, title:'Colère après une mise hors service', phase:1, weight:2, minTier:5,
+    body:'Vous coupez un ancien modèle. Des milliers d’applications en production cassent du jour au lendemain.',
+    choices:[
+      { label:'Prolonger le support', desc:'Coût fixe $2 M, clients rassurés (réputation +6).', cost:2e6,
+        apply:g=>{ g.money-=2e6; g.changeRep(6); } },
+      { label:'Assumer la coupure', desc:'Demande −20% pendant 60s, réputation −7.',
+        apply:g=>{ g.addTimedMod('demand',0.8,60); g.changeRep(-7); } },
+    ]},
+
+  { id:'agent_liability', from:2026, once:true, title:'Un agent a causé un dommage', phase:1, weight:2, minTier:6,
+    body:'Un de vos agents autonomes a passé des commandes réelles au nom d’un client. La facture est à six chiffres et l’affaire est publique.',
+    choices:[
+      { label:'Indemniser et brider', desc:'Coût fixe $5 M, garde-fous renforcés (réputation +5).', cost:5e6,
+        apply:g=>{ g.money-=5e6; g.changeRep(5); g.flags.aligned=true; } },
+      { label:'Invoquer les CGU', desc:'Aucun coût, mais réputation −12 et procès en vue.',
+        apply:g=>{ g.changeRep(-12); if(Math.random()<0.4){ g.money*=0.85; g.toast('Condamnation : dommages-intérêts','bad'); } } },
+    ]},
+
+  { id:'tariffs', from:2025, to:2032, once:true, title:'Droits de douane sur les accélérateurs', phase:1, weight:1, minTier:5,
+    body:'Des droits de douane frappent les serveurs importés. Chaque carte coûte soudain nettement plus cher à faire entrer.',
+    choices:[
+      { label:'Relocaliser l’assemblage', desc:'Coût fixe $8 M, matériel exonéré ensuite.', cost:8e6,
+        apply:g=>{ g.money-=8e6; g.mods.opex*=0.92; g.toast('Assemblage relocalisé','good'); } },
+      { label:'Répercuter sur le prix', desc:'Coût matériel ×1,3 pendant 90s.',
+        apply:g=>g.addTimedMod('gpuPrice',1.3,90) },
+    ]},
+
+  { id:'poaching', from:2025, once:true, title:'Débauchage à neuf chiffres', phase:1, weight:1, minTier:6,
+    body:'Un hyperscaler propose à votre équipe de recherche des packages à cent millions de dollars. Tous vos seniors ont reçu l’appel.',
+    choices:[
+      { label:'Aligner les rémunérations', desc:'Coût fixe $12 M, recherche +25% en permanence.', cost:12e6,
+        apply:g=>{ g.money-=12e6; g.mods.researchMult*=1.25; } },
+      { label:'Les laisser partir', desc:'Recherche −30% pendant 120s, mais aucune dépense.',
+        apply:g=>g.addTimedMod('research',0.7,120) },
+    ]},
+
   // --- PHASE 2 : AGI / autonomie ---
   { id:'shutdown_attempt', title:'Tentative d’arrêt', phase:2, weight:3,
     body:'Des gouvernements paniqués tentent de débrancher votre système. Que fait l’ASI ?',
@@ -629,11 +877,94 @@ export const SECONDS_PER_YEAR = 300;
 export const MONTHS_FR = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
 
 // ---------------------------------------------------------------------
-//  LA UNE — titres de presse, cohérents avec l'époque.
+//  LA UNE — titres de presse, cohérents avec l'époque ET avec l'avancement
+//  du joueur.
 //  polarity : 'good' (+1 réputation) · 'bad' (−1) · 'neutral' (0)
-//  from/to : fenêtre d'années · phase : phase exigée · cond(g) : optionnel
+//  from/to  : fenêtre d'années · phase : phase exigée · cond(g) : optionnel
+//  tier     : palier de modèle EXACT du joueur (le titre parle de SON modèle)
+//  minTier / maxTier : palier minimal / maximal requis — la presse ne parle
+//             d'une capacité que lorsque le joueur l'a réellement atteinte,
+//             et raille son retard lorsqu'il traîne (voir g.tierLag()).
 // ---------------------------------------------------------------------
 export const HEADLINES = [
+  // ═══ Ce qui s'est réellement passé, année par année ═══
+  // 2019-2020
+  { t:'Un réseau de neurones bat les meilleurs joueurs de StarCraft II', p:'neutral', to:2020 },
+  { t:'La reconnaissance faciale interdite dans plusieurs villes américaines', p:'neutral', to:2021 },
+  { t:'Une IA prédit la forme des protéines : la biologie sous le choc', p:'good', from:2020, to:2022 },
+  { t:'Des chercheurs alertent sur l’empreinte carbone de l’entraînement', p:'bad', from:2019, to:2022 },
+  { t:'« Perroquets stochastiques » : un article divise la communauté', p:'bad', from:2021, to:2023 },
+  // 2021-2022
+  { t:'Un assistant écrit du code à votre place dans l’éditeur', p:'good', from:2021, to:2024 },
+  { t:'Génération d’images par diffusion : les artistes s’inquiètent', p:'bad', from:2022, to:2024 },
+  { t:'Un ingénieur affirme qu’un chatbot est devenu conscient', p:'neutral', from:2022, to:2024 },
+  { t:'Un modèle scientifique retiré après trois jours de bêtises', p:'bad', from:2022, to:2024 },
+  { t:'Des modèles ouverts fuitent sur les réseaux P2P', p:'neutral', from:2023, to:2025 },
+  // 2023
+  { t:'Un moteur de recherche dopé à l’IA déclare son amour à un journaliste', p:'bad', from:2023, to:2025 },
+  { t:'Un pays européen suspend temporairement un chatbot pour la vie privée', p:'bad', from:2023, to:2025 },
+  { t:'Lettre ouverte : « pause de six mois » sur les modèles géants', p:'neutral', from:2023, to:2025 },
+  { t:'Le PDG d’un grand labo limogé puis réintégré en cinq jours', p:'neutral', from:2023, to:2025 },
+  { t:'Un décret présidentiel encadre l’IA aux États-Unis', p:'neutral', from:2023, to:2026 },
+  { t:'Des modèles ouverts européens rivalisent avec les géants', p:'good', from:2023, to:2026 },
+  // 2024
+  { t:'Génération vidéo : une minute de film à partir d’une phrase', p:'good', from:2024, to:2026 },
+  { t:'Le Nobel de physique et celui de chimie récompensent l’IA', p:'good', from:2024, to:2026 },
+  { t:'Les « lois d’échelle » atteindraient un mur, selon des chercheurs', p:'bad', from:2024, to:2027 },
+  { t:'Un protocole ouvert connecte enfin les modèles aux outils', p:'good', from:2024, to:2027 },
+  { t:'Contenus synthétiques : les plateformes imposent un marquage', p:'neutral', from:2024, to:2027 },
+  // 2025
+  { t:'Plan à 500 milliards pour l’infrastructure IA américaine', p:'neutral', from:2025, to:2028 },
+  { t:'Un assistant code désormais des heures durant sans supervision', p:'good', from:2025, to:2028 },
+  { t:'Les emplois juniors du tertiaire reculent pour la première fois', p:'bad', from:2025 },
+  { t:'Un labo chinois publie un modèle de raisonnement gratuit', p:'bad', from:2025, to:2028 },
+  { t:'Les datacenters deviennent le premier poste de croissance électrique', p:'bad', from:2025 },
+  { t:'Pénurie de mémoire HBM : la RAM double de prix en un an', p:'bad', from:2025, to:2028 },
+  { t:'Des villes votent des moratoires sur les nouveaux datacenters', p:'bad', from:2025 },
+  // 2026
+  { t:'Les capex IA des géants dépassent le PIB de pays entiers', p:'neutral', from:2026 },
+  { t:'Premiers licenciements massifs attribués explicitement à l’IA', p:'bad', from:2026 },
+  { t:'Un modèle décroche une médaille d’or aux Olympiades de maths', p:'good', from:2025, to:2028 },
+  { t:'Le marché de l’occasion des GPU s’effondre : trop de cartes, trop vite', p:'neutral', from:2026 },
+  { t:'Assurances : le risque « incident IA » devient une ligne à part', p:'neutral', from:2026 },
+
+  // ═══ Corrélation avec VOTRE avancement (palier de modèle atteint) ═══
+  { t:'Votre premier générateur de texte fait sourire les experts', p:'neutral', tier:0 },
+  { t:'Votre laboratoire publie un modèle à 175 milliards de paramètres', p:'good', tier:1 },
+  { t:'Votre assistant conversationnel dépasse le million d’utilisateurs', p:'good', tier:2 },
+  { t:'Votre chatbot invente des sources : la presse teste et publie', p:'bad', minTier:2, maxTier:4 },
+  { t:'Votre modèle décrit les images : les usages explosent', p:'good', tier:3 },
+  { t:'Votre API multimodale devient un standard de fait chez les développeurs', p:'good', tier:4 },
+  { t:'Votre modèle « réfléchit » avant de répondre — et le facture', p:'neutral', tier:5 },
+  { t:'Vos agents pilotent des ordinateurs entiers : les DSI paniquent', p:'bad', minTier:6 },
+  { t:'Votre modèle frontière rejoint le peloton de tête mondial', p:'good', tier:6 },
+  { t:'Votre laboratoire entre dans le club des trois grands', p:'good', tier:7 },
+  { t:'Votre modèle n’oublie plus rien : la vie privée en question', p:'bad', minTier:8 },
+  { t:'Mémoire persistante : votre assistant se souvient de tout, pour toujours', p:'neutral', tier:8 },
+  { t:'Votre modèle du monde simule des futurs avant de répondre', p:'good', tier:9 },
+  { t:'Des économistes utilisent votre simulateur pour arbitrer des politiques', p:'good', minTier:9 },
+  { t:'Votre essaim d’agents se réorganise sans intervention humaine', p:'neutral', tier:10 },
+  { t:'Plus personne ne lit les journaux de votre essaim d’agents', p:'bad', minTier:10 },
+  { t:'Votre système dépose des brevets qu’aucun humain ne comprend', p:'neutral', minTier:10 },
+  { t:'Votre super-intelligence réécrit son propre code cette nuit', p:'bad', tier:11 },
+  // …et raillerie quand vous décrochez
+  { t:'Vos concurrents ont une génération d’avance, selon les benchmarks', p:'bad', cond:g=>g.tierLag() === 1 },
+  { t:'« Où est passé votre laboratoire ? » : la presse tech s’interroge', p:'bad', cond:g=>g.tierLag() >= 2 },
+  { t:'Deux générations de retard : vos meilleurs chercheurs sont courtisés', p:'bad', cond:g=>g.tierLag() >= 2 },
+  { t:'Analystes : « le retard technologique commence à se voir sur les prix »', p:'bad', cond:g=>g.tierLag() >= 3 },
+  { t:'Votre laboratoire sort le modèle le plus avancé du moment', p:'good', cond:g=>g.tierLag() === 0 && g.modelTier >= 4 },
+
+  // ═══ Corrélation avec votre exploitation ═══
+  { t:'Votre campus de calcul devient le plus gros consommateur du département', p:'neutral', cond:g=>g.energyUse() > 40 },
+  { t:'Votre parc dépasse les mille accélérateurs : record local', p:'good', cond:g=>g.gpuCount() >= 1000 },
+  { t:'Votre facture d’électricité dépasse celle d’une ville moyenne', p:'bad', cond:g=>g.elecDaily() > 2e5 },
+  { t:'Vos salariés dénoncent une cadence intenable', p:'bad', cond:g=>g.headcount() >= 25 && g.reputation < 45 },
+  { t:'Votre laboratoire embauche à tour de bras : la région se réjouit', p:'good', cond:g=>g.headcount() >= 15 },
+  { t:'Vos serveurs tournent au solaire : l’exemple est cité en exemple', p:'good', cond:g=>(g.state.energyCounts.solar || 0) >= 5 },
+  { t:'Votre centrale à gaz visée par une plainte environnementale', p:'bad', cond:g=>(g.state.energyCounts.gas || 0) >= 3 },
+  { t:'Votre réacteur modulaire alimente aussi le réseau local', p:'good', cond:g=>(g.state.energyCounts.nuclear || 0) >= 1 },
+  { t:'Un incident dans vos installations fait la une des journaux locaux', p:'bad', cond:g=>!!g.state.crisis },
+  { t:'Trésorerie sous tension : vos fournisseurs demandent des garanties', p:'bad', cond:g=>g.phase < 2 && g.money < g.dailyTotal() * 3 },
   // 2019-2021 — scaling brut
   { t:'Un générateur de texte « trop dangereux pour être publié » fait débat', p:'neutral', to:2021 },
   { t:'Une IA rédige un article de presse presque indétectable', p:'good', to:2021 },

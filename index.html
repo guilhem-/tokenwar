@@ -177,11 +177,16 @@
       <div class="panel" id="panel-charges">
         <div class="panel-title">Charges journalières</div>
         <div class="panel-body">
-          <div class="meter-row"><span class="text-muted">⚡ Électricité</span><span class="num" id="charge-elec">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">⚡ Énergie consommée <i class="hint">variable</i></span><span class="num" id="charge-elec-var">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🔧 Exploitation &amp; O&amp;M <i class="hint">fixe</i></span><span class="num" id="charge-elec-fix">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🔌 Abonnement réseau <i class="hint">puissance souscrite</i></span><span class="num" id="charge-elec-sub">$0 /j</span></div>
           <div class="meter-row"><span class="text-muted">👥 Salaires</span><span class="num" id="charge-salary">$0 /j</span></div>
           <div class="meter-row"><span class="text-muted">🏢 Loyers</span><span class="num" id="charge-rent">$0 /j</span></div>
           <div class="meter-row charge-total"><span class="text-muted">Total</span><span class="num" id="charge-total">$0 /j</span></div>
           <div class="meter-row"><span class="text-muted">soit</span><span class="num" id="charge-sec">$0 /s</span></div>
+          <div class="meter-row infl-row" title="L'argent perd de sa valeur : les prix et les salaires suivent l'indice, pas votre trésorerie.">
+            <span class="text-muted">📈 Inflation</span><span class="num" id="charge-infl">—</span>
+          </div>
         </div>
       </div>
 
@@ -293,6 +298,13 @@
       <div class="modal-choices" id="modal-choices"></div>
     </div>
   </div>
+
+  <!-- ============ CRISE (boîte d'alerte, positionnée au hasard dans la page) ============ -->
+  <div class="crisis-layer" id="crisis-layer" aria-live="polite"></div>
+  <div class="crisis-vignette hidden" id="crisis-vignette" aria-hidden="true"></div>
+
+  <!-- ============ ANIMATIONS D'INACTIVITÉ (n'intercepte jamais les clics) ============ -->
+  <canvas class="idle-fx" id="idle-fx" aria-hidden="true"></canvas>
 
   <!-- ============ TOASTS ============ -->
   <div class="toast-container" id="toast-container"></div>

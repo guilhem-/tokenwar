@@ -1389,3 +1389,92 @@ a {
 @media (hover: none), (prefers-reduced-motion: reduce) {
   #ending-restart { transform: none !important; }
 }
+
+/* =====================================================================
+   CHANTIERS — rien n'est instantané : badge « en cours de mise en service »
+   ===================================================================== */
+.badge-build {
+  color: #06202a; background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+  border-color: transparent; animation: buildPulse 1.6s ease-in-out infinite;
+}
+@keyframes buildPulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+
+/* petite mention en italique dans les libellés de charges (nature du coût) */
+.hint {
+  font-style: normal; font-size: 0.66rem; letter-spacing: 0.03em;
+  text-transform: uppercase; opacity: 0.55; margin-left: 0.35rem;
+}
+.infl-row { border-top: 1px dashed var(--line); padding-top: 0.45rem; margin-top: 0.15rem; }
+.infl-row .num { font-size: 0.72rem; }
+
+/* =====================================================================
+   CRISES — une boîte d'alerte posée au hasard DANS LA PAGE (souvent hors
+   du champ de vision), avec un halo rouge qui grossit et bat de plus en
+   plus vite tant que personne ne la trouve.
+   ===================================================================== */
+.crisis-layer {
+  position: absolute; top: 0; left: 0; width: 100%; height: 0;
+  overflow: visible; pointer-events: none; z-index: 60;
+}
+.crisis-box {
+  --k: 0; --pulse: 1.5s;
+  position: absolute; pointer-events: auto;
+  width: min(92vw, 25rem);
+  isolation: isolate;
+}
+.crisis-halo {
+  position: absolute; inset: -20% ; z-index: -1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 60, 60, 0.55), rgba(255, 40, 40, 0) 68%);
+  transform: scale(calc(1 + var(--k) * 1.6));
+  animation: crisisHalo var(--pulse) ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes crisisHalo {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.95; }
+}
+.crisis-inner {
+  position: relative;
+  background: linear-gradient(160deg, rgba(38, 8, 12, 0.98), rgba(20, 6, 10, 0.98));
+  border: 2px solid var(--bad, #ef4444);
+  border-radius: 14px; padding: 0.9rem 0.95rem 0.85rem;
+  box-shadow: 0 18px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 90, 90, 0.25) inset;
+}
+.crisis-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.45rem; }
+.crisis-icon { font-size: 1.25rem; }
+.crisis-title { font-weight: 700; color: #ffd7d7; letter-spacing: 0.01em; }
+.crisis-body { font-size: 0.82rem; line-height: 1.45; color: #f0c9c9; margin-bottom: 0.6rem; }
+.crisis-meter {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.75rem; margin-bottom: 0.6rem;
+  border-top: 1px dashed rgba(255, 120, 120, 0.35); padding-top: 0.45rem;
+}
+.crisis-lost { color: #ff9a9a; font-weight: 700; }
+.crisis-fix { width: 100%; flex-direction: column; align-items: flex-start; gap: 0.15rem; text-align: left; }
+.crisis-fix .choice-desc { opacity: 0.85; }
+.crisis-cost { margin-top: 0.25rem; font-weight: 700; }
+
+/* seul indice discret à l'écran : le liseré rouge qui s'intensifie */
+.crisis-vignette {
+  position: fixed; inset: 0; pointer-events: none; z-index: 55; opacity: 0;
+  box-shadow: inset 0 0 min(18vw, 12rem) rgba(255, 40, 40, 0.85);
+  transition: opacity 0.6s linear;
+  animation: crisisVignette 2.4s ease-in-out infinite;
+}
+@keyframes crisisVignette { 0%, 100% { filter: brightness(0.75); } 50% { filter: brightness(1.25); } }
+
+/* =====================================================================
+   ANIMATIONS D'INACTIVITÉ — plein écran, jamais cliquables
+   ===================================================================== */
+.idle-fx {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 58; opacity: 0; display: none;
+}
+.idle-fx.on { display: block; opacity: 1; }
+body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate(180deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .idle-fx { display: none !important; }
+  .crisis-halo, .crisis-vignette { animation: none; }
+  .badge-build { animation: none; }
+}

@@ -3,11 +3,12 @@
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
-         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC } from './data.js';
+         EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
+         BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
-const SAVE_VERSION = 3;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
+const SAVE_VERSION = 4;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
 
 // Levées de fonds (analogue du « Trust ») : déblocages par paliers de tokens
 // Les levées sont gardées par les tokens cumulés ET par l'année (les tours de table
@@ -55,10 +56,19 @@ export class Game {
     s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true }, infra:{ owned:false, on:true }, energy:{ owned:false, on:true } };
     s.autoItems = { gpu:{}, energy:{}, infra:{} }; // auto-achat PAR élément (id -> bool), mémorisé individuellement
     s.autoTimer = 0;
+    // chantiers en cours : rien n'est instantané. {f:'gpu'|'infra'|'energy', id, t0, t1}
+    s.builds = [];
+    s.buildSeq = 0;
+    // crise en cours (incident qui saigne la trésorerie tant qu'il n'est pas repéré)
+    s.crisis = null;
+    s.lastCrisisId = null;
+    s.crisisTimer = 100;     // secondes avant le premier incident possible
+    s.crisisSeen = {};       // id -> nombre d'occurrences (pour ne pas répéter)
+    s.crisisLost = 0;        // total perdu en incidents (statistique de fin)
     s.achievements = {};     // succès débloqués (id -> true)
     s.addendum = false;      // « Directives permanentes » achetées
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
-    s.spaceDC = { status:'none', orderedAt:0, statusAt:0 }; // datacenter orbital : none/building/delayed/bankrupt
+    s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
     s.energyCap = 0.5;       // MW de base (premier raccordement offert)
     s.modelTier = 0;
@@ -77,6 +87,7 @@ export class Game {
     s.headlineTimer = 6;
     s.headlines = [];       // fil de titres {text, p, date}
     s.lastHeadlineText = null;
+    s.recentHeadlines = []; // mémoire courte : on ne réutilise pas un titre récent
     s._freshModelUntil = 0; // pour les titres réactifs à un nouvel entraînement
     s._freshModel = false;
     // allocation du compute (normalisée)
@@ -149,6 +160,81 @@ export class Game {
   log(msg, kind = 'info') { this.ui && this.ui.log(msg, kind); }
 
   // =================================================================
+  //  INFLATION — la valeur de l'argent se dégrade avec les années.
+  //  L'indice multiplie TOUT ce qui se paie (matériel, salaires, énergie,
+  //  loyers, licences) ainsi que le prix que le marché accepte de payer.
+  //  La trésorerie dormante, elle, ne suit pas : garder du cash coûte cher.
+  // =================================================================
+  inflRate(year) {                                  // taux annuel en vigueur cette année-là
+    let r = INFLATION_TAIL;
+    for (const [from, rate] of INFLATION) if (year >= from) r = rate;
+    return r;
+  }
+  inflIndex() {
+    const y = this.simYear();
+    if (y <= START_YEAR) return 1;
+    let idx = 1;
+    for (let year = START_YEAR; year < Math.floor(y); year++) idx *= 1 + this.inflRate(year);
+    idx *= Math.pow(1 + this.inflRate(Math.floor(y)), y - Math.floor(y)); // année en cours au prorata
+    return idx;
+  }
+  // perte de pouvoir d'achat cumulée d'un dollar gardé depuis 2019 (0 → 1)
+  purchasingLoss() { return 1 - 1 / this.inflIndex(); }
+
+  // =================================================================
+  //  CHANTIERS — tout objet commandé met un temps à être opérationnel,
+  //  d'autant plus long qu'il est complexe (voir BUILD dans data.js).
+  // =================================================================
+  buildSeconds(family, item) {
+    if (this.phase >= 2) return 0;                  // l'ASI assemble plus vite qu'elle ne décide
+    if (item && item.build != null) return item.build;
+    const cfg = BUILD[family] || BUILD.gpu;
+    const price = Math.max(0, (item && item.cost) || (item && item.costBase) || 0);
+    return Math.min(cfg.cap, cfg.base + cfg.k * Math.log10(1 + price / 1000));
+  }
+  queueBuild(family, id, item) {
+    const sec = this.buildSeconds(family === 'infra' ? id : family, item);
+    if (sec <= 0) return this.finishBuild({ f: family, id });   // instantané
+    this.state.builds.push({ n: ++this.state.buildSeq, f: family, id,
+      t0: this.state.playSeconds, t1: this.state.playSeconds + sec });
+    return true;
+  }
+  pendingCount(family, id) {
+    let n = 0;
+    for (const b of this.state.builds) if (b.f === family && (id == null || b.id === id)) n++;
+    return n;
+  }
+  buildProgress(family, id) {                       // 0..1 du chantier le plus avancé, ou null
+    let best = null;
+    for (const b of this.state.builds) {
+      if (b.f !== family || b.id !== id) continue;
+      const p = (this.state.playSeconds - b.t0) / Math.max(0.001, b.t1 - b.t0);
+      if (best === null || p > best) best = p;
+    }
+    return best === null ? null : clamp(best, 0, 1);
+  }
+  finishBuild(b) {
+    const s = this.state;
+    if (b.f === 'gpu') s.gpuCounts[b.id] = (s.gpuCounts[b.id] || 0) + 1;
+    else if (b.f === 'infra') s.infraCounts[b.id] = (s.infraCounts[b.id] || 0) + 1;
+    else if (b.f === 'energy') {
+      const e = ENERGY.find(x => x.id === b.id);
+      s.energyCounts[b.id] = (s.energyCounts[b.id] || 0) + 1;
+      s.energyCap += e.mw;
+      if (e.rep) this.changeRep(e.rep);
+    }
+    return true;
+  }
+  tickBuilds() {
+    const s = this.state;
+    if (!s.builds.length) return;
+    const done = s.builds.filter(b => s.playSeconds >= b.t1);
+    if (!done.length) return;
+    s.builds = s.builds.filter(b => s.playSeconds < b.t1);
+    for (const b of done) this.finishBuild(b);
+  }
+
+  // =================================================================
   //  CALCULS DÉRIVÉS
   // =================================================================
   computeRaw() {
@@ -186,12 +272,23 @@ export class Game {
     const lo = 0.02, hi = 300;
     return lo * Math.pow(hi / lo, this.state.priceSlider / 100);
   }
+  // prix accepté par le marché : il suit l'inflation (sinon la marge s'effondrerait
+  // mécaniquement à mesure que les coûts montent).
   fairPrice() {
-    return Math.max(this.model.quality, 0.5) * this.state.mods.qualityMult * this.getTimed('quality');
+    return Math.max(this.model.quality, 0.5) * this.state.mods.qualityMult * this.getTimed('quality') * this.inflIndex();
   }
   marketingPower() {
     return 6e4 * Math.pow(1.9, this.state.marketingLvl - 1);
   }
+  // tout prix libellé en dollars « de 2019 » converti en dollars courants
+  moneyCost(base) { return (base || 0) * this.inflIndex(); }
+  // retard technologique : paliers de modèles disponibles à cette date, non entraînés
+  expectedTier() {
+    let t = 0;
+    for (let i = 0; i < MODELS.length; i++) if (this.simYear() >= MODELS[i].year) t = i;
+    return t;
+  }
+  tierLag() { return Math.max(0, this.expectedTier() - this.state.modelTier); }
   // demande (tokens/s) que le marché absorbe au prix courant
   demandPerSec() {
     const price = this.priceMtok();
@@ -205,7 +302,7 @@ export class Game {
       * this.getTimed('demand');
   }
   marketingCost() {
-    return 50 * Math.pow(1.6, this.state.marketingLvl - 1);
+    return 50 * Math.pow(1.6, this.state.marketingLvl - 1) * this.inflIndex();
   }
   // prix optimal : le plus haut où la demande absorbe encore toute la production.
   // Utilisé par l'UI (indicatif) et par le bot de test (source unique de vérité).
@@ -227,11 +324,12 @@ export class Game {
   gpuCost(g) {
     let c = g.cost;                              // prix FIXE et réaliste (non exponentiel)
     if (g.scarce) c *= this.getTimed('gpuPrice'); // sauf flambée temporaire de pénurie
-    return c * this.state.mods.opex;
+    return c * this.state.mods.opex * this.inflIndex();
   }
+  // coût UNIQUE (capex) d'une source d'énergie — l'exploitation est facturée à part
   energyCost(e) {
-    const owned = this.state.energyCounts[e.id] || 0;
-    return e.costBase * Math.pow(e.costMult, owned) * this.state.mods.opex;
+    const owned = (this.state.energyCounts[e.id] || 0) + this.pendingCount('energy', e.id);
+    return e.costBase * Math.pow(e.costMult, owned) * this.state.mods.opex * this.inflIndex();
   }
 
   // =================================================================
@@ -257,7 +355,7 @@ export class Game {
   infraCost(item) {                              // prix FIXE (réaliste) ; le serveur suit la flambée mémoire
     let c = item.cost;
     if (item.eraPrice) { const y = this.simYear(); for (const [from, price] of item.eraPrice) if (y >= from) c = price; }
-    return c * this.state.mods.opex;
+    return c * this.state.mods.opex * this.inflIndex();
   }
   capacityFor(childId) {                        // emplacements offerts par les parents
     const parent = INFRA.find(x => x.child === childId);
@@ -268,7 +366,12 @@ export class Game {
     if (childId === 'rack') cap += (this.state.rentedSpace || 0) * COLO.racks; // colocation = baies louées
     return cap;
   }
-  usedFor(childId) { return childId === 'gpu' ? this.gpuCount() : this.infraCount(childId); }
+  // les objets EN CHANTIER occupent déjà leur emplacement (on ne commande pas
+  // deux serveurs pour la même place), mais n'offrent pas encore de capacité.
+  usedFor(childId) {
+    const family = childId === 'gpu' ? 'gpu' : 'infra';
+    return (childId === 'gpu' ? this.gpuCount() : this.infraCount(childId)) + this.pendingCount(family, childId);
+  }
   freeSlots(childId) { return this.capacityFor(childId) - this.usedFor(childId); }
   hostingActive() { return this.phase < 2; }   // contrainte d'hébergement en phase 1 (l'ASI auto-construit ensuite)
 
@@ -278,7 +381,7 @@ export class Game {
     const cost = this.infraCost(item);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
-    this.state.infraCounts[id] = (this.state.infraCounts[id] || 0) + 1;
+    this.queueBuild('infra', id, item);          // mise en service différée (chantier)
     return true;
   }
   canBuyInfra(id) {
@@ -310,7 +413,7 @@ export class Game {
     return true;
   }
   rentDailyTotal() {                             // loyers ($/jour) : datacenters + colocation
-    return (this.state.rentedDC || 0) * this.dcRentDaily() + (this.state.rentedSpace || 0) * COLO.daily;
+    return ((this.state.rentedDC || 0) * this.dcRentDaily() + (this.state.rentedSpace || 0) * COLO.daily) * this.inflIndex();
   }
 
   // ---- RESSOURCES HUMAINES ----
@@ -333,14 +436,17 @@ export class Game {
   rndMult() { return 1 + this.empCount('rnd') * 0.5; }                     // recherche ×(1+0.5/ing.)
   dataEmpMult() { return 1 + this.empCount('data') * 0.6; }
   opsMult() { return 1 + Math.min(0.5, this.empCount('ops') * 0.02); }     // +2%/ops, plafonné +50%
-  salaryPerDay() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id) * e.salary, 0); }
+  // les salaires suivent l'inflation (indexation) — c'est la charge qui gonfle le plus vite
+  salaryPerDay() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id) * e.salary, 0) * this.inflIndex(); }
 
   // ---- AUTOMATISATIONS (auto-clickers payants) ----
+  autoCost(a) { return this.moneyCost(a.cost); }
   buyAuto(id) {
     const a = AUTOMATIONS.find(x => x.id === id);
     const st = this.state.auto[id];
-    if (st.owned || this.state.money < a.cost) return false;
-    this.state.money -= a.cost; st.owned = true; st.on = true;
+    const cost = this.autoCost(a);
+    if (st.owned || this.state.money < cost) return false;
+    this.state.money -= cost; st.owned = true; st.on = true;
     return true;
   }
   toggleAuto(id) { const st = this.state.auto[id]; if (!st.owned) return false; st.on = !st.on; return true; }
@@ -382,24 +488,41 @@ export class Game {
   }
 
   // ---- CHARGES JOURNALIÈRES (électricité + salaires + loyers) ----
-  // L'électricité dépend du MIX : on sert la demande avec les sources les moins chères
-  // d'abord (solaire/fusion/Dyson quasi gratuits, réseau/gaz onéreux).
-  elecDaily() {
-    let need = this.energyUse();
-    if (need <= 0) return 0;
-    const caps = ENERGY.map(e => ({ mw: (this.state.energyCounts[e.id] || 0) * e.mw, cost: (e.costMWh != null ? e.costMWh : ELEC_PRICE_MWH) }));
-    caps.push({ mw: 0.5, cost: 120 });            // raccordement réseau de base (offert)
+  // L'ÉLECTRICITÉ se décompose en trois natures bien distinctes :
+  //   · variable   — le MWh réellement soutiré, servi par ordre de mérite
+  //                  (solaire/fusion/Dyson d'abord, gaz et réseau en dernier) ;
+  //   · fixe (O&M) — exploitation, maintenance, personnel de la source. Dû même
+  //                  à l'arrêt : une turbine froide coûte, un SMR encore plus ;
+  //   · abonnement — proportionnel à la PUISSANCE SOUSCRITE sur le réseau.
+  // (Le raccordement d'origine, offert, n'a pas d'abonnement : c'est le compteur
+  //  du garage.)
+  energyBill() {
+    const infl = this.inflIndex();
+    const caps = [];
+    let fixed = 0, sub = 0;
+    for (const e of ENERGY) {
+      const n = this.state.energyCounts[e.id] || 0;
+      if (n <= 0) continue;
+      caps.push({ mw: n * e.mw, cost: (e.fuelMWh != null ? e.fuelMWh : ELEC_PRICE_MWH) });
+      fixed += n * (e.omDaily || 0);
+      if (e.subMWDay) sub += n * e.mw * e.subMWDay;
+    }
+    caps.push({ mw: 0.5, cost: 78 });             // raccordement de base (offert, sans abonnement)
     caps.sort((a, b) => a.cost - b.cost);
-    let cost = 0, rem = need;
-    for (const c of caps) { if (rem <= 0) break; const u = Math.min(c.mw, rem); cost += u * 24 * c.cost; rem -= u; }
-    return cost;
+    let variable = 0, rem = this.energyUse();
+    for (const c of caps) { if (rem <= 0) break; const u = Math.min(c.mw, rem); variable += u * 24 * c.cost; rem -= u; }
+    return { variable: variable * infl, fixed: fixed * infl, sub: sub * infl,
+             total: (variable + fixed + sub) * infl };
   }
+  elecDaily() { return this.energyBill().total; }
   dailyCharges() {
-    return { elec: this.elecDaily(), salary: this.salaryPerDay(), rent: this.rentDailyTotal() };
+    const e = this.energyBill();
+    return { elec: e.total, elecVar: e.variable, elecFix: e.fixed, elecSub: e.sub,
+             salary: this.salaryPerDay(), rent: this.rentDailyTotal() };
   }
+  dailyTotal() { const c = this.dailyCharges(); return c.elec + c.salary + c.rent; }
   chargesPerSec() {
-    const c = this.dailyCharges();
-    return (c.elec + c.salary + c.rent) / (SECONDS_PER_YEAR / 365);
+    return this.dailyTotal() / (SECONDS_PER_YEAR / 365);
   }
   dcRentPerSec() {                               // (conservé) loyer datacenters seul, par seconde
     return (this.state.rentedDC || 0) * this.dcRentDaily() / (SECONDS_PER_YEAR / 365);
@@ -414,7 +537,7 @@ export class Game {
     const cost = this.gpuCost(g);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
-    this.state.gpuCounts[id] = (this.state.gpuCounts[id] || 0) + 1;
+    this.queueBuild('gpu', id, g);               // réception, rackage, burn-in
     return true;
   }
   canBuyGPU(id) {
@@ -423,12 +546,13 @@ export class Game {
     if (this.hostingActive() && this.freeSlots('gpu') < 1) return false;
     return this.state.money >= this.gpuCost(g);
   }
-  // revente du matériel obsolète : rembourse une fraction, libère un emplacement
-  sellGPU(id) {
+  // revente du matériel obsolète : rembourse une fraction, libère un emplacement.
+  // `stolen` = disparition sèche (vol), sans le moindre remboursement.
+  sellGPU(id, stolen) {
     const owned = this.state.gpuCounts[id] || 0;
     if (owned < 1) return false;
     const g = GPUS.find(x => x.id === id);
-    const refund = g.cost * 0.45;              // prix fixe → remboursement = 45% du prix réel
+    const refund = stolen ? 0 : g.cost * 0.45 * this.inflIndex(); // 45% du prix réel du jour
     this.state.gpuCounts[id] = owned - 1;
     if (this.state.gpuCounts[id] < 1e-9) delete this.state.gpuCounts[id];
     this.state.money += refund;
@@ -439,10 +563,8 @@ export class Game {
     if (!this.dateUnlocked(e)) return false;
     const cost = this.energyCost(e);
     if (this.state.money < cost) return false;
-    this.state.money -= cost;
-    this.state.energyCounts[id] = (this.state.energyCounts[id] || 0) + 1;
-    this.state.energyCap += e.mw;
-    if (e.rep) this.changeRep(e.rep);
+    this.state.money -= cost;                    // CAPEX : coût unique, payé à la commande
+    this.queueBuild('energy', id, e);            // puis raccordement / construction
     return true;
   }
   // ---- BOURSE (placer de l'argent, façon Paperclips) ----
@@ -495,11 +617,12 @@ export class Game {
     if (!this.dateUnlocked(m)) return false;
     if (this.empCount('rnd') < (m.minRnd || 0)) return false; // limité par les ingénieurs R&D
     const c = m.cost;
-    if (this.state.money < (c.money || 0)) return false;
+    const money = this.moneyCost(c.money);
+    if (this.state.money < money) return false;
     if (this.computeRaw() < (c.compute || 0)) return false; // besoin de capacité
     if (this.state.data < (c.data || 0)) return false;
     if (this.state.research < (c.research || 0)) return false;
-    this.state.money -= (c.money || 0);
+    this.state.money -= money;
     this.state.data -= (c.data || 0);
     this.state.research -= (c.research || 0);
     this.state.modelTier++;
@@ -514,9 +637,10 @@ export class Game {
     if (this.state.lifetimeTokens < f.need) return false;
     if (f.year && this.simYear() < f.year) return false;
     this.state.fundingDone[id] = true;
-    this.state.money += f.cash;
+    const cash = this.moneyCost(f.cash);        // les tours de table sont libellés en dollars courants
+    this.state.money += cash;
     for (const k in f.bonus) this.state.mods[k] *= f.bonus[k];
-    this.log(`Levée de fonds : ${f.name} (+$${Math.round(f.cash).toLocaleString('fr')})`, 'milestone');
+    this.log(`Levée de fonds : ${f.name} (+$${Math.round(cash).toLocaleString('fr')})`, 'milestone');
     this.toast(`${f.name} bouclée !`, 'good');
     return true;
   }
@@ -525,13 +649,14 @@ export class Game {
     const p = PROJECTS.find(x => x.id === id);
     if (!p || this.state.projectsDone[id]) return false;
     const c = p.cost;
-    if ((c.money || 0) > this.state.money) return false;
+    const money = this.moneyCost(c.money);
+    if (money > this.state.money) return false;
     if ((c.research || 0) > this.state.research) return false;
     if ((c.compute || 0) > this.computeRaw()) return false;
     if ((c.data || 0) > this.state.data) return false;
     if ((c.matter || 0) > this.state.matter) return false;
     if ((c.tokens || 0) > this.state.lifetimeTokens) return false;
-    this.state.money -= (c.money || 0);
+    this.state.money -= money;
     this.state.research -= (c.research || 0);
     this.state.data -= (c.data || 0);
     this.state.matter -= (c.matter || 0);
@@ -604,6 +729,11 @@ export class Game {
   enterPhase(p) {
     if (this.state.phase >= p) return;
     this.state.phase = p;
+    // au-delà de la phase 1, l'argent n'existe plus : un incident en cours n'a plus d'objet
+    if (p >= 2 && this.state.crisis) {
+      this.state.crisis = null;
+      this.ui && this.ui.onCrisisEnd && this.ui.onCrisisEnd();
+    }
     if (p === 2) {
       this.state.intelligence = Math.max(this.state.intelligence, 1);
       this.state.alloc = { serve:0.4, research:0.1, improve:0.2, harvest:0.3 };
@@ -651,9 +781,11 @@ export class Game {
   }
 
   // ---- Directives permanentes (addendum) : résolution automatique des événements ----
+  addendumCost() { return this.moneyCost(ADDENDUM.cost); }
   buyAddendum() {
-    if (this.state.addendum || this.state.money < ADDENDUM.cost) return false;
-    this.state.money -= ADDENDUM.cost;
+    const cost = this.addendumCost();
+    if (this.state.addendum || this.state.money < cost) return false;
+    this.state.money -= cost;
     this.state.addendum = true;
     return true;
   }
@@ -671,11 +803,14 @@ export class Game {
     const y = this.simYear();
     return this.phase < 2 && y >= SPACE_DC.from && y < SPACE_DC.to;
   }
+  spaceDCCost() { return this.moneyCost(SPACE_DC.cost); }
   buySpaceDC() {
     const s = this.state.spaceDC;
+    const cost = this.spaceDCCost();
     if (s.status !== 'none' || !this.spaceDCVisible()) return false;
-    if (this.state.money < SPACE_DC.cost) return false;
-    this.state.money -= SPACE_DC.cost;
+    if (this.state.money < cost) return false;
+    this.state.money -= cost;
+    s.paid = cost;                               // montant réellement versé (dollars du jour)
     s.status = 'building'; s.orderedAt = s.statusAt = this.state.playSeconds;
     this.log(`Contrat signé : ${SPACE_DC.name} — livraison promise dans ${SPACE_DC.buildMonths} mois.`, 'milestone');
     this.toast('🛰️ Datacenter orbital commandé', 'good');
@@ -710,7 +845,7 @@ export class Game {
       this.toast('🛰️ Retard : +6 mois', 'bad');
     } else if (s.status === 'delayed' && el >= SPACE_DC.delayMonths * monthSec) {
       s.status = 'bankrupt'; s.statusAt = this.state.playSeconds;
-      this.log(`Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos $${(SPACE_DC.cost / 1e6).toFixed(0)} M sont perdus dans l'espace.`, 'bad');
+      this.log(`Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos $${((s.paid || SPACE_DC.cost) / 1e6).toFixed(0)} M sont perdus dans l'espace.`, 'bad');
       this.toast('🛰️ Faillite du consortium orbital', 'bad');
       this.changeRep(-3);
     }
@@ -773,6 +908,102 @@ export class Game {
   }
 
   // =================================================================
+  //  CRISES — un incident grave démarre en silence quelque part sur la page.
+  //  Tant qu'il n'est pas repéré ET traité, il saigne la trésorerie de plus en
+  //  plus vite (jusqu'à 70% de la fortune en 2 minutes). Passé ce délai, il se
+  //  résorbe de lui-même : le mal est fait.
+  // =================================================================
+  crisisDef() { return this.state.crisis ? CRISES.find(c => c.id === this.state.crisis.id) : null; }
+  // Remédiation : un forfait fixe (indexé) + les jours d'exploitation qu'elle engloutit.
+  // La part « exploitation » est bornée à 3× le forfait : un incident doit faire mal,
+  // pas vider la caisse d'un groupe devenu énorme.
+  crisisCost(c) {
+    const base = this.moneyCost(c.cost);
+    return base + Math.min((c.days || 1) * this.dailyTotal(), base * 3);
+  }
+  crisisProgress() {                            // 0 → 1 sur les 2 minutes
+    if (!this.state.crisis) return 0;
+    return clamp((this.state.playSeconds - this.state.crisis.startedAt) / CRISIS_DURATION, 0, 1);
+  }
+  // fraction cumulée de fortune détruite après u secondes (accélère avec le temps)
+  _crisisCurve(u) { return CRISIS_MAX_LOSS * Math.pow(clamp(u / CRISIS_DURATION, 0, 1), 1.6); }
+  pickCrisis() {
+    const pool = CRISES.filter(c => {
+      if (c.cond && !c.cond(this)) return false;
+      return true;
+    });
+    if (!pool.length) return null;
+    // tirage sans remise : on épuise les incidents jamais vus avant de recycler
+    const seen = this.state.crisisSeen;
+    const min = pool.reduce((m, c) => Math.min(m, seen[c.id] || 0), Infinity);
+    const fresh = pool.filter(c => (seen[c.id] || 0) === min && c.id !== this.state.lastCrisisId);
+    const bag = fresh.length ? fresh : pool;
+    return bag[Math.floor(Math.random() * bag.length)];
+  }
+  tickCrisis(dt) {
+    const s = this.state;
+    if (s.ended || this._offline || this.phase >= 2) return;  // en phase 2+, l'argent ne compte plus
+    if (s.crisis) {
+      const t = s.playSeconds - s.crisis.startedAt;
+      const f0 = this._crisisCurve(t - dt), f1 = this._crisisCurve(t);
+      if (f1 > f0 && f1 < 1) {
+        const before = s.money;
+        s.money *= (1 - f1) / (1 - f0);          // saignée multiplicative exacte
+        s.crisis.lost += before - s.money;
+      }
+      if (t >= CRISIS_DURATION) this.resolveCrisis(false);
+      return;
+    }
+    s.crisisTimer -= dt;
+    if (s.crisisTimer > 0) return;
+    s.crisisTimer = 150 + Math.random() * 160;
+    if (this.ui && this.ui.modalOpen) return;                 // pas pendant une décision
+    // on n'assomme pas un garage : il faut une vraie exploitation à mettre en péril
+    if (s.money < 25000 || s.modelTier < 1) return;
+    const c = this.pickCrisis();
+    if (!c) return;
+    s.crisisSeen[c.id] = (s.crisisSeen[c.id] || 0) + 1;
+    s.lastCrisisId = c.id;
+    // volontairement silencieux : ni journal, ni notification. À vous de le voir.
+    s.crisis = { id: c.id, startedAt: s.playSeconds, lost: 0 };
+    this.ui && this.ui.onCrisis && this.ui.onCrisis(c);
+  }
+  // fixed = true : le joueur a trouvé la boîte et payé la remédiation
+  resolveCrisis(fixed) {
+    const s = this.state;
+    if (!s.crisis) return false;
+    const c = this.crisisDef();
+    const lost = s.crisis.lost;
+    s.crisisLost = (s.crisisLost || 0) + lost;
+    const money = v => '$' + Math.round(v).toLocaleString('fr-FR');
+    if (fixed && c) {
+      const cost = this.crisisCost(c);
+      const paid = Math.min(cost, s.money);
+      s.money -= paid;
+      s.crisis = null;
+      if (c.apply) c.apply(this);
+      if (paid < cost - 1) {                                   // remédiation au rabais
+        this.changeRep(-5);
+        this.log(`${c.title} → ${c.fix} : faute de trésorerie, remédiation partielle. Pertes ${money(lost)}.`, 'bad');
+        this.toast('Remédiation partielle — trésorerie épuisée', 'bad');
+      } else {
+        this.log(`${c.title} → ${c.fix} (${money(paid)}). Pertes évitées après ${money(lost)}.`, 'milestone');
+        this.toast('Incident maîtrisé', 'good');
+      }
+    } else {
+      s.crisis = null;
+      if (c) {
+        if (c.apply) c.apply(this);
+        this.changeRep(-6);
+        this.log(`${c.title} : l'incident s'est résorbé seul, sans que personne ne réagisse. Pertes ${money(lost)}.`, 'bad');
+        this.toast('Un incident est passé inaperçu…', 'bad');
+      }
+    }
+    this.ui && this.ui.onCrisisEnd && this.ui.onCrisisEnd();
+    return true;
+  }
+
+  // =================================================================
   //  LA UNE — titres de presse (ajustent la réputation : +1 / −1 / 0)
   // =================================================================
   tickHeadlines(dt) {
@@ -790,12 +1021,17 @@ export class Game {
     s.headlines.unshift(entry);
     if (s.headlines.length > 40) s.headlines.pop();
     s.lastHeadlineText = h.t;
+    // mémoire courte : un titre ne revient pas avant une douzaine d'autres
+    s.recentHeadlines.push(h.t);
+    if (s.recentHeadlines.length > 14) s.recentHeadlines.shift();
     this.ui && this.ui.onHeadline && this.ui.onHeadline(entry);
   }
   pickHeadline() {
     const y = this.simYear();
-    const pool = HEADLINES.filter(h => {
-      if (h.t === this.state.lastHeadlineText) return false;       // pas deux fois de suite
+    const tier = this.state.modelTier;
+    const eligible = (strict) => HEADLINES.filter(h => {
+      if (strict && this.state.recentHeadlines.indexOf(h.t) >= 0) return false;  // pas de redite récente
+      if (h.t === this.state.lastHeadlineText) return false;                     // jamais deux fois de suite
       if (h.phase != null) { if (this.phase !== h.phase) return false; }
       else {
         // titre daté (phase 1) vs titre d'état (cond, toutes phases)
@@ -803,9 +1039,16 @@ export class Game {
         if (h.from != null && y < h.from) return false;
         if (h.to != null && y >= h.to + 1) return false;
       }
+      // corrélation avec l'avancement du joueur : la presse ne parle d'une
+      // capacité que lorsqu'elle existe réellement chez lui.
+      if (h.tier != null && tier !== h.tier) return false;
+      if (h.minTier != null && tier < h.minTier) return false;
+      if (h.maxTier != null && tier > h.maxTier) return false;
       if (h.cond && !h.cond(this)) return false;
       return true;
     });
+    let pool = eligible(true);
+    if (!pool.length) pool = eligible(false);
     if (!pool.length) return null;
     return pool[Math.floor(Math.random() * pool.length)];
   }
@@ -913,9 +1156,10 @@ export class Game {
       }
     }
 
+    this.tickBuilds();                            // chantiers arrivés à terme
     this.tickAuto(dt);
     this.tickSpaceDC();
-    if (this.phase < 2) this.tickStock(dt);       // la bourse n'a plus de sens quand l'argent disparaît
+    if (this.phase < 2) { this.tickStock(dt); this.tickCrisis(dt); } // ni bourse ni incident quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);
     this.checkMilestones();
@@ -1014,7 +1258,10 @@ export class Game {
           + (this.phase < 2 ? `, ${dMoney >= 0 ? '+' : '−'}$${Math.abs(Math.round(dMoney)).toLocaleString('fr-FR')}` : '')
           + `.`, 'milestone');
       }
-      // grâce : aucune boîte de dialogue (événement) pendant les 25 premières secondes
+      // grâce : aucune boîte de dialogue (événement) pendant les 25 premières secondes,
+      // et aucun incident hérité de la session précédente (on ne saigne pas hors-ligne)
+      this.state.crisis = null;
+      this.state.crisisTimer = Math.max(this.state.crisisTimer || 0, 60);
       this.state.eventTimer = Math.max(this.state.eventTimer || 0, 25);
       this.state.headlineTimer = Math.max(this.state.headlineTimer || 0, 8);
       return true;

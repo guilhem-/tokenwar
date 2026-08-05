@@ -14,6 +14,7 @@ globalThis.HTMLElement = window.HTMLElement;
 globalThis.Node = window.Node;
 globalThis.localStorage = window.localStorage || { getItem(){return null;}, setItem(){}, removeItem(){} };
 globalThis.requestAnimationFrame = () => 0;
+globalThis.cancelAnimationFrame = () => {};
 globalThis.performance = window.performance || { now: () => Date.now() };
 globalThis.getComputedStyle = window.getComputedStyle.bind(window);
 globalThis.innerWidth = window.innerWidth; globalThis.innerHeight = window.innerHeight;
@@ -25,6 +26,7 @@ function step(label, fn) { try { fn(); console.log('OK  ' + label); } catch (e) 
 const { Game } = await import('./js/game.js');
 const { UI } = await import('./js/ui.js');
 const { Cinematic } = await import('./js/ending.js');
+const { GPUS, INFRA, ENERGY } = await import('./js/data.js');
 
 const ui = new UI();
 const game = new Game(ui);
@@ -110,14 +112,27 @@ step('boutons ×10 (≥20) et ×100 (≥200)', () => {
   if (!r.bulk100.classList.contains('hidden')) throw new Error('×100 visible alors que <200');
   const before = game.state.gpuCounts['consumer'];
   r.bulk10.dispatchEvent(new window.Event('click'));
-  if (game.state.gpuCounts['consumer'] !== before + 10) throw new Error('×10 n a pas acheté 10');
+  // les cartes commandées passent d'abord par le chantier (délai de mise en service)
+  if (game.pendingCount('gpu', 'consumer') !== 10) throw new Error('×10 n a pas commandé 10');
+  game.tick(30);                                   // on laisse le temps du rackage
+  if (game.state.gpuCounts['consumer'] < before + 10) throw new Error('×10 n a pas livré 10');
   game.state.gpuCounts['consumer'] = 250;         // ≥200 → ×100 visible
   ui.render();
   if (r.bulk100.classList.contains('hidden')) throw new Error('×100 caché alors que ≥200');
 });
 
 // chaîne d'hébergement + GPU + revente
-step('buyInfra serveur', () => { game.state.money = 1e9; const before = game.capacityFor('gpu'); game.buyInfra('server'); ui.render(); if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée'); });
+step('buyInfra serveur (chantier puis mise en service)', () => {
+  game.state.money = 1e9;
+  const before = game.capacityFor('gpu');
+  game.buyInfra('server');
+  ui.render();
+  // pendant le chantier : l'emplacement parent est réservé, mais aucune capacité encore offerte
+  if (game.pendingCount('infra', 'server') !== 1) throw new Error('serveur non mis en chantier');
+  if (game.capacityFor('gpu') !== before) throw new Error('capacité offerte avant la fin du chantier');
+  game.tick(30);
+  if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée après le chantier');
+});
 step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
 step('sellGPU (revente)', () => { const n = game.state.gpuCounts['consumer'] || 0; if (n < 1) game.buyGPU('consumer'); ui.rows.gpu['consumer'].sell.dispatchEvent(new window.Event('click')); ui.render(); });
 // équipe (RH) + charges + dépendances
@@ -224,6 +239,139 @@ step('datacenter orbital : chrono, retard, faillite', () => {
   if (!game.state.achievements['spacedc']) throw new Error('succès orbital non débloqué');
   ui.render();
   game.state.playSeconds = 60; // retour à une date normale pour la suite des tests
+});
+
+// ---- inflation simulée : les prix suivent l'indice, pas la trésorerie ----
+step('inflation : indice, prix et pouvoir d achat', () => {
+  game.state.playSeconds = 0;
+  const idx0 = game.inflIndex();
+  const gpu0 = game.gpuCost(GPUS[0]), sal0 = game.salaryPerDay ? game.salaryPerDay() : 0;
+  if (Math.abs(idx0 - 1) > 1e-9) throw new Error('indice ≠ 1 en 2019');
+  game.state.playSeconds = 300 * 8;                  // huit ans plus tard
+  const idx1 = game.inflIndex();
+  if (!(idx1 > 1.2)) throw new Error('inflation non cumulée : ' + idx1);
+  if (!(game.gpuCost(GPUS[0]) > gpu0 * 1.2)) throw new Error('le prix du matériel ne suit pas l inflation');
+  game.state.employees.rnd = 2;
+  if (!(game.salaryPerDay() > 2 * 400)) throw new Error('les salaires ne suivent pas l inflation');
+  game.state.employees.rnd = 0;
+  if (!(game.purchasingLoss() > 0.15)) throw new Error('pouvoir d achat non érodé');
+  ui.render();
+  if (!/indice/.test(ui.el.chargeInfl.textContent)) throw new Error('inflation non affichée');
+  game.state.playSeconds = 60;
+});
+
+// ---- coûts d'énergie : unique vs récurrents (fixe / variable / abonnement) ----
+step('énergie : coût unique vs coûts récurrents', () => {
+  game.state.energyCounts = { grid: 2, gas: 1 };
+  game.state.energyCap = 26;
+  const b = game.energyBill();
+  if (!(b.sub > 0)) throw new Error('abonnement (puissance souscrite) absent');
+  if (!(b.fixed > 0)) throw new Error('coût fixe d exploitation absent');
+  if (!(b.variable >= 0)) throw new Error('coût variable absent');
+  if (Math.abs(b.total - (b.variable + b.fixed + b.sub)) > 1e-6) throw new Error('total incohérent');
+  ui.render();
+  const txt = ui.el.chargeElecSub.textContent + ui.el.chargeElecFix.textContent + ui.el.chargeElecVar.textContent;
+  if (!/\$/.test(txt)) throw new Error('les trois natures de coût ne sont pas affichées');
+  // le capex, lui, est un coût UNIQUE payé à la commande
+  const m0 = game.state.money = 1e7;
+  game.buyEnergy('solar');
+  if (game.state.money >= m0) throw new Error('capex non prélevé à la commande');
+});
+
+// ---- délais de mise en service proportionnels à la complexité ----
+step('chantiers : délais croissants avec la complexité', () => {
+  const t = f => game.buildSeconds(f.id ? f.id : f, f);
+  const secGpu = game.buildSeconds('gpu', GPUS.find(g => g.id === 'consumer'));
+  const secRack = game.buildSeconds('gpu', GPUS.find(g => g.id === 'gb200'));
+  if (!(secRack > secGpu)) throw new Error('un rack complet devrait être plus long qu une carte gamer');
+  const secDc = game.buildSeconds('datacenter', INFRA.find(i => i.id === 'datacenter'));
+  const secServer = game.buildSeconds('server', INFRA.find(i => i.id === 'server'));
+  if (!(secDc > secServer)) throw new Error('un datacenter devrait être plus long qu un serveur');
+  const smr = ENERGY.find(e => e.id === 'nuclear'), sun = ENERGY.find(e => e.id === 'solar');
+  if (!(game.buildSeconds('energy', smr) > game.buildSeconds('energy', sun))) throw new Error('un SMR devrait être plus long qu un panneau');
+  // et le badge « en chantier » apparaît bien dans la liste
+  game.state.money = 1e9;
+  game.state.playSeconds = 60;
+  game.buyGPU('consumer');
+  ui.render();
+  if (!/chantier/.test(ui.rows.gpu['consumer'].effect.innerHTML)) throw new Error('badge de chantier absent');
+  game.tick(30);
+});
+
+// ---- crises : boîte rouge cachée, saignée, remédiation ----
+step('crise : apparition silencieuse, saignée puis remédiation', () => {
+  game.state.money = 1e6; game.state.modelTier = 3;   // une exploitation réelle à mettre en péril
+  game.state.crisis = null; game.state.crisisTimer = 0;
+  const logs = ui.el.log.children.length;
+  game.tickCrisis(0.1);
+  if (!game.state.crisis) throw new Error('aucune crise déclenchée');
+  if (ui.el.log.children.length !== logs) throw new Error('la crise ne doit PAS être annoncée dans le journal');
+  if (!ui.crisisBox || !ui.el.crisisLayer.querySelector('.crisis-box')) throw new Error('boîte d alerte absente');
+  if (!ui.crisisBox.querySelector('.crisis-halo')) throw new Error('halo rouge absent');
+  if (!ui.crisisBox.style.top || !ui.crisisBox.style.left) throw new Error('boîte non positionnée dans la page');
+  if (ui.el.crisisVignette.classList.contains('hidden')) throw new Error('indice visuel (liseré) absent');
+  game.state.money = 1e9;
+  for (let i = 0; i < 120; i++) game.tick(0.25);      // 30 s sans réaction
+  if (!(game.state.crisis && game.state.crisis.lost > 0)) throw new Error('la trésorerie ne saigne pas');
+  ui.render();
+  if (!/−\$/.test(ui.crisisBox.querySelector('.crisis-lost').textContent)) throw new Error('pertes non affichées');
+  // …et au bout de 2 minutes, la saignée atteint bien ~70% de la fortune
+  const f = game._crisisCurve(120);
+  if (Math.abs(f - 0.70) > 1e-6) throw new Error('la perte maximale à 2 min devrait être de 70%');
+  const cash = game.money;
+  ui.crisisBox.querySelector('.crisis-fix').dispatchEvent(new window.Event('click'));
+  if (game.state.crisis) throw new Error('la crise n a pas été résolue');
+  if (!(game.money < cash)) throw new Error('la remédiation devrait coûter');
+  if (ui.el.crisisLayer.querySelector('.crisis-box')) throw new Error('boîte non retirée');
+});
+step('crise : résorption automatique au bout de 2 minutes', () => {
+  ui.closeModal();                                   // un événement a pu s'ouvrir pendant les ticks
+  game.state.money = 1e6; game.state.modelTier = 3;
+  game.state.crisis = null; game.state.crisisTimer = 0;
+  game.tickCrisis(0.1);
+  if (!game.state.crisis) throw new Error('aucune crise déclenchée');
+  for (let i = 0; i < 500; i++) game.tick(0.25);      // > 2 minutes
+  if (game.state.crisis) throw new Error('la crise aurait dû se résorber seule');
+  if (ui.el.crisisLayer.querySelector('.crisis-box')) throw new Error('boîte encore présente');
+});
+
+// ---- animations d'inactivité : 12 types, jamais deux fois la même de suite ----
+step('inactivité : tirage sans remise des 12 animations', () => {
+  const seen = [];
+  let prev = null;
+  for (let i = 0; i < 24; i++) {
+    const id = ui.idle.nextId();
+    if (id === prev) throw new Error('deux fois la même animation de suite : ' + id);
+    prev = id; seen.push(id);
+  }
+  const uniq = new Set(seen.slice(0, 12));
+  if (uniq.size !== 12) throw new Error('les 12 animations ne passent pas avant une répétition (' + uniq.size + ')');
+});
+step('inactivité : déclenchement après 15 s sans interaction', () => {
+  ui.closeModal();
+  ui._lastAct = Date.now() - 20000;                  // 20 s d'immobilité
+  ui._nextIdleAt = 0;
+  game.state.headlineTimer = 99;
+  ui._calm = true;                                   // sans canvas (jsdom) : la presse prend le relais
+  ui.tickIdle();
+  if (game.state.headlineTimer !== 0) throw new Error('aucune manifestation après 15 s d inactivité');
+  ui._calm = false;
+  ui._lastAct = Date.now();
+});
+
+// ---- presse corrélée à l'avancement du joueur ----
+step('presse : titres corrélés au palier de modèle', () => {
+  game.state.playSeconds = 300 * 6;                  // 2025
+  game.state.modelTier = 0;
+  game.state.recentHeadlines = []; game.state.lastHeadlineText = null;
+  const low = new Set(); for (let i = 0; i < 200; i++) { const h = game.pickHeadline(); if (h) low.add(h.t); }
+  if ([...low].some(t => /essaim|world model|mémoire persistante|super-intelligence/i.test(t)))
+    throw new Error('titre d une capacité non atteinte');
+  game.state.modelTier = 10;
+  const hi = new Set(); for (let i = 0; i < 400; i++) { const h = game.pickHeadline(); if (h) hi.add(h.t); }
+  if (![...hi].some(t => /essaim/i.test(t))) throw new Error('aucun titre lié au palier atteint');
+  if (game.tierLag() < 0) throw new Error('retard technologique négatif');
+  game.state.playSeconds = 60;
 });
 
 // toast + log

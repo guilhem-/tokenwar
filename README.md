@@ -16,7 +16,7 @@ Un seul but : **maximiser les tokens produits**. Pour y arriver, vous traversez 
 
 | Phase | Ère | Vous gérez… |
 |------|-----|-------------|
-| 1 | **Startup** | Prix ↔ demande, marketing, GPU, hébergement, énergie, équipe, charges, R&D, levées de fonds, bourse, événements. |
+| 1 | **Startup** | Prix ↔ demande, marketing, GPU, hébergement, énergie, équipe, charges, inflation, R&D, levées de fonds, bourse, événements et **incidents à débusquer**. |
 | 2 | **Autonomie / AGI** | Auto-amélioration récursive, allocation du compute, conversion de la **matière terrestre**. L'argent disparaît : tout se monnaie en tokens. |
 | 3 | **Cosmos** | Sondes de von Neumann auto-réplicantes, consommation du système solaire → galaxie → **univers observable**. |
 | 4 | **Big Bang** | Singularité de recompression : l'espace-temps se replie, un nouvel univers naît (New Game +). |
@@ -30,6 +30,21 @@ marché, les **événements** ne surviennent que dans leur fenêtre historique, 
 **📰 La Une** fait défiler des titres de presse d'époque qui font monter (+1) ou descendre
 (−1) votre réputation.
 
+Ces titres suivent **l'actualité réelle de l'IA année par année** (AlphaFold, la lettre
+« pause de six mois », le PDG limogé puis réintégré, les Nobel 2024, le plan à 500 milliards,
+la pénurie de HBM…) **et votre propre avancement** : la presse ne parle d'une capacité que
+lorsque vous l'avez réellement livrée (« Votre modèle du monde simule des futurs avant de
+répondre »), et raille votre retard dès que vous décrochez d'une génération.
+
+## Douze paliers de modèles
+
+GPT-2 → GPT-3 → GPT-3.5/ChatGPT → GPT-4 → GPT-4o → o1 (raisonnement) → frontière 2025 →
+frontière 2026 → **mémoire persistante** (apprentissage continu, 2027) → **modèle du monde**
+(simulation prédictive, 2028) → **essaim d'agents auto-organisés** (2029) → **super-intelligence**
+(2030). Chacun exige davantage d'**ingénieurs R&D** (54 pour l'ASI), suit la **LLMflation**
+(le prix par token s'effondre pendant que le volume explose) et n'est disponible qu'à partir
+de son année.
+
 ## Une économie réaliste
 
 - **Prix fixes et réels** : RTX 3090 ~$1 500, RTX 5090 ~$2 000, H100 ~$30k, B200 ~$40k,
@@ -38,11 +53,22 @@ marché, les **événements** ne surviennent que dans leur fenêtre historique, 
 - **Chaîne d'hébergement** : un GPU tient dans un *serveur* → *baie* → *datacenter* →
   *immobilier*. Achat, **location de datacenter** ou **colocation** au coût journalier.
 - **Flambée mémoire 2025-2026** : le prix des serveurs bondit de $8k à $22k.
-- **Énergie** : plafond dur de production, avec un **mix à coût marginal** (merit order) —
-  solaire $5/MWh, nucléaire $20, gaz $70, réseau $120… jusqu'au collecteur Dyson gratuit.
+- **Délais de mise en service** : rien n'est instantané. Toute commande part en **chantier**
+  pour une durée croissant avec sa **complexité** (`base + k·log₁₀(prix)`) — quelques secondes
+  pour une carte gamer, un mois de simulation pour un datacenter, plusieurs pour un SMR.
+  L'emplacement parent est réservé dès la commande.
+- **Énergie — trois natures de coût bien séparées** : le **capex** (unique, à la commande),
+  l'**exploitation O&M** (fixe, journalier, dû même à l'arrêt : $7 200/j pour un SMR),
+  le **combustible** (variable, au MWh soutiré : gaz $70/MWh, réseau $78, solaire $0) et
+  l'**abonnement réseau** proportionnel à la **puissance souscrite** ($260/MW/jour).
+  Le mix est servi en **ordre de mérite** (le moins cher d'abord).
+- **Inflation simulée** (taux annuels calqués sur le CPI réel : 8 % en 2022…) : prix,
+  salaires, loyers, énergie et tarifs acceptés par le marché suivent l'indice — **mais pas
+  votre trésorerie**. Dormir sur son cash coûte du pouvoir d'achat.
 - **Équipe** : les RH ouvrent des postes, les ingénieurs R&D débloquent l'entraînement des
   modèles, les marketeurs relèvent le plafond marketing, Ops et Data boostent le parc.
-- **Charges journalières** affichées et prélevées en continu : électricité + salaires + loyers.
+  Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.
+- **Charges journalières** affichées et prélevées en continu, ventilées par nature.
 - **Tokens invendus = perdus** : la production doit suivre la demande, pas l'inverse.
 - **Bourse** (débloquée à $100k) : trois profils de risque, mouvement brownien géométrique.
 
@@ -68,11 +94,36 @@ marché, les **événements** ne surviennent que dans leur fenêtre historique, 
 
 ## Événements — des décisions, tout le temps
 
-30+ événements datés inspirés de faits réels, avec deux choix aux conséquences durables :
+**40+ événements datés** inspirés de faits réels, avec deux choix aux conséquences durables :
 pénurie de GPU H100 · choc DeepSeek (−17 % NVIDIA) · procès copyright · EU AI Act ·
-saturation du réseau (SMR nucléaire) · pannes · jailbreaks · model collapse · guerre des
+saturation du réseau (SMR nucléaire) · flambée de la mémoire HBM · moratoire local sur les
+datacenters · pression pour l'ouverture des poids · contrat de cloud souverain · colère après
+une mise hors service · dommage causé par un agent autonome · droits de douane sur les
+accélérateurs · débauchage à neuf chiffres · pannes · jailbreaks · model collapse · guerre des
 prix « mini » · embargo sur les puces · tentatives d'arrêt de l'AGI · promesse du
 sanctuaire reposée à 85 % de la Terre consommée · IA rivales · mort thermique…
+
+## 🚨 Incidents — la boîte qu'il faut trouver
+
+Douze **crises** (exfiltration de données, incendie en salle, blocage militant, fibre
+sectionnée, réacteur hors de contrôle, rançongiciel, fuite de liquide de refroidissement,
+fraude massive sur l'API, canicule, empoisonnement du corpus, vol de GPU, délestage réseau)
+surgissent **sans la moindre notification**. La boîte d'alerte — bordure rouge, **halo qui
+grossit et bat de plus en plus vite** — est posée **au hasard dans la page, de préférence hors
+du champ de vision**. Tant qu'elle n'est pas trouvée, la trésorerie fond de plus en plus vite :
+**jusqu'à 70 % de la fortune en 2 minutes**. Seul indice : le liseré rouge qui s'intensifie sur
+les bords de l'écran. Passé 2 minutes, l'incident se résorbe seul — le mal est fait. Chaque
+crise a son **bouton de remédiation** qui explique la solution (couper l'accès et durcir,
+mobiliser les pompiers et redonder l'extinction, SCRAM et inspection…) et son coût.
+
+## 😴 Douze manifestations contre l'inactivité
+
+Passé **15 secondes sans interaction**, l'écran se rappelle à vous : clignement, moirés
+sombres, pluie de glyphes façon Matrix, polygones filaires, balayage cathodique, décrochage
+RVB, vague de particules, onde de choc, inversion brève, pluie de tokens, tunnel vectoriel,
+grille synthwave. Chacune dure **moins de 5 secondes**, n'intercepte jamais un clic, et le
+tirage est **sans remise** : les douze passent avant qu'une seule revienne. La presse s'en
+mêle aussi. `prefers-reduced-motion` désactive les animations au profit des seuls titres.
 
 ## Tech
 
@@ -81,9 +132,12 @@ sanctuaire reposée à 85 % de la Terre consommée · IA rivales · mort thermiq
 ```
 index.html        structure & panneaux
 styles.css        thème « salle de contrôle IA », responsive, accents évoluant par phase
-js/data.js        contenu : modèles, GPU, hébergement, énergie, équipe, événements, succès
-js/game.js        moteur : économie, production, phases, événements, sauvegarde versionnée
-js/ui.js          rendu & interactions (sparkline, modales accessibles, export/import)
+js/data.js        contenu : modèles, GPU, hébergement, énergie, équipe, événements, crises,
+                  inflation, délais de chantier, animations d'inactivité, succès
+js/game.js        moteur : économie, inflation, chantiers, crises, phases, sauvegarde versionnée
+js/ui.js          rendu & interactions (sparkline, boîte de crise, modales accessibles, export/import)
+js/fx.js          les douze manifestations d'inactivité (canevas plein écran, non cliquable)
+js/ending.js      cinématique finale (désintégration, hyperespace, scroller, musique 8-bit)
 js/util.js        formatage des grands nombres (jusqu'à 10⁶⁰ et au-delà), puissances kW→TW
 js/main.js        boucle de jeu, vitesse, autosave
 ```

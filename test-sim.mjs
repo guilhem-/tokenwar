@@ -23,6 +23,9 @@ function bot() {
   // amorçage : cliquer tant qu'on n'a quasiment pas de compute
   if (g.computeRaw() < 3) { for (let i = 0; i < 25; i++) g.manualGenerate(); }
 
+  // 0) incidents : le bot met ~12 s à repérer la boîte d'alerte, puis remédie
+  if (s.crisis && s.playSeconds - s.crisis.startedAt > 12) g.resolveCrisis(true);
+
   // 1) lever tous les fonds disponibles
   for (const f of FUNDING) if (!s.fundingDone[f.id] && s.lifetimeTokens >= f.need) g.claimFunding(f.id);
 
@@ -34,8 +37,11 @@ function bot() {
   const wantRnd = g.canTrainNext() ? (g.nextModel().minRnd || 0) : g.empCount('rnd');
   const baseMkt = g.marketingCap() - g.empCount('marketer'); // = BASE_MARKETING
   const wantMkt = Math.max(0, desiredL - baseMkt);
-  const desiredHead = 1 + wantRnd + wantMkt + 4;
-  while (g.headcountCap() < desiredHead && g.canHire('hr')) g.hire('hr');
+  // les RH occupent eux-mêmes un poste : on vise une capacité NETTE de RH suffisante
+  // (cap − RH = 3 + 4·RH, donc la boucle converge toujours)
+  const wantHead = wantRnd + wantMkt + 4;
+  let hrGuard = 0;
+  while (g.headcountCap() - g.empCount('hr') < wantHead && hrGuard++ < 200) g.hire('hr');
   while (g.empCount('rnd') < wantRnd && g.canHire('rnd')) g.hire('rnd');
   while (g.empCount('marketer') < wantMkt && g.canHire('marketer')) g.hire('marketer');
 

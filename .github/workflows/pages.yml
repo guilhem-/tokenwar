@@ -39,8 +39,11 @@ jobs:
           node test-ui.mjs
 
       - name: Test simulation (partie complète)
-        timeout-minutes: 6
-        run: node test-sim.mjs | tail -8
+        timeout-minutes: 15
+        # pas de pipe direct : il masquerait le code de sortie du simulateur
+        run: |
+          node test-sim.mjs > sim.log
+          tail -8 sim.log
 
   deploy:
     needs: test
