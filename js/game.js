@@ -2,11 +2,12 @@
 //  TokenWar — MOTEUR DE JEU
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
-         START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
+         START_YEAR, SECONDS_PER_YEAR, HEADLINES,
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
          BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
          HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, OPTIMS } from './data.js';
 import { clamp } from './util.js';
+import { t, td, months as i18nMonths, intlLocale } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
 const SAVE_VERSION = 5;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
@@ -159,7 +160,7 @@ export class Game {
     const year = Math.floor(y);
     const dayOfYear = Math.min(364, Math.floor((y - year) * 365));
     const d = new Date(2001, 0, 1 + dayOfYear);  // 2001 : année non bissextile, pour jour↔mois
-    return `${d.getDate()} ${MONTHS_FR[d.getMonth()]} ${year}`;
+    return `${d.getDate()} ${i18nMonths()[d.getMonth()]} ${year}`;
   }
   // un élément (GPU/énergie/modèle) est-il sorti à la date courante ?
   dateUnlocked(item) { return !item.year || this.simYear() >= item.year; }
@@ -485,8 +486,8 @@ export class Game {
       s.unpaidDays += dt / perDay;
       if (!s._payWarned && s.unpaidDays >= 10) {
         s._payWarned = true;
-        this.log('Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.', 'bad');
-        this.toast('⚠️ Salaires impayés', 'bad');
+        this.log(t('Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.'), 'bad');
+        this.toast(t('⚠️ Salaires impayés'), 'bad');
       }
       const over = s.unpaidDays - UNPAID_QUIT_DAYS;
       if (over >= 0) {
@@ -496,12 +497,12 @@ export class Game {
           const who = this.quitOne();
           if (!who) break;
           this.changeRep(-1);
-          this.log(`${who.name} démissionne : ${Math.floor(s.unpaidDays)} jours de salaire impayés.`, 'bad');
-          this.toast(`👋 Départ : ${who.name}`, 'bad');
+          this.log(t('{0} démissionne : {1} jours de salaire impayés.', td(who.name), Math.floor(s.unpaidDays)), 'bad');
+          this.toast(t('👋 Départ : {0}', td(who.name)), 'bad');
         }
       }
     } else if (s.unpaidDays > 0) {
-      if (s.unpaidDays >= 10) this.log('Arriérés de salaire réglés. L’équipe reste.', 'good');
+      if (s.unpaidDays >= 10) this.log(t('Arriérés de salaire réglés. L’équipe reste.'), 'good');
       s.unpaidDays = 0; s.quitDebt = 0; s._payWarned = false;
     }
   }
@@ -702,8 +703,8 @@ export class Game {
     this.state.research -= (c.research || 0);
     this.state.modelTier++;
     this.state._freshModelUntil = this.state.playSeconds + 18; // titres de presse réactifs
-    this.log(`Modèle entraîné : ${m.name}`, 'milestone');
-    this.toast(`Nouveau modèle : ${m.name}`, 'good');
+    this.log(t('Modèle entraîné : {0}', td(m.name)), 'milestone');
+    this.toast(t('Nouveau modèle : {0}', td(m.name)), 'good');
     return true;
   }
   claimFunding(id) {
@@ -715,8 +716,8 @@ export class Game {
     const cash = this.moneyCost(f.cash);        // les tours de table sont libellés en dollars courants
     this.state.money += cash;
     for (const k in f.bonus) this.state.mods[k] *= f.bonus[k];
-    this.log(`Levée de fonds : ${f.name} (+$${Math.round(cash).toLocaleString('fr')})`, 'milestone');
-    this.toast(`${f.name} bouclée !`, 'good');
+    this.log(t('Levée de fonds : {0} (+{1})', td(f.name), '$' + Math.round(cash).toLocaleString(intlLocale())), 'milestone');
+    this.toast(t('{0} bouclée !', td(f.name)), 'good');
     return true;
   }
 
@@ -737,8 +738,8 @@ export class Game {
     this.state.matter -= (c.matter || 0);
     this.state.projectsDone[id] = true;
     this.applyProjectEffect(p.effect);
-    this.log(`Projet : ${p.name}`, 'milestone');
-    this.toast(`Percée : ${p.name}`, 'good');
+    this.log(t('Projet : {0}', td(p.name)), 'milestone');
+    this.toast(t('Percée : {0}', td(p.name)), 'good');
     return true;
   }
   applyProjectEffect(effect) {
@@ -788,7 +789,7 @@ export class Game {
     o.effect(this);
     st.n++;
     st.nextAt = this.state.playSeconds + o.months * (SECONDS_PER_YEAR / 12);
-    this.log(`${o.name} déployée (n°${st.n}) — ${o.gain}.`, 'good');
+    this.log(t('{0} déployée (n°{1}) — {2}.', td(o.name), st.n, td(o.gain)), 'good');
     return true;
   }
 
@@ -843,13 +844,13 @@ export class Game {
       this.state.intelligence = Math.max(this.state.intelligence, 1);
       this.state.alloc = { serve:0.4, research:0.1, improve:0.2, harvest:0.3 };
       this.state.eventTimer = 20;
-      this.log('SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.', 'milestone');
-      this.toast('Phase 2 — Autonomie', 'good');
+      this.log(t('SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.'), 'milestone');
+      this.toast(t('Phase 2 — Autonomie'), 'good');
     } else if (p === 3) {
       this.state.earthConsumed = 1;
       this.state.eventTimer = 20;
-      this.log('Les sondes de von Neumann quittent la Terre. L’univers est à portée.', 'milestone');
-      this.toast('Phase 3 — Expansion cosmique', 'good');
+      this.log(t('Les sondes de von Neumann quittent la Terre. L’univers est à portée.'), 'milestone');
+      this.toast(t('Phase 3 — Expansion cosmique'), 'good');
     }
     this.ui && this.ui.onPhaseChange(p);
   }
@@ -859,7 +860,7 @@ export class Game {
     this.state.phase = 4;
     this.state.ended = true;
     this.checkAchievements();   // le tick s'arrête ici : valider les derniers succès (Big Bang…)
-    this.log('SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…', 'milestone');
+    this.log(t('SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…'), 'milestone');
     this.ui && this.ui.showEnding();
   }
 
@@ -899,8 +900,8 @@ export class Game {
     this.state.addendumBlocks = (this.state.addendumBlocks || 0) + 1;
     this.state.addendum = true;
     this.log(this.state.addendumBlocks === 1
-      ? `Directives permanentes activées : ${this.directiveSlots()} mémorisables.`
-      : `Quota de directives étendu : ${this.directiveSlots()} mémorisables.`, 'milestone');
+      ? t('Directives permanentes activées : {0} mémorisables.', this.directiveSlots())
+      : t('Quota de directives étendu : {0} mémorisables.', this.directiveSlots()), 'milestone');
     return true;
   }
   // remplacer une directive existante ne consomme pas de place supplémentaire
@@ -936,8 +937,8 @@ export class Game {
     this.state.money -= cost;
     s.paid = cost;                               // montant réellement versé (dollars du jour)
     s.status = 'building'; s.orderedAt = s.statusAt = this.state.playSeconds;
-    this.log(`Contrat signé : ${SPACE_DC.name} — livraison promise dans ${SPACE_DC.buildMonths} mois.`, 'milestone');
-    this.toast('🛰️ Datacenter orbital commandé', 'good');
+    this.log(t('Contrat signé : {0} — livraison promise dans {1} mois.', td(SPACE_DC.name), SPACE_DC.buildMonths), 'milestone');
+    this.toast(t('🛰️ Datacenter orbital commandé'), 'good');
     return true;
   }
   // barre visuelle : {label, frac} — frac va de 1 → 0 (la barre se réduit)
@@ -948,14 +949,14 @@ export class Game {
     if (s.status === 'building') {
       const total = SPACE_DC.buildMonths * monthSec;
       const left = Math.max(0, total - el);
-      return { label: `Assemblage en orbite — ${Math.ceil(left / monthSec)} mois restants`, frac: left / total };
+      return { label: t('Assemblage en orbite — {0} mois restants', Math.ceil(left / monthSec)), frac: left / total };
     }
     if (s.status === 'delayed') {
       const total = SPACE_DC.delayMonths * monthSec;
       const left = Math.max(0, total - el);
-      return { label: `Retard annoncé — ${Math.ceil(left / monthSec)} mois restants`, frac: left / total };
+      return { label: t('Retard annoncé — {0} mois restants', Math.ceil(left / monthSec)), frac: left / total };
     }
-    if (s.status === 'bankrupt') return { label: 'Consortium en faillite — investissement perdu', frac: 0 };
+    if (s.status === 'bankrupt') return { label: t('Consortium en faillite — investissement perdu'), frac: 0 };
     return null;
   }
   tickSpaceDC() {
@@ -965,12 +966,12 @@ export class Game {
     const el = this.state.playSeconds - s.statusAt;
     if (s.status === 'building' && el >= SPACE_DC.buildMonths * monthSec) {
       s.status = 'delayed'; s.statusAt = this.state.playSeconds;
-      this.log('Datacenter orbital : le consortium annonce 6 mois de retard (« problèmes de radiateurs »).', 'bad');
-      this.toast('🛰️ Retard : +6 mois', 'bad');
+      this.log(t('Datacenter orbital : le consortium annonce 6 mois de retard (« problèmes de radiateurs »).'), 'bad');
+      this.toast(t('🛰️ Retard : +6 mois'), 'bad');
     } else if (s.status === 'delayed' && el >= SPACE_DC.delayMonths * monthSec) {
       s.status = 'bankrupt'; s.statusAt = this.state.playSeconds;
-      this.log(`Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos $${((s.paid || SPACE_DC.cost) / 1e6).toFixed(0)} M sont perdus dans l'espace.`, 'bad');
-      this.toast('🛰️ Faillite du consortium orbital', 'bad');
+      this.log(t('Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos ${0} M sont perdus dans l’espace.', ((s.paid || SPACE_DC.cost) / 1e6).toFixed(0)), 'bad');
+      this.toast(t('🛰️ Faillite du consortium orbital'), 'bad');
       this.changeRep(-3);
     }
   }
@@ -998,7 +999,7 @@ export class Game {
     const ch = ev.choices[idx];
     if (ch.cost && this.state.money < ch.cost) return false;  // plus les moyens → redemander
     ch.apply(this);
-    this.log(`${ev.title} → ${ch.label} (directive permanente)`, 'info');
+    this.log(t('{0} → {1} (directive permanente)', td(ev.title), td(ch.label)), 'info');
     return true;
   }
   pickEvent() {
@@ -1099,7 +1100,7 @@ export class Game {
     const c = this.crisisDef();
     const lost = s.crisis.lost;
     s.crisisLost = (s.crisisLost || 0) + lost;
-    const money = v => '$' + Math.round(v).toLocaleString('fr-FR');
+    const money = v => '$' + Math.round(v).toLocaleString(intlLocale());
     if (fixed && c) {
       const cost = this.crisisCost(c);
       const paid = Math.min(cost, s.money);
@@ -1108,19 +1109,19 @@ export class Game {
       if (c.apply) c.apply(this);
       if (paid < cost - 1) {                                   // remédiation au rabais
         this.changeRep(-5);
-        this.log(`${c.title} → ${c.fix} : faute de trésorerie, remédiation partielle. Pertes ${money(lost)}.`, 'bad');
-        this.toast('Remédiation partielle — trésorerie épuisée', 'bad');
+        this.log(t('{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.', td(c.title), td(c.fix), money(lost)), 'bad');
+        this.toast(t('Remédiation partielle — trésorerie épuisée'), 'bad');
       } else {
-        this.log(`${c.title} → ${c.fix} (${money(paid)}). Pertes évitées après ${money(lost)}.`, 'milestone');
-        this.toast('Incident maîtrisé', 'good');
+        this.log(t('{0} → {1} ({2}). Pertes évitées après {3}.', td(c.title), td(c.fix), money(paid), money(lost)), 'milestone');
+        this.toast(t('Incident maîtrisé'), 'good');
       }
     } else {
       s.crisis = null;
       if (c) {
         if (c.apply) c.apply(this);
         this.changeRep(-6);
-        this.log(`${c.title} : l'incident s'est résorbé seul, sans que personne ne réagisse. Pertes ${money(lost)}.`, 'bad');
-        this.toast('Un incident est passé inaperçu…', 'bad');
+        this.log(t('{0} : l’incident s’est résorbé seul, sans que personne ne réagisse. Pertes {1}.', td(c.title), money(lost)), 'bad');
+        this.toast(t('Un incident est passé inaperçu…'), 'bad');
       }
     }
     this.ui && this.ui.onCrisisEnd && this.ui.onCrisisEnd();
@@ -1297,10 +1298,10 @@ export class Game {
   checkMilestones() {
     const s = this.state;
     // auto-fin si recompression possible et achetée gère déjà ; ici on log des paliers
-    if (!s._m1 && s.lifetimeTokens >= 1e6) { s._m1 = true; this.log('1 million de tokens produits.', 'good'); }
-    if (!s._m2 && s.lifetimeTokens >= 1e9) { s._m2 = true; this.log('1 milliard de tokens. Les agents prennent le relais.', 'good'); }
-    if (!s._m3 && s.earthConsumed >= 0.5 && this.phase === 2) { s._m3 = true; this.log('La moitié de la croûte terrestre est devenue du calcul.', 'good'); }
-    if (!s._m4 && s.universeConsumed >= 0.5 && this.phase === 3) { s._m4 = true; this.log('La moitié de l’univers observable a été convertie.', 'good'); }
+    if (!s._m1 && s.lifetimeTokens >= 1e6) { s._m1 = true; this.log(t('1 million de tokens produits.'), 'good'); }
+    if (!s._m2 && s.lifetimeTokens >= 1e9) { s._m2 = true; this.log(t('1 milliard de tokens. Les agents prennent le relais.'), 'good'); }
+    if (!s._m3 && s.earthConsumed >= 0.5 && this.phase === 2) { s._m3 = true; this.log(t('La moitié de la croûte terrestre est devenue du calcul.'), 'good'); }
+    if (!s._m4 && s.universeConsumed >= 0.5 && this.phase === 3) { s._m4 = true; this.log(t('La moitié de l’univers observable a été convertie.'), 'good'); }
     // à 85% de la Terre, on rappelle la promesse du sanctuaire (si elle a été faite).
     // Garde-fou double : _sanctuaryAsked ET eventsSeen (l'événement est aussi marqué manual
     // pour ne jamais sortir du tirage aléatoire → une seule apparition possible).
@@ -1324,8 +1325,8 @@ export class Game {
       try { ok = a.check(this); } catch (e) { ok = false; }
       if (ok) {
         s.achievements[a.id] = true;
-        this.log(`Succès : ${a.name} — ${a.desc}`, 'milestone');
-        this.toast(`🏆 ${a.name}`, 'good');
+        this.log(t('Succès : {0} — {1}', td(a.name), td(a.desc)), 'milestone');
+        this.toast(`🏆 ${td(a.name)}`, 'good');
       }
     }
   }
@@ -1373,8 +1374,7 @@ export class Game {
     if (raw.baseGridMW === undefined) {
       const OLD_BASE = 0.5;
       s.energyCap = Math.max(BASE_GRID_MW, (s.energyCap || OLD_BASE) - (OLD_BASE - BASE_GRID_MW));
-      this.log('Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. '
-        + 'Votre capacité a été ajustée (les sources achetées sont conservées).', 'info');
+      this.log(t('Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).'), 'info');
     }
     // Les directives permanentes se comptent désormais en lots de 5 : une partie
     // qui les avait déjà payées conserve son premier lot.
@@ -1403,11 +1403,11 @@ export class Game {
         const dTok = this.state.lifetimeTokens - before.tokens;
         const dMoney = this.state.money - before.money;
         const h = Math.floor(offline / 3600), m = Math.round((offline % 3600) / 60);
-        const dur = h > 0 ? `${h} h ${m.toString().padStart(2, '0')}` : `${m} min`;
-        this.log(`Pendant votre absence (${dur}, rendement 50%, charges suspendues) : `
-          + `+${Math.round(dTok).toLocaleString('fr-FR')} tokens`
-          + (this.phase < 2 ? `, ${dMoney >= 0 ? '+' : '−'}$${Math.abs(Math.round(dMoney)).toLocaleString('fr-FR')}` : '')
-          + `.`, 'milestone');
+        const dur = h > 0 ? t('{0} h {1}', h, m.toString().padStart(2, '0')) : t('{0} min', m);
+        this.log(t('Pendant votre absence ({0}, rendement 50%, charges suspendues) : +{1} tokens{2}.',
+          dur,
+          Math.round(dTok).toLocaleString(intlLocale()),
+          this.phase < 2 ? `, ${dMoney >= 0 ? '+' : '−'}$${Math.abs(Math.round(dMoney)).toLocaleString(intlLocale())}` : ''), 'milestone');
       }
       // grâce : aucune boîte de dialogue (événement) pendant les 25 premières secondes,
       // et aucun incident hérité de la session précédente (on ne saigne pas hors-ligne)
@@ -1432,6 +1432,6 @@ export class Game {
     // bonus New Game+ : un petit coup de pouce permanent
     this.state.mods.computeMult *= Math.pow(1.5, ng);
     this.state.mods.demandMult *= Math.pow(1.3, ng);
-    if (ng > 0) this.log(`Nouvel univers (NG+${ng}). Vos connaissances persistent : production accélérée.`, 'milestone');
+    if (ng > 0) this.log(t('Nouvel univers (NG+{0}). Vos connaissances persistent : production accélérée.', ng), 'milestone');
   }
 }

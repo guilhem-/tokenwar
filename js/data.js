@@ -908,6 +908,33 @@ export const AUTOMATIONS = [
   { id:'energy', name:'Auto-énergie',      cost:5000,  desc:'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.' },
 ];
 
+// ---------------------------------------------------------------------
+//  AIDE EN JEU — un paragraphe par entrée : {b: titre en gras, p: texte}.
+//  Découpé ainsi pour rester lisible dans les fichiers de langue.
+// ---------------------------------------------------------------------
+export const HELP = [
+  { b:'But :', p:'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.' },
+  { b:'Phase 1 — Startup :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
+  { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
+  { b:'⚡ Au départ :', p:'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.' },
+  { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
+  { b:'🏗️ Délais :', p:'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.' },
+  { b:'Équipe :', p:'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.' },
+  { b:'💸 Salaires impayés :', p:'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.' },
+  { b:'📈 Inflation :', p:'l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés suivent l’indice — pas votre trésorerie. Dormir sur son cash coûte du pouvoir d’achat.' },
+  { b:'🚨 Incidents :', p:'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.' },
+  { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.' },
+  { b:'Automatisation :', p:'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.' },
+  { b:'📋 Directives permanentes :', p:'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.' },
+  { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },
+  { b:'Allocation :', p:'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.' },
+  { b:'Calendrier :', p:'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.' },
+  { b:'📰 La Une :', p:'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.' },
+  { b:'😴 Inactivité :', p:'au-delà de 15 s sans rien faire, l’écran se manifeste (douze animations courtes, jamais deux fois la même de suite) et la presse publie.' },
+  { b:'Astuce :', p:'le bouton ⏩ accélère la simulation. Sauvegarde automatique toutes les 10 s.' },
+  { muted:true, p:'Inspiré de « Universal Paperclips ». Données de prix et d’IA basées sur des faits réels (2019-2026).' },
+];
+
 export const START_YEAR = 2019;
 export const SECONDS_PER_YEAR = 300;
 export const MONTHS_FR = ['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];

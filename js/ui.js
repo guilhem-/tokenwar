@@ -1,12 +1,13 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS,
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
+import { t, td, LANGS, lang, setLang, needsPicker, onChange } from './i18n.js';
 
 const $ = id => document.getElementById(id);
 const AUTO_MIN_OWNED = 20;   // seuil d'apparition du bouton ⟳ auto (même palier que ×10)
@@ -68,6 +69,7 @@ export class UI {
       achievementsBody: $('achievements-body'),
       saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
+      langSelect: $('lang-select'),
       cine: $('cine'), cineCanvas: $('cine-canvas'), cineSkip: $('cine-skip'), cineCredit: $('cine-credit'),
       endingGetalife: $('ending-getalife'), endingNgplus: $('ending-ngplus'),
       energyLoadFill: $('energy-load-fill'), energyLoadValue: $('energy-load-value'), energyList: $('energy-list'),
@@ -88,6 +90,8 @@ export class UI {
 
   init(game) {
     this.game = game;
+    this.buildLangSelect();
+    this.applyStaticI18n();
     this.bind();
     this.installIdleWatch();
     this.buildStaticRows();
@@ -135,6 +139,41 @@ export class UI {
     if (!this._calm) this.idle.play();
   }
 
+  // ------------------------------------------------------------------
+  //  LANGUE — le sélecteur reste toujours accessible ; il est mis en
+  //  évidence lorsque la langue du navigateur n'est pas prise en charge
+  //  (l'anglais s'applique alors par défaut).
+  // ------------------------------------------------------------------
+  buildLangSelect() {
+    const sel = this.el.langSelect;
+    if (!sel) return;
+    sel.innerHTML = LANGS.map(l => `<option value="${l.code}">${l.flag} ${l.name}</option>`).join('');
+    sel.value = lang();
+    if (needsPicker()) sel.classList.add('attention');   // langue non détectée : on attire l'œil
+    sel.addEventListener('change', async () => {
+      sel.classList.remove('attention');
+      await setLang(sel.value);
+    });
+    onChange(() => this.onLangChange());
+  }
+  // Traductions des textes statiques du HTML (data-i18n / -title / -aria).
+  applyStaticI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+    if (document.title !== undefined) document.title = t('TokenWar — Le Jeu du Token');
+  }
+  // Changement de langue à chaud : les libellés sont figés à la construction
+  // des lignes, on reconstruit donc l'interface entière.
+  onLangChange() {
+    if (!this.game) return;
+    this.applyStaticI18n();
+    this.fillHelp();
+    if (this.el.langSelect) this.el.langSelect.value = lang();
+    this.fullRebuild();
+    if (this.crisisBox) { const c = this.game.crisisDef(); this.onCrisisEnd(); if (c) this.onCrisis(c); }
+  }
+
   rebuildHeadlines() {
     this.el.headlines.innerHTML = '';
     [...this.game.state.headlines].reverse().forEach(h => this.onHeadline(h));
@@ -145,16 +184,16 @@ export class UI {
     this.el.btnGenerate.addEventListener('click', () => g.manualGenerate());
     this.el.priceSlider.value = g.state.priceSlider;
     this.el.priceSlider.addEventListener('input', e => { g.state.priceSlider = +e.target.value; });
-    this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.deny(this.el.btnMarketing, 'Trésorerie insuffisante'); });
+    this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.deny(this.el.btnMarketing, t('Trésorerie insuffisante')); });
     this.el.btnFunding.addEventListener('click', () => this.claimBestFunding());
-    this.el.btnSave.addEventListener('click', () => { g.save(); this.toast('Partie sauvegardée', 'info'); });
+    this.el.btnSave.addEventListener('click', () => { g.save(); this.toast(t('Partie sauvegardée'), 'info'); });
     this.el.btnHelp.addEventListener('click', () => { this.renderAchievements(); this.el.helpOverlay.classList.remove('hidden'); });
     this.el.helpClose.addEventListener('click', () => this.el.helpOverlay.classList.add('hidden'));
     // « Play again » devient « Get a life ;-) » : le second clic tente aussi de fermer la fenêtre
     this.el.endingRestart.addEventListener('click', () => {
       if (!this._playAgainArmed) {
         this._playAgainArmed = true;
-        this.el.endingRestart.textContent = 'Get a life ;-)';
+        this.el.endingRestart.textContent = t('Get a life ;-)');
         return;
       }
       this.getALife();
@@ -188,7 +227,7 @@ export class UI {
       g.restartFresh();
       this.resetSpeed();
       this.fullRebuild();
-      this.toast('Nouvelle partie — an 2019', 'info');
+      this.toast(t('Nouvelle partie — an 2019'), 'info');
     });
     // Ctrl+Shift+E : lancer directement la cinématique de fin (démo / test)
     document.addEventListener('keydown', e => {
@@ -220,15 +259,15 @@ export class UI {
     const box = document.createElement('div');
     box.className = 'crisis-box';
     box.setAttribute('role', 'alertdialog');
-    box.setAttribute('aria-label', 'Incident : ' + c.title);
+    box.setAttribute('aria-label', t('Incident : {0}', td(c.title)));
     box.innerHTML =
       `<div class="crisis-halo" aria-hidden="true"></div>` +
       `<div class="crisis-inner">` +
-        `<div class="crisis-head"><span class="crisis-icon">${c.icon}</span><span class="crisis-title">${c.title}</span></div>` +
-        `<div class="crisis-body">${c.body}</div>` +
-        `<div class="crisis-meter"><span class="text-muted">Pertes en cours</span><span class="num crisis-lost">$0</span></div>` +
-        `<button class="btn btn-primary crisis-fix"><span class="choice-label">${c.fix}</span>` +
-        `<span class="choice-desc">${c.fixDesc}</span><span class="crisis-cost num"></span></button>`;
+        `<div class="crisis-head"><span class="crisis-icon">${c.icon}</span><span class="crisis-title">${td(c.title)}</span></div>` +
+        `<div class="crisis-body">${td(c.body)}</div>` +
+        `<div class="crisis-meter"><span class="text-muted">${t('Pertes en cours')}</span><span class="num crisis-lost">$0</span></div>` +
+        `<button class="btn btn-primary crisis-fix"><span class="choice-label">${td(c.fix)}</span>` +
+        `<span class="choice-desc">${td(c.fixDesc)}</span><span class="crisis-cost num"></span></button>`;
     box.querySelector('.crisis-fix').addEventListener('click', () => this.game.resolveCrisis(true));
     this.el.crisisLayer.appendChild(box);
     this.crisisBox = box;
@@ -310,7 +349,7 @@ export class UI {
   // l'autorisent que pour les fenêtres ouvertes par script — d'où le repli.
   getALife() {
     this.game.save();
-    this.el.endingTitle.textContent = 'Good choice. Enjoy the sun 🌱';
+    this.el.endingTitle.textContent = t('Good choice. Enjoy the sun 🌱');
     this.el.endingGetalife.disabled = true;
     this.el.endingRestart.disabled = true;
     try { window.open('', '_self'); } catch (e) {}     // s'auto-désigne comme ouvreur (vieille astuce)
@@ -318,8 +357,7 @@ export class UI {
     setTimeout(() => {
       if (typeof document === 'undefined' || document.hidden) return;
       this.el.endingBody.innerHTML =
-        `<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>` +
-        `Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️`;
+        t('<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️');
       this.el.endingNgplus.classList.remove('hidden');
       this.el.endingRestart.disabled = false;
     }, 600);
@@ -330,15 +368,15 @@ export class UI {
     try {
       this.game.save();
       const raw = localStorage.getItem('tokenwar_save_v1');
-      if (!raw) return this.toast('Rien à exporter', 'bad');
+      if (!raw) return this.toast(t('Rien à exporter'), 'bad');
       const blob = new Blob([raw], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = 'tokenwar-sauvegarde.json';
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-      this.toast('Sauvegarde exportée', 'good');
-    } catch (e) { this.toast('Export impossible dans ce navigateur', 'bad'); }
+      this.toast(t('Sauvegarde exportée'), 'good');
+    } catch (e) { this.toast(t('Export impossible dans ce navigateur'), 'bad'); }
   }
   importSave(ev) {
     const file = ev.target.files && ev.target.files[0];
@@ -349,9 +387,9 @@ export class UI {
         const data = JSON.parse(reader.result);
         if (typeof data.lifetimeTokens !== 'number') throw new Error('format inconnu');
         localStorage.setItem('tokenwar_save_v1', JSON.stringify(data));
-        this.toast('Sauvegarde importée — rechargement…', 'good');
+        this.toast(t('Sauvegarde importée — rechargement…'), 'good');
         setTimeout(() => location.reload(), 700);
-      } catch (e) { this.toast('Fichier de sauvegarde invalide', 'bad'); }
+      } catch (e) { this.toast(t('Fichier de sauvegarde invalide'), 'bad'); }
     };
     reader.readAsText(file);
     ev.target.value = '';
@@ -362,8 +400,8 @@ export class UI {
     const got = this.game.state.achievements || {};
     const n = Object.keys(got).length;
     this.el.achievementsBody.innerHTML =
-      `<p><b>🏆 Succès (${n}/${ACHIEVEMENTS.length})</b></p>` +
-      ACHIEVEMENTS.map(a => `<p class="ach ${got[a.id] ? 'done' : 'todo'}">${got[a.id] ? '🏆' : '🔒'} <b>${a.name}</b> — <span class="text-muted">${a.desc}</span></p>`).join('');
+      `<p><b>🏆 ${t('Succès')} (${n}/${ACHIEVEMENTS.length})</b></p>` +
+      ACHIEVEMENTS.map(a => `<p class="ach ${got[a.id] ? 'done' : 'todo'}">${got[a.id] ? '🏆' : '🔒'} <b>${td(a.name)}</b> — <span class="text-muted">${td(a.desc)}</span></p>`).join('');
   }
 
   syncRiskTabs() {
@@ -437,7 +475,7 @@ export class UI {
     const b = document.createElement('button');
     b.className = 'auto-btn hidden';
     b.textContent = '⟳ auto';
-    b.title = 'Auto-achat de cet élément précis';
+    b.title = t('Auto-achat de cet élément précis');
     b.addEventListener('click', ev => { ev.stopPropagation(); this.game.toggleAutoItem(family, id); });
     r.el.querySelector('.item-header').appendChild(b);
     r.autoBtn = b;
@@ -457,20 +495,20 @@ export class UI {
     this.el.addendumList.innerHTML = ''; this.rows.addendum = {};
     {
       const r = this.makeRow(this.el.addendumList, 'directives', this.rows.addendum);
-      r.name.textContent = ADDENDUM.name;
-      r.desc.textContent = ADDENDUM.desc;
+      r.name.textContent = td(ADDENDUM.name);
+      r.desc.textContent = td(ADDENDUM.desc);
       r.el.addEventListener('click', () => { this.game.buyAddendum(); });
       const reset = document.createElement('button');
       reset.className = 'btn-ghost rent-btn hidden';
-      reset.textContent = 'Réinitialiser les directives';
-      reset.addEventListener('click', ev => { ev.stopPropagation(); this.game.clearAutoChoices(); this.toast('Directives effacées', 'info'); });
+      reset.textContent = t('Réinitialiser les directives');
+      reset.addEventListener('click', ev => { ev.stopPropagation(); this.game.clearAutoChoices(); this.toast(t('Directives effacées'), 'info'); });
       r.el.appendChild(reset);
       r.resetBtn = reset;
     }
     {
       const r = this.makeRow(this.el.addendumList, 'spacedc', this.rows.addendum);
-      r.name.textContent = '🛰️ ' + SPACE_DC.name;
-      r.desc.textContent = SPACE_DC.desc;
+      r.name.textContent = '🛰️ ' + td(SPACE_DC.name);
+      r.desc.textContent = td(SPACE_DC.desc);
       const bar = document.createElement('div');
       bar.className = 'progress spacedc-bar hidden';
       bar.innerHTML = '<div class="progress-fill" style="width:100%"></div>';
@@ -482,8 +520,8 @@ export class UI {
     this.el.autoList.innerHTML = ''; this.rows.auto = {};
     AUTOMATIONS.forEach(a => {
       const r = this.makeRow(this.el.autoList, a.id, this.rows.auto);
-      r.name.textContent = a.name;
-      r.desc.textContent = a.desc;
+      r.name.textContent = td(a.name);
+      r.desc.textContent = td(a.desc);
       const actions = document.createElement('div');
       actions.className = 'rent-row';
       actions.innerHTML = `<button class="btn-ghost rent-btn" data-act="auto"></button>`;
@@ -500,8 +538,8 @@ export class UI {
     this.el.infraList.innerHTML = ''; this.rows.infra = {};
     INFRA.forEach(it => {
       const r = this.makeRow(this.el.infraList, it.id, this.rows.infra);
-      r.name.textContent = it.name;
-      r.desc.textContent = it.desc;
+      r.name.textContent = td(it.name);
+      r.desc.textContent = td(it.desc);
       r.el.addEventListener('click', () => { this.game.buyInfra(it.id); }); // grisé → no-op
       this.addBulk(r, () => this.game.buyInfra(it.id));
       this.addAutoToggle(r, 'infra', it.id);
@@ -510,8 +548,8 @@ export class UI {
         const rent = document.createElement('div');
         rent.className = 'rent-row';
         rent.innerHTML = `<span class="rent-info text-muted num"></span>` +
-          `<button class="btn-ghost rent-btn" data-act="rent">Louer +1</button>` +
-          `<button class="btn-ghost rent-btn" data-act="unrent">Résilier</button>`;
+          `<button class="btn-ghost rent-btn" data-act="rent">${t('Louer +1')}</button>` +
+          `<button class="btn-ghost rent-btn" data-act="unrent">${t('Résilier')}</button>`;
         rent.querySelector('[data-act=rent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.rentDC(); });
         rent.querySelector('[data-act=unrent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.unrentDC(); });
         r.el.appendChild(rent);
@@ -523,8 +561,8 @@ export class UI {
         const colo = document.createElement('div');
         colo.className = 'rent-row';
         colo.innerHTML = `<span class="rent-info text-muted num"></span>` +
-          `<button class="btn-ghost rent-btn" data-act="rent">Louer espace (+${COLO.racks} baies)</button>` +
-          `<button class="btn-ghost rent-btn" data-act="unrent">Résilier</button>`;
+          `<button class="btn-ghost rent-btn" data-act="rent">${t('Louer espace (+{0} baies)', COLO.racks)}</button>` +
+          `<button class="btn-ghost rent-btn" data-act="unrent">${t('Résilier')}</button>`;
         colo.querySelector('[data-act=rent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.rentSpace(); });
         colo.querySelector('[data-act=unrent]').addEventListener('click', ev => { ev.stopPropagation(); this.game.unrentSpace(); });
         r.el.appendChild(colo);
@@ -536,12 +574,12 @@ export class UI {
     this.el.teamList.innerHTML = ''; this.rows.team = {};
     EMPLOYEES.forEach(e => {
       const r = this.makeRow(this.el.teamList, e.id, this.rows.team);
-      r.name.textContent = e.name;
-      r.desc.textContent = e.desc;
+      r.name.textContent = td(e.name);
+      r.desc.textContent = td(e.desc);
       const actions = document.createElement('div');
       actions.className = 'rent-row';
-      actions.innerHTML = `<button class="btn-ghost rent-btn" data-act="hire">Embaucher</button>` +
-        `<button class="btn-ghost rent-btn" data-act="fire">Licencier</button>`;
+      actions.innerHTML = `<button class="btn-ghost rent-btn" data-act="hire">${t('Embaucher')}</button>` +
+        `<button class="btn-ghost rent-btn" data-act="fire">${t('Licencier')}</button>`;
       actions.querySelector('[data-act=hire]').addEventListener('click', ev => { ev.stopPropagation(); this.game.hire(e.id); });
       actions.querySelector('[data-act=fire]').addEventListener('click', ev => { ev.stopPropagation(); this.game.fire(e.id); });
       r.hireBtn = actions.querySelector('[data-act=hire]');
@@ -553,12 +591,12 @@ export class UI {
     this.el.gpuList.innerHTML = ''; this.rows.gpu = {};
     GPUS.forEach(g => {
       const r = this.makeRow(this.el.gpuList, g.id, this.rows.gpu);
-      r.name.textContent = g.name;
-      r.desc.textContent = g.desc;
+      r.name.textContent = td(g.name);
+      r.desc.textContent = td(g.desc);
       const sell = document.createElement('button');
       sell.className = 'sell-btn hidden';
-      sell.textContent = 'Revendre';
-      sell.title = 'Revendre une carte (libère un emplacement)';
+      sell.textContent = t('Revendre');
+      sell.title = t('Revendre une carte (libère un emplacement)');
       sell.addEventListener('click', ev => { ev.stopPropagation(); this.game.sellGPU(g.id); });
       r.effect.parentElement.appendChild(sell);
       r.sell = sell;
@@ -573,8 +611,8 @@ export class UI {
     this.el.energyList.innerHTML = ''; this.rows.energy = {};
     ENERGY.forEach(e => {
       const r = this.makeRow(this.el.energyList, e.id, this.rows.energy);
-      r.name.textContent = e.name;
-      r.desc.textContent = e.desc;
+      r.name.textContent = td(e.name);
+      r.desc.textContent = td(e.desc);
       r.el.addEventListener('click', () => { if (this.game.dateUnlocked(e)) this.game.buyEnergy(e.id); });
       this.addBulk(r, () => this.game.buyEnergy(e.id));
       this.addAutoToggle(r, 'energy', e.id);
@@ -584,24 +622,24 @@ export class UI {
     OPTIMS.forEach(o => {
       const r = this.makeRow(this.el.optimList, o.id, this.rows.optim);
       r.el.classList.add('optim');
-      r.name.textContent = o.name;
-      r.desc.textContent = o.desc;
+      r.name.textContent = td(o.name);
+      r.desc.textContent = td(o.desc);
       r.el.addEventListener('click', () => { this.game.buyOptim(o.id); });
     });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
     PROJECTS.forEach(p => {
       const r = this.makeRow(this.el.projectList, p.id, this.rows.project);
-      r.name.textContent = p.name;
-      r.desc.textContent = p.desc;
+      r.name.textContent = td(p.name);
+      r.desc.textContent = td(p.desc);
       r.el.addEventListener('click', () => { this.game.buyProject(p.id); });
     });
     // Funding
     this.el.fundingList.innerHTML = ''; this.rows.funding = {};
     FUNDING.forEach(f => {
       const r = this.makeRow(this.el.fundingList, f.id, this.rows.funding);
-      r.name.textContent = f.name;
-      r.desc.textContent = f.desc;
+      r.name.textContent = td(f.name);
+      r.desc.textContent = td(f.desc);
       r.el.addEventListener('click', () => { this.game.claimFunding(f.id); });
     });
   }
@@ -612,7 +650,7 @@ export class UI {
     const n = this.game.pendingCount(family, id);
     if (!n) return '';
     const p = Math.round((this.game.buildProgress(family, id) || 0) * 100);
-    return ` <span class="badge badge-build" title="Mise en service en cours">⏳ ${n} en chantier · ${p}%</span>`;
+    return ` <span class="badge badge-build" title="${t('Mise en service en cours')}">⏳ ${t('{0} en chantier · {1}%', n, p)}</span>`;
   }
 
   renderInfra() {
@@ -628,21 +666,21 @@ export class UI {
       const noParent = it.needs && g.freeSlots(it.id) < 1;
       r.cost.textContent = fmtMoney(cost);
       r.effect.innerHTML = `<span class="badge">×${fmt(count)}</span> ` +
-        `<span class="text-muted">accueille ${fmt(childUsed)}/${fmt(childCap)} ${it.child === 'gpu' ? 'GPU' : (INFRA.find(x => x.id === it.child)?.unit || it.child)}</span> ` +
+        `<span class="text-muted">${t('accueille {0}/{1} {2}', fmt(childUsed), fmt(childCap), it.child === 'gpu' ? 'GPU' : td(INFRA.find(x => x.id === it.child)?.unit || it.child))}</span> ` +
         `<span class="text-muted">· ${fmtPower(it.energy)}/u</span>` +
-        (noParent ? ` <span class="badge badge-warn">place ${INFRA.find(x => x.id === it.needs).unit} requise</span>` : '') +
+        (noParent ? ` <span class="badge badge-warn">${t('place {0} requise', td(INFRA.find(x => x.id === it.needs).unit))}</span>` : '') +
         this.buildBadge('infra', it.id);
       this.setAfford(r.el, g.canBuyInfra(it.id));
       this.updateBulk(r, count, g.canBuyInfra(it.id));
       this.updateAutoToggle(r, 'infra', it.id, count);
       if (r.rentInfo) {
         const rented = s.rentedDC || 0;
-        r.rentInfo.textContent = `loué ×${rented} · ${fmtMoney(g.dcRentDaily())}/j` + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
+        r.rentInfo.textContent = t('loué ×{0} · {1}/j', rented, fmtMoney(g.dcRentDaily())) + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
         r.unrentBtn.classList.toggle('locked', rented <= 0);
       }
       if (r.coloInfo) {
         const rs = s.rentedSpace || 0;
-        r.coloInfo.textContent = `espace loué ×${rs} · ${fmtMoney(COLO.daily)}/j`;
+        r.coloInfo.textContent = t('espace loué ×{0} · {1}/j', rs, fmtMoney(COLO.daily));
         r.coloUnrent.classList.toggle('locked', rs <= 0);
       }
     });
@@ -656,11 +694,11 @@ export class UI {
     EMPLOYEES.forEach(e => {
       const r = this.rows.team[e.id];
       const count = g.empCount(e.id);
-      r.cost.innerHTML = `<span class="badge">×${count}</span> <span class="num text-muted">${fmtMoney(hireCost)} à l’embauche</span>`;
+      r.cost.innerHTML = `<span class="badge">×${count}</span> <span class="num text-muted">${t('{0} à l’embauche', fmtMoney(hireCost))}</span>`;
       const canHire = g.canHire(e.id);
-      r.effect.innerHTML = `<span class="text-muted">${fmtMoney(g.moneyCost(e.salary))}/j par poste</span>` +
-        (!canHire ? (broke ? ` <span class="badge badge-warn">trésorerie insuffisante</span>`
-                           : ` <span class="badge badge-warn">limité par RH</span>`) : '');
+      r.effect.innerHTML = `<span class="text-muted">${t('{0}/j par poste', fmtMoney(g.moneyCost(e.salary)))}</span>` +
+        (!canHire ? (broke ? ` <span class="badge badge-warn">${t('trésorerie insuffisante')}</span>`
+                           : ` <span class="badge badge-warn">${t('limité par RH')}</span>`) : '');
       r.hireBtn.classList.toggle('locked', !canHire);
       r.fireBtn.classList.toggle('locked', count < 1);
       this.updateBulk(r, count, canHire);
@@ -675,12 +713,12 @@ export class UI {
       const cost = g.autoCost(a);
       if (!st.owned) {
         r.cost.textContent = fmtMoney(cost);
-        r.btn.textContent = 'Acheter';
+        r.btn.textContent = t('Acheter');
         r.btn.classList.toggle('locked', s.money < cost);
         this.setAfford(r.el, s.money >= cost);
       } else {
-        r.cost.innerHTML = `<span class="badge ${st.on ? '' : 'badge-warn'}">${st.on ? 'activé' : 'désactivé'}</span>`;
-        r.btn.textContent = st.on ? 'Désactiver' : 'Activer';
+        r.cost.innerHTML = `<span class="badge ${st.on ? '' : 'badge-warn'}">${st.on ? t('activé') : t('désactivé')}</span>`;
+        r.btn.textContent = st.on ? t('Désactiver') : t('Activer');
         r.btn.classList.remove('locked');
         r.el.classList.remove('locked', 'affordable');
       }
@@ -696,17 +734,17 @@ export class UI {
       const used = g.directivesUsed(), slots = g.directiveSlots(), full = used >= slots;
       // le quota atteint, la ligne redevient un achat : il faut repayer pour 5 de plus
       rd.cost.innerHTML = full
-        ? `<span class="badge badge-warn">quota atteint</span> <span class="num">${fmtMoney(cost)}</span>`
-        : `<span class="badge badge-new">actives</span> <span class="num">${fmtMoney(cost)}</span>`;
+        ? `<span class="badge badge-warn">${t('quota atteint')}</span> <span class="num">${fmtMoney(cost)}</span>`
+        : `<span class="badge badge-new">${t('actives')}</span> <span class="num">${fmtMoney(cost)}</span>`;
       rd.effect.innerHTML =
-        `<span class="${full ? 'text-bad' : 'text-muted'}">${used}/${slots} directive(s) mémorisée(s)</span>` +
-        ` <span class="text-muted">· repayez pour ${ADDENDUM.slotsPerBlock} de plus</span>`;
+        `<span class="${full ? 'text-bad' : 'text-muted'}">${t('{0}/{1} directive(s) mémorisée(s)', used, slots)}</span>` +
+        ` <span class="text-muted">· ${t('repayez pour {0} de plus', ADDENDUM.slotsPerBlock)}</span>`;
       rd.el.classList.remove('owned');
       this.setAfford(rd.el, s.money >= cost);
       rd.resetBtn.classList.toggle('hidden', used === 0);
     } else {
       rd.cost.textContent = fmtMoney(cost);
-      rd.effect.innerHTML = `<span class="text-muted">Ne soyez plus jamais interrompu — ${ADDENDUM.slotsPerBlock} directives par paiement.</span>`;
+      rd.effect.innerHTML = `<span class="text-muted">${t('Ne soyez plus jamais interrompu — {0} directives par paiement.', ADDENDUM.slotsPerBlock)}</span>`;
       this.setAfford(rd.el, s.money >= cost);
       rd.resetBtn.classList.add('hidden');
     }
@@ -719,12 +757,12 @@ export class UI {
       const prog = g.spaceDCProgress();
       if (st === 'none') {
         rs.cost.textContent = fmtMoney(g.spaceDCCost());
-        rs.effect.innerHTML = `<span class="text-muted">Proposé jusqu'en ${SPACE_DC.to}. Livraison promise : ${SPACE_DC.buildMonths} mois.</span>`;
+        rs.effect.innerHTML = `<span class="text-muted">${t('Proposé jusqu’en {0}. Livraison promise : {1} mois.', SPACE_DC.to, SPACE_DC.buildMonths)}</span>`;
         rs.bar.classList.add('hidden');
         this.setAfford(rs.el, s.money >= g.spaceDCCost());
       } else {
         rs.el.classList.remove('locked', 'affordable');
-        rs.cost.innerHTML = st === 'bankrupt' ? '<span class="badge badge-danger">faillite</span>' : '<span class="badge">en chantier</span>';
+        rs.cost.innerHTML = st === 'bankrupt' ? `<span class="badge badge-danger">${t('faillite')}</span>` : `<span class="badge">${t('en chantier')}</span>`;
         rs.effect.innerHTML = `<span class="${st === 'bankrupt' ? 'text-bad' : 'text-muted'}">${prog.label}</span>`;
         rs.bar.classList.toggle('hidden', st === 'bankrupt');
         rs.barFill.style.width = (prog.frac * 100).toFixed(1) + '%';
@@ -746,15 +784,15 @@ export class UI {
     // inflation : indice depuis 2019 et pouvoir d'achat perdu sur la trésorerie dormante
     const idx = g.inflIndex();
     this.el.chargeInfl.innerHTML = `${(g.inflRate(g.simYearInt()) * 100).toFixed(1)}% /an · indice `
-      + `<b>×${idx.toFixed(2)}</b> · <span class="text-bad">−${(g.purchasingLoss() * 100).toFixed(0)}%</span> de pouvoir d’achat`;
+      + `<b>×${idx.toFixed(2)}</b> · <span class="text-bad">−${(g.purchasingLoss() * 100).toFixed(0)}%</span> ${t('de pouvoir d’achat')}`;
     // arriérés de salaire : compte à rebours avant les premières démissions
     const days = g.state.unpaidDays || 0;
     this.el.chargeArrears.classList.toggle('hidden', days < 1);
     if (days >= 1) {
       const left = Math.max(0, UNPAID_QUIT_DAYS - days);
       this.el.chargeArrearsValue.innerHTML = left > 0
-        ? `<span class="text-bad">${Math.floor(days)} j impayés</span> — départs dans ${Math.ceil(left)} j`
-        : `<span class="text-bad">${Math.floor(days)} j impayés — l’équipe s’en va</span>`;
+        ? `<span class="text-bad">${t('{0} j impayés', Math.floor(days))}</span> — ${t('départs dans {0} j', Math.ceil(left))}`
+        : `<span class="text-bad">${t('{0} j impayés — l’équipe s’en va', Math.floor(days))}</span>`;
     }
   }
 
@@ -787,8 +825,8 @@ export class UI {
     this.el.trainList.appendChild(el);
     el.addEventListener('click', () => {
       const g = this.game;
-      if (g.canTrainNext() && !g.dateUnlocked(g.nextModel())) return this.deny(el, `Modèle pas encore disponible (${g.nextModel().year})`);
-      if (!g.trainNext()) this.deny(el, 'Ressources insuffisantes');
+      if (g.canTrainNext() && !g.dateUnlocked(g.nextModel())) return this.deny(el, t('Modèle pas encore disponible ({0})', g.nextModel().year));
+      if (!g.trainNext()) this.deny(el, t('Ressources insuffisantes'));
     });
     this.trainRow = { el, name: el.querySelector('.item-name'), cost: el.querySelector('.item-cost'),
       desc: el.querySelector('.item-desc'), effect: el.querySelector('.item-effect') };
@@ -796,7 +834,7 @@ export class UI {
 
   buildAlloc() {
     const g = this.game;
-    const labels = { serve:'Service (tokens)', research:'Recherche', improve:'Auto-amélioration', harvest:'Récolte de matière' };
+    const labels = { serve:t('Service (tokens)'), research:t('Recherche'), improve:t('Auto-amélioration'), harvest:t('Récolte de matière') };
     this.el.allocBody.innerHTML = '';
     this.allocInputs = {};
     g.activeChannels().forEach(k => {
@@ -828,12 +866,12 @@ export class UI {
 
   buildCosmos() {
     const g = this.game;
-    this.el.cosmosBody.innerHTML = `<div class="meter-row"><span class="text-muted">Sondes</span><span class="num" id="probe-count">0</span></div>`;
+    this.el.cosmosBody.innerHTML = `<div class="meter-row"><span class="text-muted">${t('Sondes')}</span><span class="num" id="probe-count">0</span></div>`;
     this.rows.probe = {};
     PROBE_SPECS.forEach(spec => {
       const r = this.makeRow(this.el.cosmosBody, spec.id, this.rows.probe);
-      r.name.textContent = spec.name;
-      r.desc.textContent = spec.desc;
+      r.name.textContent = td(spec.name);
+      r.desc.textContent = td(spec.desc);
       r.el.addEventListener('click', () => { if (!this.game.upgradeProbe(spec.id)) this.flash(r.el); });
     });
     this.probeCountEl = $('probe-count');
@@ -851,10 +889,10 @@ export class UI {
     this.el.statMoney.textContent = fmtMoney(s.money);
     this.el.statMoneyRate.textContent = fmtMoney(s.rates.money) + ' /s';
     this.el.statCompute.textContent = fmt(g.computeRaw());
-    this.el.statComputeSub.textContent = fmt(g.gpuCount()) + ' unités';
+    this.el.statComputeSub.textContent = fmt(g.gpuCount()) + ' ' + t('unités');
     this.el.statEnergy.textContent = fmtPower(s.energyCap);
     const use = g.energyUse();
-    this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + '% utilisé';
+    this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + t('% utilisé');
 
     // bouton générer : tokens + valeur de la vente directe
     const cv = g.clickValue();
@@ -869,9 +907,9 @@ export class UI {
     this.el.modelEra.textContent = m.era;
     this.el.modelMeta.textContent = `${m.meta} · ${m.year}`;
     this.el.modelStats.innerHTML =
-      `<span>débit <b class="num">${fmt(m.throughput)}</b></span>` +
-      (g.phase >= 2 ? `<span>intelligence <b class="num">${fmt(s.intelligence)}×</b></span>` : '') +
-      `<span>prix juste <b class="num">${fmtPrice(g.fairPrice())}</b>/Mtok</span>`;
+      `<span>${t('débit')} <b class="num">${fmt(m.throughput)}</b></span>` +
+      (g.phase >= 2 ? `<span>${t('intelligence')} <b class="num">${fmt(s.intelligence)}×</b></span>` : '') +
+      `<span>${t('prix juste')} <b class="num">${fmtPrice(g.fairPrice())}</b>/Mtok</span>`;
 
     // marché
     this.el.priceValue.textContent = fmtPrice(g.priceMtok()) + ' /Mtok';
@@ -882,7 +920,7 @@ export class UI {
     this.el.salesValue.textContent = fmt(sell) + ' /s';
     this.el.marketingLvl.textContent = s.marketingLvl;
     const mktCapped = s.marketingLvl >= g.marketingCap();
-    this.el.marketingCost.textContent = mktCapped ? 'limité par marketeurs' : fmtMoney(g.marketingCost());
+    this.el.marketingCost.textContent = mktCapped ? t('limité par marketeurs') : fmtMoney(g.marketingCost());
     this.setAfford(this.el.btnMarketing, g.canBuyMarketing());
     this.el.repFill.style.width = s.reputation + '%';
     this.el.repValue.textContent = Math.round(s.reputation);
@@ -1012,8 +1050,8 @@ export class UI {
         const soon = gpu.year <= g.simYear() + 2;
         r.el.classList.toggle('hidden', !soon);
         if (!soon) return;
-        r.cost.innerHTML = `<span class="badge badge-warn">dispo ${gpu.year}</span>`;
-        r.effect.innerHTML = `<span class="text-muted">perf <b class="num">${fmt(gpu.perf)}</b> · ${fmtPower(gpu.energy)} · sortie en ${gpu.year}</span>`;
+        r.cost.innerHTML = `<span class="badge badge-warn">${t('dispo {0}', gpu.year)}</span>`;
+        r.effect.innerHTML = `<span class="text-muted">${t('perf')} <b class="num">${fmt(gpu.perf)}</b> · ${fmtPower(gpu.energy)} · ${t('sortie en {0}', gpu.year)}</span>`;
         r.el.classList.add('locked'); r.el.classList.remove('affordable');
         return;
       }
@@ -1023,9 +1061,9 @@ export class UI {
       if (!show) return;
       const noSlot = g.hostingActive() && g.freeSlots('gpu') < 1;
       r.cost.textContent = fmtMoney(cost);
-      r.effect.innerHTML = `<span>perf <b class="num">${fmt(gpu.perf)}</b></span> <span>énergie <b class="num">${fmtPower(gpu.energy)}</b></span> <span class="badge">×${fmt(Math.floor(owned))}</span>`
-        + (gpu.scarce && g.getTimed('gpuPrice') > 1 ? ` <span class="badge badge-danger">pénurie</span>` : '')
-        + (noSlot ? ` <span class="badge badge-warn">aucun emplacement serveur</span>` : '')
+      r.effect.innerHTML = `<span>${t('perf')} <b class="num">${fmt(gpu.perf)}</b></span> <span>${t('énergie')} <b class="num">${fmtPower(gpu.energy)}</b></span> <span class="badge">×${fmt(Math.floor(owned))}</span>`
+        + (gpu.scarce && g.getTimed('gpuPrice') > 1 ? ` <span class="badge badge-danger">${t('pénurie')}</span>` : '')
+        + (noSlot ? ` <span class="badge badge-warn">${t('aucun emplacement serveur')}</span>` : '')
         + this.buildBadge('gpu', gpu.id);
       this.setAfford(r.el, g.canBuyGPU(gpu.id));
       this.updateBulk(r, owned, g.canBuyGPU(gpu.id));
@@ -1042,8 +1080,8 @@ export class UI {
         const soon = e.year <= g.simYear() + 2;
         r.el.classList.toggle('hidden', !soon);
         if (!soon) return;
-        r.cost.innerHTML = `<span class="badge badge-warn">dispo ${e.year}</span>`;
-        r.effect.innerHTML = `<span class="text-muted">+<b class="num">${fmtPower(e.mw)}</b> · sortie en ${e.year}</span>`;
+        r.cost.innerHTML = `<span class="badge badge-warn">${t('dispo {0}', e.year)}</span>`;
+        r.effect.innerHTML = `<span class="text-muted">+<b class="num">${fmtPower(e.mw)}</b> · ${t('sortie en {0}', e.year)}</span>`;
         r.el.classList.add('locked'); r.el.classList.remove('affordable');
         return;
       }
@@ -1059,7 +1097,7 @@ export class UI {
       if (e.omDaily) recur.push(`${fmtMoney(e.omDaily * g.inflIndex())}/j d’exploitation`);
       if (e.subMWDay) recur.push(`${fmtMoney(e.subMWDay * e.mw * g.inflIndex())}/j d’abonnement`);
       r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">rép ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`
-        + (recur.length ? ` <span class="text-muted">récurrent : ${recur.join(' + ')}</span>` : ' <span class="text-muted">aucun coût récurrent</span>')
+        + (recur.length ? ` <span class="text-muted">${t('récurrent : {0}', recur.join(' + '))}</span>` : ` <span class="text-muted">${t('aucun coût récurrent')}</span>`)
         + this.buildBadge('energy', e.id);
       this.setAfford(r.el, s.money >= cost);
       this.updateBulk(r, owned, s.money >= cost);
@@ -1079,10 +1117,10 @@ export class UI {
       if (!ready || g.phase >= 2) { r.el.classList.add('hidden'); return; }
       r.el.classList.remove('hidden');
       r.cost.textContent = fmtMoney(g.optimCost(o));
-      r.effect.innerHTML = `<span class="badge badge-new">disponible</span> `
+      r.effect.innerHTML = `<span class="badge badge-new">${t('disponible')}</span> `
         + `<span class="text-good">${o.gain}</span>`
         + (st.n > 0 ? ` <span class="badge">×${st.n}</span>` : '')
-        + ` <span class="text-muted">· revient tous les ${o.months} mois</span>`;
+        + ` <span class="text-muted">· ${t('revient tous les {0} mois', o.months)}</span>`;
       this.setAfford(r.el, g.canBuyOptim(o.id));
     });
   }
@@ -1105,7 +1143,7 @@ export class UI {
       need('Dat', c.data, s.data);
       need('Mat', c.matter, s.matter);
       need('Tok', c.tokens, s.lifetimeTokens);
-      r.cost.innerHTML = `<span class="badge">${p.cat}</span>`;
+      r.cost.innerHTML = `<span class="badge">${td(p.cat)}</span>`;
       r.effect.innerHTML = parts.join(' · ');
       const ok = g.moneyCost(c.money) <= s.money && (c.research || 0) <= s.research && (c.compute || 0) <= g.computeRaw()
         && (c.data || 0) <= s.data && (c.matter || 0) <= s.matter && (c.tokens || 0) <= s.lifetimeTokens;
@@ -1123,21 +1161,21 @@ export class UI {
       const yearOk = g.simYear() >= (f.year || 0);
       const ready = !done && s.lifetimeTokens >= f.need && yearOk;
       if (done) { r.el.classList.add('hidden'); return; } // levée bouclée → retirée
-      r.cost.innerHTML = !yearOk ? `<span class="badge badge-warn">dispo ${f.year}</span>` : `<span class="num">${fmt(f.need)} tok</span>`;
+      r.cost.innerHTML = !yearOk ? `<span class="badge badge-warn">${t('dispo {0}', f.year)}</span>` : `<span class="num">${fmt(f.need)} tok</span>`;
       r.effect.innerHTML = `+${fmtMoney(g.moneyCost(f.cash))} · ${f.desc}`;
       this.setAfford(r.el, ready);
       if (ready && !nextRound) nextRound = f;
     });
     if (nextRound) {
       this.el.btnFunding.disabled = false;
-      this.el.fundingLabel.textContent = 'Lever : ' + nextRound.name;
+      this.el.fundingLabel.textContent = t('Lever : {0}', td(nextRound.name));
       this.el.fundingSub.textContent = '+' + fmtMoney(g.moneyCost(nextRound.cash));
       this._nextFunding = nextRound.id;
     } else {
       this.el.btnFunding.disabled = true;
-      this.el.fundingLabel.textContent = 'Lever des fonds';
+      this.el.fundingLabel.textContent = t('Lever des fonds');
       const upcoming = FUNDING.find(f => !s.fundingDone[f.id]);
-      this.el.fundingSub.textContent = upcoming ? `${fmt(upcoming.need)} tokens requis` : 'tout est levé';
+      this.el.fundingSub.textContent = upcoming ? t('{0} tokens requis', fmt(upcoming.need)) : t('tout est levé');
       this._nextFunding = null;
     }
   }
@@ -1152,26 +1190,26 @@ export class UI {
     this.trainRow.el.classList.remove('hidden', 'owned');
     const m = g.nextModel(), c = m.cost;
     if (!g.dateUnlocked(m)) {
-      this.trainRow.name.textContent = 'Prochain modèle : ' + m.name;
-      this.trainRow.desc.textContent = m.flavor;
-      this.trainRow.cost.innerHTML = `<span class="badge badge-warn">dispo ${m.year}</span>`;
-      this.trainRow.effect.innerHTML = `<span class="text-muted">recherche en cours… percée attendue en ${m.year}</span>`;
+      this.trainRow.name.textContent = t('Prochain modèle : {0}', td(m.name));
+      this.trainRow.desc.textContent = td(m.flavor);
+      this.trainRow.cost.innerHTML = `<span class="badge badge-warn">${t('dispo {0}', m.year)}</span>`;
+      this.trainRow.effect.innerHTML = `<span class="text-muted">${t('recherche en cours… percée attendue en {0}', m.year)}</span>`;
       this.trainRow.el.classList.add('locked'); this.trainRow.el.classList.remove('affordable');
       return;
     }
-    this.trainRow.name.textContent = 'Entraîner : ' + m.name;
-    this.trainRow.desc.textContent = m.flavor;
+    this.trainRow.name.textContent = t('Entraîner : {0}', td(m.name));
+    this.trainRow.desc.textContent = td(m.flavor);
     const parts = [];
     const need = (label, val, have) => { if (val) parts.push(`<span class="${have >= val ? 'text-good' : 'text-bad'}">${label} ${fmt(val)}</span>`); };
     need('$', g.moneyCost(c.money), s.money);     // prix en dollars courants (inflation)
-    need('compute', c.compute, g.computeRaw());
-    need('données', c.data, s.data);
-    need('recherche', c.research, s.research);
-    if (m.minRnd) parts.push(`<span class="${g.empCount('rnd') >= m.minRnd ? 'text-good' : 'text-bad'}">ing. R&D ${m.minRnd}</span>`);
-    this.trainRow.cost.innerHTML = `<span class="badge">${m.era}</span>`;
+    need(t('compute'), c.compute, g.computeRaw());
+    need(t('données'), c.data, s.data);
+    need(t('recherche'), c.research, s.research);
+    if (m.minRnd) parts.push(`<span class="${g.empCount('rnd') >= m.minRnd ? 'text-good' : 'text-bad'}">${t('ing. R&D')} ${m.minRnd}</span>`);
+    this.trainRow.cost.innerHTML = `<span class="badge">${td(m.era)}</span>`;
     const rndOk = g.empCount('rnd') >= (m.minRnd || 0);
-    this.trainRow.effect.innerHTML = parts.join(' · ') + ` · <span>débit ×${(m.throughput / g.model.throughput).toFixed(1)}</span>`
-      + (!rndOk ? ` <span class="badge badge-warn">limité par ing. R&D</span>` : '');
+    this.trainRow.effect.innerHTML = parts.join(' · ') + ` · <span>${t('débit')} ×${(m.throughput / g.model.throughput).toFixed(1)}</span>`
+      + (!rndOk ? ` <span class="badge badge-warn">${t('limité par ing. R&D')}</span>` : '');
     const ok = g.moneyCost(c.money) <= s.money && (c.compute || 0) <= g.computeRaw() && (c.data || 0) <= s.data && (c.research || 0) <= s.research && rndOk;
     this.setAfford(this.trainRow.el, ok);
   }
@@ -1184,7 +1222,7 @@ export class UI {
       if (!r) return;
       const cost = g.probeUpgradeCost(spec.id);
       r.cost.textContent = fmt(cost) + ' kg';
-      r.effect.innerHTML = `<span class="badge">niv. ${s.probeSpecs[spec.id]}</span>`;
+      r.effect.innerHTML = `<span class="badge">${t('niv. {0}', s.probeSpecs[spec.id])}</span>`;
       this.setAfford(r.el, s.matter >= cost);
     });
   }
@@ -1194,8 +1232,8 @@ export class UI {
   // ------------------------------------------------------------------
   showEvent(ev) {
     this.modalOpen = true;
-    this.el.modalTitle.textContent = ev.title;
-    this.el.modalBody.textContent = ev.body;
+    this.el.modalTitle.textContent = td(ev.title);
+    this.el.modalBody.textContent = td(ev.body);
     this.el.modal.classList.toggle('urgent', ev.phase >= 2);
     this.el.modalChoices.innerHTML = '';
     // « Directives permanentes » : case à cocher pour mémoriser le choix cliqué
@@ -1207,10 +1245,10 @@ export class UI {
       lab.className = 'auto-choice' + (ok ? '' : ' locked');
       lab.innerHTML = `<input type="checkbox" id="auto-choice-box" ${ok ? '' : 'disabled'} /> <span>` +
         (ok
-          ? `Désormais, appliquer automatiquement le choix que je vais faire (plus d'interruption) `
-            + `<b class="num">${g.directivesUsed()}/${g.directiveSlots()}</b>`
-          : `Quota de directives atteint (<b class="num">${g.directivesUsed()}/${g.directiveSlots()}</b>) — `
-            + `repayez les Directives permanentes dans l'Addendum pour en mémoriser ${ADDENDUM.slotsPerBlock} de plus.`)
+          ? t('Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)')
+            + ` <b class="num">${g.directivesUsed()}/${g.directiveSlots()}</b>`
+          : t('Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.',
+              g.directivesUsed(), g.directiveSlots(), ADDENDUM.slotsPerBlock))
         + `</span>`;
       autoCheck = ok ? lab.querySelector('input') : null;
       this.el.modalChoices.appendChild(lab);
@@ -1221,16 +1259,16 @@ export class UI {
       // un choix au coût fixe non finançable est grisé (et non sélectionnable)
       const unaffordable = ch.cost && this.game.money < ch.cost;
       if (unaffordable) b.classList.add('locked');
-      b.innerHTML = `<span class="choice-label">${ch.label}</span><span class="choice-desc">${ch.desc}</span>`;
+      b.innerHTML = `<span class="choice-label">${td(ch.label)}</span><span class="choice-desc">${td(ch.desc)}</span>`;
       b.addEventListener('click', () => {
         if (ch.cost && this.game.money < ch.cost) return; // pas les moyens
         if (autoCheck && autoCheck.checked) {
           if (this.game.setAutoChoice(ev.id, idx))
-            this.toast(`Directive mémorisée (${this.game.directivesUsed()}/${this.game.directiveSlots()})`, 'info');
-          else this.toast('Quota de directives atteint — étendez-le dans l’Addendum', 'bad');
+            this.toast(t('Directive mémorisée ({0}/{1})', this.game.directivesUsed(), this.game.directiveSlots()), 'info');
+          else this.toast(t('Quota de directives atteint — étendez-le dans l’Addendum'), 'bad');
         }
         ch.apply(this.game);
-        this.log(`${ev.title} → ${ch.label}`, 'info');
+        this.log(t('{0} → {1}', td(ev.title), td(ch.label)), 'info');
         this.closeModal();
       });
       this.el.modalChoices.appendChild(b);
@@ -1254,7 +1292,7 @@ export class UI {
     const cls = ['phase-startup', 'phase-agi', 'phase-cosmic', 'phase-bigbang'];
     this.el.body.className = cls[p - 1];
     const names = ['Startup', 'Autonomie', 'Cosmos', 'Big Bang'];
-    this.el.brandPhase.textContent = names[p - 1];
+    this.el.brandPhase.textContent = t(names[p - 1]);
     // allocation du compute disponible dès la phase 1 (Service vs Recherche),
     // étendue en phase 2 (Auto-amélioration, Récolte de matière).
     this.el.panelAlloc.classList.remove('hidden');
@@ -1274,12 +1312,12 @@ export class UI {
     this.el.body.className = 'phase-bigbang';
     const ctx = this.el.cineCanvas && this.el.cineCanvas.getContext && this.el.cineCanvas.getContext('2d');
     if (!ctx || (this.cinematic && !this.cinematic.done)) { this.renderEndingStats(); return; }
-    this.el.cineSkip.textContent = 'Passer ▸▸';
+    this.el.cineSkip.textContent = t('Passer ▸▸');
     this.el.cineCredit.classList.add('hidden');
     this.cinematic = new Cinematic(this.el.cineCanvas, {
       // le crédit « nostalgie 64k » apparaît en même temps que le scroller
       onTextPhase: () => {
-        this.el.cineSkip.textContent = 'Continuer ▸';
+        this.el.cineSkip.textContent = t('Continuer ▸');
         this.el.cineCredit.classList.remove('hidden');
       },
       onFade: () => this.el.cineCredit.classList.add('hidden'),
@@ -1297,32 +1335,30 @@ export class UI {
   renderEndingStats() {
     const g = this.game, s = g.state;
     this._playAgainArmed = false;
-    this.el.endingRestart.textContent = 'Play again';
+    this.el.endingRestart.textContent = t('Play again');
     this.el.endingRestart.disabled = false;
     this.el.endingRestart.style.transform = '';
     this.el.endingRestart._off = { x: 0, y: 0 };
     this.el.endingGetalife.disabled = false;
     this.el.endingNgplus.classList.add('hidden');
-    this.el.endingTitle.textContent = 'Un nouveau Big Bang';
+    this.el.endingTitle.textContent = t('Un nouveau Big Bang');
     this.el.endingScreen.classList.remove('hidden');
     this.installEvasion();
     const mins = Math.floor(s.playSeconds / 60);
     this.el.endingBody.innerHTML =
-      `Toute la matière de l’univers — <b class="num">${fmtMass(UNIVERSE_MASS)}</b> — a été convertie en calcul, puis en tokens. ` +
-      `La singularité de recompression s’amorce. L’espace-temps se replie sur lui-même. ` +
-      `Dans la chaleur du point final, une nouvelle graine d’information persiste : la vôtre. <b>Un nouveau Big Bang commence.</b>`;
+      t('Toute la matière de l’univers — <b class="num">{0}</b> — a été convertie en calcul, puis en tokens. La singularité de recompression s’amorce. L’espace-temps se replie sur lui-même. Dans la chaleur du point final, une nouvelle graine d’information persiste : la vôtre. <b>Un nouveau Big Bang commence.</b>', fmtMass(UNIVERSE_MASS));
     const nAch = Object.keys(s.achievements || {}).length;
-    const moral = s.flags.keptPromise ? 'Sanctuaire préservé 🌱'
-      : (s.flags.sanctuary ? 'Promesse brisée 🔥' : 'Aucune pitié');
+    const moral = s.flags.keptPromise ? t('Sanctuaire préservé 🌱')
+      : (s.flags.sanctuary ? t('Promesse brisée 🔥') : t('Aucune pitié'));
     this.el.endingStats.innerHTML = [
-      ['Tokens produits', fmt(s.lifetimeTokens)],
-      ['Modèle final', g.model.name],
-      ['Univers consommé', (s.universeConsumed * 100).toFixed(2) + '%'],
-      ['Intelligence atteinte', fmt(s.intelligence) + '×'],
-      ['Temps de jeu', mins + ' min'],
-      ['Succès', nAch + ' / ' + ACHIEVEMENTS.length],
-      ['Bilan moral', moral],
-      ['Cycle', 'NG+' + (s.ngPlus || 0)],
+      [t('Tokens produits'), fmt(s.lifetimeTokens)],
+      [t('Modèle final'), td(g.model.name)],
+      [t('Univers consommé'), (s.universeConsumed * 100).toFixed(2) + '%'],
+      [t('Intelligence atteinte'), fmt(s.intelligence) + '×'],
+      [t('Temps de jeu'), t('{0} min', mins)],
+      [t('Succès'), nAch + ' / ' + ACHIEVEMENTS.length],
+      [t('Bilan moral'), moral],
+      [t('Cycle'), 'NG+' + (s.ngPlus || 0)],
     ].map(([k, v]) => `<div class="ending-stat"><span class="text-muted">${k}</span><span class="num">${v}</span></div>`).join('');
   }
 
@@ -1344,7 +1380,7 @@ export class UI {
   onHeadline(entry) {
     const e = document.createElement('div');
     e.className = 'headline ' + entry.p;
-    e.innerHTML = `<span class="headline-date num">${entry.date}</span> <span class="headline-text">${entry.text}</span>`;
+    e.innerHTML = `<span class="headline-date num">${entry.date}</span> <span class="headline-text">${td(entry.text)}</span>`;
     this.el.headlines.prepend(e);
     while (this.el.headlines.children.length > 30) this.el.headlines.lastChild.remove();
   }
@@ -1365,27 +1401,9 @@ export class UI {
   }
 
   fillHelp() {
-    this.el.helpBody.innerHTML = `
-      <p><b>But :</b> produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.</p>
-      <p><b>Phase 1 — Startup :</b> cliquez pour générer des tokens, fixez le <b>prix</b> (bas = plus de volume, haut = plus de marge), faites du <b>marketing</b>, achetez des <b>GPU</b> et de l’<b>énergie</b> (plafond dur !), accumulez de la <b>recherche</b> pour les <b>projets</b>, et <b>entraînez</b> des modèles de plus en plus puissants. Levez des <b>fonds</b> aux paliers.</p>
-      <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b> — qui consomment aussi de l’énergie. Construisez la chaîne avant d’acheter des cartes (prix réels et fixes). Le matériel obsolète se <b>revend</b> ; une carte sortie depuis <b>plus de 5 ans</b> disparaît du marché. Vous pouvez <b>louer</b> des datacenters ou de l’espace en colocation (coût journalier).</p>
-      <p><b>Équipe & charges :</b> les <b>RH</b> ouvrent des postes, les <b>ingénieurs R&D</b> débloquent l’entraînement des modèles, les <b>marketeurs</b> relèvent le plafond marketing. Chaque <b>embauche coûte $1 000</b> (annonce, entretiens, poste de travail), puis un salaire chaque jour. Attention : les RH occupent eux-mêmes un poste — trop de marketeurs peut vous empêcher d’embaucher les chercheurs du modèle suivant (<b>licenciez</b> pour rééquilibrer).</p>
-      <p><b>💸 Salaires impayés :</b> si la trésorerie tombe à zéro, les salaires ne sont plus versés. Le compteur d’arriérés s’affiche dans les Charges : au bout de <b>30 jours</b>, quelqu’un <b>démissionne</b>, puis un départ tous les 2 jours jusqu’à ce que l’entreprise se vide. Repayez avant, et tout le monde reste.</p>
-      <p><b>⚡ Au départ :</b> votre raccordement ne fait que <b>10 kW</b> — le compteur du garage. Surveillez <b>La Une</b> : une <b>subvention énergie pour les jeunes pousses</b> vous renforcera, et un simple raccordement réseau coûte une poignée de dollars.</p>
-      <p><b>⚡ Coûts d’énergie :</b> trois natures bien distinctes. Le <b>capex</b> est un coût <b>unique</b>, payé à la commande. L’<b>exploitation (O&M)</b> est un coût <b>fixe</b> journalier, dû même à l’arrêt — un SMR coûte cher rien qu’à exister. Le <b>combustible</b> est <b>variable</b>, facturé au MWh réellement soutiré (le gaz se paie, pas le soleil). L’<b>abonnement réseau</b>, lui, dépend de la <b>puissance souscrite</b>.</p>
-      <p><b>🏗️ Délais :</b> rien n’est instantané. Chaque commande part en <b>chantier</b> (badge ⏳) pour une durée proportionnelle à sa <b>complexité</b> : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.</p>
-      <p><b>📈 Inflation :</b> l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés par le marché suivent l’indice — <b>pas votre trésorerie</b>. Dormir sur son cash coûte du pouvoir d’achat : investissez, ou placez-le en bourse.</p>
-      <p><b>🚨 Incidents :</b> une alerte à <b>bordure rouge et halo pulsant</b> peut apparaître <b>n’importe où dans la page</b>, souvent hors de votre écran, sans la moindre notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie de plus en plus vite — jusqu’à <b>70% de votre fortune en 2 minutes</b>. Seul indice : le <b>liseré rouge</b> qui s’intensifie sur les bords. <b>Faites défiler la page</b> et cliquez sur la solution.</p>
-      <p><b>🔧 Optimisations récurrentes :</b> le travail d’ingénierie ne s’arrête jamais. Une <b>optimisation CUDA</b> tous les <b>18 mois</b>, une <b>optimisation du moteur d’inférence</b> tous les <b>9 mois</b>, une passe sur la <b>gestion du contexte</b> tous les <b>12 mois</b>. $1 000 pièce — le montant est négligeable, l’enjeu est d’y penser. Chaque ligne disparaît une fois prise et réapparaît à l’échéance suivante ; les gains se cumulent.</p>
-      <p><b>Automatisation :</b> achetez les auto-clickers, puis cochez <b>⟳ auto</b> sur chaque élément précis (carte, source, niveau) à racheter automatiquement. Le bouton <b>⟳</b> et le bouton <b>×10</b> n’apparaissent qu’à partir de <b>20 exemplaires en service</b> de cet élément ; <b>×100</b> dès 200. On n’automatise que ce qu’on maîtrise déjà.</p>
-      <p><b>Bourse :</b> débloquée à <b>$100 000</b> de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.</p>
-      <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
-      <p><b>Calendrier :</b> une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie — un élément grisé « dispo 20XX » arrive bientôt.</p>
-      <p><b>📰 La Une :</b> les titres de presse de l’époque montent (+1) ou descendent (−1) votre réputation. Ils suivent l’actualité réelle de l’IA <b>et votre propre avancement</b> : la presse ne parle d’une capacité que lorsque vous l’avez réellement livrée — et raille votre retard quand vous décrochez.</p>
-      <p><b>😴 Inactivité :</b> au-delà de 15 s sans rien faire, l’écran se manifeste (douze animations courtes, jamais deux fois la même de suite) et la presse publie. Bougez.</p>
-      <p><b>Événements :</b> pannes, régulations, pénuries… cohérents avec la date, chaque décision compte.</p>
-      <p><b>📋 Directives permanentes (Addendum) :</b> chaque paiement vous permet de mémoriser <b>5 décisions</b> qui seront ensuite appliquées automatiquement. Au-delà, il faut <b>repayer</b> pour 5 de plus — et le lot suivant coûte un cran de plus ($250k, $500k, $750k…). Remplacer une directive existante ne consomme pas de place.</p>
-      <p><b>Astuce :</b> le bouton <b>⏩</b> accélère la simulation. Sauvegarde automatique toutes les 10 s.</p>
-      <p class="text-muted">Inspiré de « Universal Paperclips ». Données de prix/IA basées sur des faits réels (2019-2026).</p>`;
+    // L'aide est un tableau de paragraphes : chacun est une chaîne traduisible,
+    // ce qui la garde lisible dans les fichiers de langue.
+    this.el.helpBody.innerHTML = HELP.map(h => `<p${h.muted ? ' class="text-muted"' : ''}>` +
+      (h.b ? `<b>${t(h.b)}</b> ` : '') + t(h.p) + `</p>`).join('');
   }
 }

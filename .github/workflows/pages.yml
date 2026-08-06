@@ -33,6 +33,9 @@ jobs:
         run: |
           for f in js/*.js; do node --check "$f"; done
 
+      - name: Test des traductions (couverture)
+        run: node test-i18n.mjs
+
       - name: Test UI (jsdom)
         run: |
           npm install jsdom --no-save --no-audit --no-fund

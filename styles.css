@@ -1487,3 +1487,25 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 .item.optim { border-left: 2px solid var(--accent); }
 .auto-choice.locked { opacity: 0.7; cursor: not-allowed; border-style: solid; border-color: var(--warn); }
 .auto-choice.locked input { cursor: not-allowed; }
+
+/* sélecteur de langue (topbar) */
+.lang-select {
+  appearance: none;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm, 8px);
+  background: var(--bg-3);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  min-height: 34px;
+}
+.lang-select:hover { border-color: var(--accent); }
+/* langue du navigateur non prise en charge : on signale le sélecteur */
+.lang-select.attention {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--glow);
+  animation: pulse 1.8s ease-in-out 4;
+}
+@media (max-width: 760px) { .lang-select { font-size: 0.75rem; max-width: 8.5rem; } }

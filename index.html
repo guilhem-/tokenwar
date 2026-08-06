@@ -15,41 +15,42 @@
     <div class="brand">
       <span class="brand-logo">◈</span>
       <span class="brand-name">TokenWar</span>
-      <span class="brand-phase" id="brand-phase">Startup</span>
-      <span class="brand-date num" id="sim-date" title="Date de simulation (1 an = 5 min)">jan 2019</span>
+      <span class="brand-phase" id="brand-phase" data-i18n="Startup">Startup</span>
+      <span class="brand-date num" id="sim-date" data-i18n-title="Date de simulation (1 an = 5 min)" title="Date de simulation (1 an = 5 min)">jan 2019</span>
     </div>
     <div class="stats-bar" id="stats-bar">
       <div class="stat tokens">
-        <span class="stat-label">Tokens produits</span>
+        <span class="stat-label" data-i18n="Tokens produits">Tokens produits</span>
         <span class="stat-value num" id="stat-tokens">0</span>
         <span class="stat-rate num" id="stat-tokens-rate">0 /s</span>
       </div>
       <div class="stat money">
-        <span class="stat-label">Trésorerie</span>
+        <span class="stat-label" data-i18n="Trésorerie">Trésorerie</span>
         <span class="stat-value num" id="stat-money">$0</span>
         <span class="stat-rate num" id="stat-money-rate">$0 /s</span>
       </div>
       <div class="stat compute">
-        <span class="stat-label">Compute</span>
+        <span class="stat-label" data-i18n="Compute">Compute</span>
         <span class="stat-value num" id="stat-compute">0</span>
-        <span class="stat-rate num" id="stat-compute-sub">0 GPU</span>
+        <span class="stat-rate num" id="stat-compute-sub">0</span>
       </div>
       <div class="stat energy">
-        <span class="stat-label">Énergie</span>
+        <span class="stat-label" data-i18n="Énergie">Énergie</span>
         <span class="stat-value num" id="stat-energy">0 MW</span>
         <span class="stat-rate num" id="stat-energy-sub">0% utilisé</span>
       </div>
       <div class="stat matter hidden" id="stat-matter-wrap">
-        <span class="stat-label">Matière convertie</span>
+        <span class="stat-label" data-i18n="Matière convertie">Matière convertie</span>
         <span class="stat-value num" id="stat-matter">0 kg</span>
-        <span class="stat-rate num" id="stat-matter-sub">univers</span>
+        <span class="stat-rate num" id="stat-matter-sub" data-i18n="univers">univers</span>
       </div>
     </div>
     <div class="topbar-controls">
-      <button class="btn-ghost" id="btn-speed" title="Vitesse de simulation" aria-label="Vitesse de simulation">⏩ x1</button>
-      <button class="btn-ghost" id="btn-save" title="Sauvegarder" aria-label="Sauvegarder la partie">💾</button>
-      <button class="btn-ghost" id="btn-restart" title="Recommencer depuis le début" aria-label="Recommencer depuis le début">🔄</button>
-      <button class="btn-ghost" id="btn-help" title="Aide" aria-label="Aide">?</button>
+      <select class="lang-select" id="lang-select" data-i18n-aria="Langue" aria-label="Langue"></select>
+      <button class="btn-ghost" id="btn-speed" data-i18n-title="Vitesse de simulation" data-i18n-aria="Vitesse de simulation" title="Vitesse de simulation" aria-label="Vitesse de simulation">⏩ x1</button>
+      <button class="btn-ghost" id="btn-save" data-i18n-title="Sauvegarder" data-i18n-aria="Sauvegarder la partie" title="Sauvegarder" aria-label="Sauvegarder la partie">💾</button>
+      <button class="btn-ghost" id="btn-restart" data-i18n-title="Recommencer depuis le début" data-i18n-aria="Recommencer depuis le début" title="Recommencer depuis le début" aria-label="Recommencer depuis le début">🔄</button>
+      <button class="btn-ghost" id="btn-help" data-i18n-title="Aide" data-i18n-aria="Aide" title="Aide" aria-label="Aide">?</button>
     </div>
   </header>
 
@@ -60,10 +61,10 @@
     <section class="col col-left">
 
       <div class="panel" id="panel-produce">
-        <div class="panel-title">Production de tokens</div>
+        <div class="panel-title" data-i18n="Production de tokens">Production de tokens</div>
         <div class="panel-body">
           <button class="btn btn-primary btn-generate" id="btn-generate">
-            <span class="btn-generate-label">Lancer une inférence</span>
+            <span class="btn-generate-label" data-i18n="Lancer une inférence">Lancer une inférence</span>
             <span class="btn-generate-sub num" id="btn-generate-sub">+1 token</span>
           </button>
           <div class="model-card" id="model-card">
@@ -75,46 +76,46 @@
             <div class="model-stats" id="model-stats"></div>
           </div>
           <div class="inventory-row">
-            <span class="text-muted">Tokens perdus (invendus)</span>
+            <span class="text-muted" data-i18n="Tokens perdus (invendus)">Tokens perdus (invendus)</span>
             <span class="num text-bad" id="inv-tokens">0 /s</span>
           </div>
           <div class="spark-wrap">
-            <canvas id="spark" height="46" aria-label="Historique de production (tokens/s)"></canvas>
+            <canvas id="spark" height="46" data-i18n-aria="Historique de production (tokens/s)" aria-label="Historique de production (tokens/s)"></canvas>
             <div class="spark-legend"><span class="spark-dot tok"></span> tokens/s <span class="spark-dot cash"></span> $/s</div>
           </div>
         </div>
       </div>
 
       <div class="panel" id="panel-auto">
-        <div class="panel-title">Automatisation</div>
+        <div class="panel-title" data-i18n="Automatisation">Automatisation</div>
         <div class="panel-body">
           <div class="item-list" id="auto-list"></div>
         </div>
       </div>
 
       <div class="panel" id="panel-market">
-        <div class="panel-title">Marché &amp; tarification</div>
+        <div class="panel-title" data-i18n="Marché &amp; tarification">Marché &amp; tarification</div>
         <div class="panel-body">
           <div class="control-row">
-            <label for="price-slider">Prix <span class="text-muted">($/Mtok)</span></label>
+            <label for="price-slider"><span data-i18n="Prix">Prix</span> <span class="text-muted">($/Mtok)</span></label>
             <input type="range" class="slider" id="price-slider" min="0" max="100" value="68" />
             <span class="control-value num" id="price-value">$10,00</span>
           </div>
           <div class="meter-row">
-            <span class="text-muted">Demande</span>
+            <span class="text-muted" data-i18n="Demande">Demande</span>
             <div class="progress"><div class="progress-fill" id="demand-fill" style="width:0%"></div></div>
             <span class="num" id="demand-value">0 /s</span>
           </div>
           <div class="meter-row">
-            <span class="text-muted">Ventes</span>
+            <span class="text-muted" data-i18n="Ventes">Ventes</span>
             <span class="num" id="sales-value">0 /s</span>
           </div>
           <button class="btn btn-buy" id="btn-marketing">
-            <span>Marketing — niv. <span id="marketing-lvl">1</span></span>
+            <span><span data-i18n="Marketing — niv.">Marketing — niv.</span> <span id="marketing-lvl">1</span></span>
             <span class="btn-cost num" id="marketing-cost">$100</span>
           </button>
           <div class="meter-row">
-            <span class="text-muted">Réputation</span>
+            <span class="text-muted" data-i18n="Réputation">Réputation</span>
             <div class="progress"><div class="progress-fill" id="rep-fill" style="width:50%"></div></div>
             <span class="num" id="rep-value">50</span>
           </div>
@@ -122,52 +123,52 @@
       </div>
 
       <div class="panel" id="panel-funding">
-        <div class="panel-title">Financement</div>
+        <div class="panel-title" data-i18n="Financement">Financement</div>
         <div class="panel-body">
           <div class="meter-row">
-            <span class="text-muted">Valorisation</span>
+            <span class="text-muted" data-i18n="Valorisation">Valorisation</span>
             <span class="num" id="valuation-value">$0</span>
           </div>
           <button class="btn btn-buy" id="btn-funding" disabled>
-            <span id="funding-label">Lever des fonds</span>
-            <span class="btn-cost num" id="funding-sub">verrouillé</span>
+            <span id="funding-label" data-i18n="Lever des fonds">Lever des fonds</span>
+            <span class="btn-cost num" id="funding-sub" data-i18n="verrouillé">verrouillé</span>
           </button>
           <div class="item-list" id="funding-list"></div>
         </div>
       </div>
 
       <div class="panel" id="panel-stock">
-        <div class="panel-title">Bourse</div>
+        <div class="panel-title" data-i18n="Bourse">Bourse</div>
         <div class="panel-body">
           <div class="meter-row">
-            <span class="text-muted">Portefeuille</span>
+            <span class="text-muted" data-i18n="Portefeuille">Portefeuille</span>
             <span class="num" id="stock-value">$0</span>
           </div>
           <div class="meter-row">
-            <span class="text-muted">Plus/moins-value</span>
+            <span class="text-muted" data-i18n="Plus/moins-value">Plus/moins-value</span>
             <span class="num" id="stock-pl">—</span>
           </div>
           <div class="control-row risk-row">
-            <label>Risque</label>
+            <label data-i18n="Risque">Risque</label>
             <div class="tabs" id="risk-tabs">
-              <button class="tab" data-risk="0">Prudent</button>
-              <button class="tab active" data-risk="1">Équilibré</button>
-              <button class="tab" data-risk="2">Agressif</button>
+              <button class="tab" data-risk="0" data-i18n="Prudent">Prudent</button>
+              <button class="tab active" data-risk="1" data-i18n="Équilibré">Équilibré</button>
+              <button class="tab" data-risk="2" data-i18n="Agressif">Agressif</button>
             </div>
           </div>
           <div class="stock-actions">
-            <button class="btn btn-buy" id="btn-stock-dep10">Investir 10%</button>
-            <button class="btn btn-buy" id="btn-stock-depmax">Investir max</button>
-            <button class="btn btn-ghost" id="btn-stock-withdraw">Tout retirer</button>
+            <button class="btn btn-buy" id="btn-stock-dep10" data-i18n="Investir 10%">Investir 10%</button>
+            <button class="btn btn-buy" id="btn-stock-depmax" data-i18n="Investir max">Investir max</button>
+            <button class="btn btn-ghost" id="btn-stock-withdraw" data-i18n="Tout retirer">Tout retirer</button>
           </div>
         </div>
       </div>
 
       <div class="panel" id="panel-team">
-        <div class="panel-title">Équipe</div>
+        <div class="panel-title" data-i18n="Équipe">Équipe</div>
         <div class="panel-body">
           <div class="meter-row">
-            <span class="text-muted">Effectif</span>
+            <span class="text-muted" data-i18n="Effectif">Effectif</span>
             <span class="num" id="headcount">0 / 3</span>
           </div>
           <div class="item-list" id="team-list"></div>
@@ -175,27 +176,27 @@
       </div>
 
       <div class="panel" id="panel-charges">
-        <div class="panel-title">Charges journalières</div>
+        <div class="panel-title" data-i18n="Charges journalières">Charges journalières</div>
         <div class="panel-body">
-          <div class="meter-row"><span class="text-muted">⚡ Énergie consommée <i class="hint">variable</i></span><span class="num" id="charge-elec-var">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">🔧 Exploitation &amp; O&amp;M <i class="hint">fixe</i></span><span class="num" id="charge-elec-fix">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">🔌 Abonnement réseau <i class="hint">puissance souscrite</i></span><span class="num" id="charge-elec-sub">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">👥 Salaires</span><span class="num" id="charge-salary">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">🏢 Loyers</span><span class="num" id="charge-rent">$0 /j</span></div>
-          <div class="meter-row charge-total"><span class="text-muted">Total</span><span class="num" id="charge-total">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">soit</span><span class="num" id="charge-sec">$0 /s</span></div>
-          <div class="meter-row arrears-row hidden" id="charge-arrears" title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d'arriérés, l'équipe commence à partir.">
-            <span class="text-muted">💸 Salaires impayés</span><span class="num" id="charge-arrears-value">—</span>
+          <div class="meter-row"><span class="text-muted">⚡ <span data-i18n="Énergie consommée">Énergie consommée</span> <i class="hint" data-i18n="variable">variable</i></span><span class="num" id="charge-elec-var">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🔧 <span data-i18n="Exploitation &amp; O&amp;M">Exploitation &amp; O&amp;M</span> <i class="hint" data-i18n="fixe">fixe</i></span><span class="num" id="charge-elec-fix">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🔌 <span data-i18n="Abonnement réseau">Abonnement réseau</span> <i class="hint" data-i18n="puissance souscrite">puissance souscrite</i></span><span class="num" id="charge-elec-sub">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">👥 <span data-i18n="Salaires">Salaires</span></span><span class="num" id="charge-salary">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🏢 <span data-i18n="Loyers">Loyers</span></span><span class="num" id="charge-rent">$0 /j</span></div>
+          <div class="meter-row charge-total"><span class="text-muted" data-i18n="Total">Total</span><span class="num" id="charge-total">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted" data-i18n="soit">soit</span><span class="num" id="charge-sec">$0 /s</span></div>
+          <div class="meter-row arrears-row hidden" id="charge-arrears" data-i18n-title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir." title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir.">
+            <span class="text-muted">💸 <span data-i18n="Salaires impayés">Salaires impayés</span></span><span class="num" id="charge-arrears-value">—</span>
           </div>
-          <div class="meter-row infl-row" title="L'argent perd de sa valeur : les prix et les salaires suivent l'indice, pas votre trésorerie.">
-            <span class="text-muted">📈 Inflation</span><span class="num" id="charge-infl">—</span>
+          <div class="meter-row infl-row" data-i18n-title="L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie." title="L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.">
+            <span class="text-muted">📈 <span data-i18n="Inflation">Inflation</span></span><span class="num" id="charge-infl">—</span>
           </div>
         </div>
       </div>
 
       <!-- PHASE 2+ : allocation -->
       <div class="panel hidden" id="panel-alloc">
-        <div class="panel-title">Allocation du compute</div>
+        <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
         <div class="panel-body" id="alloc-body"></div>
       </div>
 
@@ -205,17 +206,17 @@
     <section class="col col-center">
 
       <div class="panel" id="panel-hosting">
-        <div class="panel-title">Hébergement</div>
+        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
         <div class="panel-body">
           <div class="item-list" id="infra-list"></div>
         </div>
       </div>
 
       <div class="panel" id="panel-compute">
-        <div class="panel-title">Infrastructure de calcul</div>
+        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
         <div class="panel-body">
           <div class="meter-row" id="gpu-cap-row">
-            <span class="text-muted">Emplacements GPU</span>
+            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
             <span class="num" id="gpu-cap">0 / 0</span>
           </div>
           <div class="item-list" id="gpu-list"></div>
@@ -223,10 +224,10 @@
       </div>
 
       <div class="panel" id="panel-energy">
-        <div class="panel-title">Énergie</div>
+        <div class="panel-title" data-i18n="Énergie">Énergie</div>
         <div class="panel-body">
           <div class="meter-row energy-meter">
-            <span class="text-muted">Charge réseau</span>
+            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
             <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
             <span class="num" id="energy-load-value">0 / 0 MW</span>
           </div>
@@ -235,16 +236,16 @@
       </div>
 
       <div class="panel" id="panel-training">
-        <div class="panel-title">R&amp;D — Entraînement de modèles</div>
+        <div class="panel-title" data-i18n="R&amp;D — Entraînement de modèles">R&amp;D — Entraînement de modèles</div>
         <div class="panel-body">
           <div class="meter-row">
-            <span class="text-muted">Recherche</span>
+            <span class="text-muted" data-i18n="Recherche">Recherche</span>
             <span class="num" id="research-value">0</span>
             <span class="text-muted">·</span>
             <span class="num" id="research-rate">0 /s</span>
           </div>
           <div class="meter-row">
-            <span class="text-muted">Données</span>
+            <span class="text-muted" data-i18n="Données">Données</span>
             <span class="num" id="data-value">0</span>
           </div>
           <div class="item-list" id="train-list"></div>
@@ -253,7 +254,7 @@
 
       <!-- PHASE 3+ : cosmos -->
       <div class="panel hidden" id="panel-cosmos">
-        <div class="panel-title">Expansion cosmique</div>
+        <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
         <div class="panel-body" id="cosmos-body"></div>
       </div>
 
@@ -263,14 +264,14 @@
     <section class="col col-right">
 
       <div class="panel" id="panel-addendum">
-        <div class="panel-title">Addendum</div>
+        <div class="panel-title" data-i18n="Addendum">Addendum</div>
         <div class="panel-body">
           <div class="item-list" id="addendum-list"></div>
         </div>
       </div>
 
       <div class="panel" id="panel-projects">
-        <div class="panel-title">Projets &amp; percées</div>
+        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
         <div class="panel-body">
           <div class="item-list" id="optim-list"></div>
           <div class="item-list" id="project-list"></div>
@@ -278,14 +279,14 @@
       </div>
 
       <div class="panel" id="panel-press">
-        <div class="panel-title">📰 La Une</div>
+        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
         <div class="panel-body">
           <div class="headlines" id="headlines"></div>
         </div>
       </div>
 
       <div class="panel" id="panel-log">
-        <div class="panel-title">Journal</div>
+        <div class="panel-title" data-i18n="Journal">Journal</div>
         <div class="panel-body">
           <div class="log" id="log"></div>
         </div>
@@ -297,7 +298,7 @@
   <!-- ============ EVENT MODAL ============ -->
   <div class="modal-overlay hidden" id="modal-overlay">
     <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div class="modal-title" id="modal-title">Événement</div>
+      <div class="modal-title" id="modal-title" data-i18n="Événement">Événement</div>
       <div class="modal-body" id="modal-body"></div>
       <div class="modal-choices" id="modal-choices"></div>
     </div>
@@ -318,31 +319,31 @@
     <canvas id="cine-canvas"></canvas>
     <a class="cine-credit hidden" id="cine-credit" href="https://en.wikipedia.org/wiki/Enshittification"
        target="_blank" rel="noopener noreferrer">Nostalgia of 64k demos, before enshitification of the world</a>
-    <button class="btn-ghost cine-skip" id="cine-skip" aria-label="Passer la cinématique">Passer ▸▸</button>
+    <button class="btn-ghost cine-skip" id="cine-skip" data-i18n-aria="Passer la cinématique" aria-label="Passer la cinématique">Passer ▸▸</button>
   </div>
 
   <!-- ============ ENDING ============ -->
   <div class="ending-screen hidden" id="ending-screen">
     <div class="ending-inner">
-      <div class="ending-title" id="ending-title">Un nouveau Big Bang</div>
+      <div class="ending-title" id="ending-title" data-i18n="Un nouveau Big Bang">Un nouveau Big Bang</div>
       <div class="ending-body" id="ending-body"></div>
       <div class="ending-stats" id="ending-stats"></div>
       <div class="ending-actions">
-        <button class="btn btn-primary" id="ending-restart">Play again</button>
-        <button class="btn btn-ghost" id="ending-getalife">Get a life</button>
+        <button class="btn btn-primary" id="ending-restart" data-i18n="Play again">Play again</button>
+        <button class="btn btn-ghost" id="ending-getalife" data-i18n="Get a life">Get a life</button>
       </div>
-      <button class="btn-ghost ending-ngplus hidden" id="ending-ngplus">…bon, d'accord : recommencer (New Game+)</button>
+      <button class="btn-ghost ending-ngplus hidden" id="ending-ngplus" data-i18n="…bon, d’accord : recommencer (New Game+)">…bon, d’accord : recommencer (New Game+)</button>
     </div>
   </div>
 
   <!-- ============ RESTART CONFIRM ============ -->
   <div class="modal-overlay hidden" id="restart-overlay">
     <div class="modal urgent" role="dialog" aria-modal="true" aria-labelledby="restart-title">
-      <div class="modal-title" id="restart-title">Recommencer depuis le début ?</div>
-      <div class="modal-body">Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.</div>
+      <div class="modal-title" id="restart-title" data-i18n="Recommencer depuis le début ?">Recommencer depuis le début ?</div>
+      <div class="modal-body" data-i18n="Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.">Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.</div>
       <div class="modal-choices">
-        <button class="btn choice" id="restart-cancel">Annuler</button>
-        <button class="btn choice" id="restart-confirm">Tout effacer et recommencer</button>
+        <button class="btn choice" id="restart-cancel" data-i18n="Annuler">Annuler</button>
+        <button class="btn choice" id="restart-confirm" data-i18n="Tout effacer et recommencer">Tout effacer et recommencer</button>
       </div>
     </div>
   </div>
@@ -350,16 +351,16 @@
   <!-- ============ HELP ============ -->
   <div class="modal-overlay hidden" id="help-overlay">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
-      <div class="modal-title" id="help-title">Comment jouer</div>
+      <div class="modal-title" id="help-title" data-i18n="Comment jouer">Comment jouer</div>
       <div class="modal-body" id="help-body"></div>
       <div class="modal-body" id="achievements-body"></div>
       <div class="modal-choices save-tools">
-        <button class="btn choice" id="save-export">Exporter la sauvegarde</button>
-        <button class="btn choice" id="save-import">Importer…</button>
+        <button class="btn choice" id="save-export" data-i18n="Exporter la sauvegarde">Exporter la sauvegarde</button>
+        <button class="btn choice" id="save-import" data-i18n="Importer…">Importer…</button>
         <input type="file" id="save-file" accept=".json,application/json" class="hidden" />
       </div>
       <div class="modal-choices">
-        <button class="btn choice" id="help-close">Compris</button>
+        <button class="btn choice" id="help-close" data-i18n="Compris">Compris</button>
       </div>
     </div>
   </div>

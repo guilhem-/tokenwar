@@ -1,32 +1,39 @@
 // =====================================================================
 //  TokenWar — UTILITAIRES
+//  Le formatage suit la langue choisie : séparateur décimal, groupement des
+//  milliers, et surtout l'ÉCHELLE des grands nombres — échelle longue en
+//  français/allemand (Md, B…), courte en anglais (B = 10⁹), et groupement
+//  par 10⁴ en chinois/japonais/coréen (万/億/兆).
 // =====================================================================
+import { decimalSep, scale, intlLocale } from './i18n.js';
 
-const SUFFIXES = ['', ' K', ' M', ' Md', ' B', // milliers, millions, milliards, billions
-  ' Bd', ' Tr', ' Trd', ' Qa', ' Qad', ' Qi', ' Qid', ' Sx', ' Sxd', ' Sp', ' Spd', ' Oc'];
+const dec = s => s.replace('.', decimalSep());
 
-// Formate un grand nombre : 1234 -> "1,23 K", 1e60 -> "1,00e60"
+// Formate un grand nombre : 1234 -> "1,23 K" (fr) / "1.23K" (en) / "1234" (zh, <万)
 export function fmt(n, decimals = 2) {
   if (n === Infinity) return '∞';
   if (n === null || n === undefined || isNaN(n)) return '0';
   const neg = n < 0;
   n = Math.abs(n);
-  if (n < 1000) {
-    const r = (n < 10 && n % 1 !== 0) ? n.toFixed(1) : Math.round(n).toString();
+  const sc = scale();
+  const step = Math.pow(10, sc.base);
+  if (n < step) {
+    const r = (n < 10 && n % 1 !== 0) ? dec(n.toFixed(1)) : Math.round(n).toString();
     return (neg ? '-' : '') + r;
   }
-  const tier = Math.floor(Math.log10(n) / 3);
-  if (tier < SUFFIXES.length) {
-    const scaled = n / Math.pow(10, tier * 3);
-    return (neg ? '-' : '') + scaled.toFixed(decimals).replace('.', ',') + SUFFIXES[tier];
+  const tier = Math.floor(Math.log10(n) / sc.base);
+  if (tier < sc.s.length) {
+    const scaled = n / Math.pow(10, tier * sc.base);
+    return (neg ? '-' : '') + dec(scaled.toFixed(decimals)) + sc.s[tier];
   }
-  // au-delà : notation scientifique
+  // au-delà de la table : notation scientifique
   const exp = Math.floor(Math.log10(n));
   const mant = n / Math.pow(10, exp);
-  return (neg ? '-' : '') + mant.toFixed(2).replace('.', ',') + 'e' + exp;
+  return (neg ? '-' : '') + dec(mant.toFixed(2)) + 'e' + exp;
 }
 
-// Argent : $ + format
+// Argent. Le jeu est libellé en dollars dans toutes les langues (c'est la
+// monnaie de l'industrie qu'il simule).
 export function fmtMoney(n) {
   return '$' + fmt(n);
 }
@@ -35,15 +42,15 @@ export function fmtMoney(n) {
 export function fmtMass(kg) {
   if (kg < 1e24) return fmt(kg) + ' kg';
   const earth = kg / 5.97e24;
-  if (earth < 1e3) return earth.toFixed(2).replace('.', ',') + ' ⊕'; // masses terrestres
+  if (earth < 1e3) return dec(earth.toFixed(2)) + ' ⊕'; // masses terrestres
   const solar = kg / 1.989e30;
   return fmt(solar) + ' ☉'; // masses solaires
 }
 
 // Prix $/Mtok lisible
 export function fmtPrice(perMtok) {
-  if (perMtok >= 1) return '$' + perMtok.toFixed(2).replace('.', ',');
-  return '$' + perMtok.toFixed(3).replace('.', ',');
+  if (perMtok >= 1) return '$' + dec(perMtok.toFixed(2));
+  return '$' + dec(perMtok.toFixed(3));
 }
 
 // Pourcentage clampé 0..100
@@ -51,24 +58,24 @@ export function pct(x) {
   return Math.max(0, Math.min(100, x * 100));
 }
 
-// Puissance : kW quand faible, puis MW / GW / TW
+// Puissance : kW quand faible, puis MW / GW / TW (symboles universels)
 export function fmtPower(mw) {
   if (mw == null || isNaN(mw)) return '0 kW';
   if (mw < 1) {
     const kw = mw * 1000;
-    return (kw < 10 ? kw.toFixed(2) : kw.toFixed(0)).replace('.', ',') + ' kW';
+    return dec(kw < 10 ? kw.toFixed(2) : kw.toFixed(0)) + ' kW';
   }
-  if (mw < 1000) return (mw < 10 ? mw.toFixed(1) : mw.toFixed(0)).replace('.', ',') + ' MW';
-  if (mw < 1e6) return (mw / 1e3).toFixed(1).replace('.', ',') + ' GW';
-  if (mw < 1e9) return (mw / 1e6).toFixed(1).replace('.', ',') + ' TW';
+  if (mw < 1000) return dec(mw < 10 ? mw.toFixed(1) : mw.toFixed(0)) + ' MW';
+  if (mw < 1e6) return dec((mw / 1e3).toFixed(1)) + ' GW';
+  if (mw < 1e9) return dec((mw / 1e6).toFixed(1)) + ' TW';
   return fmt(mw / 1e6) + ' TW';
 }
 
-// Nombre entier avec TOUS les chiffres (groupés) tant qu'il reste raisonnable,
-// sinon repli sur la notation abrégée (au-delà du domaine de précision exact).
+// Nombre entier avec TOUS les chiffres (groupés selon la langue) tant qu'il
+// reste raisonnable, sinon repli sur la notation abrégée.
 export function fmtFull(n) {
   if (n == null || isNaN(n)) return '0';
-  if (n < 1e15) return Math.floor(n).toLocaleString('fr-FR');
+  if (n < 1e15) return Math.floor(n).toLocaleString(intlLocale());
   return fmt(n);
 }
 

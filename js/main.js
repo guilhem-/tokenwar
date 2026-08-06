@@ -3,13 +3,18 @@
 // =====================================================================
 import { Game } from './game.js';
 import { UI } from './ui.js';
+import { init as initI18n, t } from './i18n.js';
+
+// la langue doit être choisie AVANT toute construction d'interface :
+// les libellés sont figés à la création des lignes.
+await initI18n();
 
 const ui = new UI();
 const game = new Game(ui);
 
 // chargement d'une éventuelle sauvegarde
 if (game.load()) {
-  ui.toast('Partie chargée', 'info');
+  ui.toast(t('Partie chargée'), 'info');
 }
 ui.init(game);
 
