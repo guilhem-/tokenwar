@@ -403,6 +403,27 @@ step('énergie de départ à 10 kW + subvention', async () => {
   if (fresh.pickHeadline() === grant) throw new Error('la subvention devrait être unique');
 });
 
+// ---- migration : une vieille sauvegarde ne doit pas conserver les 500 kW ----
+step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
+  const stub = { toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false };
+  // sauvegarde d'avant le changement de règle : base 500 kW + 2 raccordements achetés,
+  // et PAS de marqueur `baseGridMW` (c'est à cela qu'on la reconnaît).
+  const old = { v:4, savedAt: Date.now(), lifetimeTokens: 1e6, money: 5000,
+    energyCap: 1.5, energyCounts: { grid: 2 } };
+  window.localStorage.setItem('tokenwar_save_v1', JSON.stringify(old));
+  const g = new Game(stub);
+  if (!g.load()) throw new Error('sauvegarde non chargée');
+  // 1,5 MW − (0,5 offert − 0,01 offert) = 1,01 MW : les 2 raccordements achetés restent
+  if (Math.abs(g.state.energyCap - 1.01) > 1e-6) throw new Error('capacité migrée incorrecte : ' + g.state.energyCap);
+  if (g.state.baseGridMW !== 0.01) throw new Error('marqueur de règle non posé');
+  // une sauvegarde déjà migrée ne doit PAS être amputée une seconde fois
+  const again = new Game(stub);
+  again.state = Object.assign(again.state, { energyCap: 1.01 });
+  again.migrate({ baseGridMW: 0.01, energyCap: 1.01 });
+  if (Math.abs(again.state.energyCap - 1.01) > 1e-6) throw new Error('migration appliquée deux fois');
+  window.localStorage.removeItem('tokenwar_save_v1');
+});
+
 // ---- l'embauche coûte 1000 $ ----
 step('embauche : coût fixe de 1000 $', () => {
   game.state.playSeconds = 0;                     // indice d'inflation = 1

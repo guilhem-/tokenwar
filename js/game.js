@@ -9,7 +9,7 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
-const SAVE_VERSION = 4;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
+const SAVE_VERSION = 5;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
 
 // Levées de fonds (analogue du « Trust ») : déblocages par paliers de tokens
 // Les levées sont gardées par les tokens cumulés ET par l'année (les tours de table
@@ -72,6 +72,7 @@ export class Game {
     s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
     s.energyCap = BASE_GRID_MW; // 10 kW : le compteur du garage, offert
+    s.baseGridMW = BASE_GRID_MW; // marqueur de règle : permet de migrer les vieilles sauvegardes
     s.unpaidDays = 0;        // jours d'arriérés de salaire (30 → les gens partent)
     s.quitDebt = 0;          // départs accumulés en attente d'être appliqués
     s.modelTier = 0;
@@ -1312,6 +1313,24 @@ export class Game {
       }
     }
   }
+  // Migrations de sauvegarde : sanitize() ne répare que les valeurs corrompues,
+  // il ne rattrape pas un changement de RÈGLE. Une partie enregistrée avant le
+  // changement garderait sinon l'ancien monde (d'où : « j'ai toujours 500 kW »).
+  // `raw` = la sauvegarde telle qu'elle a été écrite (AVANT sanitize, qui comble
+  // les champs manquants et masquerait donc leur absence).
+  migrate(raw) {
+    const s = this.state;
+    // Le raccordement offert est passé de 500 kW à 10 kW. On reconnaît une
+    // sauvegarde d'avant ce changement à l'absence de `baseGridMW` — on ne peut
+    // pas se fier au numéro de version, qui avait déjà été incrémenté avant.
+    if (raw.baseGridMW === undefined) {
+      const OLD_BASE = 0.5;
+      s.energyCap = Math.max(BASE_GRID_MW, (s.energyCap || OLD_BASE) - (OLD_BASE - BASE_GRID_MW));
+      this.log('Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. '
+        + 'Votre capacité a été ajustée (les sources achetées sont conservées).', 'info');
+    }
+    s.baseGridMW = BASE_GRID_MW;
+  }
   load() {
     try {
       const raw = localStorage.getItem(SAVE_KEY);
@@ -1320,6 +1339,7 @@ export class Game {
       const defaults = JSON.parse(JSON.stringify(this.state)); // état frais (reset() vient d'être appelé)
       this.state = Object.assign(this.state, data);
       this.sanitize(defaults, this.state);
+      this.migrate(data);                           // règles changées depuis la sauvegarde
       this.state.reputation = clamp(this.state.reputation, 0, 100);
       // simulation hors-ligne (plafonnée à 8h, rendement 50%, charges suspendues)
       const offline = Math.min((Date.now() - (data.savedAt || Date.now())) / 1000, 8 * 3600);
