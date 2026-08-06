@@ -403,6 +403,76 @@ step('énergie de départ à 10 kW + subvention', async () => {
   if (fresh.pickHeadline() === grant) throw new Error('la subvention devrait être unique');
 });
 
+// ---- optimisations récurrentes (CUDA 18 mois, moteur 9 mois, contexte 12 mois) ----
+step('optimisations : périodicité, coût négligeable, cumul', async () => {
+  const { OPTIMS } = await import('./js/data.js');
+  const per = Object.fromEntries(OPTIMS.map(o => [o.id, o.months]));
+  if (per.cuda !== 18 || per.engine !== 9 || per.context !== 12)
+    throw new Error('périodicités attendues : CUDA 18, moteur 9, contexte 12');
+  game.state.playSeconds = 60; game.state.money = 1e6;
+  game.state.optims = {};
+  const monthSec = 300 / 12;
+  for (const o of OPTIMS) {
+    if (Math.abs(game.optimCost(o) - 1000 * game.inflIndex()) > 1e-6) throw new Error('coût ≠ 1000 $');
+    if (!game.optimReady(o)) throw new Error(`${o.id} devrait être disponible d entrée`);
+    const before = { cmp: game.mods.computeMult, q: game.mods.qualityMult, e: game.mods.energyEff };
+    if (!game.buyOptim(o.id)) throw new Error(`${o.id} non achetable`);
+    const gained = game.mods.computeMult > before.cmp || game.mods.qualityMult > before.q || game.mods.energyEff < before.e;
+    if (!gained) throw new Error(`${o.id} sans effet`);
+    if (game.optimReady(o)) throw new Error(`${o.id} de nouveau disponible immédiatement`);
+    // …et elle revient exactement à l'échéance annoncée
+    const wait = game.optimWait(o);
+    if (Math.abs(wait - o.months * monthSec) > 0.5) throw new Error(`${o.id} : échéance incorrecte`);
+    game.state.playSeconds += o.months * monthSec;
+    if (!game.optimReady(o)) throw new Error(`${o.id} ne revient pas après ${o.months} mois`);
+    if (game.optimState(o.id).n !== 1) throw new Error('compteur d optimisations incorrect');
+  }
+  // la ligne disparaît tant qu'elle n'est pas due
+  game.state.optims = { cuda: { n:1, nextAt: game.state.playSeconds + 999 } };
+  ui.render();
+  if (!ui.rows.optim['cuda'].el.classList.contains('hidden')) throw new Error('optimisation non due mais affichée');
+  game.state.optims = {};
+  ui.render();
+  if (ui.rows.optim['cuda'].el.classList.contains('hidden')) throw new Error('optimisation due mais masquée');
+  game.state.playSeconds = 60;
+});
+
+// ---- directives permanentes : quota par lots de 5, il faut repayer ----
+step('directives : quota de 5, extension payante', () => {
+  ui.closeModal();
+  game.state.playSeconds = 0;                      // inflation neutre
+  game.state.addendum = false; game.state.addendumBlocks = 0; game.state.autoChoices = {};
+  game.state.money = 1e7;
+  const c1 = game.addendumCost();
+  if (Math.abs(c1 - 250000) > 1e-6) throw new Error('premier lot ≠ 250 000 $');
+  if (!game.buyAddendum()) throw new Error('achat des directives refusé');
+  if (game.directiveSlots() !== 5) throw new Error('un paiement devrait ouvrir 5 directives');
+  for (let i = 0; i < 5; i++) if (!game.setAutoChoice('ev' + i, 0)) throw new Error('directive ' + i + ' refusée');
+  if (game.directivesUsed() !== 5 || game.directivesLeft() !== 0) throw new Error('comptage des directives faux');
+  // la 6e est refusée tant qu'on n'a pas repayé
+  if (game.setAutoChoice('ev5', 0)) throw new Error('6e directive acceptée sans repayer');
+  if (game.canSetAutoChoice('ev5')) throw new Error('quota non signalé');
+  // …mais remplacer une directive existante reste possible
+  if (!game.setAutoChoice('ev2', 1)) throw new Error('remplacement d une directive refusé');
+  if (game.state.autoChoices['ev2'] !== 1) throw new Error('remplacement non appliqué');
+  // le lot suivant coûte un cran de plus, et débloque 5 places
+  const c2 = game.addendumCost();
+  if (Math.abs(c2 - 500000) > 1e-6) throw new Error('deuxième lot ≠ 500 000 $ (' + c2 + ')');
+  if (!game.buyAddendum()) throw new Error('extension refusée');
+  if (game.directiveSlots() !== 10) throw new Error('extension sans effet sur le quota');
+  if (!game.setAutoChoice('ev5', 0)) throw new Error('6e directive toujours refusée après extension');
+  // la case à cocher de la modale reflète le quota
+  game.state.autoChoices = {}; game.state.addendumBlocks = 1;
+  for (let i = 0; i < 5; i++) game.setAutoChoice('ev' + i, 0);
+  const ev = { id:'ev_full', title:'T', body:'B', phase:1, choices:[{ label:'a', desc:'d', apply(){} }] };
+  ui.showEvent(ev);
+  const box = ui.el.modalChoices.querySelector('#auto-choice-box');
+  if (!box || !box.disabled) throw new Error('case à cocher active alors que le quota est atteint');
+  ui.closeModal();
+  game.state.autoChoices = {};
+  game.state.playSeconds = 60;
+});
+
 // ---- migration : une vieille sauvegarde ne doit pas conserver les 500 kW ----
 step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
   const stub = { toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false };

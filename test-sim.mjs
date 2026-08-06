@@ -1,6 +1,6 @@
 // Simulateur headless : joue automatiquement pour valider l'équilibrage et la robustesse.
 import { Game } from './js/game.js';
-import { GPUS, ENERGY, PROJECTS, MODELS, INFRA } from './js/data.js';
+import { GPUS, ENERGY, PROJECTS, MODELS, INFRA, OPTIMS } from './js/data.js';
 import { fmt } from './js/util.js';
 
 const stub = {
@@ -49,8 +49,9 @@ function bot() {
   let trained = true;
   while (trained) trained = g.trainNext();
 
-  // 3) projets abordables
+  // 3) projets abordables + optimisations récurrentes dès qu'elles sont dues
   for (const p of PROJECTS) { if (!s.projectsDone[p.id] && p.req(g)) g.buyProject(p.id); }
+  for (const o of OPTIMS) if (g.canBuyOptim(o.id)) g.buyOptim(o.id);
 
   // 4) tarification optimale — helper partagé avec le jeu (une seule source de vérité)
   s.priceSlider = g.optimalPriceSlider();

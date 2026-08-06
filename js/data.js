@@ -444,6 +444,31 @@ export const PROJECTS = [
 ];
 
 // ---------------------------------------------------------------------
+//  OPTIMISATIONS RÉCURRENTES — le travail d'ingénierie ne s'arrête jamais.
+//  Contrairement aux PROJETS (percées uniques), celles-ci reviennent à
+//  intervalle fixe : une nouvelle version du compilateur, du moteur, du
+//  gestionnaire de contexte. Le montant est négligeable ($1 000) : l'intérêt
+//  est de penser à les prendre, pas de les financer.
+//  months : périodicité · effect(g) : gain, modeste mais cumulatif
+// ---------------------------------------------------------------------
+export const OPTIMS = [
+  { id:'cuda', name:'Optimisation CUDA', months:18, cost:1000,
+    desc:'Nouvelle passe de noyaux CUDA : +10% de débit sur tout le parc.',
+    gain:'+10% compute',
+    effect:g=>{ g.mods.computeMult *= 1.10; } },
+
+  { id:'engine', name:'Optimisation du moteur d’inférence', months:9, cost:1000,
+    desc:'Batching continu, cache d’attention, noyaux fusionnés : +6% de débit et −2% d’énergie.',
+    gain:'+6% compute · −2% énergie',
+    effect:g=>{ g.mods.computeMult *= 1.06; g.mods.energyEff *= 0.98; } },
+
+  { id:'context', name:'Gestion du contexte sélectionné', months:12, cost:1000,
+    desc:'Sélection et compression du contexte utile : les clients acceptent +5% de prix.',
+    gain:'+5% prix accepté',
+    effect:g=>{ g.mods.qualityMult *= 1.05; } },
+];
+
+// ---------------------------------------------------------------------
 //  COSMOS — sondes (phase 3)
 // ---------------------------------------------------------------------
 export const PROBE_SPECS = [
@@ -852,9 +877,12 @@ export const ACHIEVEMENTS = [
 //  dans chaque boîte de dialogue, de cocher « appliquer ce choix désormais » :
 //  l'événement sera résolu automatiquement les fois suivantes (plus d'interruption).
 // ---------------------------------------------------------------------
+//  Chaque paiement ouvre un LOT de 5 directives mémorisables. Au-delà, il faut
+//  repayer pour étendre la capacité — et le lot suivant coûte un cran de plus
+//  (250k, 500k, 750k…) : un COO ne retient pas indéfiniment vos consignes.
 export const ADDENDUM = {
-  id:'directives', name:'Directives permanentes', cost:250000,
-  desc:'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois.',
+  id:'directives', name:'Directives permanentes', cost:250000, slotsPerBlock:5,
+  desc:'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.',
 };
 
 // Datacenter IA orbital : proposé entre 2030 et 2040. Livraison promise en 18 mois…

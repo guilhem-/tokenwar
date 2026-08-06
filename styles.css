@@ -1482,3 +1482,8 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 /* arriérés de salaire : compte à rebours avant les démissions */
 .arrears-row { border-top: 1px dashed var(--bad); padding-top: 0.45rem; }
 .arrears-row .num { font-size: 0.72rem; }
+
+/* optimisations récurrentes : elles n'apparaissent que le jour où elles sont dues */
+.item.optim { border-left: 2px solid var(--accent); }
+.auto-choice.locked { opacity: 0.7; cursor: not-allowed; border-style: solid; border-color: var(--warn); }
+.auto-choice.locked input { cursor: not-allowed; }

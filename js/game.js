@@ -5,7 +5,7 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
          BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
-         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW } from './data.js';
+         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, OPTIMS } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -68,6 +68,8 @@ export class Game {
     s.crisisLost = 0;        // total perdu en incidents (statistique de fin)
     s.achievements = {};     // succès débloqués (id -> true)
     s.addendum = false;      // « Directives permanentes » achetées
+    s.addendumBlocks = 0;    // lots de 5 directives payés (il faut repayer pour étendre)
+    s.optims = {};           // optimisations récurrentes : id -> {n, nextAt}
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
     s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
@@ -760,6 +762,36 @@ export class Game {
         break;
     }
   }
+  // =================================================================
+  //  OPTIMISATIONS RÉCURRENTES — elles reviennent à intervalle fixe
+  //  (CUDA tous les 18 mois, moteur d'inférence tous les 9, gestion du
+  //  contexte tous les 12). Coût négligeable : c'est un rendez-vous, pas
+  //  un investissement. Tant qu'elle n'est pas due, la ligne disparaît.
+  // =================================================================
+  optimState(id) {
+    if (!this.state.optims[id]) this.state.optims[id] = { n: 0, nextAt: 0 };
+    return this.state.optims[id];
+  }
+  optimCost(o) { return this.moneyCost(o.cost); }
+  optimReady(o) { return this.state.playSeconds >= this.optimState(o.id).nextAt; }
+  // secondes restantes avant la prochaine disponibilité (0 si déjà due)
+  optimWait(o) { return Math.max(0, this.optimState(o.id).nextAt - this.state.playSeconds); }
+  canBuyOptim(id) {
+    const o = OPTIMS.find(x => x.id === id);
+    return !!o && this.optimReady(o) && this.state.money >= this.optimCost(o);
+  }
+  buyOptim(id) {
+    const o = OPTIMS.find(x => x.id === id);
+    if (!o || !this.canBuyOptim(id)) return false;
+    const st = this.optimState(id);
+    this.state.money -= this.optimCost(o);
+    o.effect(this);
+    st.n++;
+    st.nextAt = this.state.playSeconds + o.months * (SECONDS_PER_YEAR / 12);
+    this.log(`${o.name} déployée (n°${st.n}) — ${o.gain}.`, 'good');
+    return true;
+  }
+
   // upgrade de spec de sonde (phase 3) — coût en matière
   upgradeProbe(spec) {
     const lvl = this.state.probeSpecs[spec];
@@ -854,18 +886,33 @@ export class Game {
   }
 
   // ---- Directives permanentes (addendum) : résolution automatique des événements ----
-  addendumCost() { return this.moneyCost(ADDENDUM.cost); }
-  buyAddendum() {
+  // Chaque paiement ouvre 5 directives mémorisables ; le lot suivant coûte un
+  // cran de plus (250k, 500k, 750k…). Au-delà du quota, il faut repayer.
+  addendumCost() { return this.moneyCost(ADDENDUM.cost * ((this.state.addendumBlocks || 0) + 1)); }
+  directiveSlots() { return (this.state.addendumBlocks || 0) * ADDENDUM.slotsPerBlock; }
+  directivesUsed() { return Object.keys(this.state.autoChoices).length; }
+  directivesLeft() { return this.directiveSlots() - this.directivesUsed(); }
+  buyAddendum() {                                 // premier achat OU extension de quota
     const cost = this.addendumCost();
-    if (this.state.addendum || this.state.money < cost) return false;
+    if (this.state.money < cost) return false;
     this.state.money -= cost;
+    this.state.addendumBlocks = (this.state.addendumBlocks || 0) + 1;
     this.state.addendum = true;
+    this.log(this.state.addendumBlocks === 1
+      ? `Directives permanentes activées : ${this.directiveSlots()} mémorisables.`
+      : `Quota de directives étendu : ${this.directiveSlots()} mémorisables.`, 'milestone');
     return true;
   }
-  setAutoChoice(eventId, choiceIndex) {
+  // remplacer une directive existante ne consomme pas de place supplémentaire
+  canSetAutoChoice(eventId) {
     if (!this.state.addendum) return false;
-    if (choiceIndex == null) delete this.state.autoChoices[eventId];
-    else this.state.autoChoices[eventId] = choiceIndex;
+    if (this.state.autoChoices[eventId] != null) return true;
+    return this.directivesLeft() > 0;
+  }
+  setAutoChoice(eventId, choiceIndex) {
+    if (choiceIndex == null) { delete this.state.autoChoices[eventId]; return true; }
+    if (!this.canSetAutoChoice(eventId)) return false;   // quota atteint : il faut repayer
+    this.state.autoChoices[eventId] = choiceIndex;
     return true;
   }
   clearAutoChoices() { this.state.autoChoices = {}; }
@@ -1329,6 +1376,9 @@ export class Game {
       this.log('Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. '
         + 'Votre capacité a été ajustée (les sources achetées sont conservées).', 'info');
     }
+    // Les directives permanentes se comptent désormais en lots de 5 : une partie
+    // qui les avait déjà payées conserve son premier lot.
+    if (s.addendum && !s.addendumBlocks) s.addendumBlocks = 1;
     s.baseGridMW = BASE_GRID_MW;
   }
   load() {

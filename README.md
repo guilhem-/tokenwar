@@ -85,12 +85,20 @@ de son année.
   (carte précise, source précise, niveau d'infra précis), activables/désactivables.
 - **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200. Le bouton
   **⟳ auto** obéit au même seuil : on n'automatise que ce qu'on a déjà maîtrisé.
+- **Optimisations récurrentes** : le travail d'ingénierie ne s'arrête jamais. Une
+  optimisation **CUDA tous les 18 mois** (+10% compute), une du **moteur d'inférence
+  tous les 9 mois** (+6% compute, −2% énergie), une passe sur la **gestion du contexte
+  tous les 12 mois** (+5% prix accepté). $1 000 pièce : le montant est négligeable,
+  l'enjeu est d'y penser. La ligne disparaît une fois prise et réapparaît à l'échéance.
 - **Graphe de production** (tokens/s et $/s, échelle log).
 - **17 succès** à débloquer, écran de fin avec bilan moral (le sanctuaire de la biosphère…).
-- **Addendum** : « Directives permanentes » (cochez un choix d’événement pour qu’il s’applique
-  automatiquement — plus d’interruption) et l’offre piège du **datacenter IA orbital**
-  (2030-2040) : 18 mois de chantier, 6 mois de retard… puis la faillite du consortium,
-  et six mois plus tard l'affaire est classée : la ligne disparaît.
+- **Addendum — Directives permanentes** : cochez un choix d’événement pour qu’il s’applique
+  automatiquement les fois suivantes (plus d’interruption). Chaque paiement couvre
+  **5 directives** ; au-delà il faut **repayer**, et le lot suivant coûte un cran de plus
+  ($250k, $500k, $750k…). Remplacer une directive existante ne consomme pas de place.
+- **Addendum — datacenter IA orbital** (2030-2040), l’offre piège : 18 mois de chantier,
+  6 mois de retard… puis la faillite du consortium, et six mois plus tard l’affaire est
+  classée — la ligne disparaît.
 - **Cinématique de fin** (aussi accessible par **Ctrl+Shift+E**) : l’écran se désintègre pixel
   par pixel, hyperespace (chaque étoile trace sa trajectoire complète), scroller sinusoïdal
   multicolore façon démo 64k, musique 8-bit (WebAudio) et clin d’œil « Nostalgia of 64k demos ».

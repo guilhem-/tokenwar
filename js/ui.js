@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS,
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
@@ -73,7 +73,7 @@ export class UI {
       energyLoadFill: $('energy-load-fill'), energyLoadValue: $('energy-load-value'), energyList: $('energy-list'),
       researchValue: $('research-value'), researchRate: $('research-rate'), dataValue: $('data-value'), trainList: $('train-list'),
       panelCosmos: $('panel-cosmos'), cosmosBody: $('cosmos-body'),
-      projectList: $('project-list'),
+      projectList: $('project-list'), optimList: $('optim-list'),
       log: $('log'),
       modalOverlay: $('modal-overlay'), modal: $('modal'), modalTitle: $('modal-title'),
       modalBody: $('modal-body'), modalChoices: $('modal-choices'),
@@ -579,6 +579,15 @@ export class UI {
       this.addBulk(r, () => this.game.buyEnergy(e.id));
       this.addAutoToggle(r, 'energy', e.id);
     });
+    // Optimisations récurrentes (elles reviennent tous les N mois)
+    this.el.optimList.innerHTML = ''; this.rows.optim = {};
+    OPTIMS.forEach(o => {
+      const r = this.makeRow(this.el.optimList, o.id, this.rows.optim);
+      r.el.classList.add('optim');
+      r.name.textContent = o.name;
+      r.desc.textContent = o.desc;
+      r.el.addEventListener('click', () => { this.game.buyOptim(o.id); });
+    });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
     PROJECTS.forEach(p => {
@@ -682,15 +691,23 @@ export class UI {
     const g = this.game, s = g.state;
     // Directives permanentes
     const rd = this.rows.addendum['directives'];
+    const cost = g.addendumCost();
     if (s.addendum) {
-      rd.cost.innerHTML = '<span class="badge badge-new">actives</span>';
-      rd.effect.innerHTML = `<span class="text-muted">${Object.keys(s.autoChoices).length} directive(s) mémorisée(s) — cochez un choix dans un événement.</span>`;
-      rd.el.classList.remove('locked', 'affordable'); rd.el.classList.add('owned');
-      rd.resetBtn.classList.toggle('hidden', Object.keys(s.autoChoices).length === 0);
+      const used = g.directivesUsed(), slots = g.directiveSlots(), full = used >= slots;
+      // le quota atteint, la ligne redevient un achat : il faut repayer pour 5 de plus
+      rd.cost.innerHTML = full
+        ? `<span class="badge badge-warn">quota atteint</span> <span class="num">${fmtMoney(cost)}</span>`
+        : `<span class="badge badge-new">actives</span> <span class="num">${fmtMoney(cost)}</span>`;
+      rd.effect.innerHTML =
+        `<span class="${full ? 'text-bad' : 'text-muted'}">${used}/${slots} directive(s) mémorisée(s)</span>` +
+        ` <span class="text-muted">· repayez pour ${ADDENDUM.slotsPerBlock} de plus</span>`;
+      rd.el.classList.remove('owned');
+      this.setAfford(rd.el, s.money >= cost);
+      rd.resetBtn.classList.toggle('hidden', used === 0);
     } else {
-      rd.cost.textContent = fmtMoney(g.addendumCost());
-      rd.effect.innerHTML = '<span class="text-muted">Ne soyez plus jamais interrompu.</span>';
-      this.setAfford(rd.el, s.money >= g.addendumCost());
+      rd.cost.textContent = fmtMoney(cost);
+      rd.effect.innerHTML = `<span class="text-muted">Ne soyez plus jamais interrompu — ${ADDENDUM.slotsPerBlock} directives par paiement.</span>`;
+      this.setAfford(rd.el, s.money >= cost);
       rd.resetBtn.classList.add('hidden');
     }
     // Datacenter orbital
@@ -902,6 +919,7 @@ export class UI {
     this.renderStock();
     this.renderGPUs();
     this.renderEnergy();
+    this.renderOptims();
     this.renderProjects();
     this.renderCrisis();
     this.tickIdle();
@@ -1048,6 +1066,27 @@ export class UI {
       this.updateAutoToggle(r, 'energy', e.id, owned);
     });
   }
+  // Optimisations : la ligne n'apparaît que lorsque la prochaine version est due
+  // (sinon elle disparaît, comme toute option indisponible).
+  renderOptims() {
+    const g = this.game;
+    OPTIMS.forEach(o => {
+      const r = this.rows.optim[o.id];
+      if (!r) return;
+      const st = g.optimState(o.id);
+      const ready = g.optimReady(o);
+      // en phase 2+, l'argent n'existe plus : l'ASI optimise seule
+      if (!ready || g.phase >= 2) { r.el.classList.add('hidden'); return; }
+      r.el.classList.remove('hidden');
+      r.cost.textContent = fmtMoney(g.optimCost(o));
+      r.effect.innerHTML = `<span class="badge badge-new">disponible</span> `
+        + `<span class="text-good">${o.gain}</span>`
+        + (st.n > 0 ? ` <span class="badge">×${st.n}</span>` : '')
+        + ` <span class="text-muted">· revient tous les ${o.months} mois</span>`;
+      this.setAfford(r.el, g.canBuyOptim(o.id));
+    });
+  }
+
   renderProjects() {
     const g = this.game, s = g.state;
     PROJECTS.forEach(p => {
@@ -1162,10 +1201,18 @@ export class UI {
     // « Directives permanentes » : case à cocher pour mémoriser le choix cliqué
     let autoCheck = null;
     if (this.game.state.addendum) {
+      const g = this.game;
+      const ok = g.canSetAutoChoice(ev.id);
       const lab = document.createElement('label');
-      lab.className = 'auto-choice';
-      lab.innerHTML = `<input type="checkbox" id="auto-choice-box" /> <span>Désormais, appliquer automatiquement le choix que je vais faire (plus d'interruption)</span>`;
-      autoCheck = lab.querySelector('input');
+      lab.className = 'auto-choice' + (ok ? '' : ' locked');
+      lab.innerHTML = `<input type="checkbox" id="auto-choice-box" ${ok ? '' : 'disabled'} /> <span>` +
+        (ok
+          ? `Désormais, appliquer automatiquement le choix que je vais faire (plus d'interruption) `
+            + `<b class="num">${g.directivesUsed()}/${g.directiveSlots()}</b>`
+          : `Quota de directives atteint (<b class="num">${g.directivesUsed()}/${g.directiveSlots()}</b>) — `
+            + `repayez les Directives permanentes dans l'Addendum pour en mémoriser ${ADDENDUM.slotsPerBlock} de plus.`)
+        + `</span>`;
+      autoCheck = ok ? lab.querySelector('input') : null;
       this.el.modalChoices.appendChild(lab);
     }
     ev.choices.forEach((ch, idx) => {
@@ -1178,8 +1225,9 @@ export class UI {
       b.addEventListener('click', () => {
         if (ch.cost && this.game.money < ch.cost) return; // pas les moyens
         if (autoCheck && autoCheck.checked) {
-          this.game.setAutoChoice(ev.id, idx);
-          this.toast('Directive mémorisée — ce choix sera appliqué automatiquement', 'info');
+          if (this.game.setAutoChoice(ev.id, idx))
+            this.toast(`Directive mémorisée (${this.game.directivesUsed()}/${this.game.directiveSlots()})`, 'info');
+          else this.toast('Quota de directives atteint — étendez-le dans l’Addendum', 'bad');
         }
         ch.apply(this.game);
         this.log(`${ev.title} → ${ch.label}`, 'info');
@@ -1328,6 +1376,7 @@ export class UI {
       <p><b>🏗️ Délais :</b> rien n’est instantané. Chaque commande part en <b>chantier</b> (badge ⏳) pour une durée proportionnelle à sa <b>complexité</b> : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.</p>
       <p><b>📈 Inflation :</b> l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés par le marché suivent l’indice — <b>pas votre trésorerie</b>. Dormir sur son cash coûte du pouvoir d’achat : investissez, ou placez-le en bourse.</p>
       <p><b>🚨 Incidents :</b> une alerte à <b>bordure rouge et halo pulsant</b> peut apparaître <b>n’importe où dans la page</b>, souvent hors de votre écran, sans la moindre notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie de plus en plus vite — jusqu’à <b>70% de votre fortune en 2 minutes</b>. Seul indice : le <b>liseré rouge</b> qui s’intensifie sur les bords. <b>Faites défiler la page</b> et cliquez sur la solution.</p>
+      <p><b>🔧 Optimisations récurrentes :</b> le travail d’ingénierie ne s’arrête jamais. Une <b>optimisation CUDA</b> tous les <b>18 mois</b>, une <b>optimisation du moteur d’inférence</b> tous les <b>9 mois</b>, une passe sur la <b>gestion du contexte</b> tous les <b>12 mois</b>. $1 000 pièce — le montant est négligeable, l’enjeu est d’y penser. Chaque ligne disparaît une fois prise et réapparaît à l’échéance suivante ; les gains se cumulent.</p>
       <p><b>Automatisation :</b> achetez les auto-clickers, puis cochez <b>⟳ auto</b> sur chaque élément précis (carte, source, niveau) à racheter automatiquement. Le bouton <b>⟳</b> et le bouton <b>×10</b> n’apparaissent qu’à partir de <b>20 exemplaires en service</b> de cet élément ; <b>×100</b> dès 200. On n’automatise que ce qu’on maîtrise déjà.</p>
       <p><b>Bourse :</b> débloquée à <b>$100 000</b> de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.</p>
       <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
@@ -1335,6 +1384,7 @@ export class UI {
       <p><b>📰 La Une :</b> les titres de presse de l’époque montent (+1) ou descendent (−1) votre réputation. Ils suivent l’actualité réelle de l’IA <b>et votre propre avancement</b> : la presse ne parle d’une capacité que lorsque vous l’avez réellement livrée — et raille votre retard quand vous décrochez.</p>
       <p><b>😴 Inactivité :</b> au-delà de 15 s sans rien faire, l’écran se manifeste (douze animations courtes, jamais deux fois la même de suite) et la presse publie. Bougez.</p>
       <p><b>Événements :</b> pannes, régulations, pénuries… cohérents avec la date, chaque décision compte.</p>
+      <p><b>📋 Directives permanentes (Addendum) :</b> chaque paiement vous permet de mémoriser <b>5 décisions</b> qui seront ensuite appliquées automatiquement. Au-delà, il faut <b>repayer</b> pour 5 de plus — et le lot suivant coûte un cran de plus ($250k, $500k, $750k…). Remplacer une directive existante ne consomme pas de place.</p>
       <p><b>Astuce :</b> le bouton <b>⏩</b> accélère la simulation. Sauvegarde automatique toutes les 10 s.</p>
       <p class="text-muted">Inspiré de « Universal Paperclips ». Données de prix/IA basées sur des faits réels (2019-2026).</p>`;
   }
