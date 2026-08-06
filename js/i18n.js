@@ -21,6 +21,7 @@
 export const LANGS = [
   { code: 'fr', name: 'Français',   flag: '🇫🇷' },
   { code: 'en', name: 'English',    flag: '🇬🇧' },
+  { code: 'es', name: 'Español',    flag: '🇪🇸' },
 ];
 export const DEFAULT_LANG = 'en';          // langue par défaut hors des langues détectées
 const STORE_KEY = 'tokenwar_lang';

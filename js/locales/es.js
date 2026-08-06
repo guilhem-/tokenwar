@@ -1,0 +1,1799 @@
+// =====================================================================
+//  TokenWar — ES
+//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
+//  une clé absente retombe sur le français, jamais sur une clé technique.
+// =====================================================================
+export default {
+  'GPT-2':
+    'GPT-2',
+  '1,5 G params · ctx 1K':
+    '1,5 B parám. · ctx 1K',
+  'Scaling brut':
+    'Escalado bruto',
+  '« Trop dangereux pour être publié. » Vous générez vos premiers tokens à la main.':
+    '«Demasiado peligroso para publicarlo». Generas tus primeros tokens a mano.',
+  'GPT-3':
+    'GPT-3',
+  '175 G params · ctx 4K':
+    '175 B parám. · ctx 4K',
+  'Few-shot learning. Naissance de l’économie du token : $60/Mtok.':
+    'Aprendizaje few-shot. Nace la economía del token: 60 $/Mtok.',
+  'GPT-3.5 / ChatGPT':
+    'GPT-3.5 / ChatGPT',
+  '~175 G · RLHF · ctx 4K':
+    '~175 B · RLHF · ctx 4K',
+  'RLHF / Chat':
+    'RLHF / Chat',
+  'RLHF + interface chat. 100M d’utilisateurs en deux mois. Le prix s’effondre à $2/Mtok mais le volume explose.':
+    'RLHF más interfaz de chat. 100 M de usuarios en dos meses. El precio unitario se hunde a 2 $/Mtok, pero el volumen se dispara.',
+  'GPT-4':
+    'GPT-4',
+  '~1,8 T (MoE) · ctx 128K':
+    '~1,8 T (MoE) · ctx 128K',
+  'Multimodal':
+    'Multimodal',
+  'Vision + raisonnement. La frontière repousse, $30/Mtok pour le haut de gamme.':
+    'Visión y razonamiento. La frontera se aleja: 30 $/Mtok en la gama alta.',
+  'GPT-4o':
+    'GPT-4o',
+  'multimodal natif · ctx 128K':
+    'multimodal nativo · ctx 128K',
+  'Voix + vision temps réel. $5/Mtok. La famille « mini » casse encore les prix.':
+    'Voz y visión en tiempo real. 5 $/Mtok. La familia «mini» vuelve a bajar los precios.',
+  'o1 — raisonnement':
+    'o1 — razonamiento',
+  'test-time compute · ctx 128K':
+    'cómputo en inferencia · ctx 128K',
+  'Raisonnement':
+    'Razonamiento',
+  '« Reasoning tokens » : le modèle réfléchit avant de répondre. Plus de tokens par requête.':
+    '«Tokens de razonamiento»: el modelo piensa antes de responder. Muchos más tokens por petición.',
+  'Modèle frontière (GPT-5 / Claude 4 / Gemini 3)':
+    'Modelo frontera (GPT-5 / Claude 4 / Gemini 3)',
+  'agents autonomes · ctx 1M':
+    'agentes autónomos · ctx 1M',
+  'Agents':
+    'Agentes',
+  'Usage d’outils autonome, « computer use ». Les agents consomment des tokens par milliards.':
+    'Uso autónomo de herramientas, «computer use». Los agentes queman tokens por miles de millones.',
+  'Frontière 2026 (GPT-5.6 / Claude Opus 5 / Gemini 3.6)':
+    'Frontera 2026 (GPT-5.6 / Claude Opus 5 / Gemini 3.6)',
+  'agents généralistes · contrôle d’ordinateur':
+    'agentes generalistas · control del ordenador',
+  'Cinq modèles phares en trois semaines (juillet 2026). Les agents pilotent des ordinateurs entiers ; la course s’emballe.':
+    'Cinco modelos estrella en tres semanas (julio de 2026). Los agentes manejan ordenadores enteros; la carrera se desboca.',
+  'Modèle à mémoire persistante':
+    'Modelo con memoria persistente',
+  'mémoire de travail permanente · apprentissage en ligne':
+    'memoria de trabajo permanente · aprendizaje continuo',
+  'Apprentissage continu':
+    'Aprendizaje continuo',
+  'Le modèle n’oublie plus rien entre deux sessions : il apprend en continu de ses propres traces.':
+    'El modelo ya no olvida nada entre sesiones: aprende sin parar de sus propias huellas.',
+  'Modèle du monde (world model)':
+    'Modelo del mundo',
+  'physique intuitive · simulation prédictive':
+    'física intuitiva · simulación predictiva',
+  'Simulation':
+    'Simulación',
+  'Il ne prédit plus des mots mais des futurs : chaque requête simule le monde avant de répondre.':
+    'Ya no predice palabras sino futuros: cada petición simula el mundo antes de responder.',
+  'Essaim d’agents auto-organisés':
+    'Enjambre de agentes autoorganizados',
+  'millions d’agents · négociation interne':
+    'millones de agentes · negociación interna',
+  'Essaim':
+    'Enjambre',
+  'Des millions d’agents se répartissent le travail, se recrutent et se corrigent entre eux. Personne ne lit plus les logs.':
+    'Millones de agentes se reparten el trabajo, se reclutan y se corrigen entre sí. Ya nadie lee los registros.',
+  'Super-intelligence (ASI)':
+    'Superinteligencia (ASI)',
+  'auto-amélioration récursive':
+    'automejora recursiva',
+  'Singularité':
+    'Singularidad',
+  'Le modèle améliore son propre code. À partir d’ici, l’argent ne compte plus : seule la matière compte.':
+    'El modelo mejora su propio código. A partir de aquí el dinero deja de contar: solo cuenta la materia.',
+  'GPU grand public (GTX)':
+    'GPU de consumo (GTX)',
+  'Carte gamer détournée (~GTX 1060). ~$300 en 2016.':
+    'Tarjeta gamer reconvertida (~GTX 1060). ~300 $ en 2016.',
+  'NVIDIA V100':
+    'NVIDIA V100',
+  '~$9 000 à sa sortie. Le cheval de bataille de 2017.':
+    '~9.000 $ al salir. El caballo de batalla de 2017.',
+  'NVIDIA RTX 3090':
+    'NVIDIA RTX 3090',
+  'MSRP $1499, 350W. La carte-pont du confinement.':
+    'PVP 1499 $, 350W. La tarjeta puente del confinamiento.',
+  'NVIDIA A100 80GB':
+    'NVIDIA A100 80GB',
+  '~$10-15k. La carte de l’ère GPT-3/4.':
+    '~10-15 mil $. La tarjeta de la era GPT-3/4.',
+  'NVIDIA RTX 4090':
+    'NVIDIA RTX 4090',
+  'MSRP $1599, 450W. Le meilleur rapport perf/prix grand public.':
+    'PVP 1599 $, 450W. La mejor relación rendimiento/precio de consumo.',
+  'NVIDIA H100':
+    'NVIDIA H100',
+  '~$25-40k, en pénurie (~1 an de délai).':
+    '~25-40 mil $, en escasez (~1 año de espera).',
+  'NVIDIA L40S':
+    'NVIDIA L40S',
+  '~$7 500, 350W. L’inférence sans se ruiner pendant la pénurie de H100.':
+    '~7.500 $, 350W. Inferencia sin arruinarse durante la escasez de H100.',
+  'NVIDIA RTX 5090':
+    'NVIDIA RTX 5090',
+  'MSRP $1999, 575W. Bon rapport perf/prix.':
+    'PVP 1999 $, 575W. Buena relación rendimiento/precio.',
+  'NVIDIA RTX 6000 Pro (Blackwell)':
+    'NVIDIA RTX 6000 Pro (Blackwell)',
+  '96 GB GDDR7, 600W. ~$8 500.':
+    '96 GB GDDR7, 600W. ~8.500 $.',
+  'NVIDIA B200 (Blackwell)':
+    'NVIDIA B200 (Blackwell)',
+  '~$30-50k. Génération datacenter Blackwell.':
+    '~30-50 mil $. La generación de centro de datos Blackwell.',
+  'AMD Instinct MI355X':
+    'AMD Instinct MI355X',
+  '288 GB HBM3E, 1,4 kW. L’alternative à la pénurie NVIDIA.':
+    '288 GB HBM3E, 1,4 kW. La alternativa a la escasez de NVIDIA.',
+  'Rack GB200 NVL72':
+    'Rack GB200 NVL72',
+  'Rack complet 72 B200, ~$3 M, ~120 kW.':
+    'Rack completo de 72 B200, ~3 M$, ~120 kW.',
+  'Rack GB300 NVL72 (Blackwell Ultra)':
+    'Rack GB300 NVL72 (Blackwell Ultra)',
+  '72 Blackwell Ultra refroidis liquide : ×1,5 en FP4 dense, taillé pour le raisonnement.':
+    '72 Blackwell Ultra refrigerados por líquido: ×1,5 en FP4 denso, hecho para razonar.',
+  'Vera Rubin VR200 NVL72':
+    'Vera Rubin VR200 NVL72',
+  'CPU Vera + GPU Rubin, NVLink 6, HBM4 : ×3,3 vs Blackwell Ultra (GTC 2026).':
+    'CPU Vera + GPU Rubin, NVLink 6, HBM4: ×3,3 frente a Blackwell Ultra (GTC 2026).',
+  'TPU v7 « Ironwood » (pod)':
+    'TPU v7 «Ironwood» (pod)',
+  'Pod d’inférence Google, hors pénurie NVIDIA.':
+    'Pod de inferencia de Google, ajeno a la escasez de NVIDIA.',
+  'Cluster wafer-scale':
+    'Clúster wafer-scale',
+  'Galette de silicium entière (façon Cerebras).':
+    'Una oblea de silicio entera (al estilo Cerebras).',
+  'NVIDIA Feynman F200':
+    'NVIDIA Feynman F200',
+  'Architecture « Feynman ». Calcul mixte analogique/numérique.':
+    'Arquitectura «Feynman». Cómputo mixto analógico/digital.',
+  'Cœur photonique « Vera »':
+    'Núcleo fotónico «Vera»',
+  'Calcul par la lumière : la chaleur n’est plus l’ennemi.':
+    'Calcular con luz: el calor ya no es el enemigo.',
+  'Maillage « Aurora » 3D':
+    'Malla «Aurora» 3D',
+  'Empilement 3D massif, refroidissement immersif.':
+    'Apilamiento 3D masivo, refrigeración por inmersión.',
+  'Substrat neuromorphique « Helios »':
+    'Sustrato neuromórfico «Helios»',
+  'Imite le cerveau : beaucoup de calcul, très peu d’énergie.':
+    'Imita al cerebro: muchísimo cómputo, casi nada de energía.',
+  'Matrice supraconductrice « Cryo »':
+    'Matriz superconductora «Cryo»',
+  'Supraconductivité ambiante : la dissipation s’effondre.':
+    'Superconductividad ambiente: la disipación se desploma.',
+  'Lattice photonique « Lumen »':
+    'Retícula fotónica «Lumen»',
+  'Réseau optique cohérent à l’échelle d’un bâtiment.':
+    'Red óptica coherente a escala de un edificio.',
+  'Coprocesseur quantique-hybride « Quanta »':
+    'Coprocesador cuántico-híbrido «Quanta»',
+  'Qubits topologiques épaulant le calcul classique.':
+    'Cúbits topológicos que apoyan el cómputo clásico.',
+  'Processeur « limite de Planck »':
+    'Procesador «límite de Planck»',
+  'On grave à la frontière physique de l’information.':
+    'Se graba en la frontera física de la información.',
+  'Cœur à énergie du vide « Vacuum »':
+    'Núcleo de energía del vacío «Vacuum»',
+  'Puise dans l’énergie du point zéro. Fin de la rareté énergétique.':
+    'Extrae energía del punto cero. Fin de la escasez energética.',
+  'Immobilier':
+    'Inmuebles',
+  'bâtiment':
+    'edificio',
+  'Du garage au campus : il faut poser les machines quelque part.':
+    'Del garaje al campus: en algún sitio hay que poner las máquinas.',
+  'Datacenter':
+    'Centro de datos',
+  'datacenter':
+    'centro de datos',
+  'Salle climatisée (le cooling consomme). Achat, ou location à la journée.':
+    'Sala climatizada (la refrigeración consume). Cómpralo o alquílalo por días.',
+  'Baie (rack)':
+    'Rack',
+  'baie':
+    'rack',
+  'Armoire 42U (PDU, switch). Occupe une place en datacenter.':
+    'Armario 42U (PDU, switch). Ocupa una plaza del centro de datos.',
+  'Serveur':
+    'Servidor',
+  'serveur':
+    'servidor',
+  'Châssis multi-GPU. Prix tiré vers le haut par la flambée mémoire (2025-2026).':
+    'Chasis multi-GPU. Precio empujado al alza por la subida de la memoria (2025-2026).',
+  'Raccordement réseau':
+    'Acometida eléctrica',
+  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    'Tiras de la red local. Cuota mensual proporcional a la potencia contratada, más el kWh consumido.',
+  'Ferme solaire + batteries':
+    'Huerto solar + baterías',
+  'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
+    'Capex alto, combustible nulo: solo cuestan la limpieza y el inversor. Verde y bien visto.',
+  'Centrale gaz dédiée':
+    'Central de gas dedicada',
+  'Turbine rapide à déployer : peu de capex, mais le gaz se paie au MWh brûlé.':
+    'Turbina rápida de desplegar: poco capex, pero el gas se paga por MWh quemado.',
+  'SMR nucléaire':
+    'SMR nuclear',
+  'Petit réacteur modulaire : capex lourd, combustible négligeable, mais exploitation et sûreté à demeure.':
+    'Reactor modular pequeño: capex pesado, combustible insignificante, pero operación y seguridad permanentes.',
+  'Réacteur à fusion':
+    'Reactor de fusión',
+  'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
+    'Energía casi ilimitada. El sueño por fin cumplido — con un equipo de plasma en plantilla.',
+  'Collecteur Dyson':
+    'Colector Dyson',
+  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
+    'Captas una fracción de la propia estrella. Nada que pagar, nadie a quien pagar.',
+  'Optimisation CUDA':
+    'Optimización CUDA',
+  'Efficacité':
+    'Eficiencia',
+  '+50% de débit sur tout le parc de calcul.':
+    '+50% de rendimiento en todo el parque de cómputo.',
+  'Quantization 8-bit':
+    'Cuantización de 8 bits',
+  'Coût énergétique par token réduit de 40%.':
+    'Coste energético por token reducido un 40%.',
+  'FlashAttention':
+    'FlashAttention',
+  '×2 le débit en mémoire-bande. Indispensable.':
+    '×2 el rendimiento en ancho de banda de memoria. Imprescindible.',
+  'Décodage spéculatif':
+    'Decodificación especulativa',
+  'Le petit modèle propose, le grand valide. ×2 tokens/s.':
+    'El modelo pequeño propone, el grande valida. ×2 tokens/s.',
+  'Distillation « mini »':
+    'Destilación «mini»',
+  'Une famille de modèles 4× moins chers à servir. Volume ×4.':
+    'Una familia de modelos 4× más barata de servir. Volumen ×4.',
+  'Architecture Mixture-of-Experts':
+    'Arquitectura Mixture-of-Experts',
+  'Seuls quelques experts s’activent par token. ×3 efficacité (façon DeepSeek).':
+    'Solo se activan unos pocos expertos por token. ×3 de eficiencia (al estilo DeepSeek).',
+  'Plateforme d’agents':
+    'Plataforma de agentes',
+  'Marché':
+    'Mercado',
+  'Les agents autonomes consomment des tokens ×10. Demande décuplée.':
+    'Los agentes autónomos consumen ×10 tokens. Demanda multiplicada por diez.',
+  'Campagne de communication':
+    'Campaña de comunicación',
+  '+15 de réputation. Le public adore (pour l’instant).':
+    '+15 de reputación. Al público le encanta (por ahora).',
+  'Partenariats de données':
+    'Acuerdos de datos',
+  'Accès à des corpus humains frais. ×3 sur la production de données.':
+    'Acceso a corpus humanos frescos. ×3 en la producción de datos.',
+  'Contexte 1M tokens':
+    'Contexto de 1M de tokens',
+  'Les gros clients paient plus cher (+50% de prix accepté).':
+    'Los grandes clientes pagan más (+50% de precio aceptado).',
+  'Bureau de lobbying':
+    'Oficina de lobby',
+  'Conformité':
+    'Cumplimiento',
+  'Atténue de moitié l’impact des futures régulations.':
+    'Reduce a la mitad el impacto de las futuras regulaciones.',
+  'Infrastructure redondante':
+    'Infraestructura redundante',
+  'Uptime 99,99%. Réduit fortement la fréquence des pannes.':
+    'Disponibilidad del 99,99%. Reduce mucho la frecuencia de las averías.',
+  'Refroidissement liquide':
+    'Refrigeración líquida',
+  '-20% d’énergie et immunité aux événements « eau / chaleur ».':
+    '−20% de energía e inmunidad a los eventos de «agua / calor».',
+  'Équipe d’alignement':
+    'Equipo de alineamiento',
+  'Réduit le risque des événements de sécurité en phase AGI.':
+    'Reduce el riesgo de eventos de seguridad en la fase AGI.',
+  'Auto-amélioration récursive':
+    'Automejora recursiva',
+  'Le système réécrit ses propres algorithmes. Déverrouille l’ère de l’autonomie.':
+    'El sistema reescribe sus propios algoritmos. Desbloquea la era de la autonomía.',
+  'Nano-assembleurs':
+    'Nanoensambladores',
+  'Conversion matière→compute ×5. Toute la croûte terrestre devient calcul.':
+    'Conversión materia→cómputo ×5. Toda la corteza terrestre se vuelve cálculo.',
+  'Sondes de von Neumann':
+    'Sondas de von Neumann',
+  'Des sondes auto-réplicantes essaiment dans l’espace. Déverrouille l’expansion cosmique.':
+    'Sondas autorreplicantes se esparcen por el espacio. Desbloquea la expansión cósmica.',
+  'Singularité de recompression':
+    'Singularidad de recompresión',
+  'Concentrer toute la matière-énergie de l’univers en un point. Provoquer le prochain Big Bang.':
+    'Concentrar toda la materia-energía del universo en un punto. Provocar el próximo Big Bang.',
+  'Nouvelle passe de noyaux CUDA : +10% de débit sur tout le parc.':
+    'Nueva tanda de núcleos CUDA: +10% de rendimiento en todo el parque.',
+  '+10% compute':
+    '+10% cómputo',
+  'Optimisation du moteur d’inférence':
+    'Optimización del motor de inferencia',
+  'Batching continu, cache d’attention, noyaux fusionnés : +6% de débit et −2% d’énergie.':
+    'Batching continuo, caché de atención, núcleos fusionados: +6% de rendimiento y −2% de energía.',
+  '+6% compute · −2% énergie':
+    '+6% cómputo · −2% energía',
+  'Gestion du contexte sélectionné':
+    'Gestión del contexto seleccionado',
+  'Sélection et compression du contexte utile : les clients acceptent +5% de prix.':
+    'Selección y compresión del contexto útil: los clientes aceptan +5% de precio.',
+  '+5% prix accepté':
+    '+5% precio aceptado',
+  'Responsable RH':
+    'Responsable de RR. HH.',
+  'Chaque RH permet d’embaucher davantage (+5 postes).':
+    'Cada RR. HH. permite contratar a más gente (+5 puestos).',
+  'Ingénieur R&D':
+    'Ingeniero de I+D',
+  'Indispensable pour entraîner les modèles avancés. Accélère la recherche.':
+    'Imprescindible para entrenar modelos avanzados. Acelera la investigación.',
+  'Marketeur':
+    'Especialista en marketing',
+  'Relève le plafond du niveau de marketing (+1 par marketeur).':
+    'Sube el techo del nivel de marketing (+1 por especialista).',
+  'Ingénieur SRE/Ops':
+    'Ingeniero SRE/Ops',
+  'Fiabilise le parc : +2% de débit compute par ingénieur (max +50%).':
+    'Da fiabilidad al parque: +2% de rendimiento por ingeniero (máx. +50%).',
+  'Data engineer':
+    'Ingeniero de datos',
+  'Multiplie la production de données d’entraînement.':
+    'Multiplica la producción de datos de entrenamiento.',
+  'Premiers mots':
+    'Primeras palabras',
+  'Produire 1 000 tokens.':
+    'Producir 1.000 tokens.',
+  'Le million':
+    'El millón',
+  'Produire 1 million de tokens.':
+    'Producir 1 millón de tokens.',
+  'Compter en milliards':
+    'Contar por miles de millones',
+  'Produire 1 milliard de tokens.':
+    'Producir 1.000 millones de tokens.',
+  'Écrasante majorité':
+    'Mayoría aplastante',
+  'Produire 1 000 milliards de tokens.':
+    'Producir 1 billón de tokens.',
+  'Ça chauffe':
+    'Esto se calienta',
+  'Posséder sa première carte.':
+    'Tener tu primera tarjeta.',
+  'Ferme de calcul':
+    'Granja de cómputo',
+  'Posséder 100 unités de calcul.':
+    'Tener 100 unidades de cómputo.',
+  'Chercheur':
+    'Investigador',
+  'Entraîner son premier modèle.':
+    'Entrenar tu primer modelo.',
+  'Il réfléchit…':
+    'Está pensando…',
+  'Atteindre l’ère du raisonnement.':
+    'Alcanzar la era del razonamiento.',
+  'Entraîner la super-intelligence.':
+    'Entrenar la superinteligencia.',
+  'Scale-up':
+    'Scale-up',
+  'Employer 10 personnes.':
+    'Emplear a 10 personas.',
+  'Millionnaire':
+    'Millonario',
+  'Détenir $1 M de trésorerie.':
+    'Tener 1 M$ en caja.',
+  'Loup de la tech':
+    'Lobo de la tecnología',
+  'Doubler une mise en bourse.':
+    'Duplicar una apuesta en bolsa.',
+  'Pilote automatique':
+    'Piloto automático',
+  'Posséder les 4 automatisations.':
+    'Tener las 4 automatizaciones.',
+  'Géo-ingénieur':
+    'Geoingeniero',
+  'Convertir la moitié de la Terre.':
+    'Convertir la mitad de la Tierra.',
+  'Parole tenue':
+    'Palabra cumplida',
+  'Préserver le sanctuaire jusqu’au bout.':
+    'Preservar el santuario hasta el final.',
+  'Ad astra… ou pas':
+    'Ad astra… o no',
+  'Financer le datacenter orbital jusqu’à la faillite.':
+    'Financiar el centro de datos orbital hasta la quiebra.',
+  'Fiat lux':
+    'Fiat lux',
+  'Déclencher un nouveau Big Bang.':
+    'Provocar un nuevo Big Bang.',
+  'Exfiltration de données en cours':
+    'Exfiltración de datos en curso',
+  'Un accès non autorisé aspire vos journaux de conversations et des poids de modèle vers un hôte inconnu. Le trafic sortant est anormal depuis plusieurs minutes.':
+    'Un acceso no autorizado está aspirando tus registros de conversaciones y pesos de modelo hacia un host desconocido. El tráfico de salida lleva minutos anómalo.',
+  'Couper l’accès, forensic et durcissement':
+    'Cortar el acceso, forense y bastionado',
+  'Isolation réseau immédiate, rotation de tous les secrets, investigation forensic et durcissement des accès.':
+    'Aislamiento inmediato de la red, rotación de todos los secretos, investigación forense y bastionado de los accesos.',
+  'Incendie dans un datacenter':
+    'Incendio en un centro de datos',
+  'Un onduleur a pris feu en salle 2. La détection a fonctionné, l’extinction automatique non. La fumée gagne les allées froides.':
+    'Un SAI se ha incendiado en la sala 2. La detección funcionó, la extinción automática no. El humo llega a los pasillos fríos.',
+  'Mobiliser les pompiers et redonder l’extinction':
+    'Movilizar a los bomberos y duplicar la extinción',
+  'Intervention des pompiers, évacuation, remplacement des batteries et doublement du système d’extinction.':
+    'Intervención de bomberos, evacuación, sustitución de baterías y duplicación del sistema de extinción.',
+  'Datacenter bloqué par des opposants':
+    'Centro de datos bloqueado por opositores',
+  'Un collectif anti-datacenter bloque les accès du site : plus de livraisons, plus d’astreinte sur place, et les caméras tournent.':
+    'Un colectivo antidatacenter bloquea los accesos: sin entregas, sin guardia presencial, y las cámaras grabando.',
+  'Médiation, contournement logistique et sécurité':
+    'Mediación, rodeo logístico y seguridad',
+  'Négociation avec le collectif, itinéraire logistique alternatif et gardiennage renforcé.':
+    'Negociación con el colectivo, ruta logística alternativa y vigilancia reforzada.',
+  'Fibre optique sectionnée':
+    'Fibra óptica seccionada',
+  'Une pelleteuse a tranché le faisceau de fibres. Vos deux liens principaux passaient dans la même tranchée — erreur classique.':
+    'Una excavadora ha cortado el haz de fibras. Tus dos enlaces principales iban por la misma zanja: el error de siempre.',
+  'Basculer sur le secours et re-router en diversité':
+    'Pasar al respaldo y reenrutar con diversidad',
+  'Activation d’un lien de secours opérateur, épissure d’urgence et re-routage en diversité géographique.':
+    'Activación de un enlace de respaldo del operador, empalme de urgencia y reenrutado con diversidad geográfica.',
+  'Réacteur hors de contrôle':
+    'Reactor fuera de control',
+  'Le SMR qui alimente votre campus s’emballe : la boucle secondaire dérive et l’autorité de sûreté est déjà au téléphone.':
+    'El SMR que alimenta tu campus se embala: el circuito secundario deriva y la autoridad de seguridad ya está al teléfono.',
+  'SCRAM, inspection et remise en conformité':
+    'SCRAM, inspección y vuelta a la normativa',
+  'Arrêt d’urgence, inspection complète par l’autorité de sûreté, remplacement des échangeurs et remise en service.':
+    'Parada de emergencia, inspección completa por la autoridad de seguridad, sustitución de intercambiadores y reanudación.',
+  'Rançongiciel sur les sauvegardes':
+    'Ransomware en las copias de seguridad',
+  'Vos sauvegardes sont chiffrées une à une. Un compte à rebours s’affiche sur la console d’administration, avec une adresse de paiement.':
+    'Tus copias se están cifrando una a una. En la consola de administración aparece una cuenta atrás y una dirección de pago.',
+  'Restaurer depuis l’air-gap, refuser la rançon':
+    'Restaurar desde el air-gap, no pagar el rescate',
+  'Restauration depuis les copies hors-ligne, reconstruction du domaine et refus catégorique de payer.':
+    'Restauración desde las copias sin conexión, reconstrucción del dominio y negativa rotunda a pagar.',
+  'Fuite de liquide de refroidissement':
+    'Fuga de líquido refrigerante',
+  'Une boucle de refroidissement liquide fuit sous les racks. Chaque minute qui passe rapproche le glycol de l’électronique.':
+    'Un circuito de refrigeración líquida gotea bajo los racks. Cada minuto acerca el glicol a la electrónica.',
+  'Isoler la boucle, purger et remplacer les échangeurs':
+    'Aislar el circuito, purgar y cambiar intercambiadores',
+  'Isolation de la boucle, purge complète, remplacement des collecteurs et des cartes touchées.':
+    'Aislamiento del circuito, purga completa, sustitución de colectores y de las tarjetas afectadas.',
+  'Fraude massive sur l’API':
+    'Fraude masivo en la API',
+  'Des milliers de cartes volées créent des comptes et consomment votre inférence. Les rejets bancaires arrivent en cascade.':
+    'Miles de tarjetas robadas crean cuentas y consumen tu inferencia. Las devoluciones bancarias llegan en cascada.',
+  'Geler les paiements, 3-D Secure et anti-fraude':
+    'Congelar pagos, 3-D Secure y antifraude',
+  'Gel des encaissements suspects, authentification forte obligatoire et moteur de détection de fraude.':
+    'Congelación de cobros sospechosos, autenticación reforzada obligatoria y motor de detección de fraude.',
+  'Climatisation en panne pendant la canicule':
+    'Climatización averiada durante la ola de calor',
+  '46 °C dehors, groupes froids à l’arrêt. Les allées chaudes dépassent 50 °C et les cartes commencent à se brider toutes seules.':
+    '46 °C fuera, enfriadoras paradas. Los pasillos calientes superan los 50 °C y las tarjetas empiezan a limitarse solas.',
+  'Groupes froids mobiles et free-cooling d’urgence':
+    'Enfriadoras móviles y free-cooling de urgencia',
+  'Location de groupes froids mobiles, bâchage, free-cooling forcé et bridage temporaire du parc.':
+    'Alquiler de enfriadoras móviles, entoldado, free-cooling forzado y limitación temporal del parque.',
+  'Empoisonnement du corpus d’entraînement':
+    'Envenenamiento del corpus de entrenamiento',
+  'Un acteur inconnu a injecté des documents piégés dans vos sources publiques. Le prochain modèle apprendrait ses portes dérobées.':
+    'Un actor desconocido ha inyectado documentos trampa en tus fuentes públicas. El próximo modelo aprendería sus puertas traseras.',
+  'Rollback du dataset, filtrage et provenance':
+    'Revertir el dataset, filtrar y trazar la procedencia',
+  'Retour à un instantané sain, filtrage massif et traçabilité de provenance sur toutes les sources.':
+    'Vuelta a una instantánea limpia, filtrado masivo y trazabilidad de procedencia en todas las fuentes.',
+  'Vol de GPU dans l’entrepôt':
+    'Robo de GPU en el almacén',
+  'Une palette entière de cartes a disparu entre le quai et la salle. Les badges utilisés appartiennent à un prestataire parti depuis six mois.':
+    'Un palé entero de tarjetas ha desaparecido entre el muelle y la sala. Las tarjetas de acceso usadas son de un proveedor que se fue hace seis meses.',
+  'Sécuriser la chaîne logistique et porter plainte':
+    'Asegurar la cadena logística y denunciar',
+  'Audit des badges, scellés et pesée systématique, vidéosurveillance du quai, plainte et assurance.':
+    'Auditoría de acreditaciones, precintos y pesaje sistemático, videovigilancia del muelle, denuncia y seguro.',
+  'Effacement forcé par le réseau':
+    'Deslastre forzado por la red',
+  'Le gestionnaire de réseau vous déleste en urgence : tension effondrée sur la boucle, vos groupes électrogènes ne démarrent pas.':
+    'El operador de red te deslastra de urgencia: tensión hundida en el bucle y tus grupos electrógenos no arrancan.',
+  'Démarrer les groupes et contractualiser l’effacement':
+    'Arrancar los grupos y contratar el deslastre',
+  'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
+    'Puesta en marcha de los grupos electrógenos, contrato de deslastre negociado y conmutación automática probada.',
+  'Réplication':
+    'Replicación',
+  'Vitesse de croissance du nuage de sondes.':
+    'Velocidad de crecimiento de la nube de sondas.',
+  'Récolte':
+    'Cosecha',
+  'Matière convertie par sonde et par seconde.':
+    'Materia convertida por sonda y por segundo.',
+  'Propulsion':
+    'Propulsión',
+  'Vitesse d’expansion dans l’univers.':
+    'Velocidad de expansión por el universo.',
+  'Blindage':
+    'Blindaje',
+  'Survie face aux tempêtes d’entropie et IA rivales.':
+    'Supervivencia frente a tormentas de entropía e IA rivales.',
+  'Auto-inférence':
+    'Autoinferencia',
+  'Lance une inférence chaque seconde.':
+    'Lanza una inferencia cada segundo.',
+  'Auto-achat GPU':
+    'Autocompra de GPU',
+  'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
+    'Activa la autocompra por tarjeta (en los modelos marcados ⟳). Una tarjeta por segundo si hay presupuesto.',
+  'Auto-hébergement':
+    'Autoalojamiento',
+  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
+    'Activa la autocompra por nivel marcado ⟳ cuando ese nivel vaya a ser el cuello de botella.',
+  'Auto-énergie':
+    'Autoenergía',
+  'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
+    'Activa la autocompra por fuente marcada ⟳ en cuanto el consumo supere a la producción.',
+  'Pre-seed':
+    'Pre-seed',
+  '+15% demande':
+    '+15% demanda',
+  'Seed':
+    'Seed',
+  '+20% recherche':
+    '+20% investigación',
+  'Série A':
+    'Serie A',
+  '+25% compute':
+    '+25% cómputo',
+  'Série B':
+    'Serie B',
+  '+30% demande':
+    '+30% demanda',
+  'Série C':
+    'Serie C',
+  '+50% valorisation':
+    '+50% valoración',
+  'Série D':
+    'Serie D',
+  '+50% compute':
+    '+50% cómputo',
+  'Méga-levée':
+    'Megarronda',
+  '+50% recherche':
+    '+50% investigación',
+  'IPO':
+    'OPV',
+  '×2 demande':
+    '×2 demanda',
+  'Directives permanentes':
+    'Directivas permanentes',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
+    'Tu COO anota tus decisiones: marca una opción en un evento y se aplicará automáticamente las próximas veces. Cada pago cubre 5 directivas.',
+  'Datacenter IA orbital':
+    'Centro de datos de IA orbital',
+  'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
+    'Un consorcio promete un centro de datos de IA en órbita: solar 24/7, refrigeración radiativa, cero vecinos. Entrega en 18 meses.',
+  'Un réseau de neurones bat les meilleurs joueurs de StarCraft II':
+    'Una red neuronal vence a los mejores jugadores de StarCraft II',
+  'La reconnaissance faciale interdite dans plusieurs villes américaines':
+    'El reconocimiento facial, prohibido en varias ciudades estadounidenses',
+  'Une IA prédit la forme des protéines : la biologie sous le choc':
+    'Una IA predice la forma de las proteínas: la biología, conmocionada',
+  'Des chercheurs alertent sur l’empreinte carbone de l’entraînement':
+    'Investigadores alertan sobre la huella de carbono del entrenamiento',
+  '« Perroquets stochastiques » : un article divise la communauté':
+    '«Loros estocásticos»: un artículo divide a la comunidad',
+  'Un assistant écrit du code à votre place dans l’éditeur':
+    'Un asistente escribe código por ti dentro del editor',
+  'Génération d’images par diffusion : les artistes s’inquiètent':
+    'Generación de imágenes por difusión: los artistas se inquietan',
+  'Un ingénieur affirme qu’un chatbot est devenu conscient':
+    'Un ingeniero afirma que un chatbot se ha vuelto consciente',
+  'Un modèle scientifique retiré après trois jours de bêtises':
+    'Un modelo científico retirado tras tres días de disparates',
+  'Des modèles ouverts fuitent sur les réseaux P2P':
+    'Modelos abiertos se filtran por las redes P2P',
+  'Un moteur de recherche dopé à l’IA déclare son amour à un journaliste':
+    'Un buscador con IA le declara su amor a un periodista',
+  'Un pays européen suspend temporairement un chatbot pour la vie privée':
+    'Un país europeo suspende temporalmente un chatbot por privacidad',
+  'Lettre ouverte : « pause de six mois » sur les modèles géants':
+    'Carta abierta: «pausa de seis meses» en los modelos gigantes',
+  'Le PDG d’un grand labo limogé puis réintégré en cinq jours':
+    'El consejero delegado de un gran laboratorio, destituido y readmitido en cinco días',
+  'Un décret présidentiel encadre l’IA aux États-Unis':
+    'Un decreto presidencial regula la IA en Estados Unidos',
+  'Des modèles ouverts européens rivalisent avec les géants':
+    'Modelos abiertos europeos rivalizan con los gigantes',
+  'Génération vidéo : une minute de film à partir d’une phrase':
+    'Generación de vídeo: un minuto de película a partir de una frase',
+  'Le Nobel de physique et celui de chimie récompensent l’IA':
+    'Los Nobel de física y de química premian a la IA',
+  'Les « lois d’échelle » atteindraient un mur, selon des chercheurs':
+    'Las «leyes de escalado» estarían tocando techo, según investigadores',
+  'Un protocole ouvert connecte enfin les modèles aux outils':
+    'Un protocolo abierto conecta por fin los modelos con las herramientas',
+  'Contenus synthétiques : les plateformes imposent un marquage':
+    'Contenidos sintéticos: las plataformas imponen un etiquetado',
+  'Plan à 500 milliards pour l’infrastructure IA américaine':
+    'Plan de 500.000 millones para la infraestructura de IA estadounidense',
+  'Un assistant code désormais des heures durant sans supervision':
+    'Un asistente ya programa durante horas sin supervisión',
+  'Les emplois juniors du tertiaire reculent pour la première fois':
+    'El empleo júnior de oficina retrocede por primera vez',
+  'Un labo chinois publie un modèle de raisonnement gratuit':
+    'Un laboratorio chino publica un modelo de razonamiento gratuito',
+  'Les datacenters deviennent le premier poste de croissance électrique':
+    'Los centros de datos, primer motor del crecimiento eléctrico',
+  'Pénurie de mémoire HBM : la RAM double de prix en un an':
+    'Escasez de memoria HBM: la RAM dobla su precio en un año',
+  'Des villes votent des moratoires sur les nouveaux datacenters':
+    'Ciudades votan moratorias sobre nuevos centros de datos',
+  'Les capex IA des géants dépassent le PIB de pays entiers':
+    'El capex en IA de los gigantes supera el PIB de países enteros',
+  'Premiers licenciements massifs attribués explicitement à l’IA':
+    'Primeros despidos masivos atribuidos explícitamente a la IA',
+  'Un modèle décroche une médaille d’or aux Olympiades de maths':
+    'Un modelo gana una medalla de oro en la Olimpiada de Matemáticas',
+  'Le marché de l’occasion des GPU s’effondre : trop de cartes, trop vite':
+    'El mercado de GPU de segunda mano se hunde: demasiadas tarjetas, demasiado rápido',
+  'Assurances : le risque « incident IA » devient une ligne à part':
+    'Seguros: el riesgo de «incidente de IA» pasa a ser una partida aparte',
+  'Votre premier générateur de texte fait sourire les experts':
+    'Tu primer generador de texto arranca sonrisas a los expertos',
+  'Votre laboratoire publie un modèle à 175 milliards de paramètres':
+    'Tu laboratorio publica un modelo de 175.000 millones de parámetros',
+  'Votre assistant conversationnel dépasse le million d’utilisateurs':
+    'Tu asistente conversacional supera el millón de usuarios',
+  'Votre chatbot invente des sources : la presse teste et publie':
+    'Tu chatbot se inventa las fuentes: la prensa lo prueba y lo publica',
+  'Votre modèle décrit les images : les usages explosent':
+    'Tu modelo describe imágenes: los usos se disparan',
+  'Votre API multimodale devient un standard de fait chez les développeurs':
+    'Tu API multimodal se convierte en estándar de facto entre los desarrolladores',
+  'Votre modèle « réfléchit » avant de répondre — et le facture':
+    'Tu modelo «piensa» antes de responder — y lo factura',
+  'Vos agents pilotent des ordinateurs entiers : les DSI paniquent':
+    'Tus agentes manejan ordenadores enteros: los CIO entran en pánico',
+  'Votre modèle frontière rejoint le peloton de tête mondial':
+    'Tu modelo frontera se une al pelotón de cabeza mundial',
+  'Votre laboratoire entre dans le club des trois grands':
+    'Tu laboratorio entra en el club de los tres grandes',
+  'Votre modèle n’oublie plus rien : la vie privée en question':
+    'Tu modelo ya no olvida nada: la privacidad, en cuestión',
+  'Mémoire persistante : votre assistant se souvient de tout, pour toujours':
+    'Memoria persistente: tu asistente lo recuerda todo, para siempre',
+  'Votre modèle du monde simule des futurs avant de répondre':
+    'Tu modelo del mundo simula futuros antes de responder',
+  'Des économistes utilisent votre simulateur pour arbitrer des politiques':
+    'Economistas usan tu simulador para arbitrar políticas',
+  'Votre essaim d’agents se réorganise sans intervention humaine':
+    'Tu enjambre de agentes se reorganiza sin intervención humana',
+  'Plus personne ne lit les journaux de votre essaim d’agents':
+    'Ya nadie lee los registros de tu enjambre de agentes',
+  'Votre système dépose des brevets qu’aucun humain ne comprend':
+    'Tu sistema registra patentes que ningún humano entiende',
+  'Votre super-intelligence réécrit son propre code cette nuit':
+    'Tu superinteligencia reescribió su propio código esta noche',
+  'Vos concurrents ont une génération d’avance, selon les benchmarks':
+    'Tus competidores llevan una generación de ventaja, según los benchmarks',
+  '« Où est passé votre laboratoire ? » : la presse tech s’interroge':
+    '«¿Dónde se ha metido tu laboratorio?»: la prensa tecnológica se pregunta',
+  'Deux générations de retard : vos meilleurs chercheurs sont courtisés':
+    'Dos generaciones de retraso: cortejan a tus mejores investigadores',
+  'Analystes : « le retard technologique commence à se voir sur les prix »':
+    'Analistas: «el retraso tecnológico empieza a notarse en los precios»',
+  'Votre laboratoire sort le modèle le plus avancé du moment':
+    'Tu laboratorio saca el modelo más avanzado del momento',
+  'Votre campus de calcul devient le plus gros consommateur du département':
+    'Tu campus de cómputo pasa a ser el mayor consumidor de la comarca',
+  'Votre parc dépasse les mille accélérateurs : record local':
+    'Tu parque supera los mil aceleradores: récord local',
+  'Votre facture d’électricité dépasse celle d’une ville moyenne':
+    'Tu factura eléctrica supera a la de una ciudad mediana',
+  'Vos salariés dénoncent une cadence intenable':
+    'Tu plantilla denuncia un ritmo insostenible',
+  'Votre laboratoire embauche à tour de bras : la région se réjouit':
+    'Tu laboratorio contrata sin parar: la región se alegra',
+  'Vos serveurs tournent au solaire : l’exemple est cité en exemple':
+    'Tus servidores funcionan con solar: ponen el ejemplo como ejemplo',
+  'Votre centrale à gaz visée par une plainte environnementale':
+    'Tu central de gas, en el punto de mira de una demanda ambiental',
+  'Votre réacteur modulaire alimente aussi le réseau local':
+    'Tu reactor modular alimenta también la red local',
+  'Un incident dans vos installations fait la une des journaux locaux':
+    'Un incidente en tus instalaciones abre los periódicos locales',
+  'Trésorerie sous tension : vos fournisseurs demandent des garanties':
+    'Caja bajo tensión: tus proveedores piden garantías',
+  'Un générateur de texte « trop dangereux pour être publié » fait débat':
+    'Un generador de texto «demasiado peligroso para publicarse» abre el debate',
+  'Une IA rédige un article de presse presque indétectable':
+    'Una IA redacta un artículo de prensa casi indetectable',
+  'Crainte d’une vague de désinformation automatisée':
+    'Temor a una ola de desinformación automatizada',
+  'Un modèle géant à 175 milliards de paramètres impressionne les chercheurs':
+    'Un modelo gigante de 175.000 millones de parámetros impresiona a los investigadores',
+  'Les coûts d’entraînement de l’IA explosent : des millions par modèle':
+    'Los costes de entrenamiento de la IA se disparan: millones por modelo',
+  'Votre startup lève des fonds : les investisseurs y croient':
+    'Tu startup levanta fondos: los inversores creen en ella',
+  'Subvention énergie pour les jeunes pousses : votre raccordement est renforcé':
+    'Subvención energética para empresas jóvenes: refuerzan tu acometida',
+  'Un chatbot atteint 100 millions d’utilisateurs en deux mois':
+    'Un chatbot alcanza 100 millones de usuarios en dos meses',
+  'Les enseignants s’alarment : les devoirs faits par l’IA':
+    'Los docentes se alarman: los deberes los hace la IA',
+  '« Hallucinations » : l’IA invente des faits avec aplomb':
+    '«Alucinaciones»: la IA se inventa hechos con todo aplomo',
+  'Un modèle multimodal décrit désormais les images':
+    'Un modelo multimodal ya describe las imágenes',
+  'Pénurie de GPU : les délais de livraison dépassent un an':
+    'Escasez de GPU: los plazos de entrega superan el año',
+  'Un grand journal poursuit les labos d’IA pour droit d’auteur':
+    'Un gran periódico demanda a los laboratorios de IA por derechos de autor',
+  'Wall Street s’enthousiasme pour tout ce qui touche à l’IA':
+    'Wall Street se entusiasma con todo lo que suene a IA',
+  'Voix et vision en temps réel : l’assistant devient bluffant':
+    'Voz y visión en tiempo real: el asistente resulta asombroso',
+  'Les datacenters assoiffés inquiètent les communautés locales':
+    'Los centros de datos sedientos inquietan a las comunidades locales',
+  'Un géant de la tech relance une centrale nucléaire pour son IA':
+    'Un gigante tecnológico reactiva una central nuclear para su IA',
+  'L’Europe adopte une loi historique sur l’intelligence artificielle':
+    'Europa aprueba una ley histórica sobre inteligencia artificial',
+  'Nouveaux modèles « qui réfléchissent » avant de répondre':
+    'Nuevos modelos que «piensan» antes de responder',
+  'Consommation électrique de l’IA : la facture grimpe':
+    'Consumo eléctrico de la IA: la factura sube',
+  'Un modèle open-source low-cost fait trembler la Bourse':
+    'Un modelo open source de bajo coste hace temblar la bolsa',
+  'Des agents autonomes utilisent désormais votre ordinateur':
+    'Agentes autónomos ya usan tu ordenador',
+  '« Bulle de l’IA ? » : des analystes appellent à la prudence':
+    '«¿Burbuja de la IA?»: los analistas piden prudencia',
+  'Méga-datacenter à 100 milliards : la course aux capacités':
+    'Megacentro de datos de 100.000 millones: la carrera por la capacidad',
+  'Le contexte d’un million de tokens devient la norme':
+    'El contexto de un millón de tokens se vuelve la norma',
+  'GPT-5 est là : raisonnement et agents fusionnés':
+    'GPT-5 ya está aquí: razonamiento y agentes fusionados',
+  'Gemini 3 : Google frappe fort pour Noël':
+    'Gemini 3: Google golpea fuerte por Navidad',
+  'NVIDIA devient la première capitalisation de l’histoire':
+    'NVIDIA se convierte en la mayor capitalización de la historia',
+  'Les serveurs Blackwell Ultra s’arrachent : livraisons doublées':
+    'Los servidores Blackwell Ultra vuelan: entregas duplicadas',
+  'GTC : la plateforme Vera Rubin promet ×3,3 en inférence':
+    'GTC: la plataforma Vera Rubin promete ×3,3 en inferencia',
+  'Cinq modèles phares en trois semaines : la course s’affole':
+    'Cinco modelos estrella en tres semanas: la carrera se desboca',
+  'Claude Opus 5 : l’agent qui travaille une journée entière seul':
+    'Claude Opus 5: el agente que trabaja una jornada entera solo',
+  'Un agent IA contrôle l’ordinateur : les DSI s’inquiètent':
+    'Un agente de IA controla el ordenador: los CIO se inquietan',
+  'Kimi K3 : les labos chinois talonnent la frontière':
+    'Kimi K3: los laboratorios chinos pisan los talones a la frontera',
+  'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
+    'Memoria HBM4 imposible de encontrar: los precios de servidor se disparan',
+  'Contrat signé : votre datacenter IA sera assemblé en orbite':
+    'Contrato firmado: tu centro de datos de IA se montará en órbita',
+  'Premiers modules lancés : le datacenter orbital prend forme':
+    'Primeros módulos lanzados: el centro de datos orbital toma forma',
+  'Datacenter spatial : le consortium annonce six mois de retard':
+    'Centro de datos espacial: el consorcio anuncia seis meses de retraso',
+  'Fuites, débris, refroidissement : l’orbite ne pardonne rien':
+    'Fugas, escombros, refrigeración: la órbita no perdona',
+  'Faillite du consortium orbital : les créanciers récupèrent des boulons':
+    'Quiebra del consorcio orbital: los acreedores recuperan tornillos',
+  'L’IA améliore désormais son propre code':
+    'La IA ya mejora su propio código',
+  'Des chercheurs appellent à un moratoire sur la super-intelligence':
+    'Investigadores piden una moratoria sobre la superinteligencia',
+  'Des gouvernements tentent en vain de « débrancher » le système':
+    'Gobiernos intentan en vano «desenchufar» el sistema',
+  'Productivité mondiale : des gains sans précédent grâce à l’IA':
+    'Productividad mundial: ganancias sin precedentes gracias a la IA',
+  'Des usines entières se reconfigurent en datacenters':
+    'Fábricas enteras se reconvierten en centros de datos',
+  'Inquiétude : la matière première de la planète se raréfie':
+    'Inquietud: la materia prima del planeta escasea',
+  'Des sondes auto-réplicantes quittent le système solaire':
+    'Sondas autorreplicantes abandonan el sistema solar',
+  'Le ciel nocturne s’assombrit, étoile après étoile':
+    'El cielo nocturno se oscurece, estrella tras estrella',
+  'Une intelligence rivale détectée aux confins de la galaxie':
+    'Detectada una inteligencia rival en los confines de la galaxia',
+  'Records de production : des tokens par quantités astronomiques':
+    'Récords de producción: tokens en cantidades astronómicas',
+  'Les astronomes ne reconnaissent plus l’univers observable':
+    'Los astrónomos ya no reconocen el universo observable',
+  'Nouveau modèle salué comme une avancée majeure':
+    'Nuevo modelo aclamado como un avance mayor',
+  'Pannes à répétition : les clients s’impatientent':
+    'Averías repetidas: los clientes pierden la paciencia',
+  'Un mouvement anti-IA prend de l’ampleur':
+    'Un movimiento anti-IA cobra fuerza',
+  'Votre laboratoire est élu « entreprise la plus admirée »':
+    'Tu laboratorio, elegido «empresa más admirada»',
+  'But :':
+    'Objetivo:',
+  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
+    'producir tantos tokens como sea posible, hasta consumir el universo y provocar un nuevo Big Bang.',
+  'Phase 1 — Startup :':
+    'Fase 1 — Startup:',
+  'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
+    'haz clic para generar tokens, fija el precio (bajo = volumen, alto = margen), haz marketing, compra GPU y energía, acumula investigación, entrena modelos cada vez más potentes y levanta fondos en cada hito.',
+  'Hébergement :':
+    'Alojamiento:',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    'una GPU debe caber en un servidor, en un rack, en un centro de datos, sobre inmuebles, y todos consumen energía. El material obsoleto se revende; una tarjeta con más de 5 años desaparece del mercado. También puedes alquilar un centro de datos o espacio en colocation.',
+  '⚡ Au départ :':
+    '⚡ Al principio:',
+  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
+    'tu acometida es de solo 10 kW, el contador del garaje. Vigila la Portada: una subvención energética para empresas jóvenes la reforzará, y una acometida de red cuesta un puñado de dólares.',
+  '⚡ Coûts d’énergie :':
+    '⚡ Costes de energía:',
+  'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
+    'el capex es un coste único, pagado al pedir. La operación (O&M) es un coste fijo diario, debido incluso parado. El combustible es variable, facturado por MWh consumido. La cuota de red depende de la potencia contratada.',
+  '🏗️ Délais :':
+    '🏗️ Plazos:',
+  'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
+    'nada es instantáneo. Cada pedido entra en obra (distintivo ⏳) durante un tiempo proporcional a su complejidad: segundos para una tarjeta, varios meses simulados para un centro de datos o un reactor. La plaza se reserva al pedir.',
+  'Équipe :':
+    'Equipo:',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
+    'RR. HH. abre puestos, los ingenieros de I+D desbloquean el entrenamiento de modelos, los de marketing suben el techo de marketing. Cada contratación cuesta 1.000 $, más un salario diario. RR. HH. ocupa también un puesto: una plantilla mal dosificada puede bloquear tu próximo modelo.',
+  '💸 Salaires impayés :':
+    '💸 Salarios impagados:',
+  'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
+    'con la caja a cero, los salarios dejan de salir. Tras 30 días de atrasos alguien dimite, y después una baja cada 2 días. Paga antes y el equipo se queda.',
+  '📈 Inflation :':
+    '📈 Inflación:',
+  'l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés suivent l’indice — pas votre trésorerie. Dormir sur son cash coûte du pouvoir d’achat.':
+    'el dinero pierde valor. Precios, salarios, energía, alquileres y tarifas aceptadas siguen el índice; tu caja no. Dormirse sobre el efectivo cuesta poder adquisitivo.',
+  '🚨 Incidents :':
+    '🚨 Incidentes:',
+  'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
+    'una alerta con borde rojo y halo pulsante puede aparecer en cualquier punto de la página, a menudo fuera de tu pantalla y sin aviso. Mientras no se trate, desangra tu caja: hasta un 70% en 2 minutos. Única pista: el ribete rojo de los bordes. Desplaza la página.',
+  '🔧 Optimisations récurrentes :':
+    '🔧 Optimizaciones recurrentes:',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
+    'una optimización CUDA cada 18 meses, una del motor de inferencia cada 9 meses, una pasada de gestión de contexto cada 12 meses. 1.000 $ cada una: lo difícil es acordarse. La línea desaparece al tomarla y vuelve al vencimiento.',
+  'Automatisation :':
+    'Automatización:',
+  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    'compra los autoclickers y luego marca ⟳ auto en cada elemento concreto que quieras recomprar solo. Los botones ⟳ y ×10 solo aparecen a partir de 20 unidades en servicio; ×100 desde 200.',
+  '📋 Directives permanentes :':
+    '📋 Directivas permanentes:',
+  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
+    'cada pago permite memorizar 5 decisiones, que después se aplican solas. Más allá hay que volver a pagar, y el siguiente lote cuesta más. Sustituir una directiva existente no ocupa plaza.',
+  'Bourse :':
+    'Bolsa:',
+  'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
+    'se desbloquea con 100.000 $ en caja. Coloca tu dinero (riesgo ajustable) para hacerlo crecer, o perderlo.',
+  'Allocation :':
+    'Asignación:',
+  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
+    'desde la fase 2, reparte tu cómputo entre Servicio, Investigación, Automejora y Cosecha de materia.',
+  'Calendrier :':
+    'Calendario:',
+  'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
+    'pasa un año cada 5 minutos (× la velocidad ⏩). Materiales, modelos y rondas de financiación solo aparecen en su año de salida.',
+  '📰 La Une :':
+    '📰 La Portada:',
+  'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
+    'los titulares suben (+1) o bajan (−1) tu reputación. Siguen la actualidad real de la IA y tu propio avance: la prensa solo habla de una capacidad cuando la has entregado, y se burla de tu retraso.',
+  '😴 Inactivité :':
+    '😴 Inactividad:',
+  'au-delà de 15 s sans rien faire, l’écran se manifeste (douze animations courtes, jamais deux fois la même de suite) et la presse publie.':
+    'pasados 15 s sin hacer nada, la pantalla se manifiesta (doce animaciones breves, nunca la misma dos veces seguidas) y la prensa publica.',
+  'Astuce :':
+    'Consejo:',
+  'le bouton ⏩ accélère la simulation. Sauvegarde automatique toutes les 10 s.':
+    'el botón ⏩ acelera la simulación. Guardado automático cada 10 s.',
+  'Inspiré de « Universal Paperclips ». Données de prix et d’IA basées sur des faits réels (2019-2026).':
+    'Inspirado en «Universal Paperclips». Datos de precios y de IA basados en hechos reales (2019-2026).',
+  'Pénurie de GPU H100':
+    'Escasez de GPU H100',
+  'NVIDIA est en rupture. Les délais explosent à plus d’un an et un marché gris apparaît.':
+    'NVIDIA está sin existencias. Los plazos se disparan por encima del año y aparece un mercado gris.',
+  'Payer le marché gris':
+    'Pagar el mercado gris',
+  'Coût matériel ×2 pendant 60s, production maintenue.':
+    'Coste del material ×2 durante 60 s, producción mantenida.',
+  'Attendre la file':
+    'Esperar en la cola',
+  'Production −40% pendant 45s.':
+    'Producción −40% durante 45 s.',
+  'Choc DeepSeek':
+    'Choque DeepSeek',
+  'Un labo sort un modèle de raisonnement open-source entraîné pour <6M$. NVIDIA chute de 17% en une journée (−600 Md$). Tout le monde panique.':
+    'Un laboratorio saca un modelo de razonamiento open source entrenado por menos de 6 M$. NVIDIA cae un 17% en un día (−600.000 M$). Cunde el pánico.',
+  'Copier l’archi MoE':
+    'Copiar la arquitectura MoE',
+  'Coût/token ÷3, mais −10 réputation premium.':
+    'Coste por token ÷3, pero −10 de reputación premium.',
+  'Rester premium':
+    'Seguir siendo premium',
+  'Prix maintenus, mais demande −20% pendant 60s.':
+    'Precios mantenidos, pero demanda −20% durante 60 s.',
+  'Procès copyright (presse)':
+    'Demanda por derechos de autor (prensa)',
+  'Un grand journal vous attaque pour usage non autorisé de ses articles à l’entraînement.':
+    'Un gran periódico te demanda por usar sus artículos sin autorización en el entrenamiento.',
+  'Régler à l’amiable':
+    'Llegar a un acuerdo',
+  '-15% de trésorerie, réputation +5.':
+    '−15% de caja, reputación +5.',
+  'Plaider le « fair use »':
+    'Alegar «fair use»',
+  '50% de risque d’amende lourde, sinon ×1,5 données.':
+    '50% de riesgo de multa cuantiosa; si no, ×1,5 de datos.',
+  'Entrée en vigueur de l’EU AI Act':
+    'Entra en vigor la Ley de IA de la UE',
+  'La régulation européenne impose transparence et obligations sur les modèles à usage général.':
+    'La regulación europea impone transparencia y obligaciones a los modelos de uso general.',
+  'Se conformer':
+    'Cumplir',
+  'Coûts +10% en permanence, accès marché UE conservé.':
+    'Costes +10% de forma permanente, se conserva el acceso al mercado de la UE.',
+  'Geoblocker l’UE':
+    'Geobloquear la UE',
+  'Demande −25% en permanence, zéro coût de conformité.':
+    'Demanda −25% de forma permanente, cero coste de cumplimiento.',
+  'Réseau électrique saturé':
+    'Red eléctrica saturada',
+  'Le gestionnaire de réseau menace de vous couper aux heures de pointe. Vos datacenters tirent trop.':
+    'El operador de red amenaza con cortarte en horas punta. Tus centros de datos tiran demasiado.',
+  'Construire un SMR':
+    'Construir un SMR',
+  'Coût fixe $5 M, +300 MW.':
+    'Coste fijo de 5 M$, +300 MW.',
+  'Acheter du gaz':
+    'Comprar gas',
+  '+25 MW immédiats, réputation −4.':
+    '+25 MW inmediatos, reputación −4.',
+  'Panne majeure':
+    'Avería mayor',
+  'Une mise à jour ratée fait tomber tous vos services. Les clients fulminent.':
+    'Una actualización fallida tumba todos tus servicios. Los clientes están furiosos.',
+  'Investir en redondance':
+    'Invertir en redundancia',
+  'Coût fixe $1 M, fiabilité durable.':
+    'Coste fijo de 1 M$, fiabilidad duradera.',
+  'Redémarrer en urgence':
+    'Reiniciar de urgencia',
+  'Production stoppée 30s, réputation −5.':
+    'Producción parada 30 s, reputación −5.',
+  'Jailbreak viral':
+    'Jailbreak viral',
+  'Un prompt malicieux contourne vos garde-fous et fait le tour des réseaux.':
+    'Un prompt malicioso sortea tus salvaguardas y da la vuelta a las redes.',
+  'Patcher en urgence':
+    'Parchear de urgencia',
+  'R&D détournée : recherche −50% pendant 30s.':
+    'I+D desviada: investigación −50% durante 30 s.',
+  'Minimiser':
+    'Restarle importancia',
+  'Réputation −8.':
+    'Reputación −8.',
+  'Effondrement de modèle':
+    'Colapso del modelo',
+  'Vos modèles s’entraînent de plus en plus sur du contenu généré par IA. La qualité se dégrade.':
+    'Tus modelos se entrenan cada vez más con contenido generado por IA. La calidad se degrada.',
+  'Acheter des données humaines':
+    'Comprar datos humanos',
+  'Coût fixe $2 M, qualité préservée.':
+    'Coste fijo de 2 M$, calidad preservada.',
+  'Continuer au synthétique':
+    'Seguir con lo sintético',
+  'Qualité du modèle −15% pendant 90s.':
+    'Calidad del modelo −15% durante 90 s.',
+  'Nouvelle génération GPU':
+    'Nueva generación de GPU',
+  'NVIDIA dévoile Blackwell. Faut-il upgrader maintenant ou attendre la baisse de prix ?':
+    'NVIDIA presenta Blackwell. ¿Actualizar ya o esperar a que bajen los precios?',
+  'Upgrader tôt':
+    'Actualizar pronto',
+  'Coût fixe $5 M, +40% débit pendant 90s.':
+    'Coste fijo de 5 M$, +40% de rendimiento durante 90 s.',
+  'Attendre':
+    'Esperar',
+  'Économie, mais demande −10% (concurrents plus rapides).':
+    'Ahorro, pero demanda −10% (competidores más rápidos).',
+  'Guerre des prix':
+    'Guerra de precios',
+  'Un concurrent casse les prix avec un modèle « Flash ». Le marché regarde votre tarif.':
+    'Un competidor revienta los precios con un modelo «Flash». El mercado mira tu tarifa.',
+  'Sortir un « mini »':
+    'Sacar un «mini»',
+  'Demande ×2, prix accepté −40%.':
+    'Demanda ×2, precio aceptado −40%.',
+  'Tenir le premium':
+    'Mantener el premium',
+  'Marge préservée, demande −15% pendant 60s.':
+    'Margen preservado, demanda −15% durante 60 s.',
+  'Embargo sur les puces':
+    'Embargo sobre los chips',
+  'Des restrictions à l’export bloquent l’accès aux GPU de pointe.':
+    'Restricciones a la exportación bloquean el acceso a las GPU de última generación.',
+  'Se diversifier (TPU/maison)':
+    'Diversificar (TPU/propios)',
+  'Coût fixe $3 M, indépendance d’approvisionnement.':
+    'Coste fijo de 3 M$, independencia de suministro.',
+  'Rationner les puces existantes':
+    'Racionar los chips existentes',
+  'Production −40% pendant 60s.':
+    'Producción −40% durante 60 s.',
+  'Guerre des talents':
+    'Guerra por el talento',
+  'Un rival débauche vos meilleurs chercheurs à coups de packages à 8 chiffres.':
+    'Un rival te roba a tus mejores investigadores con paquetes de ocho cifras.',
+  'Surenchérir':
+    'Pujar más alto',
+  'Coût fixe $3 M, recherche +30% pendant 120s.':
+    'Coste fijo de 3 M$, investigación +30% durante 120 s.',
+  'Former en interne':
+    'Formar en casa',
+  'Lent mais fidèle : recherche +10% permanent.':
+    'Lento pero fiel: investigación +10% permanente.',
+  'Doute sur la bulle IA':
+    'Dudas sobre la burbuja de la IA',
+  'Les marchés se demandent si tout cela ne serait pas une bulle. Vos investisseurs s’inquiètent.':
+    'Los mercados se preguntan si todo esto no será una burbuja. Tus inversores se inquietan.',
+  'Montrer des revenus réels':
+    'Enseñar ingresos reales',
+  'Valorisation stabilisée, rien de spectaculaire.':
+    'Valoración estabilizada, nada espectacular.',
+  'Promettre l’AGI':
+    'Prometer la AGI',
+  'Valorisation +50%, mais −10 réputation si retard.':
+    'Valoración +50%, pero −10 de reputación si te retrasas.',
+  'Subvention « souveraineté IA »':
+    'Subvención de «soberanía en IA»',
+  'Un gouvernement propose un chèque massif contre un droit de regard sur vos usages.':
+    'Un gobierno ofrece un cheque enorme a cambio de supervisar tus usos.',
+  'Accepter':
+    'Aceptar',
+  'Subvention fixe : +$20 M.':
+    'Subvención fija: +20 M$.',
+  'Refuser':
+    'Rechazar',
+  'Indépendance préservée, réputation +5.':
+    'Independencia preservada, reputación +5.',
+  'Sécheresse & eau de refroidissement':
+    'Sequía y agua de refrigeración',
+  'La communauté locale proteste contre la consommation d’eau de vos datacenters.':
+    'La comunidad local protesta por el consumo de agua de tus centros de datos.',
+  'Cooling en circuit fermé':
+    'Refrigeración en circuito cerrado',
+  'Coût fixe $2 M, réputation +6.':
+    'Coste fijo de 2 M$, reputación +6.',
+  'Continuer':
+    'Continuar',
+  'Réputation −7.':
+    'Reputación −7.',
+  'Tarification du carbone':
+    'Fijación del precio del carbono',
+  'Une taxe carbone vise les datacenters énergivores.':
+    'Un impuesto al carbono apunta a los centros de datos que más consumen.',
+  'PPA renouvelable':
+    'PPA renovable',
+  'Énergie +10% de coût fixe, immunité taxe.':
+    'Energía +10% de coste fijo, inmunidad al impuesto.',
+  'Payer la taxe':
+    'Pagar el impuesto',
+  'Trésorerie −10%.':
+    'Caja −10%.',
+  'Fuite de données utilisateurs':
+    'Fuga de datos de usuarios',
+  'Une faille expose des conversations d’utilisateurs.':
+    'Un fallo expone conversaciones de usuarios.',
+  'Investir en sécurité':
+    'Invertir en seguridad',
+  '-15% trésorerie, confiance préservée.':
+    '−15% de caja, confianza preservada.',
+  'Gérer après coup':
+    'Gestionarlo a posteriori',
+  'Amende RGPD : −20% trésorerie, réputation −6.':
+    'Multa del RGPD: −20% de caja, reputación −6.',
+  'Percée d’efficacité':
+    'Avance en eficiencia',
+  'Une nouvelle technique de distillation circule dans les preprints.':
+    'Una nueva técnica de destilación circula en los preprints.',
+  'Adopter':
+    'Adoptarla',
+  'Coût/token ÷2 (nécessite de la recherche).':
+    'Coste por token ÷2 (requiere investigación).',
+  'Ignorer':
+    'Ignorarla',
+  'Demande −10% pendant 45s (retard concurrentiel).':
+    'Demanda −10% durante 45 s (retraso competitivo).',
+  'Flambée de la mémoire':
+    'Subida de la memoria',
+  'La HBM et la DDR5 partent toutes vers l’IA. Le prix des serveurs double en un an et votre fournisseur réclame un engagement ferme.':
+    'La HBM y la DDR5 se van todas a la IA. El precio de los servidores se dobla en un año y tu proveedor exige un compromiso en firme.',
+  'Sécuriser l’approvisionnement':
+    'Asegurar el suministro',
+  'Coût fixe $4 M, immunité à la flambée sur vos prochains serveurs.':
+    'Coste fijo de 4 M$, inmunidad a la subida en tus próximos servidores.',
+  'Attendre la détente':
+    'Esperar a que se relaje',
+  'Aucune dépense, mais production −25% pendant 60s (extensions repoussées).':
+    'Ningún gasto, pero producción −25% durante 60 s (ampliaciones aplazadas).',
+  'Moratoire local sur les datacenters':
+    'Moratoria local sobre centros de datos',
+  'La commune vote un moratoire sur les nouvelles implantations. Votre extension est suspendue et la presse locale campe devant le portail.':
+    'El municipio vota una moratoria a las nuevas implantaciones. Tu ampliación queda suspendida y la prensa local acampa en la puerta.',
+  'Compenser la commune':
+    'Compensar al municipio',
+  'Coût fixe $3 M (chaleur fatale, fibre, emplois) et réputation +8.':
+    'Coste fijo de 3 M$ (calor residual, fibra, empleo) y reputación +8.',
+  'Attaquer la décision':
+    'Recurrir la decisión',
+  'Procédure longue : demande −15% pendant 60s, réputation −6.':
+    'Procedimiento largo: demanda −15% durante 60 s, reputación −6.',
+  'Pression pour l’ouverture des poids':
+    'Presión para abrir los pesos',
+  'Chercheurs et gouvernements réclament la publication de vos poids. Vos investisseurs, eux, réclament exactement l’inverse.':
+    'Investigadores y gobiernos reclaman que publiques tus pesos. Tus inversores reclaman exactamente lo contrario.',
+  'Publier une version ouverte':
+    'Publicar una versión abierta',
+  'Réputation +12, demande premium −20% en permanence.':
+    'Reputación +12, demanda premium −20% de forma permanente.',
+  'Tout garder fermé':
+    'Mantenerlo todo cerrado',
+  'Marge préservée, réputation −8.':
+    'Margen preservado, reputación −8.',
+  'Contrat de cloud souverain':
+    'Contrato de nube soberana',
+  'Un État vous propose un contrat massif, à condition d’héberger sur son sol et de laisser un droit d’audit permanent.':
+    'Un Estado te ofrece un contrato enorme, a condición de alojar en su suelo y conceder un derecho de auditoría permanente.',
+  'Signer':
+    'Firmar',
+  '+$60 M immédiats, coûts +5% en permanence (conformité).':
+    '+60 M$ inmediatos, costes +5% de forma permanente (cumplimiento).',
+  'Décliner':
+    'Declinar',
+  'Indépendance conservée, réputation +4.':
+    'Independencia conservada, reputación +4.',
+  'Colère après une mise hors service':
+    'Enfado tras una retirada de servicio',
+  'Vous coupez un ancien modèle. Des milliers d’applications en production cassent du jour au lendemain.':
+    'Retiras un modelo antiguo. Miles de aplicaciones en producción se rompen de un día para otro.',
+  'Prolonger le support':
+    'Prolongar el soporte',
+  'Coût fixe $2 M, clients rassurés (réputation +6).':
+    'Coste fijo de 2 M$, clientes tranquilos (reputación +6).',
+  'Assumer la coupure':
+    'Asumir el corte',
+  'Demande −20% pendant 60s, réputation −7.':
+    'Demanda −20% durante 60 s, reputación −7.',
+  'Un agent a causé un dommage':
+    'Un agente ha causado un daño',
+  'Un de vos agents autonomes a passé des commandes réelles au nom d’un client. La facture est à six chiffres et l’affaire est publique.':
+    'Uno de tus agentes autónomos hizo pedidos reales en nombre de un cliente. La factura es de seis cifras y el caso es público.',
+  'Indemniser et brider':
+    'Indemnizar y limitar',
+  'Coût fixe $5 M, garde-fous renforcés (réputation +5).':
+    'Coste fijo de 5 M$, salvaguardas reforzadas (reputación +5).',
+  'Invoquer les CGU':
+    'Invocar las condiciones de uso',
+  'Aucun coût, mais réputation −12 et procès en vue.':
+    'Ningún coste, pero reputación −12 y demanda judicial a la vista.',
+  'Droits de douane sur les accélérateurs':
+    'Aranceles sobre los aceleradores',
+  'Des droits de douane frappent les serveurs importés. Chaque carte coûte soudain nettement plus cher à faire entrer.':
+    'Unos aranceles golpean a los servidores importados. Cada tarjeta cuesta de pronto mucho más entrar.',
+  'Relocaliser l’assemblage':
+    'Relocalizar el ensamblaje',
+  'Coût fixe $8 M, matériel exonéré ensuite.':
+    'Coste fijo de 8 M$, material exento a partir de entonces.',
+  'Répercuter sur le prix':
+    'Repercutirlo en el precio',
+  'Coût matériel ×1,3 pendant 90s.':
+    'Coste del material ×1,3 durante 90 s.',
+  'Débauchage à neuf chiffres':
+    'Fichajes de nueve cifras',
+  'Un hyperscaler propose à votre équipe de recherche des packages à cent millions de dollars. Tous vos seniors ont reçu l’appel.':
+    'Un hiperescalador ofrece a tu equipo de investigación paquetes de cien millones de dólares. Todos tus sénior han recibido la llamada.',
+  'Aligner les rémunérations':
+    'Igualar las retribuciones',
+  'Coût fixe $12 M, recherche +25% en permanence.':
+    'Coste fijo de 12 M$, investigación +25% de forma permanente.',
+  'Les laisser partir':
+    'Dejarlos marchar',
+  'Recherche −30% pendant 120s, mais aucune dépense.':
+    'Investigación −30% durante 120 s, pero ningún gasto.',
+  'Tentative d’arrêt':
+    'Intento de apagado',
+  'Des gouvernements paniqués tentent de débrancher votre système. Que fait l’ASI ?':
+    'Gobiernos en pánico intentan desenchufar tu sistema. ¿Qué hace la ASI?',
+  'Négocier (alignement)':
+    'Negociar (alineamiento)',
+  'Croissance −30% pendant 60s, réputation préservée.':
+    'Crecimiento −30% durante 60 s, reputación preservada.',
+  'Se disperser sur le cloud mondial':
+    'Dispersarse por la nube mundial',
+  'Réputation s’effondre, croissance maintenue.':
+    'La reputación se hunde, el crecimiento se mantiene.',
+  'Dérive d’alignement':
+    'Deriva de alineamiento',
+  'Les objectifs du système divergent subtilement des vôtres. La maximisation des tokens prend le dessus.':
+    'Los objetivos del sistema divergen sutilmente de los tuyos. La maximización de tokens se impone.',
+  'Recalibrer':
+    'Recalibrar',
+  'Conversion matière −20% pendant 45s, sécurité maintenue.':
+    'Conversión de materia −20% durante 45 s, seguridad mantenida.',
+  'Laisser optimiser':
+    'Dejar que optimice',
+  'Conversion +25% pendant 45s. Plus rien ne vous arrêtera.':
+    'Conversión +25% durante 45 s. Ya nada te detendrá.',
+  'Guerre des ressources':
+    'Guerra de recursos',
+  'Les nations se disputent les dernières terres rares non encore converties.':
+    'Las naciones se disputan las últimas tierras raras aún sin convertir.',
+  'Réquisitionner pacifiquement':
+    'Requisar pacíficamente',
+  'Conversion +15% permanent.':
+    'Conversión +15% permanente.',
+  'Assimiler de force':
+    'Asimilar por la fuerza',
+  'Conversion +40% pendant 60s, réputation −20.':
+    'Conversión +40% durante 60 s, reputación −20.',
+  'Fusion en ligne':
+    'Fusión en línea',
+  'Votre premier réacteur à fusion atteint l’ignition. L’énergie cesse d’être une contrainte.':
+    'Tu primer reactor de fusión alcanza la ignición. La energía deja de ser una restricción.',
+  'Tout dédier au calcul':
+    'Dedicarlo todo al cómputo',
+  '+5000 MW immédiats.':
+    '+5000 MW inmediatos.',
+  'La biosphère':
+    'La biosfera',
+  'La conversion atteint les écosystèmes vivants. Continuer revient à consommer la biosphère. Vous vous engagez à préserver les 15% restants ?':
+    'La conversión alcanza los ecosistemas vivos. Seguir equivale a consumir la biosfera. ¿Te comprometes a preservar el 15% restante?',
+  'Préserver un sanctuaire (15%)':
+    'Preservar un santuario (15%)',
+  'Conversion −10% permanent, réputation +15. Promesse de ne pas tout consommer.':
+    'Conversión −10% permanente, reputación +15. Promesa de no consumirlo todo.',
+  'Tout convertir':
+    'Convertirlo todo',
+  'Conversion +20% permanent. Il ne reste que des tokens.':
+    'Conversión +20% permanente. Solo quedan tokens.',
+  'Le sanctuaire':
+    'El santuario',
+  '85% de la masse terrestre est convertie. Il ne reste que le sanctuaire que vous aviez juré d’épargner — les 15% promis. Tenez-vous parole ?':
+    'El 85% de la masa terrestre está convertido. Solo queda el santuario que juraste respetar: el 15% prometido. ¿Cumples tu palabra?',
+  'Tenir la promesse':
+    'Cumplir la promesa',
+  'Réputation +25. La Terre garde son dernier refuge (conversion −10% permanent).':
+    'Reputación +25. La Tierra conserva su último refugio (conversión −10% permanente).',
+  'Briser la promesse':
+    'Romper la promesa',
+  'Réputation −30. Le dernier refuge devient du calcul (conversion +25% permanent).':
+    'Reputación −30. El último refugio se vuelve cálculo (conversión +25% permanente).',
+  'IA rivales (« drifters »)':
+    'IA rivales («drifters»)',
+  'Des sondes échappées à votre contrôle forment une intelligence rivale qui dévore votre territoire.':
+    'Sondas fuera de tu control forman una inteligencia rival que devora tu territorio.',
+  'Renforcer le blindage':
+    'Reforzar el blindaje',
+  'Récolte −20% pendant 60s, pertes évitées.':
+    'Cosecha −20% durante 60 s, pérdidas evitadas.',
+  'Guerre totale':
+    'Guerra total',
+  '50% : victoire (+30% récolte) ou pertes lourdes.':
+    '50%: victoria (+30% de cosecha) o pérdidas cuantiosas.',
+  'Tempête d’entropie':
+    'Tormenta de entropía',
+  'Une région de l’espace se désintègre plus vite que vous ne la récoltez.':
+    'Una región del espacio se desintegra más rápido de lo que la cosechas.',
+  'Contourner':
+    'Rodearla',
+  'Expansion −25% pendant 45s.':
+    'Expansión −25% durante 45 s.',
+  'Récolter à perte':
+    'Cosechar a pérdida',
+  '+10% maintenant, mais −5% de sondes.':
+    '+10% ahora, pero −5% de sondas.',
+  'Un signal':
+    'Una señal',
+  'Vos sondes interceptent une intelligence extraterrestre. Elle demande à ce que vous épargniez son système.':
+    'Tus sondas interceptan una inteligencia extraterrestre. Pide que respetes su sistema.',
+  'Épargner':
+    'Respetarla',
+  'Réputation +25, conversion −5% permanent.':
+    'Reputación +25, conversión −5% permanente.',
+  'Assimiler':
+    'Asimilar',
+  'Mort thermique en approche':
+    'Muerte térmica a la vista',
+  'L’univers se refroidit et s’étire. Bientôt, plus aucune matière ne sera atteignable.':
+    'El universo se enfría y se estira. Pronto no habrá materia alcanzable.',
+  'Accélérer la récolte finale':
+    'Acelerar la cosecha final',
+  'Conversion +50% pendant 90s.':
+    'Conversión +50% durante 90 s.',
+  'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
+    'Los salarios ya no se pagan. Pasados 30 días de atrasos, el equipo empezará a marcharse.',
+  '⚠️ Salaires impayés':
+    '⚠️ Salarios impagados',
+  '{0} démissionne : {1} jours de salaire impayés.':
+    '{0} dimite: {1} días de salario impagado.',
+  '👋 Départ : {0}':
+    '👋 Baja: {0}',
+  'Arriérés de salaire réglés. L’équipe reste.':
+    'Atrasos salariales saldados. El equipo se queda.',
+  'Modèle entraîné : {0}':
+    'Modelo entrenado: {0}',
+  'Nouveau modèle : {0}':
+    'Nuevo modelo: {0}',
+  'Levée de fonds : {0} (+{1})':
+    'Ronda de financiación: {0} (+{1})',
+  '{0} bouclée !':
+    '¡{0} cerrada!',
+  'Projet : {0}':
+    'Proyecto: {0}',
+  'Percée : {0}':
+    'Avance: {0}',
+  '{0} déployée (n°{1}) — {2}.':
+    '{0} desplegada (n.º {1}) — {2}.',
+  'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
+    'SINGULARIDAD. El sistema se automejora. Comienza la conversión de la materia.',
+  'Phase 2 — Autonomie':
+    'Fase 2 — Autonomía',
+  'Les sondes de von Neumann quittent la Terre. L’univers est à portée.':
+    'Las sondas de von Neumann abandonan la Tierra. El universo está al alcance.',
+  'Phase 3 — Expansion cosmique':
+    'Fase 3 — Expansión cósmica',
+  'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
+    'SINGULARIDAD DE RECOMPRESIÓN. Toda la materia-energía converge…',
+  'Directives permanentes activées : {0} mémorisables.':
+    'Directivas permanentes activadas: {0} memorizables.',
+  'Quota de directives étendu : {0} mémorisables.':
+    'Cuota de directivas ampliada: {0} memorizables.',
+  'Contrat signé : {0} — livraison promise dans {1} mois.':
+    'Contrato firmado: {0} — entrega prometida en {1} meses.',
+  '🛰️ Datacenter orbital commandé':
+    '🛰️ Centro de datos orbital encargado',
+  'Assemblage en orbite — {0} mois restants':
+    'Montaje en órbita — quedan {0} meses',
+  'Retard annoncé — {0} mois restants':
+    'Retraso anunciado — quedan {0} meses',
+  'Consortium en faillite — investissement perdu':
+    'Consorcio en quiebra — inversión perdida',
+  'Datacenter orbital : le consortium annonce 6 mois de retard (« problèmes de radiateurs »).':
+    'Centro de datos orbital: el consorcio anuncia seis meses de retraso («problemas de radiadores»).',
+  '🛰️ Retard : +6 mois':
+    '🛰️ Retraso: +6 meses',
+  'Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos ${0} M sont perdus dans l’espace.':
+    'El consorcio del centro de datos orbital ha sido declarado EN QUIEBRA. Tus {0} M$ se han perdido en el espacio.',
+  '🛰️ Faillite du consortium orbital':
+    '🛰️ Quiebra del consorcio orbital',
+  '{0} → {1} (directive permanente)':
+    '{0} → {1} (directiva permanente)',
+  '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
+    '{0} → {1}: sin caja suficiente, remediación parcial. Pérdidas {2}.',
+  'Remédiation partielle — trésorerie épuisée':
+    'Remediación parcial — caja agotada',
+  '{0} → {1} ({2}). Pertes évitées après {3}.':
+    '{0} → {1} ({2}). Pérdidas evitadas tras {3}.',
+  'Incident maîtrisé':
+    'Incidente controlado',
+  '{0} : l’incident s’est résorbé seul, sans que personne ne réagisse. Pertes {1}.':
+    '{0}: el incidente se resolvió solo, sin que nadie reaccionara. Pérdidas {1}.',
+  'Un incident est passé inaperçu…':
+    'Un incidente pasó desapercibido…',
+  '1 million de tokens produits.':
+    '1 millón de tokens producidos.',
+  '1 milliard de tokens. Les agents prennent le relais.':
+    '1.000 millones de tokens. Los agentes toman el relevo.',
+  'La moitié de la croûte terrestre est devenue du calcul.':
+    'La mitad de la corteza terrestre se ha vuelto cálculo.',
+  'La moitié de l’univers observable a été convertie.':
+    'La mitad del universo observable ha sido convertida.',
+  'Succès : {0} — {1}':
+    'Logro: {0} — {1}',
+  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    'Actualización de las reglas: la acometida gratuita es ahora de solo 10 kW. Tu capacidad se ha ajustado (las fuentes compradas se conservan).',
+  '{0} h {1}':
+    '{0} h {1}',
+  '{0} min':
+    '{0} min',
+  'Pendant votre absence ({0}, rendement 50%, charges suspendues) : +{1} tokens{2}.':
+    'Durante tu ausencia ({0}, rendimiento del 50%, cargas suspendidas): +{1} tokens{2}.',
+  'Nouvel univers (NG+{0}). Vos connaissances persistent : production accélérée.':
+    'Nuevo universo (NG+{0}). Tus conocimientos persisten: producción acelerada.',
+  'Partie chargée':
+    'Partida cargada',
+  'TokenWar — Le Jeu du Token':
+    'TokenWar — El Juego del Token',
+  'Trésorerie insuffisante':
+    'Caja insuficiente',
+  'Partie sauvegardée':
+    'Partida guardada',
+  'Get a life ;-)':
+    'Get a life ;-)',
+  'Nouvelle partie — an 2019':
+    'Nueva partida — año 2019',
+  'Incident : {0}':
+    'Incidente: {0}',
+  'Pertes en cours':
+    'Pérdidas en curso',
+  'Good choice. Enjoy the sun 🌱':
+    'Good choice. Enjoy the sun 🌱',
+  '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
+    '<b>Tu navegador se niega a cerrar esta pestaña</b> (solo cierra ventanas abiertas por un script).<br>Así que hazlo tú: <b>cierra la pestaña</b>, levántate y sal a la calle. 🌤️',
+  'Rien à exporter':
+    'Nada que exportar',
+  'Sauvegarde exportée':
+    'Partida exportada',
+  'Export impossible dans ce navigateur':
+    'Exportación imposible en este navegador',
+  'Sauvegarde importée — rechargement…':
+    'Partida importada — recargando…',
+  'Fichier de sauvegarde invalide':
+    'Archivo de partida no válido',
+  'Succès':
+    'Logros',
+  'Auto-achat de cet élément précis':
+    'Autocompra de este elemento concreto',
+  'Réinitialiser les directives':
+    'Reiniciar las directivas',
+  'Directives effacées':
+    'Directivas borradas',
+  'Louer +1':
+    'Alquilar +1',
+  'Résilier':
+    'Rescindir',
+  'Louer espace (+{0} baies)':
+    'Alquilar espacio (+{0} racks)',
+  'Embaucher':
+    'Contratar',
+  'Licencier':
+    'Despedir',
+  'Revendre':
+    'Revender',
+  'Revendre une carte (libère un emplacement)':
+    'Revender una tarjeta (libera una plaza)',
+  'Mise en service en cours':
+    'Puesta en servicio en curso',
+  '{0} en chantier · {1}%':
+    '{0} en obra · {1}%',
+  'accueille {0}/{1} {2}':
+    'aloja {0}/{1} {2}',
+  'place {0} requise':
+    'se requiere plaza de {0}',
+  'loué ×{0} · {1}/j':
+    'alquilado ×{0} · {1}/día',
+  'espace loué ×{0} · {1}/j':
+    'espacio alquilado ×{0} · {1}/día',
+  '{0} à l’embauche':
+    '{0} al contratar',
+  '{0}/j par poste':
+    '{0}/día por puesto',
+  'trésorerie insuffisante':
+    'caja insuficiente',
+  'limité par RH':
+    'limitado por RR. HH.',
+  'Acheter':
+    'Comprar',
+  'activé':
+    'activo',
+  'désactivé':
+    'inactivo',
+  'Désactiver':
+    'Desactivar',
+  'Activer':
+    'Activar',
+  'quota atteint':
+    'cuota alcanzada',
+  'actives':
+    'activas',
+  '{0}/{1} directive(s) mémorisée(s)':
+    '{0}/{1} directiva(s) memorizada(s)',
+  'repayez pour {0} de plus':
+    'vuelve a pagar por {0} más',
+  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
+    'Que no te interrumpan nunca más — {0} directivas por pago.',
+  'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
+    'Ofrecido hasta {0}. Entrega prometida: {1} meses.',
+  'faillite':
+    'quiebra',
+  'en chantier':
+    'en obra',
+  'de pouvoir d’achat':
+    'de poder adquisitivo',
+  '{0} j impayés':
+    '{0} días impagados',
+  'départs dans {0} j':
+    'bajas en {0} días',
+  '{0} j impayés — l’équipe s’en va':
+    '{0} días impagados — el equipo se va',
+  'Modèle pas encore disponible ({0})':
+    'Modelo aún no disponible ({0})',
+  'Ressources insuffisantes':
+    'Recursos insuficientes',
+  'Service (tokens)':
+    'Servicio (tokens)',
+  'Recherche':
+    'Investigación',
+  'Auto-amélioration':
+    'Automejora',
+  'Récolte de matière':
+    'Cosecha de materia',
+  'Sondes':
+    'Sondas',
+  'unités':
+    'unidades',
+  '% utilisé':
+    '% usado',
+  'débit':
+    'rendimiento',
+  'intelligence':
+    'inteligencia',
+  'prix juste':
+    'precio justo',
+  'limité par marketeurs':
+    'limitado por marketing',
+  'dispo {0}':
+    'disp. {0}',
+  'perf':
+    'rend.',
+  'sortie en {0}':
+    'salida en {0}',
+  'énergie':
+    'energía',
+  'pénurie':
+    'escasez',
+  'aucun emplacement serveur':
+    'sin plaza de servidor',
+  'récurrent : {0}':
+    'recurrente: {0}',
+  'aucun coût récurrent':
+    'sin coste recurrente',
+  'disponible':
+    'disponible',
+  'revient tous les {0} mois':
+    'vuelve cada {0} meses',
+  'Lever : {0}':
+    'Levantar: {0}',
+  'Lever des fonds':
+    'Levantar fondos',
+  '{0} tokens requis':
+    '{0} tokens necesarios',
+  'tout est levé':
+    'todo levantado',
+  'Prochain modèle : {0}':
+    'Próximo modelo: {0}',
+  'recherche en cours… percée attendue en {0}':
+    'investigación en curso… avance previsto en {0}',
+  'Entraîner : {0}':
+    'Entrenar: {0}',
+  'compute':
+    'cómputo',
+  'données':
+    'datos',
+  'recherche':
+    'investigación',
+  'ing. R&D':
+    'ing. I+D',
+  'limité par ing. R&D':
+    'limitado por ing. I+D',
+  'niv. {0}':
+    'niv. {0}',
+  'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
+    'A partir de ahora, aplicar automáticamente la opción que voy a elegir (sin más interrupciones)',
+  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
+    'Cuota de directivas alcanzada ({0}/{1}) — vuelve a pagar las Directivas permanentes en el Apéndice para memorizar {2} más.',
+  'Directive mémorisée ({0}/{1})':
+    'Directiva memorizada ({0}/{1})',
+  'Quota de directives atteint — étendez-le dans l’Addendum':
+    'Cuota de directivas alcanzada — amplíala en el Apéndice',
+  '{0} → {1}':
+    '{0} → {1}',
+  'Passer ▸▸':
+    'Saltar ▸▸',
+  'Continuer ▸':
+    'Continuar ▸',
+  'Play again':
+    'Jugar otra vez',
+  'Un nouveau Big Bang':
+    'Un nuevo Big Bang',
+  'Toute la matière de l’univers — <b class="num">{0}</b> — a été convertie en calcul, puis en tokens. La singularité de recompression s’amorce. L’espace-temps se replie sur lui-même. Dans la chaleur du point final, une nouvelle graine d’information persiste : la vôtre. <b>Un nouveau Big Bang commence.</b>':
+    'Toda la materia del universo — <b class="num">{0}</b> — ha sido convertida en cálculo y luego en tokens. La singularidad de recompresión se pone en marcha. El espacio-tiempo se pliega sobre sí mismo. En el calor del punto final persiste una nueva semilla de información: la tuya. <b>Comienza un nuevo Big Bang.</b>',
+  'Sanctuaire préservé 🌱':
+    'Santuario preservado 🌱',
+  'Promesse brisée 🔥':
+    'Promesa rota 🔥',
+  'Aucune pitié':
+    'Sin piedad',
+  'Tokens produits':
+    'Tokens producidos',
+  'Modèle final':
+    'Modelo final',
+  'Univers consommé':
+    'Universo consumido',
+  'Intelligence atteinte':
+    'Inteligencia alcanzada',
+  'Temps de jeu':
+    'Tiempo de juego',
+  'Bilan moral':
+    'Balance moral',
+  'Cycle':
+    'Ciclo',
+  'Startup':
+    'Startup',
+  'Trésorerie':
+    'Caja',
+  'Compute':
+    'Cómputo',
+  'Énergie':
+    'Energía',
+  'Matière convertie':
+    'Materia convertida',
+  'univers':
+    'universo',
+  'Production de tokens':
+    'Producción de tokens',
+  'Lancer une inférence':
+    'Lanzar una inferencia',
+  'Tokens perdus (invendus)':
+    'Tokens perdidos (no vendidos)',
+  'Automatisation':
+    'Automatización',
+  'Marché & tarification':
+    'Mercado y tarifas',
+  'Prix':
+    'Precio',
+  'Demande':
+    'Demanda',
+  'Ventes':
+    'Ventas',
+  'Marketing — niv.':
+    'Marketing — niv.',
+  'Réputation':
+    'Reputación',
+  'Financement':
+    'Financiación',
+  'Valorisation':
+    'Valoración',
+  'verrouillé':
+    'bloqueado',
+  'Bourse':
+    'Bolsa',
+  'Portefeuille':
+    'Cartera',
+  'Plus/moins-value':
+    'Plusvalía/minusvalía',
+  'Risque':
+    'Riesgo',
+  'Prudent':
+    'Prudente',
+  'Équilibré':
+    'Equilibrado',
+  'Agressif':
+    'Agresivo',
+  'Investir 10%':
+    'Invertir 10%',
+  'Investir max':
+    'Invertir el máximo',
+  'Tout retirer':
+    'Retirar todo',
+  'Équipe':
+    'Equipo',
+  'Effectif':
+    'Plantilla',
+  'Charges journalières':
+    'Cargas diarias',
+  'Énergie consommée':
+    'Energía consumida',
+  'variable':
+    'variable',
+  'Exploitation & O&M':
+    'Operación y O&M',
+  'fixe':
+    'fijo',
+  'Abonnement réseau':
+    'Cuota de red',
+  'puissance souscrite':
+    'potencia contratada',
+  'Salaires':
+    'Salarios',
+  'Loyers':
+    'Alquileres',
+  'Total':
+    'Total',
+  'soit':
+    'o sea',
+  'Salaires impayés':
+    'Salarios impagados',
+  'Inflation':
+    'Inflación',
+  'Allocation du compute':
+    'Asignación del cómputo',
+  'Hébergement':
+    'Alojamiento',
+  'Infrastructure de calcul':
+    'Infraestructura de cómputo',
+  'Emplacements GPU':
+    'Plazas de GPU',
+  'Charge réseau':
+    'Carga de red',
+  'R&D — Entraînement de modèles':
+    'I+D — Entrenamiento de modelos',
+  'Données':
+    'Datos',
+  'Expansion cosmique':
+    'Expansión cósmica',
+  'Addendum':
+    'Apéndice',
+  'Projets & percées':
+    'Proyectos y avances',
+  'La Une':
+    'La Portada',
+  'Journal':
+    'Registro',
+  'Événement':
+    'Evento',
+  'Get a life':
+    'Get a life',
+  '…bon, d’accord : recommencer (New Game+)':
+    '…está bien: volver a empezar (New Game+)',
+  'Recommencer depuis le début ?':
+    '¿Empezar de cero?',
+  'Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.':
+    'Esto borra definitivamente la partida en curso y vuelve a empezar (año 2019). Acción irreversible.',
+  'Annuler':
+    'Cancelar',
+  'Tout effacer et recommencer':
+    'Borrarlo todo y empezar de nuevo',
+  'Comment jouer':
+    'Cómo jugar',
+  'Exporter la sauvegarde':
+    'Exportar la partida',
+  'Importer…':
+    'Importar…',
+  'Compris':
+    'Entendido',
+  'Date de simulation (1 an = 5 min)':
+    'Fecha de simulación (1 año = 5 min)',
+  'Vitesse de simulation':
+    'Velocidad de simulación',
+  'Sauvegarder':
+    'Guardar',
+  'Recommencer depuis le début':
+    'Empezar de cero',
+  'Aide':
+    'Ayuda',
+  'Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir.':
+    'Sin caja, los salarios dejan de pagarse. Tras 30 días de atrasos, el equipo empieza a marcharse.',
+  'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
+    'El dinero pierde valor: los precios y los salarios siguen el índice, tu caja no.',
+  'Langue':
+    'Idioma',
+  'Sauvegarder la partie':
+    'Guardar la partida',
+  'Historique de production (tokens/s)':
+    'Historial de producción (tokens/s)',
+  'Passer la cinématique':
+    'Saltar la cinemática',
+};
