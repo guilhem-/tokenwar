@@ -178,7 +178,7 @@ export const INFRA = [
 // ---------------------------------------------------------------------
 export const ENERGY = [
   { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0,
-    fuelMWh:78, omDaily:0, subMWDay:260, build:5,
+    fuelMWh:78, omDaily:0, subMWDay:60, build:5,
     desc:'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.' },
   { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1,
     fuelMWh:0, omDaily:38, build:9,
@@ -815,6 +815,13 @@ export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
 export const BASE_MARKETING = 10;     // niveau de marketing atteignable sans marketeur
 export const ELEC_PRICE_MWH = 80;    // prix de l electricite ($/MWh) -> charge journaliere
 export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (colocation)
+export const HIRE_COST = 1000;       // frais d'embauche (annonce, entretiens, materiel, onboarding)
+// Salaires impayes : au bout de 30 jours d'arrieres, les salaries commencent a
+// partir — un depart tous les 2 jours supplementaires, jusqu'a l'entreprise vide.
+export const UNPAID_QUIT_DAYS = 30;
+export const UNPAID_QUIT_EVERY = 2;
+// Puissance du raccordement d'origine, offert : 10 kW (le compteur du garage).
+export const BASE_GRID_MW = 0.01;
 
 
 // ---------------------------------------------------------------------
@@ -855,6 +862,7 @@ export const ADDENDUM = {
 export const SPACE_DC = {
   id:'spacedc', name:'Datacenter IA orbital', cost:5e7, from:2030, to:2040,
   buildMonths:18, delayMonths:6,
+  hideMonths:6,   // six mois apres la faillite, l'affaire est classee : la ligne disparait
   desc:'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.',
 };
 
@@ -972,6 +980,13 @@ export const HEADLINES = [
   { t:'Un modèle géant à 175 milliards de paramètres impressionne les chercheurs', p:'good', from:2020, to:2022 },
   { t:'Les coûts d’entraînement de l’IA explosent : des millions par modèle', p:'bad', from:2020, to:2023 },
   { t:'Votre startup lève des fonds : les investisseurs y croient', p:'good', to:2022, cond:g=>g.money>5e4 },
+  // Le raccordement d'origine ne fait que 10 kW : cette actualité-là débloque
+  // vraiment quelque chose (voir `effect`), une seule fois, au tout début.
+  { id:'energy_grant', once:true, p:'good', to:2023,
+    t:'Subvention énergie pour les jeunes pousses : votre raccordement est renforcé',
+    cond:g=>g.phase===1 && g.state.energyCap < 0.4,
+    effect:g=>{ g.energyCap += 0.15; g.toast('⚡ Subvention énergie : +150 kW', 'good');
+      g.log('Subvention « énergie pour les jeunes pousses » : raccordement renforcé de +150 kW.', 'milestone'); } },
   // 2022-2023 — RLHF / chat / GPT-4
   { t:'Un chatbot atteint 100 millions d’utilisateurs en deux mois', p:'good', from:2022, to:2024 },
   { t:'Les enseignants s’alarment : les devoirs faits par l’IA', p:'bad', from:2022, to:2024 },

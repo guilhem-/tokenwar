@@ -20,20 +20,22 @@ export class IdleFX {
     this.raf = null;
   }
 
-  // tirage sans remise : on vide le sac avant de le remplir à nouveau
+  // tirage sans remise : on vide le sac avant de le remplir à nouveau. Au
+  // remplissage, on s'assure que la première pioche du nouveau sac n'est pas
+  // celle qui vient de sortir — sinon une animation passerait deux fois de suite.
   nextId() {
     if (!this.bag.length) {
       this.bag = IDLE_FX.map(f => f.id);
-      // mélange de Fisher-Yates
-      for (let i = this.bag.length - 1; i > 0; i--) {
+      for (let i = this.bag.length - 1; i > 0; i--) {   // mélange de Fisher-Yates
         const j = Math.floor(Math.random() * (i + 1));
         [this.bag[i], this.bag[j]] = [this.bag[j], this.bag[i]];
       }
-      if (this.bag[this.bag.length - 1] === this.last && this.bag.length > 1) {
+      if (this.bag.length > 1 && this.bag[this.bag.length - 1] === this.last) {
         [this.bag[this.bag.length - 1], this.bag[0]] = [this.bag[0], this.bag[this.bag.length - 1]];
       }
     }
-    return this.bag.pop();
+    this.last = this.bag.pop();
+    return this.last;
   }
 
   play(id) {
@@ -41,7 +43,7 @@ export class IdleFX {
     const ctx = this.c && this.c.getContext && this.c.getContext('2d');
     if (!ctx) return false;
     const def = IDLE_FX.find(f => f.id === (id || this.nextId())) || IDLE_FX[0];
-    this.last = def.id;
+    this.last = def.id;                              // (nextId l'a déjà fait ; utile si `id` est imposé)
     const w = this.c.width = window.innerWidth;
     const h = this.c.height = window.innerHeight;
     this.c.classList.add('on');

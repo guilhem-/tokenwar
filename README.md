@@ -60,7 +60,7 @@ de son année.
 - **Énergie — trois natures de coût bien séparées** : le **capex** (unique, à la commande),
   l'**exploitation O&M** (fixe, journalier, dû même à l'arrêt : $7 200/j pour un SMR),
   le **combustible** (variable, au MWh soutiré : gaz $70/MWh, réseau $78, solaire $0) et
-  l'**abonnement réseau** proportionnel à la **puissance souscrite** ($260/MW/jour).
+  l'**abonnement réseau** proportionnel à la **puissance souscrite** ($60/MW/jour).
   Le mix est servi en **ordre de mérite** (le moins cher d'abord).
 - **Inflation simulée** (taux annuels calqués sur le CPI réel : 8 % en 2022…) : prix,
   salaires, loyers, énergie et tarifs acceptés par le marché suivent l'indice — **mais pas
@@ -68,6 +68,13 @@ de son année.
 - **Équipe** : les RH ouvrent des postes, les ingénieurs R&D débloquent l'entraînement des
   modèles, les marketeurs relèvent le plafond marketing, Ops et Data boostent le parc.
   Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.
+  Chaque **embauche coûte $1 000** (annonce, entretiens, poste de travail, intégration).
+- **Salaires impayés** : trésorerie à zéro = salaires non versés. Un compteur d'arriérés
+  s'affiche, et au bout de **30 jours** quelqu'un **démissionne** — puis un départ tous les
+  2 jours, jusqu'à l'entreprise vide. Repayez avant, et l'équipe reste.
+- **Démarrage sous-alimenté** : le raccordement d'origine ne fait que **10 kW**. Une
+  actualité — la *subvention énergie pour les jeunes pousses* — le renforce vraiment
+  (les titres de presse ne font pas que commenter : certains débloquent quelque chose).
 - **Charges journalières** affichées et prélevées en continu, ventilées par nature.
 - **Tokens invendus = perdus** : la production doit suivre la demande, pas l'inverse.
 - **Bourse** (débloquée à $100k) : trois profils de risque, mouvement brownien géométrique.
@@ -76,12 +83,14 @@ de son année.
 
 - **Automatisations** achetables : auto-inférence, auto-achat **par élément coché ⟳**
   (carte précise, source précise, niveau d'infra précis), activables/désactivables.
-- **Achats groupés** : ×10 dès 20 exemplaires possédés, ×100 dès 200.
+- **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200. Le bouton
+  **⟳ auto** obéit au même seuil : on n'automatise que ce qu'on a déjà maîtrisé.
 - **Graphe de production** (tokens/s et $/s, échelle log).
 - **17 succès** à débloquer, écran de fin avec bilan moral (le sanctuaire de la biosphère…).
 - **Addendum** : « Directives permanentes » (cochez un choix d’événement pour qu’il s’applique
   automatiquement — plus d’interruption) et l’offre piège du **datacenter IA orbital**
-  (2030-2040) : 18 mois de chantier, 6 mois de retard… puis la faillite du consortium.
+  (2030-2040) : 18 mois de chantier, 6 mois de retard… puis la faillite du consortium,
+  et six mois plus tard l'affaire est classée : la ligne disparaît.
 - **Cinématique de fin** (aussi accessible par **Ctrl+Shift+E**) : l’écran se désintègre pixel
   par pixel, hyperespace (chaque étoile trace sa trajectoire complète), scroller sinusoïdal
   multicolore façon démo 64k, musique 8-bit (WebAudio) et clin d’œil « Nostalgia of 64k demos ».

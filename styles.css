@@ -1478,3 +1478,7 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
   .crisis-halo, .crisis-vignette { animation: none; }
   .badge-build { animation: none; }
 }
+
+/* arriérés de salaire : compte à rebours avant les démissions */
+.arrears-row { border-top: 1px dashed var(--bad); padding-top: 0.45rem; }
+.arrears-row .num { font-size: 0.72rem; }

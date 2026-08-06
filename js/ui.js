@@ -2,13 +2,14 @@
 //  TokenWar — INTERFACE
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS,
-         CRISIS_DURATION, IDLE_DELAY } from './data.js';
+         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
 
 const $ = id => document.getElementById(id);
+const AUTO_MIN_OWNED = 20;   // seuil d'apparition du bouton ⟳ auto (même palier que ×10)
 
 export class UI {
   constructor() {
@@ -54,6 +55,7 @@ export class UI {
       panelCharges: $('panel-charges'), chargeSalary: $('charge-salary'),
       chargeElecVar: $('charge-elec-var'), chargeElecFix: $('charge-elec-fix'), chargeElecSub: $('charge-elec-sub'),
       chargeRent: $('charge-rent'), chargeTotal: $('charge-total'), chargeSec: $('charge-sec'), chargeInfl: $('charge-infl'),
+      chargeArrears: $('charge-arrears'), chargeArrearsValue: $('charge-arrears-value'),
       crisisLayer: $('crisis-layer'), crisisVignette: $('crisis-vignette'), idleFx: $('idle-fx'),
       gpuCap: $('gpu-cap'),
       gpuList: $('gpu-list'),
@@ -440,10 +442,13 @@ export class UI {
     r.el.querySelector('.item-header').appendChild(b);
     r.autoBtn = b;
   }
-  updateAutoToggle(r, family, id) {
+  // Le bouton n'apparaît qu'une fois l'automatisation achetée ET 20 exemplaires
+  // de CET élément en service : on n'automatise que ce qu'on a déjà maîtrisé.
+  updateAutoToggle(r, family, id, owned) {
     if (!r.autoBtn) return;
     const cap = this.game.state.auto[family] && this.game.state.auto[family].owned;
-    r.autoBtn.classList.toggle('hidden', !cap);
+    const show = cap && Math.floor(owned || 0) >= AUTO_MIN_OWNED;
+    r.autoBtn.classList.toggle('hidden', !show);
     r.autoBtn.classList.toggle('on', this.game.isAutoItem(family, id));
   }
 
@@ -620,7 +625,7 @@ export class UI {
         this.buildBadge('infra', it.id);
       this.setAfford(r.el, g.canBuyInfra(it.id));
       this.updateBulk(r, count, g.canBuyInfra(it.id));
-      this.updateAutoToggle(r, 'infra', it.id);
+      this.updateAutoToggle(r, 'infra', it.id, count);
       if (r.rentInfo) {
         const rented = s.rentedDC || 0;
         r.rentInfo.textContent = `loué ×${rented} · ${fmtMoney(g.dcRentDaily())}/j` + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
@@ -637,13 +642,16 @@ export class UI {
   renderTeam() {
     const g = this.game;
     this.el.headcount.textContent = fmt(g.headcount()) + ' / ' + fmt(g.headcountCap());
+    const hireCost = g.hireCost();
+    const broke = g.money < hireCost;
     EMPLOYEES.forEach(e => {
       const r = this.rows.team[e.id];
       const count = g.empCount(e.id);
-      r.cost.innerHTML = `<span class="badge">×${count}</span>`;
+      r.cost.innerHTML = `<span class="badge">×${count}</span> <span class="num text-muted">${fmtMoney(hireCost)} à l’embauche</span>`;
       const canHire = g.canHire(e.id);
-      r.effect.innerHTML = `<span class="text-muted">${fmtMoney(e.salary)}/j par poste</span>` +
-        (!canHire ? ` <span class="badge badge-warn">limité par RH</span>` : '');
+      r.effect.innerHTML = `<span class="text-muted">${fmtMoney(g.moneyCost(e.salary))}/j par poste</span>` +
+        (!canHire ? (broke ? ` <span class="badge badge-warn">trésorerie insuffisante</span>`
+                           : ` <span class="badge badge-warn">limité par RH</span>`) : '');
       r.hireBtn.classList.toggle('locked', !canHire);
       r.fireBtn.classList.toggle('locked', count < 1);
       this.updateBulk(r, count, canHire);
@@ -722,6 +730,15 @@ export class UI {
     const idx = g.inflIndex();
     this.el.chargeInfl.innerHTML = `${(g.inflRate(g.simYearInt()) * 100).toFixed(1)}% /an · indice `
       + `<b>×${idx.toFixed(2)}</b> · <span class="text-bad">−${(g.purchasingLoss() * 100).toFixed(0)}%</span> de pouvoir d’achat`;
+    // arriérés de salaire : compte à rebours avant les premières démissions
+    const days = g.state.unpaidDays || 0;
+    this.el.chargeArrears.classList.toggle('hidden', days < 1);
+    if (days >= 1) {
+      const left = Math.max(0, UNPAID_QUIT_DAYS - days);
+      this.el.chargeArrearsValue.innerHTML = left > 0
+        ? `<span class="text-bad">${Math.floor(days)} j impayés</span> — départs dans ${Math.ceil(left)} j`
+        : `<span class="text-bad">${Math.floor(days)} j impayés — l’équipe s’en va</span>`;
+    }
   }
 
   renderStock() {
@@ -904,7 +921,7 @@ export class UI {
     this.el.panelMarket.classList.toggle('hidden', moneyHidden);
     this.el.panelAuto.classList.toggle('hidden', moneyHidden);
     // l'Addendum survit à la phase 2 si les directives sont actives ou le chantier orbital en cours
-    this.el.panelAddendum.classList.toggle('hidden', moneyHidden && !s.addendum && s.spaceDC.status === 'none');
+    this.el.panelAddendum.classList.toggle('hidden', moneyHidden && !s.addendum && !g.spaceDCVisible());
     this.el.panelCharges.classList.toggle('hidden', moneyHidden);
     this.el.panelTeam.classList.toggle('hidden', moneyHidden);
     if (moneyHidden) { this.el.panelFunding.classList.add('hidden'); this.el.panelStock.classList.add('hidden'); }
@@ -994,7 +1011,7 @@ export class UI {
         + this.buildBadge('gpu', gpu.id);
       this.setAfford(r.el, g.canBuyGPU(gpu.id));
       this.updateBulk(r, owned, g.canBuyGPU(gpu.id));
-      this.updateAutoToggle(r, 'gpu', gpu.id);
+      this.updateAutoToggle(r, 'gpu', gpu.id, owned);
     });
   }
   renderEnergy() {
@@ -1028,7 +1045,7 @@ export class UI {
         + this.buildBadge('energy', e.id);
       this.setAfford(r.el, s.money >= cost);
       this.updateBulk(r, owned, s.money >= cost);
-      this.updateAutoToggle(r, 'energy', e.id);
+      this.updateAutoToggle(r, 'energy', e.id, owned);
     });
   }
   renderProjects() {
@@ -1304,12 +1321,14 @@ export class UI {
       <p><b>But :</b> produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.</p>
       <p><b>Phase 1 — Startup :</b> cliquez pour générer des tokens, fixez le <b>prix</b> (bas = plus de volume, haut = plus de marge), faites du <b>marketing</b>, achetez des <b>GPU</b> et de l’<b>énergie</b> (plafond dur !), accumulez de la <b>recherche</b> pour les <b>projets</b>, et <b>entraînez</b> des modèles de plus en plus puissants. Levez des <b>fonds</b> aux paliers.</p>
       <p><b>Hébergement :</b> un GPU doit tenir dans un <b>serveur</b>, dans une <b>baie</b>, dans un <b>datacenter</b>, sur de l’<b>immobilier</b> — qui consomment aussi de l’énergie. Construisez la chaîne avant d’acheter des cartes (prix réels et fixes). Le matériel obsolète se <b>revend</b> ; une carte sortie depuis <b>plus de 5 ans</b> disparaît du marché. Vous pouvez <b>louer</b> des datacenters ou de l’espace en colocation (coût journalier).</p>
-      <p><b>Équipe & charges :</b> les <b>RH</b> ouvrent des postes, les <b>ingénieurs R&D</b> débloquent l’entraînement des modèles, les <b>marketeurs</b> relèvent le plafond marketing. Salaires, électricité et loyers sont prélevés chaque jour. Attention : les RH occupent eux-mêmes un poste — trop de marketeurs peut vous empêcher d’embaucher les chercheurs du modèle suivant (<b>licenciez</b> pour rééquilibrer).</p>
+      <p><b>Équipe & charges :</b> les <b>RH</b> ouvrent des postes, les <b>ingénieurs R&D</b> débloquent l’entraînement des modèles, les <b>marketeurs</b> relèvent le plafond marketing. Chaque <b>embauche coûte $1 000</b> (annonce, entretiens, poste de travail), puis un salaire chaque jour. Attention : les RH occupent eux-mêmes un poste — trop de marketeurs peut vous empêcher d’embaucher les chercheurs du modèle suivant (<b>licenciez</b> pour rééquilibrer).</p>
+      <p><b>💸 Salaires impayés :</b> si la trésorerie tombe à zéro, les salaires ne sont plus versés. Le compteur d’arriérés s’affiche dans les Charges : au bout de <b>30 jours</b>, quelqu’un <b>démissionne</b>, puis un départ tous les 2 jours jusqu’à ce que l’entreprise se vide. Repayez avant, et tout le monde reste.</p>
+      <p><b>⚡ Au départ :</b> votre raccordement ne fait que <b>10 kW</b> — le compteur du garage. Surveillez <b>La Une</b> : une <b>subvention énergie pour les jeunes pousses</b> vous renforcera, et un simple raccordement réseau coûte une poignée de dollars.</p>
       <p><b>⚡ Coûts d’énergie :</b> trois natures bien distinctes. Le <b>capex</b> est un coût <b>unique</b>, payé à la commande. L’<b>exploitation (O&M)</b> est un coût <b>fixe</b> journalier, dû même à l’arrêt — un SMR coûte cher rien qu’à exister. Le <b>combustible</b> est <b>variable</b>, facturé au MWh réellement soutiré (le gaz se paie, pas le soleil). L’<b>abonnement réseau</b>, lui, dépend de la <b>puissance souscrite</b>.</p>
       <p><b>🏗️ Délais :</b> rien n’est instantané. Chaque commande part en <b>chantier</b> (badge ⏳) pour une durée proportionnelle à sa <b>complexité</b> : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.</p>
       <p><b>📈 Inflation :</b> l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés par le marché suivent l’indice — <b>pas votre trésorerie</b>. Dormir sur son cash coûte du pouvoir d’achat : investissez, ou placez-le en bourse.</p>
       <p><b>🚨 Incidents :</b> une alerte à <b>bordure rouge et halo pulsant</b> peut apparaître <b>n’importe où dans la page</b>, souvent hors de votre écran, sans la moindre notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie de plus en plus vite — jusqu’à <b>70% de votre fortune en 2 minutes</b>. Seul indice : le <b>liseré rouge</b> qui s’intensifie sur les bords. <b>Faites défiler la page</b> et cliquez sur la solution.</p>
-      <p><b>Automatisation :</b> achetez les auto-clickers, puis cochez <b>⟳ auto</b> sur chaque élément précis (carte, source, niveau) à racheter automatiquement. Dès 20 exemplaires d’un même élément : bouton <b>×10</b> ; dès 200 : <b>×100</b>.</p>
+      <p><b>Automatisation :</b> achetez les auto-clickers, puis cochez <b>⟳ auto</b> sur chaque élément précis (carte, source, niveau) à racheter automatiquement. Le bouton <b>⟳</b> et le bouton <b>×10</b> n’apparaissent qu’à partir de <b>20 exemplaires en service</b> de cet élément ; <b>×100</b> dès 200. On n’automatise que ce qu’on maîtrise déjà.</p>
       <p><b>Bourse :</b> débloquée à <b>$100 000</b> de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.</p>
       <p><b>Allocation :</b> dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.</p>
       <p><b>Calendrier :</b> une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie — un élément grisé « dispo 20XX » arrive bientôt.</p>

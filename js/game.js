@@ -4,7 +4,8 @@
 import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MASS,
          START_YEAR, SECONDS_PER_YEAR, MONTHS_FR, HEADLINES,
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
-         BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION } from './data.js';
+         BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
+         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW } from './data.js';
 import { clamp } from './util.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -70,7 +71,9 @@ export class Game {
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
     s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
-    s.energyCap = 0.5;       // MW de base (premier raccordement offert)
+    s.energyCap = BASE_GRID_MW; // 10 kW : le compteur du garage, offert
+    s.unpaidDays = 0;        // jours d'arriérés de salaire (30 → les gens partent)
+    s.quitDebt = 0;          // départs accumulés en attente d'être appliqués
     s.modelTier = 0;
     s.marketingLvl = 1;
     s.priceSlider = 68;
@@ -86,6 +89,7 @@ export class Game {
     // presse / calendrier
     s.headlineTimer = 6;
     s.headlines = [];       // fil de titres {text, p, date}
+    s.headlinesFired = {};  // titres à effet, jouables une seule fois
     s.lastHeadlineText = null;
     s.recentHeadlines = []; // mémoire courte : on ne réutilise pas un titre récent
     s._freshModelUntil = 0; // pour les titres réactifs à un nouvel entraînement
@@ -373,6 +377,25 @@ export class Game {
     return (childId === 'gpu' ? this.gpuCount() : this.infraCount(childId)) + this.pendingCount(family, childId);
   }
   freeSlots(childId) { return this.capacityFor(childId) - this.usedFor(childId); }
+  // Capacité PRÉVUE : celle en service plus celle déjà en chantier. Elle ne sert
+  // jamais à autoriser un achat (il faut une place réelle), mais à DÉCIDER d'en
+  // commander : sans elle, un acheteur automatique recommanderait en boucle tant
+  // que la première unité n'est pas livrée.
+  plannedCapacityFor(childId) {
+    const parent = INFRA.find(x => x.child === childId);
+    if (!parent) return Infinity;
+    return this.capacityFor(childId) + this.pendingCount('infra', parent.id) * parent.capacity;
+  }
+  plannedFreeSlots(childId) { return this.plannedCapacityFor(childId) - this.usedFor(childId); }
+  energyCapPlanned() {                          // MW en service + MW en construction
+    let mw = this.state.energyCap;
+    for (const b of this.state.builds) {
+      if (b.f !== 'energy') continue;
+      const e = ENERGY.find(x => x.id === b.id);
+      if (e) mw += e.mw;
+    }
+    return mw;
+  }
   hostingActive() { return this.phase < 2; }   // contrainte d'hébergement en phase 1 (l'ASI auto-construit ensuite)
 
   buyInfra(id) {
@@ -420,9 +443,19 @@ export class Game {
   empCount(id) { return this.state.employees[id] || 0; }
   headcount() { return EMPLOYEES.reduce((t, e) => t + this.empCount(e.id), 0); }
   headcountCap() { return BASE_HEADCOUNT + this.empCount('hr') * HR_HEADCOUNT; }
-  // les RH créent leur propre capacité → toujours embauchables ; les autres sont plafonnés
-  canHire(id) { return id === 'hr' || this.headcount() < this.headcountCap(); }
-  hire(id) { if (!this.canHire(id)) return false; this.state.employees[id] = this.empCount(id) + 1; return true; }
+  // recruter coûte : annonce, entretiens, poste de travail, intégration
+  hireCost() { return this.moneyCost(HIRE_COST); }
+  // les RH créent leur propre capacité → jamais bloqués par l'effectif ; les autres sont plafonnés
+  canHire(id) {
+    if (this.state.money < this.hireCost()) return false;
+    return id === 'hr' || this.headcount() < this.headcountCap();
+  }
+  hire(id) {
+    if (!this.canHire(id)) return false;
+    this.state.money -= this.hireCost();
+    this.state.employees[id] = this.empCount(id) + 1;
+    return true;
+  }
   fire(id) {
     if (this.empCount(id) < 1) return false;
     if (id === 'hr') {                           // ne pas licencier un RH si cela dépasserait la capacité
@@ -431,6 +464,43 @@ export class Game {
     }
     this.state.employees[id]--;
     return true;
+  }
+  // ---- SALAIRES IMPAYÉS : au bout de 30 jours d'arriérés, on s'en va ----
+  // (un départ n'est pas un licenciement : aucune garde-fou d'effectif ne s'applique)
+  quitOne() {
+    // part d'abord celui dont le poste est le mieux payé ailleurs
+    const order = ['rnd', 'ops', 'data', 'marketer', 'hr'];
+    for (const id of order) if (this.empCount(id) > 0) { this.state.employees[id]--; return EMPLOYEES.find(e => e.id === id); }
+    return null;
+  }
+  tickPayroll(dt) {
+    const s = this.state;
+    const perDay = SECONDS_PER_YEAR / 365;
+    if (this.headcount() < 1) { s.unpaidDays = 0; s.quitDebt = 0; return; }
+    // arriérés : la trésorerie ne couvre plus les charges du jour
+    if (s.money <= 0.5 && this.chargesPerSec() > 0) {
+      s.unpaidDays += dt / perDay;
+      if (!s._payWarned && s.unpaidDays >= 10) {
+        s._payWarned = true;
+        this.log('Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.', 'bad');
+        this.toast('⚠️ Salaires impayés', 'bad');
+      }
+      const over = s.unpaidDays - UNPAID_QUIT_DAYS;
+      if (over >= 0) {
+        const due = 1 + Math.floor(over / UNPAID_QUIT_EVERY);   // 1 départ, puis 1 tous les 2 jours
+        while (s.quitDebt < due) {
+          s.quitDebt++;
+          const who = this.quitOne();
+          if (!who) break;
+          this.changeRep(-1);
+          this.log(`${who.name} démissionne : ${Math.floor(s.unpaidDays)} jours de salaire impayés.`, 'bad');
+          this.toast(`👋 Départ : ${who.name}`, 'bad');
+        }
+      }
+    } else if (s.unpaidDays > 0) {
+      if (s.unpaidDays >= 10) this.log('Arriérés de salaire réglés. L’équipe reste.', 'good');
+      s.unpaidDays = 0; s.quitDebt = 0; s._payWarned = false;
+    }
   }
   marketingCap() { return BASE_MARKETING + this.empCount('marketer'); }   // plafond marketing
   rndMult() { return 1 + this.empCount('rnd') * 0.5; }                     // recherche ×(1+0.5/ing.)
@@ -474,14 +544,16 @@ export class Game {
       if (au.energy.owned && au.energy.on) {
         for (const e of ENERGY) {
           if (!this.isAutoItem('energy', e.id)) continue;
-          if (this.energyUse() <= s.energyCap * 0.98) break;
+          // on compte la capacité déjà en chantier : sinon on recommande en boucle
+          if (this.energyUse() <= this.energyCapPlanned() * 0.98) break;
           if ((!e.phase || this.phase >= e.phase) && this.dateUnlocked(e) && s.money >= this.energyCost(e)) this.buyEnergy(e.id);
         }
       }
       // hébergement : on achète un niveau coché quand IL va devenir limitant
       if (au.infra.owned && au.infra.on) {
         for (const it of INFRA) {
-          if (this.isAutoItem('infra', it.id) && this.freeSlots(it.child) < 4 && this.canBuyInfra(it.id)) this.buyInfra(it.id);
+          // idem : la capacité en chantier compte dans la décision
+          if (this.isAutoItem('infra', it.id) && this.plannedFreeSlots(it.child) < 4 && this.canBuyInfra(it.id)) this.buyInfra(it.id);
         }
       }
     }
@@ -507,7 +579,7 @@ export class Game {
       fixed += n * (e.omDaily || 0);
       if (e.subMWDay) sub += n * e.mw * e.subMWDay;
     }
-    caps.push({ mw: 0.5, cost: 78 });             // raccordement de base (offert, sans abonnement)
+    caps.push({ mw: BASE_GRID_MW, cost: 78 });    // raccordement de base (offert, sans abonnement)
     caps.sort((a, b) => a.cost - b.cost);
     let variable = 0, rem = this.energyUse();
     for (const c of caps) { if (rem <= 0) break; const u = Math.min(c.mw, rem); variable += u * 24 * c.cost; rem -= u; }
@@ -799,6 +871,10 @@ export class Game {
   // ---- Datacenter IA orbital (2030-2040) : 18 mois → +6 mois de retard → faillite ----
   spaceDCVisible() {
     const s = this.state.spaceDC;
+    if (s.status === 'bankrupt') {                            // l'affaire est classée au bout de 6 mois
+      const monthSec = SECONDS_PER_YEAR / 12;
+      return this.state.playSeconds - s.statusAt < SPACE_DC.hideMonths * monthSec;
+    }
     if (s.status !== 'none') return true;                     // chantier en cours : toujours affiché
     const y = this.simYear();
     return this.phase < 2 && y >= SPACE_DC.from && y < SPACE_DC.to;
@@ -1017,6 +1093,9 @@ export class Game {
     if (!h) return;
     const delta = h.p === 'good' ? 1 : (h.p === 'bad' ? -1 : 0);
     if (delta) this.changeRep(delta);
+    // certains titres ne font pas que commenter : ils débloquent réellement quelque chose
+    if (h.id) s.headlinesFired[h.id] = true;
+    if (h.effect) h.effect(this);
     const entry = { text: h.t, p: h.p, date: this.dateLabel() };
     s.headlines.unshift(entry);
     if (s.headlines.length > 40) s.headlines.pop();
@@ -1030,6 +1109,7 @@ export class Game {
     const y = this.simYear();
     const tier = this.state.modelTier;
     const eligible = (strict) => HEADLINES.filter(h => {
+      if (h.once && h.id && this.state.headlinesFired[h.id]) return false;       // titre à effet, une seule fois
       if (strict && this.state.recentHeadlines.indexOf(h.t) >= 0) return false;  // pas de redite récente
       if (h.t === this.state.lastHeadlineText) return false;                     // jamais deux fois de suite
       if (h.phase != null) { if (this.phase !== h.phase) return false; }
@@ -1068,6 +1148,7 @@ export class Game {
       const chargesSec = this.chargesPerSec();
       if (chargesSec > 0) s.money = Math.max(0, s.money - chargesSec * dt);
       s.rates.charges = chargesSec;
+      this.tickPayroll(dt);                       // arriérés de salaire → démissions
     }
 
     const compute = this.computeEffective();

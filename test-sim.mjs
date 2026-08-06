@@ -41,7 +41,7 @@ function bot() {
   // (cap − RH = 3 + 4·RH, donc la boucle converge toujours)
   const wantHead = wantRnd + wantMkt + 4;
   let hrGuard = 0;
-  while (g.headcountCap() - g.empCount('hr') < wantHead && hrGuard++ < 200) g.hire('hr');
+  while (g.headcountCap() - g.empCount('hr') < wantHead && g.canHire('hr') && hrGuard++ < 200) g.hire('hr');
   while (g.empCount('rnd') < wantRnd && g.canHire('rnd')) g.hire('rnd');
   while (g.empCount('marketer') < wantMkt && g.canHire('marketer')) g.hire('marketer');
 
@@ -62,7 +62,7 @@ function bot() {
   const reserve = g.canTrainNext() ? (g.nextModel().cost.money || 0) * 1.1 : 0;
   const buyEnergyHeadroom = () => {
     let guard = 0;
-    while (guard++ < 200 && s.energyCap < g.energyUse() * 1.5) {
+    while (guard++ < 200 && g.energyCapPlanned() < g.energyUse() * 1.5) {   // capacité en chantier comprise
       let best = null, bestRatio = Infinity;
       for (const e of ENERGY) {
         if (e.phase && g.phase < e.phase) continue;
@@ -76,7 +76,8 @@ function bot() {
   // chaîne d'hébergement : garder des emplacements GPU libres devant soi
   const ensureHosting = () => {
     let guard = 0;
-    while (guard++ < 800 && g.hostingActive() && g.freeSlots('gpu') < 16) {
+    // on raisonne en capacité PRÉVUE (chantiers compris) pour ne pas sur-commander
+    while (guard++ < 800 && g.hostingActive() && g.plannedFreeSlots('gpu') < 16) {
       let target = g.freeSlots('server') >= 1 ? 'server'
         : g.freeSlots('rack') >= 1 ? 'rack'
         : g.freeSlots('datacenter') >= 1 ? 'datacenter' : 'realestate';

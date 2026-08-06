@@ -91,8 +91,13 @@ step('automatisations : achat + toggle', () => {
 step('auto-achat par élément (toggle sur une carte)', () => {
   game.state.auto.gpu.owned = true; game.state.auto.gpu.on = true;
   const r = ui.rows.gpu['consumer'];
+  // le bouton n'apparaît qu'à partir de 20 exemplaires en service
+  game.state.gpuCounts['consumer'] = 5;
   ui.render();
-  if (r.autoBtn.classList.contains('hidden')) throw new Error('toggle auto absent alors que capacité achetée');
+  if (!r.autoBtn.classList.contains('hidden')) throw new Error('toggle auto visible avec moins de 20 exemplaires');
+  game.state.gpuCounts['consumer'] = 20;
+  ui.render();
+  if (r.autoBtn.classList.contains('hidden')) throw new Error('toggle auto absent alors que capacité achetée et 20 exemplaires');
   r.autoBtn.dispatchEvent(new window.Event('click'));
   if (!game.isAutoItem('gpu', 'consumer')) throw new Error('auto élément non activé');
   ui.render();
@@ -130,6 +135,8 @@ step('buyInfra serveur (chantier puis mise en service)', () => {
   // pendant le chantier : l'emplacement parent est réservé, mais aucune capacité encore offerte
   if (game.pendingCount('infra', 'server') !== 1) throw new Error('serveur non mis en chantier');
   if (game.capacityFor('gpu') !== before) throw new Error('capacité offerte avant la fin du chantier');
+  // …mais la capacité PRÉVUE la compte, pour ne pas recommander en boucle
+  if (game.plannedCapacityFor('gpu') <= before) throw new Error('capacité prévue ignorant le chantier');
   game.tick(30);
   if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée après le chantier');
 });
@@ -289,6 +296,14 @@ step('chantiers : délais croissants avec la complexité', () => {
   if (!(secDc > secServer)) throw new Error('un datacenter devrait être plus long qu un serveur');
   const smr = ENERGY.find(e => e.id === 'nuclear'), sun = ENERGY.find(e => e.id === 'solar');
   if (!(game.buildSeconds('energy', smr) > game.buildSeconds('energy', sun))) throw new Error('un SMR devrait être plus long qu un panneau');
+  // la capacité énergétique en chantier est comptée dans la capacité prévue
+  game.state.money = 1e7;
+  const capPlanned = game.energyCapPlanned(), capReal = game.state.energyCap;
+  game.buyEnergy('gas');
+  if (!(game.energyCapPlanned() > capPlanned)) throw new Error('capacité énergétique prévue ignorant le chantier');
+  if (game.state.energyCap !== capReal) throw new Error('capacité énergétique livrée avant la fin du chantier');
+  game.tick(30);
+  if (!(game.state.energyCap > capReal)) throw new Error('capacité énergétique non livrée après le chantier');
   // et le badge « en chantier » apparaît bien dans la liste
   game.state.money = 1e9;
   game.state.playSeconds = 60;
@@ -372,6 +387,64 @@ step('presse : titres corrélés au palier de modèle', () => {
   if (![...hi].some(t => /essaim/i.test(t))) throw new Error('aucun titre lié au palier atteint');
   if (game.tierLag() < 0) throw new Error('retard technologique négatif');
   game.state.playSeconds = 60;
+});
+
+// ---- énergie de départ : 10 kW, puis subvention « jeunes pousses » ----
+step('énergie de départ à 10 kW + subvention', async () => {
+  const fresh = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  if (Math.abs(fresh.state.energyCap - 0.01) > 1e-9) throw new Error('le raccordement de départ devrait faire 10 kW');
+  const { HEADLINES } = await import('./js/data.js');
+  const grant = HEADLINES.find(h => h.id === 'energy_grant');
+  if (!grant) throw new Error('titre de subvention énergie absent');
+  if (!grant.cond(fresh)) throw new Error('la subvention devrait être proposée à une startup sous-alimentée');
+  grant.effect(fresh);
+  if (!(fresh.state.energyCap > 0.15)) throw new Error('la subvention n a pas renforcé le raccordement');
+  fresh.state.headlinesFired[grant.id] = true;
+  if (fresh.pickHeadline() === grant) throw new Error('la subvention devrait être unique');
+});
+
+// ---- l'embauche coûte 1000 $ ----
+step('embauche : coût fixe de 1000 $', () => {
+  game.state.playSeconds = 0;                     // indice d'inflation = 1
+  game.state.money = 2500;
+  const before = game.money, head = game.headcount();
+  if (Math.abs(game.hireCost() - 1000) > 1e-6) throw new Error('frais d embauche ≠ 1000 $');
+  if (!game.hire('ops')) throw new Error('embauche refusée alors que finançable');
+  if (Math.abs((before - game.money) - 1000) > 1e-6) throw new Error('frais d embauche non prélevés');
+  if (game.headcount() !== head + 1) throw new Error('effectif inchangé');
+  game.state.money = 200;                         // plus les moyens
+  if (game.canHire('hr')) throw new Error('embauche possible sans trésorerie');
+  if (game.hire('ops')) throw new Error('embauche effectuée sans trésorerie');
+  ui.render();
+  if (!/à l’embauche/.test(ui.rows.team['ops'].cost.innerHTML)) throw new Error('coût d embauche non affiché');
+  game.fire('ops');
+  game.state.playSeconds = 60;
+});
+
+// ---- 30 jours d'arriérés : l'équipe s'en va ----
+step('salaires impayés : départs au bout de 30 jours', () => {
+  ui.closeModal();
+  game.state.money = 0;
+  game.state.employees = { hr:2, rnd:3, marketer:1, ops:1, data:1 };
+  game.state.unpaidDays = 0; game.state.quitDebt = 0; game.state._payWarned = false;
+  const head0 = game.headcount();
+  const perDay = 300 / 365;
+  game.tickPayroll(20 * perDay);                  // 20 jours : on prévient, personne ne part
+  if (game.headcount() !== head0) throw new Error('départ prématuré avant 30 jours');
+  ui.render();
+  if (ui.el.chargeArrears.classList.contains('hidden')) throw new Error('arriérés non signalés');
+  game.tickPayroll(11 * perDay);                  // 31 jours : premier départ
+  if (game.headcount() !== head0 - 1) throw new Error('aucun départ après 30 jours d arriérés');
+  game.tickPayroll(6 * perDay);                   // +6 jours → 3 départs de plus (1 tous les 2 j)
+  if (game.headcount() > head0 - 4) throw new Error('les départs ne s enchaînent pas');
+  // on repaie : l'hémorragie s'arrête
+  game.state.money = 1e6;
+  game.tickPayroll(perDay);
+  const head1 = game.headcount();
+  game.tickPayroll(50 * perDay);
+  if (game.headcount() !== head1) throw new Error('des départs continuent alors que les salaires sont payés');
+  if (game.state.unpaidDays !== 0) throw new Error('compteur d arriérés non remis à zéro');
+  game.state.employees = { hr:0, rnd:0, marketer:0, ops:0, data:0 };
 });
 
 // toast + log
