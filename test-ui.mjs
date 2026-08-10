@@ -538,6 +538,30 @@ step('salaires impayés : départs au bout de 30 jours', () => {
   game.state.employees = { hr:0, rnd:0, marketer:0, ops:0, data:0 };
 });
 
+// ---- sélecteur de langue ----
+step('langue : sélecteur, changement à chaud, repli', async () => {
+  const i18n = await import('./js/i18n.js');
+  const sel = ui.el.langSelect;
+  if (!sel) throw new Error('sélecteur de langue absent');
+  if (sel.options.length !== i18n.LANGS.length) throw new Error('toutes les langues ne sont pas proposées');
+  const panel = document.querySelector('[data-i18n="Production de tokens"]');
+  const before = panel.textContent;
+  sel.value = 'en';
+  sel.dispatchEvent(new window.Event('change'));
+  await new Promise(r => setTimeout(r, 30));
+  if (i18n.lang() !== 'en') throw new Error('langue non appliquée');
+  if (panel.textContent === before) throw new Error('les textes statiques ne sont pas retraduits');
+  if (panel.textContent !== 'Token production') throw new Error('traduction inattendue : ' + panel.textContent);
+  // les libellés issus des données suivent aussi
+  ui.render(true);
+  if (!/Consumer GPU/.test(ui.rows.gpu['consumer'].name.textContent)) throw new Error('les données ne sont pas traduites');
+  // retour au français : la source, sans dictionnaire
+  sel.value = 'fr';
+  sel.dispatchEvent(new window.Event('change'));
+  await new Promise(r => setTimeout(r, 30));
+  if (panel.textContent !== 'Production de tokens') throw new Error('retour au français échoué');
+});
+
 // toast + log
 step('toast & log', () => { ui.toast('hello','good'); ui.log('test log','milestone'); });
 

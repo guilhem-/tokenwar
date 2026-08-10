@@ -72,3 +72,45 @@ for (const code of targets) {
 console.log(`\n${strings.length} chaînes × ${targets.length} langues`);
 if (errors.length) { console.log(`\n=== ${errors.length} ERREUR(S) ===`); errors.forEach(e => console.log(' - ' + e)); process.exit(1); }
 console.log('=== i18n OK — couverture complète ===');
+
+// ---- comportement du moteur (détection, repli, formatage) ----
+const { t, setLang, browserLang, supported, scale, decimalSep } = await import('./js/i18n.js');
+const { fmt } = await import('./js/util.js');
+
+step('détection : la langue du navigateur est réduite à sa base', () => {
+  // navigator est en lecture seule sous Node : on le redéfinit proprement
+  const nav = langs => Object.defineProperty(globalThis, 'navigator',
+    { value: { languages: langs }, configurable: true, writable: true });
+  nav(['pt-BR', 'en-US']);
+  if (browserLang() !== 'pt') throw new Error('pt-BR devrait donner pt');
+  nav(['zh-Hant-TW']);
+  if (browserLang() !== 'zh') throw new Error('zh-Hant-TW devrait donner zh');
+  nav(['sv-SE']);                                     // langue non prise en charge
+  if (browserLang() !== null) throw new Error('une langue inconnue ne doit correspondre à aucune');
+  if (supported('sv')) throw new Error('sv ne devrait pas être déclarée');
+});
+
+step('traduction et substitutions', async () => {
+  globalThis.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+  await setLang('de', false);
+  if (t('Aide') !== 'Hilfe') throw new Error('traduction allemande absente');
+  if (t('Incident : {0}', 'X') !== 'Zwischenfall: X') throw new Error('substitution non appliquée');
+  if (t('Une chaîne jamais traduite') !== 'Une chaîne jamais traduite')
+    throw new Error('le repli doit rendre le français, pas une clé');
+});
+
+step('formatage : échelles longue, courte et par 10⁴', async () => {
+  await setLang('fr', false);
+  if (fmt(1.2e9) !== '1,20 Md') throw new Error('échelle longue française : ' + fmt(1.2e9));
+  await setLang('en', false);
+  if (fmt(1.2e9) !== '1.20B') throw new Error('échelle courte anglaise : ' + fmt(1.2e9));
+  await setLang('zh', false);
+  if (scale().base !== 4) throw new Error('le chinois doit grouper par 10⁴');
+  if (fmt(1.2e9) !== '12.00亿') throw new Error('groupement chinois : ' + fmt(1.2e9));
+  await setLang('de', false);
+  if (decimalSep() !== ',') throw new Error('séparateur décimal allemand');
+  if (fmt(1.2e9) !== '1,20 Mrd') throw new Error('échelle allemande : ' + fmt(1.2e9));
+  await setLang('fr', false);
+});
+
+if (errors.length) { console.log(`\n=== ${errors.length} ERREUR(S) ===`); errors.forEach(e => console.log(' - ' + e)); process.exit(1); }

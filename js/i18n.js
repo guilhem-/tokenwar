@@ -22,6 +22,11 @@ export const LANGS = [
   { code: 'fr', name: 'Français',   flag: '🇫🇷' },
   { code: 'en', name: 'English',    flag: '🇬🇧' },
   { code: 'es', name: 'Español',    flag: '🇪🇸' },
+  { code: 'pt', name: 'Português',  flag: '🇵🇹' },
+  { code: 'de', name: 'Deutsch',    flag: '🇩🇪' },
+  { code: 'zh', name: '中文',        flag: '🇨🇳' },
+  { code: 'ja', name: '日本語',      flag: '🇯🇵' },
+  { code: 'ko', name: '한국어',      flag: '🇰🇷' },
 ];
 export const DEFAULT_LANG = 'en';          // langue par défaut hors des langues détectées
 const STORE_KEY = 'tokenwar_lang';

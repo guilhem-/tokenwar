@@ -9,6 +9,28 @@ travers toute l'histoire (réelle puis spéculative) des grands modèles de lang
 
 > 🎮 **Jouer :** https://guilhem-.github.io/tokenwar/
 > ⏱️ Terminable en moins de 4 h. Sauvegarde automatique locale + export/import.
+> 🌍 **8 langues** — français, English, 中文, 日本語, 한국어, Deutsch, Español, Português.
+
+## 🌍 Multilingue
+
+Le jeu **détecte la langue du navigateur** (`pt-BR` → `pt`, `zh-Hant` → `zh`), la mémorise
+d'une session à l'autre, et se change **à chaud** depuis le sélecteur de la barre du haut.
+Si la langue détectée n'est pas prise en charge, l'**anglais** s'applique et le sélecteur est
+mis en évidence.
+
+Le **français est la source** : chaque chaîne française est sa propre clé (façon *gettext*).
+Une traduction manquante affiche donc le français lisible, jamais une clé technique cassée.
+
+Ce n'est pas que de la traduction. Le jeu affiche des nombres jusqu'à 10⁷¹, et l'**échelle
+suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), courte en anglais
+(`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
+Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
+
+**896 chaînes × 7 langues = 6 272 traductions**, vérifiées par `test-i18n.mjs` avant tout
+déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
+aucune clé orpheline. `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
+de jeu, appels `t()`, attributs `data-i18n`) — ajouter une chaîne la rend automatiquement
+obligatoire partout. Une langue n'est proposée que lorsque son fichier est complet.
 
 ## Le concept
 
@@ -154,6 +176,9 @@ js/data.js        contenu : modèles, GPU, hébergement, énergie, équipe, év�
 js/game.js        moteur : économie, inflation, chantiers, crises, phases, sauvegarde versionnée
 js/ui.js          rendu & interactions (sparkline, boîte de crise, modales accessibles, export/import)
 js/fx.js          les douze manifestations d'inactivité (canevas plein écran, non cliquable)
+js/i18n.js        détection de langue, traduction, échelles de nombres localisées
+js/locales/*.js   les sept dictionnaires (générés par tools/build-locale.mjs)
+tools/strings.mjs inventaire des chaînes, extrait du code — source unique de vérité
 js/ending.js      cinématique finale (désintégration, hyperespace, scroller, musique 8-bit)
 js/util.js        formatage des grands nombres (jusqu'à 10⁶⁰ et au-delà), puissances kW→TW
 js/main.js        boucle de jeu, vitesse, autosave

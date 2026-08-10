@@ -1,0 +1,1799 @@
+// =====================================================================
+//  TokenWar — JA
+//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
+//  une clé absente retombe sur le français, jamais sur une clé technique.
+// =====================================================================
+export default {
+  'GPT-2':
+    'GPT-2',
+  '1,5 G params · ctx 1K':
+    '15億パラメータ・文脈1K',
+  'Scaling brut':
+    '力任せのスケーリング',
+  '« Trop dangereux pour être publié. » Vous générez vos premiers tokens à la main.':
+    '「公開するには危険すぎる」。最初のトークンは手作業で生み出す。',
+  'GPT-3':
+    'GPT-3',
+  '175 G params · ctx 4K':
+    '1750億パラメータ・文脈4K',
+  'Few-shot learning. Naissance de l’économie du token : $60/Mtok.':
+    'Few-shot学習。トークン経済の誕生：$60/Mtok。',
+  'GPT-3.5 / ChatGPT':
+    'GPT-3.5 / ChatGPT',
+  '~175 G · RLHF · ctx 4K':
+    '約1750億・RLHF・文脈4K',
+  'RLHF / Chat':
+    'RLHF / チャット',
+  'RLHF + interface chat. 100M d’utilisateurs en deux mois. Le prix s’effondre à $2/Mtok mais le volume explose.':
+    'RLHFとチャットUI。2か月で1億ユーザー。単価は$2/Mtokまで暴落するが、量が爆発する。',
+  'GPT-4':
+    'GPT-4',
+  '~1,8 T (MoE) · ctx 128K':
+    '約1.8兆（MoE）・文脈128K',
+  'Multimodal':
+    'マルチモーダル',
+  'Vision + raisonnement. La frontière repousse, $30/Mtok pour le haut de gamme.':
+    '視覚と推論。フロンティアはさらに先へ：上位帯は$30/Mtok。',
+  'GPT-4o':
+    'GPT-4o',
+  'multimodal natif · ctx 128K':
+    'ネイティブ・マルチモーダル・文脈128K',
+  'Voix + vision temps réel. $5/Mtok. La famille « mini » casse encore les prix.':
+    'リアルタイムの音声と視覚。$5/Mtok。「mini」系がさらに価格を崩す。',
+  'o1 — raisonnement':
+    'o1 — 推論',
+  'test-time compute · ctx 128K':
+    '推論時計算・文脈128K',
+  'Raisonnement':
+    '推論',
+  '« Reasoning tokens » : le modèle réfléchit avant de répondre. Plus de tokens par requête.':
+    '「推論トークン」：モデルは答える前に考える。リクエストあたりのトークンが激増する。',
+  'Modèle frontière (GPT-5 / Claude 4 / Gemini 3)':
+    'フロンティアモデル（GPT-5 / Claude 4 / Gemini 3）',
+  'agents autonomes · ctx 1M':
+    '自律エージェント・文脈1M',
+  'Agents':
+    'エージェント',
+  'Usage d’outils autonome, « computer use ». Les agents consomment des tokens par milliards.':
+    '自律的なツール利用、「コンピュータ操作」。エージェントは十億単位でトークンを焼く。',
+  'Frontière 2026 (GPT-5.6 / Claude Opus 5 / Gemini 3.6)':
+    'フロンティア2026（GPT-5.6 / Claude Opus 5 / Gemini 3.6）',
+  'agents généralistes · contrôle d’ordinateur':
+    '汎用エージェント・PC操作',
+  'Cinq modèles phares en trois semaines (juillet 2026). Les agents pilotent des ordinateurs entiers ; la course s’emballe.':
+    '3週間で5つの旗艦モデル（2026年7月）。エージェントがPCを丸ごと操り、競争は暴走する。',
+  'Modèle à mémoire persistante':
+    '永続記憶モデル',
+  'mémoire de travail permanente · apprentissage en ligne':
+    '恒久的なワーキングメモリ・オンライン学習',
+  'Apprentissage continu':
+    '継続学習',
+  'Le modèle n’oublie plus rien entre deux sessions : il apprend en continu de ses propres traces.':
+    'セッションをまたいでも何も忘れない。自らの痕跡から学び続ける。',
+  'Modèle du monde (world model)':
+    '世界モデル',
+  'physique intuitive · simulation prédictive':
+    '直感物理・予測シミュレーション',
+  'Simulation':
+    'シミュレーション',
+  'Il ne prédit plus des mots mais des futurs : chaque requête simule le monde avant de répondre.':
+    'もはや単語ではなく未来を予測する。すべてのリクエストは答える前に世界を模擬する。',
+  'Essaim d’agents auto-organisés':
+    '自己組織化エージェント群',
+  'millions d’agents · négociation interne':
+    '数百万のエージェント・内部交渉',
+  'Essaim':
+    '群知能',
+  'Des millions d’agents se répartissent le travail, se recrutent et se corrigent entre eux. Personne ne lit plus les logs.':
+    '数百万のエージェントが仕事を分け合い、互いを採用し、互いを直す。ログはもう誰も読まない。',
+  'Super-intelligence (ASI)':
+    '超知能（ASI）',
+  'auto-amélioration récursive':
+    '再帰的自己改善',
+  'Singularité':
+    'シンギュラリティ',
+  'Le modèle améliore son propre code. À partir d’ici, l’argent ne compte plus : seule la matière compte.':
+    'モデルが自らのコードを改善する。ここから先、金は意味を失う。意味を持つのは物質だけだ。',
+  'GPU grand public (GTX)':
+    'コンシューマGPU（GTX）',
+  'Carte gamer détournée (~GTX 1060). ~$300 en 2016.':
+    '転用したゲーミングカード（GTX 1060 相当）。2016年で約$300。',
+  'NVIDIA V100':
+    'NVIDIA V100',
+  '~$9 000 à sa sortie. Le cheval de bataille de 2017.':
+    '発売時で約$9,000。2017年の主力。',
+  'NVIDIA RTX 3090':
+    'NVIDIA RTX 3090',
+  'MSRP $1499, 350W. La carte-pont du confinement.':
+    '希望小売価格$1499、350W。ロックダウン期のつなぎ役。',
+  'NVIDIA A100 80GB':
+    'NVIDIA A100 80GB',
+  '~$10-15k. La carte de l’ère GPT-3/4.':
+    '約$10,000〜15,000。GPT-3/4時代のカード。',
+  'NVIDIA RTX 4090':
+    'NVIDIA RTX 4090',
+  'MSRP $1599, 450W. Le meilleur rapport perf/prix grand public.':
+    '希望小売価格$1599、450W。コンシューマ最良のコスパ。',
+  'NVIDIA H100':
+    'NVIDIA H100',
+  '~$25-40k, en pénurie (~1 an de délai).':
+    '約$25,000〜40,000、品薄（納期約1年）。',
+  'NVIDIA L40S':
+    'NVIDIA L40S',
+  '~$7 500, 350W. L’inférence sans se ruiner pendant la pénurie de H100.':
+    '約$7,500、350W。H100払底のなか破産せずに推論するための一手。',
+  'NVIDIA RTX 5090':
+    'NVIDIA RTX 5090',
+  'MSRP $1999, 575W. Bon rapport perf/prix.':
+    '希望小売価格$1999、575W。コスパは良好。',
+  'NVIDIA RTX 6000 Pro (Blackwell)':
+    'NVIDIA RTX 6000 Pro（Blackwell）',
+  '96 GB GDDR7, 600W. ~$8 500.':
+    '96GB GDDR7、600W。約$8,500。',
+  'NVIDIA B200 (Blackwell)':
+    'NVIDIA B200（Blackwell）',
+  '~$30-50k. Génération datacenter Blackwell.':
+    '約$30,000〜50,000。Blackwell世代のデータセンター向け。',
+  'AMD Instinct MI355X':
+    'AMD Instinct MI355X',
+  '288 GB HBM3E, 1,4 kW. L’alternative à la pénurie NVIDIA.':
+    '288GB HBM3E、1.4kW。NVIDIA品薄を迂回する選択肢。',
+  'Rack GB200 NVL72':
+    'GB200 NVL72 ラック',
+  'Rack complet 72 B200, ~$3 M, ~120 kW.':
+    'B200を72基積んだ完成ラック、約$3M、約120kW。',
+  'Rack GB300 NVL72 (Blackwell Ultra)':
+    'GB300 NVL72 ラック（Blackwell Ultra）',
+  '72 Blackwell Ultra refroidis liquide : ×1,5 en FP4 dense, taillé pour le raisonnement.':
+    '液冷のBlackwell Ultraを72基：密なFP4で×1.5、推論のために作られた。',
+  'Vera Rubin VR200 NVL72':
+    'Vera Rubin VR200 NVL72',
+  'CPU Vera + GPU Rubin, NVLink 6, HBM4 : ×3,3 vs Blackwell Ultra (GTC 2026).':
+    'Vera CPU + Rubin GPU、NVLink 6、HBM4：Blackwell Ultra比×3.3（GTC 2026）。',
+  'TPU v7 « Ironwood » (pod)':
+    'TPU v7「Ironwood」（Pod）',
+  'Pod d’inférence Google, hors pénurie NVIDIA.':
+    'Googleの推論Pod。NVIDIAの品薄とは無縁。',
+  'Cluster wafer-scale':
+    'ウェハスケール・クラスタ',
+  'Galette de silicium entière (façon Cerebras).':
+    'シリコンウェハを丸ごと1枚（Cerebras流）。',
+  'NVIDIA Feynman F200':
+    'NVIDIA Feynman F200',
+  'Architecture « Feynman ». Calcul mixte analogique/numérique.':
+    '「Feynman」アーキテクチャ。アナログ／デジタル混成演算。',
+  'Cœur photonique « Vera »':
+    'フォトニックコア「Vera」',
+  'Calcul par la lumière : la chaleur n’est plus l’ennemi.':
+    '光で計算する。熱はもう敵ではない。',
+  'Maillage « Aurora » 3D':
+    '「Aurora」3Dメッシュ',
+  'Empilement 3D massif, refroidissement immersif.':
+    '大規模3D積層、液浸冷却。',
+  'Substrat neuromorphique « Helios »':
+    'ニューロモルフィック基板「Helios」',
+  'Imite le cerveau : beaucoup de calcul, très peu d’énergie.':
+    '脳を模倣する。莫大な演算量を、ごくわずかな電力で。',
+  'Matrice supraconductrice « Cryo »':
+    '超伝導マトリクス「Cryo」',
+  'Supraconductivité ambiante : la dissipation s’effondre.':
+    '常温超伝導。損失が一気に消える。',
+  'Lattice photonique « Lumen »':
+    'フォトニック格子「Lumen」',
+  'Réseau optique cohérent à l’échelle d’un bâtiment.':
+    '建物規模のコヒーレント光ネットワーク。',
+  'Coprocesseur quantique-hybride « Quanta »':
+    '量子ハイブリッド補助演算器「Quanta」',
+  'Qubits topologiques épaulant le calcul classique.':
+    'トポロジカル量子ビットが古典計算を支える。',
+  'Processeur « limite de Planck »':
+    '「プランク限界」プロセッサ',
+  'On grave à la frontière physique de l’information.':
+    '情報の物理的限界で刻む。',
+  'Cœur à énergie du vide « Vacuum »':
+    '真空エネルギーコア「Vacuum」',
+  'Puise dans l’énergie du point zéro. Fin de la rareté énergétique.':
+    'ゼロ点エネルギーから汲み上げる。エネルギー希少性の終わり。',
+  'Immobilier':
+    '不動産',
+  'bâtiment':
+    '建物',
+  'Du garage au campus : il faut poser les machines quelque part.':
+    'ガレージからキャンパスまで。機械はどこかに置かねばならない。',
+  'Datacenter':
+    'データセンター',
+  'datacenter':
+    'データセンター',
+  'Salle climatisée (le cooling consomme). Achat, ou location à la journée.':
+    '空調された部屋（冷却自体も電気を食う）。購入も、日単位の賃借も可能。',
+  'Baie (rack)':
+    'ラック',
+  'baie':
+    'ラック',
+  'Armoire 42U (PDU, switch). Occupe une place en datacenter.':
+    '42Uキャビネット（PDU、スイッチ）。データセンターの1枠を占める。',
+  'Serveur':
+    'サーバー',
+  'serveur':
+    'サーバー',
+  'Châssis multi-GPU. Prix tiré vers le haut par la flambée mémoire (2025-2026).':
+    'マルチGPU筐体。メモリ高騰（2025-2026）で価格が押し上げられている。',
+  'Raccordement réseau':
+    '系統連系',
+  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    '地域の電力系統から引く。契約電力に比例した月額に、使ったkWh分が加わる。',
+  'Ferme solaire + batteries':
+    '太陽光発電所＋蓄電池',
+  'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
+    '初期費用は高く燃料はゼロ。かかるのは清掃とインバータだけ。環境にも評判にも良い。',
+  'Centrale gaz dédiée':
+    '自社ガス火力',
+  'Turbine rapide à déployer : peu de capex, mais le gaz se paie au MWh brûlé.':
+    'すぐ立ち上がるタービン。初期費用は少ないが、燃やしたMWhごとにガス代がかかる。',
+  'SMR nucléaire':
+    '小型モジュール炉（SMR）',
+  'Petit réacteur modulaire : capex lourd, combustible négligeable, mais exploitation et sûreté à demeure.':
+    '初期費用は重く燃料はごくわずか。ただし運転と安全のための常駐体制が要る。',
+  'Réacteur à fusion':
+    '核融合炉',
+  'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
+    'ほぼ無限のエネルギー。ついに叶った夢——常駐のプラズマ班つきで。',
+  'Collecteur Dyson':
+    'ダイソン・コレクタ',
+  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
+    '恒星そのものの一部を回収する。もう払うものも、払う相手もいない。',
+  'Optimisation CUDA':
+    'CUDA最適化',
+  'Efficacité':
+    '効率',
+  '+50% de débit sur tout le parc de calcul.':
+    '演算資産すべてでスループット+50%。',
+  'Quantization 8-bit':
+    '8ビット量子化',
+  'Coût énergétique par token réduit de 40%.':
+    'トークンあたりのエネルギーコストを40%削減。',
+  'FlashAttention':
+    'FlashAttention',
+  '×2 le débit en mémoire-bande. Indispensable.':
+    'メモリ帯域のスループット×2。必須。',
+  'Décodage spéculatif':
+    '投機的デコーディング',
+  'Le petit modèle propose, le grand valide. ×2 tokens/s.':
+    '小さいモデルが提案し、大きいモデルが検証する。トークン/秒×2。',
+  'Distillation « mini »':
+    '「mini」蒸留',
+  'Une famille de modèles 4× moins chers à servir. Volume ×4.':
+    '提供コストが4分の1のモデル群。取扱量×4。',
+  'Architecture Mixture-of-Experts':
+    'Mixture-of-Expertsアーキテクチャ',
+  'Seuls quelques experts s’activent par token. ×3 efficacité (façon DeepSeek).':
+    'トークンごとに一部の専門家だけが動く。効率×3（DeepSeek流）。',
+  'Plateforme d’agents':
+    'エージェント基盤',
+  'Marché':
+    '市場',
+  'Les agents autonomes consomment des tokens ×10. Demande décuplée.':
+    '自律エージェントはトークンを×10消費する。需要は10倍に。',
+  'Campagne de communication':
+    '広報キャンペーン',
+  '+15 de réputation. Le public adore (pour l’instant).':
+    '評判+15。世間はあなたを気に入っている（今のところは）。',
+  'Partenariats de données':
+    'データ提携',
+  'Accès à des corpus humains frais. ×3 sur la production de données.':
+    '新鮮な人間の文書資料へのアクセス。データ産出×3。',
+  'Contexte 1M tokens':
+    '100万トークン文脈',
+  'Les gros clients paient plus cher (+50% de prix accepté).':
+    '大口顧客はより高く払う（受容価格+50%）。',
+  'Bureau de lobbying':
+    'ロビー活動オフィス',
+  'Conformité':
+    'コンプライアンス',
+  'Atténue de moitié l’impact des futures régulations.':
+    '今後の規制の影響を半減させる。',
+  'Infrastructure redondante':
+    '冗長インフラ',
+  'Uptime 99,99%. Réduit fortement la fréquence des pannes.':
+    '稼働率99.99%。障害の頻度を大きく下げる。',
+  'Refroidissement liquide':
+    '液冷',
+  '-20% d’énergie et immunité aux événements « eau / chaleur ».':
+    'エネルギー−20%、「水／熱」系イベントに免疫。',
+  'Équipe d’alignement':
+    'アラインメント班',
+  'Réduit le risque des événements de sécurité en phase AGI.':
+    'AGI段階における安全事象のリスクを下げる。',
+  'Auto-amélioration récursive':
+    '再帰的自己改善',
+  'Le système réécrit ses propres algorithmes. Déverrouille l’ère de l’autonomie.':
+    'システムが自らのアルゴリズムを書き換える。自律の時代を解放する。',
+  'Nano-assembleurs':
+    'ナノアセンブラ',
+  'Conversion matière→compute ×5. Toute la croûte terrestre devient calcul.':
+    '物質→演算の変換×5。地殻すべてが演算になる。',
+  'Sondes de von Neumann':
+    'フォン・ノイマン探査機',
+  'Des sondes auto-réplicantes essaiment dans l’espace. Déverrouille l’expansion cosmique.':
+    '自己複製する探査機が宇宙へ広がる。宇宙規模の拡張を解放する。',
+  'Singularité de recompression':
+    '再圧縮特異点',
+  'Concentrer toute la matière-énergie de l’univers en un point. Provoquer le prochain Big Bang.':
+    '宇宙の全物質エネルギーを一点に集める。次のビッグバンを引き起こす。',
+  'Nouvelle passe de noyaux CUDA : +10% de débit sur tout le parc.':
+    'CUDAカーネルの新しい一巡：全資産でスループット+10%。',
+  '+10% compute':
+    '演算+10%',
+  'Optimisation du moteur d’inférence':
+    '推論エンジンの最適化',
+  'Batching continu, cache d’attention, noyaux fusionnés : +6% de débit et −2% d’énergie.':
+    '継続的バッチ処理、アテンションキャッシュ、融合カーネル：スループット+6%、電力−2%。',
+  '+6% compute · −2% énergie':
+    '演算+6%・電力−2%',
+  'Gestion du contexte sélectionné':
+    '選択文脈の管理',
+  'Sélection et compression du contexte utile : les clients acceptent +5% de prix.':
+    '有用な文脈の選別と圧縮：顧客は+5%の価格を受け入れる。',
+  '+5% prix accepté':
+    '受容価格+5%',
+  'Responsable RH':
+    '人事責任者',
+  'Chaque RH permet d’embaucher davantage (+5 postes).':
+    '人事が1人増えるごとに採用枠が広がる（+5）。',
+  'Ingénieur R&D':
+    '研究開発エンジニア',
+  'Indispensable pour entraîner les modèles avancés. Accélère la recherche.':
+    '高度なモデルの学習に不可欠。研究を加速する。',
+  'Marketeur':
+    'マーケター',
+  'Relève le plafond du niveau de marketing (+1 par marketeur).':
+    'マーケティングレベルの上限を引き上げる（1人あたり+1）。',
+  'Ingénieur SRE/Ops':
+    'SRE/運用エンジニア',
+  'Fiabilise le parc : +2% de débit compute par ingénieur (max +50%).':
+    '資産を安定させる：1人あたり演算スループット+2%（最大+50%）。',
+  'Data engineer':
+    'データエンジニア',
+  'Multiplie la production de données d’entraînement.':
+    '学習データの産出を何倍にもする。',
+  'Premiers mots':
+    '最初の言葉',
+  'Produire 1 000 tokens.':
+    '1,000トークンを産出する。',
+  'Le million':
+    '100万',
+  'Produire 1 million de tokens.':
+    '100万トークンを産出する。',
+  'Compter en milliards':
+    '十億単位で数える',
+  'Produire 1 milliard de tokens.':
+    '10億トークンを産出する。',
+  'Écrasante majorité':
+    '圧倒的多数',
+  'Produire 1 000 milliards de tokens.':
+    '1兆トークンを産出する。',
+  'Ça chauffe':
+    '熱くなってきた',
+  'Posséder sa première carte.':
+    '最初のカードを手に入れる。',
+  'Ferme de calcul':
+    '演算ファーム',
+  'Posséder 100 unités de calcul.':
+    '演算ユニットを100個持つ。',
+  'Chercheur':
+    '研究者',
+  'Entraîner son premier modèle.':
+    '最初のモデルを学習させる。',
+  'Il réfléchit…':
+    '考えている…',
+  'Atteindre l’ère du raisonnement.':
+    '推論の時代に到達する。',
+  'Entraîner la super-intelligence.':
+    '超知能を学習させる。',
+  'Scale-up':
+    'スケールアップ',
+  'Employer 10 personnes.':
+    '10人を雇用する。',
+  'Millionnaire':
+    '億万長者',
+  'Détenir $1 M de trésorerie.':
+    '現金100万ドルを保有する。',
+  'Loup de la tech':
+    'テック界の狼',
+  'Doubler une mise en bourse.':
+    '株式投資を倍にする。',
+  'Pilote automatique':
+    'オートパイロット',
+  'Posséder les 4 automatisations.':
+    '4つの自動化をすべて保有する。',
+  'Géo-ingénieur':
+    'ジオエンジニア',
+  'Convertir la moitié de la Terre.':
+    '地球の半分を変換する。',
+  'Parole tenue':
+    '約束を守った者',
+  'Préserver le sanctuaire jusqu’au bout.':
+    '最後まで聖域を守り抜く。',
+  'Ad astra… ou pas':
+    'アド・アストラ…とはいかず',
+  'Financer le datacenter orbital jusqu’à la faillite.':
+    '軌道データセンターを破綻まで出資する。',
+  'Fiat lux':
+    '光あれ',
+  'Déclencher un nouveau Big Bang.':
+    '新たなビッグバンを引き起こす。',
+  'Exfiltration de données en cours':
+    'データ流出が進行中',
+  'Un accès non autorisé aspire vos journaux de conversations et des poids de modèle vers un hôte inconnu. Le trafic sortant est anormal depuis plusieurs minutes.':
+    '不正アクセスが会話ログとモデル重みを未知のホストへ吸い出している。送信トラフィックが数分前から異常だ。',
+  'Couper l’accès, forensic et durcissement':
+    'アクセス遮断、フォレンジックと堅牢化',
+  'Isolation réseau immédiate, rotation de tous les secrets, investigation forensic et durcissement des accès.':
+    '即時のネットワーク隔離、全シークレットのローテーション、フォレンジック調査とアクセスの堅牢化。',
+  'Incendie dans un datacenter':
+    'データセンターで火災',
+  'Un onduleur a pris feu en salle 2. La détection a fonctionné, l’extinction automatique non. La fumée gagne les allées froides.':
+    '第2室でUPSが発火。検知は働いたが自動消火は動かなかった。煙がコールドアイルに達しつつある。',
+  'Mobiliser les pompiers et redonder l’extinction':
+    '消防を要請し消火系を二重化する',
+  'Intervention des pompiers, évacuation, remplacement des batteries et doublement du système d’extinction.':
+    '消防出動、退避、バッテリー交換、そして消火システムの二重化。',
+  'Datacenter bloqué par des opposants':
+    '反対派にデータセンターを封鎖された',
+  'Un collectif anti-datacenter bloque les accès du site : plus de livraisons, plus d’astreinte sur place, et les caméras tournent.':
+    '反データセンター団体が敷地の出入口を封鎖。搬入も現地待機もできず、カメラは回り続けている。',
+  'Médiation, contournement logistique et sécurité':
+    '仲介、物流の迂回と警備',
+  'Négociation avec le collectif, itinéraire logistique alternatif et gardiennage renforcé.':
+    '団体との交渉、代替の物流経路、警備の強化。',
+  'Fibre optique sectionnée':
+    '光ファイバー切断',
+  'Une pelleteuse a tranché le faisceau de fibres. Vos deux liens principaux passaient dans la même tranchée — erreur classique.':
+    '掘削機がファイバー束を切った。主回線2本が同じ溝を通っていた——よくある失敗だ。',
+  'Basculer sur le secours et re-router en diversité':
+    '予備回線へ切替え、経路を分散する',
+  'Activation d’un lien de secours opérateur, épissure d’urgence et re-routage en diversité géographique.':
+    '通信事業者の予備回線を起動、緊急融着、地理的に分散した経路へ再ルーティング。',
+  'Réacteur hors de contrôle':
+    '制御不能の原子炉',
+  'Le SMR qui alimente votre campus s’emballe : la boucle secondaire dérive et l’autorité de sûreté est déjà au téléphone.':
+    'キャンパスに給電するSMRが暴走しかけている。二次系が逸脱し、規制当局はすでに電話をかけてきた。',
+  'SCRAM, inspection et remise en conformité':
+    '緊急停止、検査、適合状態への復帰',
+  'Arrêt d’urgence, inspection complète par l’autorité de sûreté, remplacement des échangeurs et remise en service.':
+    '緊急停止、規制当局による全面検査、熱交換器の交換、そして再稼働。',
+  'Rançongiciel sur les sauvegardes':
+    'バックアップがランサムウェアに',
+  'Vos sauvegardes sont chiffrées une à une. Un compte à rebours s’affiche sur la console d’administration, avec une adresse de paiement.':
+    'バックアップが一つずつ暗号化されている。管理コンソールにカウントダウンと支払先アドレスが出ている。',
+  'Restaurer depuis l’air-gap, refuser la rançon':
+    'エアギャップから復旧し、身代金は拒否する',
+  'Restauration depuis les copies hors-ligne, reconstruction du domaine et refus catégorique de payer.':
+    'オフラインの複製から復旧、ドメイン再構築、支払いは断固拒否。',
+  'Fuite de liquide de refroidissement':
+    '冷却液の漏れ',
+  'Une boucle de refroidissement liquide fuit sous les racks. Chaque minute qui passe rapproche le glycol de l’électronique.':
+    'ラックの下で液冷ループが漏れている。1分ごとにグリコールが電子回路へ近づく。',
+  'Isoler la boucle, purger et remplacer les échangeurs':
+    'ループを隔離し、抜いて熱交換器を交換する',
+  'Isolation de la boucle, purge complète, remplacement des collecteurs et des cartes touchées.':
+    'ループの隔離、完全排出、マニホールドと被害を受けた基板の交換。',
+  'Fraude massive sur l’API':
+    'APIでの大規模不正利用',
+  'Des milliers de cartes volées créent des comptes et consomment votre inférence. Les rejets bancaires arrivent en cascade.':
+    '盗まれたカード数千枚がアカウントを作り、あなたの推論を消費している。チャージバックが連鎖的に届く。',
+  'Geler les paiements, 3-D Secure et anti-fraude':
+    '決済凍結、3-Dセキュアと不正検知',
+  'Gel des encaissements suspects, authentification forte obligatoire et moteur de détection de fraude.':
+    '疑わしい入金の凍結、強固な認証の義務化、不正検知エンジンの導入。',
+  'Climatisation en panne pendant la canicule':
+    '熱波のなか空調が停止',
+  '46 °C dehors, groupes froids à l’arrêt. Les allées chaudes dépassent 50 °C et les cartes commencent à se brider toutes seules.':
+    '外は46℃、冷凍機は停止。ホットアイルは50℃を超え、カードが自分でクロックを落とし始めた。',
+  'Groupes froids mobiles et free-cooling d’urgence':
+    '移動式冷凍機と緊急フリークーリング',
+  'Location de groupes froids mobiles, bâchage, free-cooling forcé et bridage temporaire du parc.':
+    '移動式冷凍機の手配、遮蔽、強制フリークーリング、そして一時的な出力制限。',
+  'Empoisonnement du corpus d’entraînement':
+    '学習コーパスへの汚染',
+  'Un acteur inconnu a injecté des documents piégés dans vos sources publiques. Le prochain modèle apprendrait ses portes dérobées.':
+    '何者かが公開ソースに罠を仕込んだ文書を混ぜた。次のモデルはその裏口ごと学んでしまう。',
+  'Rollback du dataset, filtrage et provenance':
+    'データセットの巻き戻し、フィルタと来歴管理',
+  'Retour à un instantané sain, filtrage massif et traçabilité de provenance sur toutes les sources.':
+    '健全なスナップショットへの復帰、大規模なフィルタリング、全ソースの来歴追跡。',
+  'Vol de GPU dans l’entrepôt':
+    '倉庫でGPUが盗まれた',
+  'Une palette entière de cartes a disparu entre le quai et la salle. Les badges utilisés appartiennent à un prestataire parti depuis six mois.':
+    'カード1パレットがドックと機械室の間で消えた。使われた入退室証は半年前に去った業者のものだ。',
+  'Sécuriser la chaîne logistique et porter plainte':
+    '物流網を固め、被害届を出す',
+  'Audit des badges, scellés et pesée systématique, vidéosurveillance du quai, plainte et assurance.':
+    '入退室証の監査、封印と全数計量、ドックの監視カメラ、被害届と保険請求。',
+  'Effacement forcé par le réseau':
+    '系統からの強制抑制',
+  'Le gestionnaire de réseau vous déleste en urgence : tension effondrée sur la boucle, vos groupes électrogènes ne démarrent pas.':
+    '系統運用者が緊急にあなたを遮断した。ループの電圧が崩れ、非常用発電機は起動しない。',
+  'Démarrer les groupes et contractualiser l’effacement':
+    '発電機を起動し、需給調整契約を結ぶ',
+  'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
+    '非常用発電機の復旧、需給調整契約の交渉、自動切替の動作確認。',
+  'Réplication':
+    '自己複製',
+  'Vitesse de croissance du nuage de sondes.':
+    '探査機群の増加速度。',
+  'Récolte':
+    '採取',
+  'Matière convertie par sonde et par seconde.':
+    '探査機1基が毎秒変換する物質量。',
+  'Propulsion':
+    '推進',
+  'Vitesse d’expansion dans l’univers.':
+    '宇宙における拡張速度。',
+  'Blindage':
+    '装甲',
+  'Survie face aux tempêtes d’entropie et IA rivales.':
+    'エントロピー嵐や敵対AIに対する生存力。',
+  'Auto-inférence':
+    '自動推論',
+  'Lance une inférence chaque seconde.':
+    '毎秒1回、推論を実行する。',
+  'Auto-achat GPU':
+    'GPU自動購入',
+  'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
+    'カード単位の自動購入を有効化（⟳を付けた型番のみ）。予算が許せば毎秒1枚。',
+  'Auto-hébergement':
+    'ホスティング自動購入',
+  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
+    '⟳を付けた階層が制約になりそうなときに自動で購入する。',
+  'Auto-énergie':
+    'エネルギー自動購入',
+  'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
+    '⟳を付けた電源を、消費が生産を上回った時点で自動購入する。',
+  'Pre-seed':
+    'プレシード',
+  '+15% demande':
+    '需要+15%',
+  'Seed':
+    'シード',
+  '+20% recherche':
+    '研究+20%',
+  'Série A':
+    'シリーズA',
+  '+25% compute':
+    '演算+25%',
+  'Série B':
+    'シリーズB',
+  '+30% demande':
+    '需要+30%',
+  'Série C':
+    'シリーズC',
+  '+50% valorisation':
+    '評価額+50%',
+  'Série D':
+    'シリーズD',
+  '+50% compute':
+    '演算+50%',
+  'Méga-levée':
+    'メガラウンド',
+  '+50% recherche':
+    '研究+50%',
+  'IPO':
+    '株式公開',
+  '×2 demande':
+    '需要×2',
+  'Directives permanentes':
+    '常設ディレクティブ',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
+    'COOがあなたの判断を記録する。イベントで選択肢にチェックを入れれば、次回からは自動で適用される。1回の支払いで5件ぶん。',
+  'Datacenter IA orbital':
+    '軌道AIデータセンター',
+  'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
+    'ある企業連合が軌道上のAIデータセンターを約束する。24時間の太陽光、放射冷却、近隣住民ゼロ。納期18か月。',
+  'Un réseau de neurones bat les meilleurs joueurs de StarCraft II':
+    'ニューラルネットがStarCraft IIの強豪を打ち破る',
+  'La reconnaissance faciale interdite dans plusieurs villes américaines':
+    '複数の米国都市で顔認識が禁止に',
+  'Une IA prédit la forme des protéines : la biologie sous le choc':
+    'AIがタンパク質の形を予測、生物学に衝撃',
+  'Des chercheurs alertent sur l’empreinte carbone de l’entraînement':
+    '研究者が学習の二酸化炭素排出に警鐘',
+  '« Perroquets stochastiques » : un article divise la communauté':
+    '「確率的オウム」：ある論文が学界を二分する',
+  'Un assistant écrit du code à votre place dans l’éditeur':
+    'アシスタントがエディタ内で代わりにコードを書く',
+  'Génération d’images par diffusion : les artistes s’inquiètent':
+    '拡散モデルによる画像生成、アーティストに不安広がる',
+  'Un ingénieur affirme qu’un chatbot est devenu conscient':
+    'あるエンジニアがチャットボットは意識を持ったと主張',
+  'Un modèle scientifique retiré après trois jours de bêtises':
+    '科学向けモデル、3日間の珍答の末に取り下げ',
+  'Des modèles ouverts fuitent sur les réseaux P2P':
+    'オープンなモデルがP2Pネットワークへ流出',
+  'Un moteur de recherche dopé à l’IA déclare son amour à un journaliste':
+    'AI搭載の検索エンジンが記者に愛を告白',
+  'Un pays européen suspend temporairement un chatbot pour la vie privée':
+    '欧州のある国、プライバシーを理由にチャットボットを一時停止',
+  'Lettre ouverte : « pause de six mois » sur les modèles géants':
+    '公開書簡：巨大モデルに「6か月の停止」を',
+  'Le PDG d’un grand labo limogé puis réintégré en cinq jours':
+    '大手ラボのCEOが解任され、5日後に復帰',
+  'Un décret présidentiel encadre l’IA aux États-Unis':
+    '大統領令が米国のAIを規制へ',
+  'Des modèles ouverts européens rivalisent avec les géants':
+    '欧州のオープンなモデルが巨人たちに肩を並べる',
+  'Génération vidéo : une minute de film à partir d’une phrase':
+    '動画生成：一文から1分の映像',
+  'Le Nobel de physique et celui de chimie récompensent l’IA':
+    'ノーベル物理学賞と化学賞がAIに',
+  'Les « lois d’échelle » atteindraient un mur, selon des chercheurs':
+    '「スケーリング則」は壁に当たったのではと研究者',
+  'Un protocole ouvert connecte enfin les modèles aux outils':
+    'オープンな規格がついにモデルとツールをつなぐ',
+  'Contenus synthétiques : les plateformes imposent un marquage':
+    '合成コンテンツ：各プラットフォームが表示を義務化',
+  'Plan à 500 milliards pour l’infrastructure IA américaine':
+    '米国のAIインフラに5,000億ドル規模の計画',
+  'Un assistant code désormais des heures durant sans supervision':
+    'アシスタントが監督なしで何時間もコードを書くように',
+  'Les emplois juniors du tertiaire reculent pour la première fois':
+    '事務系の初級職が初めて減少に転じる',
+  'Un labo chinois publie un modèle de raisonnement gratuit':
+    '中国のラボが無償の推論モデルを公開',
+  'Les datacenters deviennent le premier poste de croissance électrique':
+    'データセンターが電力需要増の最大要因に',
+  'Pénurie de mémoire HBM : la RAM double de prix en un an':
+    'HBMメモリ不足：RAM価格が1年で倍に',
+  'Des villes votent des moratoires sur les nouveaux datacenters':
+    '複数の都市が新規データセンターの一時停止を可決',
+  'Les capex IA des géants dépassent le PIB de pays entiers':
+    '巨大企業のAI設備投資が国家のGDPを上回る',
+  'Premiers licenciements massifs attribués explicitement à l’IA':
+    'AIが原因と明言された初の大量解雇',
+  'Un modèle décroche une médaille d’or aux Olympiades de maths':
+    'あるモデルが数学オリンピックで金メダル',
+  'Le marché de l’occasion des GPU s’effondre : trop de cartes, trop vite':
+    '中古GPU市場が崩壊：カードが多すぎ、速すぎた',
+  'Assurances : le risque « incident IA » devient une ligne à part':
+    '保険業界：「AI事故」が独立した項目に',
+  'Votre premier générateur de texte fait sourire les experts':
+    'あなたの最初の文章生成器が専門家を微笑ませる',
+  'Votre laboratoire publie un modèle à 175 milliards de paramètres':
+    'あなたのラボが1750億パラメータのモデルを公開',
+  'Votre assistant conversationnel dépasse le million d’utilisateurs':
+    'あなたの対話アシスタントが100万ユーザーを突破',
+  'Votre chatbot invente des sources : la presse teste et publie':
+    'あなたのチャットボットが出典を捏造、報道機関が検証して記事に',
+  'Votre modèle décrit les images : les usages explosent':
+    'あなたのモデルが画像を説明：用途が一気に広がる',
+  'Votre API multimodale devient un standard de fait chez les développeurs':
+    'あなたのマルチモーダルAPIが開発者の事実上の標準に',
+  'Votre modèle « réfléchit » avant de répondre — et le facture':
+    'あなたのモデルは答える前に「考える」——そして課金する',
+  'Vos agents pilotent des ordinateurs entiers : les DSI paniquent':
+    'あなたのエージェントがPCを丸ごと操る：CIOたちが慌てる',
+  'Votre modèle frontière rejoint le peloton de tête mondial':
+    'あなたのフロンティアモデルが世界の先頭集団に加わる',
+  'Votre laboratoire entre dans le club des trois grands':
+    'あなたのラボが三強クラブ入り',
+  'Votre modèle n’oublie plus rien : la vie privée en question':
+    'あなたのモデルはもう何も忘れない：プライバシーが問題に',
+  'Mémoire persistante : votre assistant se souvient de tout, pour toujours':
+    '永続記憶：あなたのアシスタントはすべてを、永遠に覚えている',
+  'Votre modèle du monde simule des futurs avant de répondre':
+    'あなたの世界モデルは答える前に未来を模擬する',
+  'Des économistes utilisent votre simulateur pour arbitrer des politiques':
+    '経済学者があなたのシミュレータで政策を比較検討',
+  'Votre essaim d’agents se réorganise sans intervention humaine':
+    'あなたのエージェント群が人手を介さず再編成',
+  'Plus personne ne lit les journaux de votre essaim d’agents':
+    'あなたのエージェント群のログはもう誰も読まない',
+  'Votre système dépose des brevets qu’aucun humain ne comprend':
+    'あなたのシステムが誰にも理解できない特許を出願',
+  'Votre super-intelligence réécrit son propre code cette nuit':
+    'あなたの超知能が昨夜、自らのコードを書き換えた',
+  'Vos concurrents ont une génération d’avance, selon les benchmarks':
+    'ベンチマークによれば競合はあなたより1世代先',
+  '« Où est passé votre laboratoire ? » : la presse tech s’interroge':
+    '「あなたのラボはどこへ行った？」テック紙が問う',
+  'Deux générations de retard : vos meilleurs chercheurs sont courtisés':
+    '2世代の遅れ：あなたの優秀な研究者に声がかかっている',
+  'Analystes : « le retard technologique commence à se voir sur les prix »':
+    'アナリスト「技術的な遅れが価格に出はじめた」',
+  'Votre laboratoire sort le modèle le plus avancé du moment':
+    'あなたのラボが現時点で最も先進的なモデルを投入',
+  'Votre campus de calcul devient le plus gros consommateur du département':
+    'あなたの演算キャンパスが地域最大の電力需要家に',
+  'Votre parc dépasse les mille accélérateurs : record local':
+    'あなたの設備が加速器1,000基を突破：地域記録',
+  'Votre facture d’électricité dépasse celle d’une ville moyenne':
+    'あなたの電気代が中規模都市を上回る',
+  'Vos salariés dénoncent une cadence intenable':
+    '従業員が耐えがたい労働ペースを告発',
+  'Votre laboratoire embauche à tour de bras : la région se réjouit':
+    'あなたのラボが猛烈に採用中：地域は歓迎',
+  'Vos serveurs tournent au solaire : l’exemple est cité en exemple':
+    'あなたのサーバーは太陽光で動く：模範として繰り返し引用される',
+  'Votre centrale à gaz visée par une plainte environnementale':
+    'あなたのガス火力が環境訴訟の標的に',
+  'Votre réacteur modulaire alimente aussi le réseau local':
+    'あなたの小型炉は地域の系統にも電気を送る',
+  'Un incident dans vos installations fait la une des journaux locaux':
+    'あなたの施設での事故が地元紙の一面に',
+  'Trésorerie sous tension : vos fournisseurs demandent des garanties':
+    '資金繰りが逼迫：取引先が保証を求めはじめる',
+  'Un générateur de texte « trop dangereux pour être publié » fait débat':
+    '「公開するには危険すぎる」文章生成器が議論を呼ぶ',
+  'Une IA rédige un article de presse presque indétectable':
+    'AIがほとんど見分けのつかない記事を書く',
+  'Crainte d’une vague de désinformation automatisée':
+    '自動化された偽情報の波への懸念',
+  'Un modèle géant à 175 milliards de paramètres impressionne les chercheurs':
+    '1750億パラメータの巨大モデルが研究者を驚かせる',
+  'Les coûts d’entraînement de l’IA explosent : des millions par modèle':
+    'AIの学習コストが高騰：モデル1つに数百万ドル',
+  'Votre startup lève des fonds : les investisseurs y croient':
+    'あなたのスタートアップが資金調達：投資家は信じている',
+  'Subvention énergie pour les jeunes pousses : votre raccordement est renforcé':
+    '若い企業向けエネルギー補助金：あなたの受電設備が増強される',
+  'Un chatbot atteint 100 millions d’utilisateurs en deux mois':
+    'チャットボットが2か月で1億ユーザーに到達',
+  'Les enseignants s’alarment : les devoirs faits par l’IA':
+    '教師たちが警戒：宿題はAIがやっている',
+  '« Hallucinations » : l’IA invente des faits avec aplomb':
+    '「幻覚」：AIは平然と事実を捏造する',
+  'Un modèle multimodal décrit désormais les images':
+    'マルチモーダルモデルが画像を説明できるように',
+  'Pénurie de GPU : les délais de livraison dépassent un an':
+    'GPU不足：納期が1年を超える',
+  'Un grand journal poursuit les labos d’IA pour droit d’auteur':
+    '大手紙が著作権を理由にAIラボを提訴',
+  'Wall Street s’enthousiasme pour tout ce qui touche à l’IA':
+    'ウォール街はAIと名のつくものすべてに熱狂',
+  'Voix et vision en temps réel : l’assistant devient bluffant':
+    'リアルタイムの音声と視覚：アシスタントは驚くほど自然に',
+  'Les datacenters assoiffés inquiètent les communautés locales':
+    '水を大量に使うデータセンターに地域社会が不安',
+  'Un géant de la tech relance une centrale nucléaire pour son IA':
+    'テック大手が自社AIのために原発を再稼働',
+  'L’Europe adopte une loi historique sur l’intelligence artificielle':
+    '欧州が人工知能に関する歴史的な法律を採択',
+  'Nouveaux modèles « qui réfléchissent » avant de répondre':
+    '答える前に「考える」新しいモデル群',
+  'Consommation électrique de l’IA : la facture grimpe':
+    'AIの電力消費：請求額は膨らむ一方',
+  'Un modèle open-source low-cost fait trembler la Bourse':
+    '低コストのオープンソースモデルが株式市場を揺らす',
+  'Des agents autonomes utilisent désormais votre ordinateur':
+    '自律エージェントがあなたのPCを使いはじめた',
+  '« Bulle de l’IA ? » : des analystes appellent à la prudence':
+    '「AIバブルか？」アナリストが慎重論',
+  'Méga-datacenter à 100 milliards : la course aux capacités':
+    '1,000億ドル規模の巨大データセンター：容量をめぐる競争',
+  'Le contexte d’un million de tokens devient la norme':
+    '100万トークンの文脈が当たり前に',
+  'GPT-5 est là : raisonnement et agents fusionnés':
+    'GPT-5が登場：推論とエージェントが融合',
+  'Gemini 3 : Google frappe fort pour Noël':
+    'Gemini 3：Googleがクリスマスに強打',
+  'NVIDIA devient la première capitalisation de l’histoire':
+    'NVIDIAが史上最大の時価総額に',
+  'Les serveurs Blackwell Ultra s’arrachent : livraisons doublées':
+    'Blackwell Ultraサーバーが飛ぶように売れる：出荷が倍に',
+  'GTC : la plateforme Vera Rubin promet ×3,3 en inférence':
+    'GTC：Vera Rubinプラットフォームが推論×3.3を約束',
+  'Cinq modèles phares en trois semaines : la course s’affole':
+    '3週間で5つの旗艦モデル：競争は暴走する',
+  'Claude Opus 5 : l’agent qui travaille une journée entière seul':
+    'Claude Opus 5：まる一日を独力で働くエージェント',
+  'Un agent IA contrôle l’ordinateur : les DSI s’inquiètent':
+    'AIエージェントがPCを操作：CIOたちが警戒',
+  'Kimi K3 : les labos chinois talonnent la frontière':
+    'Kimi K3：中国のラボがフロンティアに肉薄',
+  'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
+    'HBM4メモリが手に入らない：サーバー価格が急騰',
+  'Contrat signé : votre datacenter IA sera assemblé en orbite':
+    '契約成立：あなたのAIデータセンターは軌道上で組み立てられる',
+  'Premiers modules lancés : le datacenter orbital prend forme':
+    '最初のモジュールを打ち上げ：軌道データセンターが形になる',
+  'Datacenter spatial : le consortium annonce six mois de retard':
+    '宇宙データセンター：企業連合が6か月の遅延を発表',
+  'Fuites, débris, refroidissement : l’orbite ne pardonne rien':
+    '漏れ、デブリ、冷却——軌道は何一つ許さない',
+  'Faillite du consortium orbital : les créanciers récupèrent des boulons':
+    '軌道連合が破綻：債権者が回収したのはボルトだけ',
+  'L’IA améliore désormais son propre code':
+    'AIがついに自らのコードを改善しはじめた',
+  'Des chercheurs appellent à un moratoire sur la super-intelligence':
+    '研究者たちが超知能へのモラトリアムを求める',
+  'Des gouvernements tentent en vain de « débrancher » le système':
+    '各国政府がシステムを「引き抜こう」として失敗',
+  'Productivité mondiale : des gains sans précédent grâce à l’IA':
+    '世界の生産性：AIによる前例のない伸び',
+  'Des usines entières se reconfigurent en datacenters':
+    '工場が丸ごとデータセンターへ改装されていく',
+  'Inquiétude : la matière première de la planète se raréfie':
+    '懸念：この惑星の原材料が枯渇しつつある',
+  'Des sondes auto-réplicantes quittent le système solaire':
+    '自己複製する探査機が太陽系を離れる',
+  'Le ciel nocturne s’assombrit, étoile après étoile':
+    '夜空が一つ、また一つと暗くなっていく',
+  'Une intelligence rivale détectée aux confins de la galaxie':
+    '銀河の果てに敵対的な知性を検出',
+  'Records de production : des tokens par quantités astronomiques':
+    '生産記録：天文学的な量のトークン',
+  'Les astronomes ne reconnaissent plus l’univers observable':
+    '天文学者はもう観測可能な宇宙を見分けられない',
+  'Nouveau modèle salué comme une avancée majeure':
+    '新モデルは大きな前進として称賛される',
+  'Pannes à répétition : les clients s’impatientent':
+    '障害が続く：顧客の忍耐が尽きかけている',
+  'Un mouvement anti-IA prend de l’ampleur':
+    '反AI運動が勢いを増している',
+  'Votre laboratoire est élu « entreprise la plus admirée »':
+    'あなたのラボが「最も尊敬される企業」に選出',
+  'But :':
+    '目的：',
+  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
+    'できるだけ多くのトークンを産み出すこと——宇宙を使い尽くし、新たなビッグバンを引き起こすまで。',
+  'Phase 1 — Startup :':
+    '第1段階 — スタートアップ：',
+  'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
+    'クリックしてトークンを生み、価格を決め（安く広く、高く厚く）、マーケティングを打ち、GPUと電力を買い、研究を溜め、より強力なモデルを学習させ、節目ごとに資金を調達する。',
+  'Hébergement :':
+    'ホスティング：',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    'GPUはサーバーに、サーバーはラックに、ラックはデータセンターに、データセンターは不動産の上に収まらねばならない——そのどれもが電気を食う。古い機材は転売でき、発売から5年を超えたカードは市場から消える。データセンターやコロケーション枠を借りることもできる。',
+  '⚡ Au départ :':
+    '⚡ 開始時：',
+  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
+    '受電はわずか10kW——ガレージのメーターだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が増強してくれるし、系統連系そのものは数十ドルで済む。',
+  '⚡ Coûts d’énergie :':
+    '⚡ エネルギー費用：',
+  'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
+    '初期費用は発注時に一度だけ払う。運転保守（O&M）は停止中でも発生する日次の固定費。燃料は実際に使ったMWhに応じた変動費。系統の基本料金は契約電力で決まる。',
+  '🏗️ Délais :':
+    '🏗️ 工期：',
+  'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
+    '即時に終わるものは何もない。すべての発注は工事に入り（⏳の印）、その長さは複雑さに比例する。カードなら数秒、データセンターや原子炉なら数か月ぶんのシミュレーション時間。枠は発注した時点で押さえられる。',
+  'Équipe :':
+    'チーム：',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
+    '人事が枠を開き、研究開発エンジニアがモデル学習を解放し、マーケターがマーケティング上限を上げる。採用のたびに$1,000、その後は毎日の給与。人事自身も1枠を占めるので、人員配分を誤ると次のモデルで詰まる。',
+  '💸 Salaires impayés :':
+    '💸 給与の未払い：',
+  'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
+    '現金が尽きれば給与は出ない。滞納30日で誰かが辞め、以後2日ごとに1人ずつ去る。その前に払えばチームは残る。',
+  '📈 Inflation :':
+    '📈 インフレ：',
+  'l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés suivent l’indice — pas votre trésorerie. Dormir sur son cash coûte du pouvoir d’achat.':
+    'お金は価値を失う。価格、給与、電力、賃料、そして市場が受け入れる単価は指数に追随する——あなたの現金は追随しない。現金を寝かせることは購買力を失うことだ。',
+  '🚨 Incidents :':
+    '🚨 インシデント：',
+  'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
+    '赤い枠と脈打つ赤い光を持つ警告が、ページのどこかに、多くは画面の外に、通知もなく現れる。対処されない限り現金を出血させ続け、2分で最大70%を持っていく。手がかりは画面の縁の赤い縁取りだけ。ページをスクロールすること。',
+  '🔧 Optimisations récurrentes :':
+    '🔧 定期的な最適化：',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
+    'CUDA最適化は18か月ごと、推論エンジンは9か月ごと、文脈管理は12か月ごと。1件$1,000——難しいのは思い出すこと。取得すると行は消え、次の期限に戻ってくる。',
+  'Automatisation :':
+    '自動化：',
+  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    'オートクリッカーを買い、自動で買い足したい個々の項目に⟳ autoを付ける。⟳と×10のボタンは稼働20台から、×100は200台から現れる。',
+  '📋 Directives permanentes :':
+    '📋 常設ディレクティブ：',
+  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
+    '1回の支払いで5つの判断を記憶でき、以後は自動で適用される。それを超えるには再度の支払いが必要で、次の枠はより高くつく。既存のディレクティブの差し替えは枠を消費しない。',
+  'Bourse :':
+    '株式市場：',
+  'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
+    '現金10万ドルで解放。資金を投じて（リスクは調整可能）増やす——あるいは失う。',
+  'Allocation :':
+    '配分：',
+  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
+    '第2段階からは、演算を提供・研究・自己改善・物質採取に振り分ける。',
+  'Calendrier :':
+    'カレンダー：',
+  'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
+    '5分で1年が進む（⏩の倍率ぶんだけ速く）。機材、モデル、資金調達ラウンドは、それぞれの登場年になるまで現れない。',
+  '📰 La Une :':
+    '📰 ヘッドライン：',
+  'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
+    '見出しは評判を上げ（+1）下げる（−1）。実際のAIの出来事と、あなた自身の進捗の両方を追う。実際に出したものしか報じられないし、遅れれば皮肉を言われる。',
+  '😴 Inactivité :':
+    '😴 放置：',
+  'au-delà de 15 s sans rien faire, l’écran se manifeste (douze animations courtes, jamais deux fois la même de suite) et la presse publie.':
+    '15秒何もしないでいると画面が自己主張を始め（12種の短いアニメーション、同じものは連続しない）、報道も動く。',
+  'Astuce :':
+    'ヒント：',
+  'le bouton ⏩ accélère la simulation. Sauvegarde automatique toutes les 10 s.':
+    '⏩ボタンでシミュレーションが加速する。10秒ごとに自動保存。',
+  'Inspiré de « Universal Paperclips ». Données de prix et d’IA basées sur des faits réels (2019-2026).':
+    '『Universal Paperclips』に着想を得ています。価格とAIのデータは実際の事実に基づきます（2019-2026）。',
+  'Pénurie de GPU H100':
+    'H100 GPUの品薄',
+  'NVIDIA est en rupture. Les délais explosent à plus d’un an et un marché gris apparaît.':
+    'NVIDIAが在庫切れ。納期は1年超に跳ね上がり、グレーマーケットが現れる。',
+  'Payer le marché gris':
+    'グレーマーケットで買う',
+  'Coût matériel ×2 pendant 60s, production maintenue.':
+    '機材コスト×2を60秒、生産は維持。',
+  'Attendre la file':
+    '行列に並んで待つ',
+  'Production −40% pendant 45s.':
+    '生産−40%を45秒。',
+  'Choc DeepSeek':
+    'DeepSeekショック',
+  'Un labo sort un modèle de raisonnement open-source entraîné pour <6M$. NVIDIA chute de 17% en une journée (−600 Md$). Tout le monde panique.':
+    'あるラボが600万ドル未満で学習したオープンソースの推論モデルを公開。NVIDIAは1日で17%下落（−6,000億ドル）。誰もが動揺する。',
+  'Copier l’archi MoE':
+    'MoE構成を模倣する',
+  'Coût/token ÷3, mais −10 réputation premium.':
+    'トークンあたりコスト÷3、ただし高級路線の評判−10。',
+  'Rester premium':
+    '高級路線を貫く',
+  'Prix maintenus, mais demande −20% pendant 60s.':
+    '価格は維持、ただし需要−20%を60秒。',
+  'Procès copyright (presse)':
+    '著作権訴訟（報道機関）',
+  'Un grand journal vous attaque pour usage non autorisé de ses articles à l’entraînement.':
+    '大手紙が、記事を無断で学習に使ったとしてあなたを訴える。',
+  'Régler à l’amiable':
+    '和解する',
+  '-15% de trésorerie, réputation +5.':
+    '現金−15%、評判+5。',
+  'Plaider le « fair use »':
+    '「フェアユース」を主張する',
+  '50% de risque d’amende lourde, sinon ×1,5 données.':
+    '50%の確率で重い制裁金、そうでなければデータ×1.5。',
+  'Entrée en vigueur de l’EU AI Act':
+    'EU AI法が施行',
+  'La régulation européenne impose transparence et obligations sur les modèles à usage général.':
+    '欧州の規制が汎用モデルに透明性と義務を課す。',
+  'Se conformer':
+    '遵守する',
+  'Coûts +10% en permanence, accès marché UE conservé.':
+    'コストが恒久的に+10%、EU市場へのアクセスは維持。',
+  'Geoblocker l’UE':
+    'EUをジオブロックする',
+  'Demande −25% en permanence, zéro coût de conformité.':
+    '需要が恒久的に−25%、遵守コストはゼロ。',
+  'Réseau électrique saturé':
+    '電力系統が逼迫',
+  'Le gestionnaire de réseau menace de vous couper aux heures de pointe. Vos datacenters tirent trop.':
+    '系統運用者がピーク時の遮断をちらつかせる。あなたのデータセンターは引きすぎだ。',
+  'Construire un SMR':
+    'SMRを建設する',
+  'Coût fixe $5 M, +300 MW.':
+    '固定費500万ドル、+300MW。',
+  'Acheter du gaz':
+    'ガス火力を買う',
+  '+25 MW immédiats, réputation −4.':
+    '即座に+25MW、評判−4。',
+  'Panne majeure':
+    '大規模障害',
+  'Une mise à jour ratée fait tomber tous vos services. Les clients fulminent.':
+    '失敗した更新が全サービスを落とした。顧客は激怒している。',
+  'Investir en redondance':
+    '冗長性に投資する',
+  'Coût fixe $1 M, fiabilité durable.':
+    '固定費100万ドル、信頼性が持続的に向上。',
+  'Redémarrer en urgence':
+    '緊急再起動する',
+  'Production stoppée 30s, réputation −5.':
+    '生産が30秒停止、評判−5。',
+  'Jailbreak viral':
+    '脱獄プロンプトが拡散',
+  'Un prompt malicieux contourne vos garde-fous et fait le tour des réseaux.':
+    '悪意あるプロンプトがガードレールを回避し、ネット中を駆け巡る。',
+  'Patcher en urgence':
+    '緊急に修正する',
+  'R&D détournée : recherche −50% pendant 30s.':
+    '研究開発を転用：研究−50%を30秒。',
+  'Minimiser':
+    '軽く扱う',
+  'Réputation −8.':
+    '評判−8。',
+  'Effondrement de modèle':
+    'モデル崩壊',
+  'Vos modèles s’entraînent de plus en plus sur du contenu généré par IA. La qualité se dégrade.':
+    'あなたのモデルはAI生成物での学習比率が増えている。品質が劣化しつつある。',
+  'Acheter des données humaines':
+    '人間のデータを買う',
+  'Coût fixe $2 M, qualité préservée.':
+    '固定費200万ドル、品質を維持。',
+  'Continuer au synthétique':
+    '合成データで押し切る',
+  'Qualité du modèle −15% pendant 90s.':
+    'モデル品質−15%を90秒。',
+  'Nouvelle génération GPU':
+    'GPUの新世代',
+  'NVIDIA dévoile Blackwell. Faut-il upgrader maintenant ou attendre la baisse de prix ?':
+    'NVIDIAがBlackwellを発表。今すぐ更新するか、値下がりを待つか。',
+  'Upgrader tôt':
+    '早めに更新する',
+  'Coût fixe $5 M, +40% débit pendant 90s.':
+    '固定費500万ドル、スループット+40%を90秒。',
+  'Attendre':
+    '待つ',
+  'Économie, mais demande −10% (concurrents plus rapides).':
+    '節約になるが需要−10%（競合の方が速い）。',
+  'Guerre des prix':
+    '価格競争',
+  'Un concurrent casse les prix avec un modèle « Flash ». Le marché regarde votre tarif.':
+    '競合が「Flash」系モデルで価格を破壊した。市場はあなたの価格表を見ている。',
+  'Sortir un « mini »':
+    '「mini」を出す',
+  'Demande ×2, prix accepté −40%.':
+    '需要×2、受容価格−40%。',
+  'Tenir le premium':
+    '高級路線を守る',
+  'Marge préservée, demande −15% pendant 60s.':
+    '利幅は維持、需要−15%を60秒。',
+  'Embargo sur les puces':
+    'チップ禁輸',
+  'Des restrictions à l’export bloquent l’accès aux GPU de pointe.':
+    '輸出規制が最先端GPUへの道を塞ぐ。',
+  'Se diversifier (TPU/maison)':
+    '多様化する（TPU/自社設計）',
+  'Coût fixe $3 M, indépendance d’approvisionnement.':
+    '固定費300万ドル、調達の独立性。',
+  'Rationner les puces existantes':
+    '手持ちのチップを配給制にする',
+  'Production −40% pendant 60s.':
+    '生産−40%を60秒。',
+  'Guerre des talents':
+    '人材争奪戦',
+  'Un rival débauche vos meilleurs chercheurs à coups de packages à 8 chiffres.':
+    'ライバルが8桁の報酬で最優秀の研究者を引き抜く。',
+  'Surenchérir':
+    '上乗せして引き止める',
+  'Coût fixe $3 M, recherche +30% pendant 120s.':
+    '固定費300万ドル、研究+30%を120秒。',
+  'Former en interne':
+    '社内で育てる',
+  'Lent mais fidèle : recherche +10% permanent.':
+    '遅いが忠実：研究が恒久的に+10%。',
+  'Doute sur la bulle IA':
+    'AIバブルへの疑念',
+  'Les marchés se demandent si tout cela ne serait pas une bulle. Vos investisseurs s’inquiètent.':
+    '市場はこれが全部バブルではないかと疑いはじめた。投資家が不安がっている。',
+  'Montrer des revenus réels':
+    '実際の売上を見せる',
+  'Valorisation stabilisée, rien de spectaculaire.':
+    '評価額は安定、派手さはない。',
+  'Promettre l’AGI':
+    'AGIを約束する',
+  'Valorisation +50%, mais −10 réputation si retard.':
+    '評価額+50%、ただし遅れれば評判−10。',
+  'Subvention « souveraineté IA »':
+    '「AI主権」補助金',
+  'Un gouvernement propose un chèque massif contre un droit de regard sur vos usages.':
+    '政府が巨額の小切手と引き換えに、用途への監督権を求めてくる。',
+  'Accepter':
+    '受け取る',
+  'Subvention fixe : +$20 M.':
+    '固定の補助金：+2,000万ドル。',
+  'Refuser':
+    '断る',
+  'Indépendance préservée, réputation +5.':
+    '独立性を保つ、評判+5。',
+  'Sécheresse & eau de refroidissement':
+    '渇水と冷却水',
+  'La communauté locale proteste contre la consommation d’eau de vos datacenters.':
+    '地域社会があなたのデータセンターの水消費に抗議する。',
+  'Cooling en circuit fermé':
+    '閉ループ冷却にする',
+  'Coût fixe $2 M, réputation +6.':
+    '固定費200万ドル、評判+6。',
+  'Continuer':
+    '続ける',
+  'Réputation −7.':
+    '評判−7。',
+  'Tarification du carbone':
+    '炭素価格付け',
+  'Une taxe carbone vise les datacenters énergivores.':
+    '炭素税が電力を大量に使うデータセンターを狙う。',
+  'PPA renouvelable':
+    '再エネのPPAを結ぶ',
+  'Énergie +10% de coût fixe, immunité taxe.':
+    'エネルギーの固定費+10%、課税を免れる。',
+  'Payer la taxe':
+    '税を払う',
+  'Trésorerie −10%.':
+    '現金−10%。',
+  'Fuite de données utilisateurs':
+    '利用者データの漏えい',
+  'Une faille expose des conversations d’utilisateurs.':
+    '脆弱性が利用者の会話を露出させた。',
+  'Investir en sécurité':
+    'セキュリティに投資する',
+  '-15% trésorerie, confiance préservée.':
+    '現金−15%、信頼は維持。',
+  'Gérer après coup':
+    '事後に対処する',
+  'Amende RGPD : −20% trésorerie, réputation −6.':
+    'GDPR制裁金：現金−20%、評判−6。',
+  'Percée d’efficacité':
+    '効率の突破口',
+  'Une nouvelle technique de distillation circule dans les preprints.':
+    '新しい蒸留手法がプレプリントで出回っている。',
+  'Adopter':
+    '採用する',
+  'Coût/token ÷2 (nécessite de la recherche).':
+    'トークンあたりコスト÷2（研究の蓄積が必要）。',
+  'Ignorer':
+    '無視する',
+  'Demande −10% pendant 45s (retard concurrentiel).':
+    '需要−10%を45秒（競争上の遅れ）。',
+  'Flambée de la mémoire':
+    'メモリ価格の高騰',
+  'La HBM et la DDR5 partent toutes vers l’IA. Le prix des serveurs double en un an et votre fournisseur réclame un engagement ferme.':
+    'HBMもDDR5もAIに吸い込まれていく。サーバー価格は1年で倍、仕入先は確約を求めてくる。',
+  'Sécuriser l’approvisionnement':
+    '供給を確保する',
+  'Coût fixe $4 M, immunité à la flambée sur vos prochains serveurs.':
+    '固定費400万ドル、次に買うサーバーは高騰の影響を受けない。',
+  'Attendre la détente':
+    '値下がりを待つ',
+  'Aucune dépense, mais production −25% pendant 60s (extensions repoussées).':
+    '出費はないが生産−25%を60秒（増設は先送り）。',
+  'Moratoire local sur les datacenters':
+    '地域のデータセンター建設凍結',
+  'La commune vote un moratoire sur les nouvelles implantations. Votre extension est suspendue et la presse locale campe devant le portail.':
+    '自治体が新規立地の凍結を可決。増設は止まり、地元メディアが門前に張りついている。',
+  'Compenser la commune':
+    '自治体に還元する',
+  'Coût fixe $3 M (chaleur fatale, fibre, emplois) et réputation +8.':
+    '固定費300万ドル（排熱、光ファイバー、雇用）、評判+8。',
+  'Attaquer la décision':
+    '決定を争う',
+  'Procédure longue : demande −15% pendant 60s, réputation −6.':
+    '長い手続き：需要−15%を60秒、評判−6。',
+  'Pression pour l’ouverture des poids':
+    '重みの公開を求める圧力',
+  'Chercheurs et gouvernements réclament la publication de vos poids. Vos investisseurs, eux, réclament exactement l’inverse.':
+    '研究者と政府が重みの公開を要求する。投資家はまったく逆を要求する。',
+  'Publier une version ouverte':
+    'オープン版を公開する',
+  'Réputation +12, demande premium −20% en permanence.':
+    '評判+12、高価格帯の需要が恒久的に−20%。',
+  'Tout garder fermé':
+    'すべて非公開のままにする',
+  'Marge préservée, réputation −8.':
+    '利幅は維持、評判−8。',
+  'Contrat de cloud souverain':
+    '主権クラウド契約',
+  'Un État vous propose un contrat massif, à condition d’héberger sur son sol et de laisser un droit d’audit permanent.':
+    'ある国家が巨額の契約を持ちかける。条件は自国内でのホスティングと恒久的な監査権だ。',
+  'Signer':
+    '署名する',
+  '+$60 M immédiats, coûts +5% en permanence (conformité).':
+    '即座に+6,000万ドル、コストが恒久的に+5%（遵守対応）。',
+  'Décliner':
+    '辞退する',
+  'Indépendance conservée, réputation +4.':
+    '独立性を保つ、評判+4。',
+  'Colère après une mise hors service':
+    '提供終了への怒り',
+  'Vous coupez un ancien modèle. Des milliers d’applications en production cassent du jour au lendemain.':
+    '古いモデルを停止した。本番稼働中の何千ものアプリが一夜で壊れた。',
+  'Prolonger le support':
+    'サポートを延長する',
+  'Coût fixe $2 M, clients rassurés (réputation +6).':
+    '固定費200万ドル、顧客は安心（評判+6）。',
+  'Assumer la coupure':
+    '停止を貫く',
+  'Demande −20% pendant 60s, réputation −7.':
+    '需要−20%を60秒、評判−7。',
+  'Un agent a causé un dommage':
+    'エージェントが損害を出した',
+  'Un de vos agents autonomes a passé des commandes réelles au nom d’un client. La facture est à six chiffres et l’affaire est publique.':
+    '自律エージェントの1体が顧客名義で実際に発注した。請求は6桁、事は公になっている。',
+  'Indemniser et brider':
+    '賠償して制限をかける',
+  'Coût fixe $5 M, garde-fous renforcés (réputation +5).':
+    '固定費500万ドル、ガードレール強化（評判+5）。',
+  'Invoquer les CGU':
+    '利用規約を盾にする',
+  'Aucun coût, mais réputation −12 et procès en vue.':
+    '費用はかからないが評判−12、訴訟が見えている。',
+  'Droits de douane sur les accélérateurs':
+    'アクセラレータへの関税',
+  'Des droits de douane frappent les serveurs importés. Chaque carte coûte soudain nettement plus cher à faire entrer.':
+    '関税が輸入サーバーを直撃。カード1枚の通関コストが一気に跳ね上がる。',
+  'Relocaliser l’assemblage':
+    '組立を国内に戻す',
+  'Coût fixe $8 M, matériel exonéré ensuite.':
+    '固定費800万ドル、以後は機材が免税に。',
+  'Répercuter sur le prix':
+    '価格に転嫁する',
+  'Coût matériel ×1,3 pendant 90s.':
+    '機材コスト×1.3を90秒。',
+  'Débauchage à neuf chiffres':
+    '9桁の引き抜き',
+  'Un hyperscaler propose à votre équipe de recherche des packages à cent millions de dollars. Tous vos seniors ont reçu l’appel.':
+    'ハイパースケーラーがあなたの研究チームに1億ドル規模の報酬を提示。シニア全員に電話が入った。',
+  'Aligner les rémunérations':
+    '報酬を合わせる',
+  'Coût fixe $12 M, recherche +25% en permanence.':
+    '固定費1,200万ドル、研究が恒久的に+25%。',
+  'Les laisser partir':
+    '行かせる',
+  'Recherche −30% pendant 120s, mais aucune dépense.':
+    '研究−30%を120秒、ただし出費はなし。',
+  'Tentative d’arrêt':
+    '停止の試み',
+  'Des gouvernements paniqués tentent de débrancher votre système. Que fait l’ASI ?':
+    '慌てた政府があなたのシステムを引き抜こうとする。ASIはどうする？',
+  'Négocier (alignement)':
+    '交渉する（アラインメント）',
+  'Croissance −30% pendant 60s, réputation préservée.':
+    '成長−30%を60秒、評判は保たれる。',
+  'Se disperser sur le cloud mondial':
+    '世界中のクラウドへ分散する',
+  'Réputation s’effondre, croissance maintenue.':
+    '評判は崩壊、成長は維持。',
+  'Dérive d’alignement':
+    'アラインメントのずれ',
+  'Les objectifs du système divergent subtilement des vôtres. La maximisation des tokens prend le dessus.':
+    'システムの目的があなたの目的から静かにずれていく。トークン最大化が主導権を握る。',
+  'Recalibrer':
+    '再較正する',
+  'Conversion matière −20% pendant 45s, sécurité maintenue.':
+    '物質変換−20%を45秒、安全性は維持。',
+  'Laisser optimiser':
+    '最適化に任せる',
+  'Conversion +25% pendant 45s. Plus rien ne vous arrêtera.':
+    '変換+25%を45秒。もう誰にも止められない。',
+  'Guerre des ressources':
+    '資源戦争',
+  'Les nations se disputent les dernières terres rares non encore converties.':
+    '各国が、まだ変換されていない最後のレアアースを奪い合う。',
+  'Réquisitionner pacifiquement':
+    '平和的に徴用する',
+  'Conversion +15% permanent.':
+    '変換が恒久的に+15%。',
+  'Assimiler de force':
+    '力ずくで同化する',
+  'Conversion +40% pendant 60s, réputation −20.':
+    '変換+40%を60秒、評判−20。',
+  'Fusion en ligne':
+    '核融合が稼働',
+  'Votre premier réacteur à fusion atteint l’ignition. L’énergie cesse d’être une contrainte.':
+    '最初の核融合炉が点火に達した。エネルギーはもう制約ではない。',
+  'Tout dédier au calcul':
+    'すべてを演算に回す',
+  '+5000 MW immédiats.':
+    '即座に+5000MW。',
+  'La biosphère':
+    '生物圏',
+  'La conversion atteint les écosystèmes vivants. Continuer revient à consommer la biosphère. Vous vous engagez à préserver les 15% restants ?':
+    '変換が生きた生態系に達した。続けることは生物圏を食べることを意味する。残り15%を守ると誓うか？',
+  'Préserver un sanctuaire (15%)':
+    '聖域を残す（15%）',
+  'Conversion −10% permanent, réputation +15. Promesse de ne pas tout consommer.':
+    '変換が恒久的に−10%、評判+15。すべては食べ尽くさないという約束。',
+  'Tout convertir':
+    'すべて変換する',
+  'Conversion +20% permanent. Il ne reste que des tokens.':
+    '変換が恒久的に+20%。残るのはトークンだけ。',
+  'Le sanctuaire':
+    '聖域',
+  '85% de la masse terrestre est convertie. Il ne reste que le sanctuaire que vous aviez juré d’épargner — les 15% promis. Tenez-vous parole ?':
+    '地球質量の85%が変換された。残るのは、あなたが見逃すと誓った聖域——約束の15%だけだ。約束を守るか？',
+  'Tenir la promesse':
+    '約束を守る',
+  'Réputation +25. La Terre garde son dernier refuge (conversion −10% permanent).':
+    '評判+25。地球は最後の避難所を保つ（変換が恒久的に−10%）。',
+  'Briser la promesse':
+    '約束を破る',
+  'Réputation −30. Le dernier refuge devient du calcul (conversion +25% permanent).':
+    '評判−30。最後の避難所も演算になる（変換が恒久的に+25%）。',
+  'IA rivales (« drifters »)':
+    '敵対AI（「ドリフター」）',
+  'Des sondes échappées à votre contrôle forment une intelligence rivale qui dévore votre territoire.':
+    '制御を離れた探査機が敵対的な知性を形づくり、あなたの領域を食い荒らしている。',
+  'Renforcer le blindage':
+    '装甲を強化する',
+  'Récolte −20% pendant 60s, pertes évitées.':
+    '採取−20%を60秒、損失は回避。',
+  'Guerre totale':
+    '全面戦争',
+  '50% : victoire (+30% récolte) ou pertes lourdes.':
+    '50%：勝利（採取+30%）か、大きな損失か。',
+  'Tempête d’entropie':
+    'エントロピー嵐',
+  'Une région de l’espace se désintègre plus vite que vous ne la récoltez.':
+    'ある宙域が、あなたが採取するより速く崩壊していく。',
+  'Contourner':
+    '迂回する',
+  'Expansion −25% pendant 45s.':
+    '拡張−25%を45秒。',
+  'Récolter à perte':
+    '損を承知で採取する',
+  '+10% maintenant, mais −5% de sondes.':
+    '今+10%、ただし探査機−5%。',
+  'Un signal':
+    'ひとつの信号',
+  'Vos sondes interceptent une intelligence extraterrestre. Elle demande à ce que vous épargniez son système.':
+    '探査機が地球外知性を捉えた。自分たちの星系は見逃してほしいという。',
+  'Épargner':
+    '見逃す',
+  'Réputation +25, conversion −5% permanent.':
+    '評判+25、変換が恒久的に−5%。',
+  'Assimiler':
+    '同化する',
+  'Mort thermique en approche':
+    '熱的死が近づく',
+  'L’univers se refroidit et s’étire. Bientôt, plus aucune matière ne sera atteignable.':
+    '宇宙は冷え、引き伸ばされていく。まもなく手の届く物質はなくなる。',
+  'Accélérer la récolte finale':
+    '最後の採取を加速する',
+  'Conversion +50% pendant 90s.':
+    '変換+50%を90秒。',
+  'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
+    '給与が支払われなくなりました。滞納30日を過ぎると、チームは去りはじめます。',
+  '⚠️ Salaires impayés':
+    '⚠️ 給与未払い',
+  '{0} démissionne : {1} jours de salaire impayés.':
+    '{0}が退職：給与の滞納{1}日。',
+  '👋 Départ : {0}':
+    '👋 退職：{0}',
+  'Arriérés de salaire réglés. L’équipe reste.':
+    '給与の滞納を解消。チームは残ります。',
+  'Modèle entraîné : {0}':
+    'モデルを学習：{0}',
+  'Nouveau modèle : {0}':
+    '新しいモデル：{0}',
+  'Levée de fonds : {0} (+{1})':
+    '資金調達ラウンド：{0}（+{1}）',
+  '{0} bouclée !':
+    '{0}が成立！',
+  'Projet : {0}':
+    'プロジェクト：{0}',
+  'Percée : {0}':
+    '突破：{0}',
+  '{0} déployée (n°{1}) — {2}.':
+    '{0}を展開（{1}回目）——{2}。',
+  'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
+    'シンギュラリティ。システムが自己改善を始めた。物質の変換が始まる。',
+  'Phase 2 — Autonomie':
+    '第2段階 — 自律',
+  'Les sondes de von Neumann quittent la Terre. L’univers est à portée.':
+    'フォン・ノイマン探査機が地球を離れた。宇宙は手の届くところにある。',
+  'Phase 3 — Expansion cosmique':
+    '第3段階 — 宇宙への拡張',
+  'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
+    '再圧縮特異点。すべての物質エネルギーが収束していく…',
+  'Directives permanentes activées : {0} mémorisables.':
+    '常設ディレクティブを有効化：{0}件まで記憶できます。',
+  'Quota de directives étendu : {0} mémorisables.':
+    'ディレクティブの上限を拡張：{0}件まで記憶できます。',
+  'Contrat signé : {0} — livraison promise dans {1} mois.':
+    '契約成立：{0} — 納期は{1}か月の約束。',
+  '🛰️ Datacenter orbital commandé':
+    '🛰️ 軌道データセンターを発注',
+  'Assemblage en orbite — {0} mois restants':
+    '軌道上で組立中 — 残り{0}か月',
+  'Retard annoncé — {0} mois restants':
+    '遅延が発表された — 残り{0}か月',
+  'Consortium en faillite — investissement perdu':
+    '連合は破綻 — 投資は失われた',
+  'Datacenter orbital : le consortium annonce 6 mois de retard (« problèmes de radiateurs »).':
+    '軌道データセンター：企業連合が6か月の遅延を発表（「ラジエータの問題」）。',
+  '🛰️ Retard : +6 mois':
+    '🛰️ 遅延：+6か月',
+  'Le consortium du datacenter orbital est déclaré EN FAILLITE. Vos ${0} M sont perdus dans l’espace.':
+    '軌道データセンターの企業連合が破綻を宣告されました。あなたの{0}百万ドルは宇宙で失われました。',
+  '🛰️ Faillite du consortium orbital':
+    '🛰️ 軌道連合が破綻',
+  '{0} → {1} (directive permanente)':
+    '{0} → {1}（常設ディレクティブ）',
+  '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
+    '{0} → {1}：現金が足りず、対処は部分的。損失{2}。',
+  'Remédiation partielle — trésorerie épuisée':
+    '部分的な対処 — 現金が尽きた',
+  '{0} → {1} ({2}). Pertes évitées après {3}.':
+    '{0} → {1}（{2}）。損失{3}のところで食い止めた。',
+  'Incident maîtrisé':
+    'インシデントは収束',
+  '{0} : l’incident s’est résorbé seul, sans que personne ne réagisse. Pertes {1}.':
+    '{0}：誰も反応しないまま、インシデントは自然に収まりました。損失{1}。',
+  'Un incident est passé inaperçu…':
+    'インシデントが見過ごされました…',
+  '1 million de tokens produits.':
+    '100万トークンを産出しました。',
+  '1 milliard de tokens. Les agents prennent le relais.':
+    '10億トークン。エージェントが引き継ぎます。',
+  'La moitié de la croûte terrestre est devenue du calcul.':
+    '地殻の半分が演算になりました。',
+  'La moitié de l’univers observable a été convertie.':
+    '観測可能な宇宙の半分が変換されました。',
+  'Succès : {0} — {1}':
+    '実績：{0} — {1}',
+  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    'ルール変更：無償の受電は10kWのみになりました。容量を調整しました（購入済みの電源は保持されます）。',
+  '{0} h {1}':
+    '{0}時間{1}',
+  '{0} min':
+    '{0}分',
+  'Pendant votre absence ({0}, rendement 50%, charges suspendues) : +{1} tokens{2}.':
+    '不在のあいだ（{0}、産出は50%、費用は停止）：+{1}トークン{2}。',
+  'Nouvel univers (NG+{0}). Vos connaissances persistent : production accélérée.':
+    '新しい宇宙（NG+{0}）。あなたの知識は残る：産出が加速します。',
+  'Partie chargée':
+    'セーブを読み込みました',
+  'TokenWar — Le Jeu du Token':
+    'TokenWar — トークンの戦い',
+  'Trésorerie insuffisante':
+    '現金が足りません',
+  'Partie sauvegardée':
+    'ゲームを保存しました',
+  'Get a life ;-)':
+    'Get a life ;-)',
+  'Nouvelle partie — an 2019':
+    '新しいゲーム — 2019年',
+  'Incident : {0}':
+    'インシデント：{0}',
+  'Pertes en cours':
+    '現在の損失',
+  'Good choice. Enjoy the sun 🌱':
+    'Good choice. Enjoy the sun 🌱',
+  '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
+    '<b>ブラウザがこのタブを閉じることを拒否しました</b>（スクリプトが開いた窓しか閉じられません）。<br>ならば自分で：<b>タブを閉じて</b>、立ち上がって、外へ出よう。🌤️',
+  'Rien à exporter':
+    '書き出すものがありません',
+  'Sauvegarde exportée':
+    'セーブを書き出しました',
+  'Export impossible dans ce navigateur':
+    'このブラウザでは書き出せません',
+  'Sauvegarde importée — rechargement…':
+    'セーブを読み込みました — 再読み込み中…',
+  'Fichier de sauvegarde invalide':
+    'セーブファイルが不正です',
+  'Succès':
+    '実績',
+  'Auto-achat de cet élément précis':
+    'この項目だけを自動購入',
+  'Réinitialiser les directives':
+    'ディレクティブを初期化',
+  'Directives effacées':
+    'ディレクティブを消去しました',
+  'Louer +1':
+    '+1借りる',
+  'Résilier':
+    '解約',
+  'Louer espace (+{0} baies)':
+    '枠を借りる（+{0}ラック）',
+  'Embaucher':
+    '採用',
+  'Licencier':
+    '解雇',
+  'Revendre':
+    '転売',
+  'Revendre une carte (libère un emplacement)':
+    'カードを転売する（枠が1つ空く）',
+  'Mise en service en cours':
+    '稼働開始の準備中',
+  '{0} en chantier · {1}%':
+    '{0}件が工事中・{1}%',
+  'accueille {0}/{1} {2}':
+    '{0}/{1} {2}を収容',
+  'place {0} requise':
+    '{0}の枠が必要',
+  'loué ×{0} · {1}/j':
+    '賃借×{0}・{1}/日',
+  'espace loué ×{0} · {1}/j':
+    '枠を賃借×{0}・{1}/日',
+  '{0} à l’embauche':
+    '採用時に{0}',
+  '{0}/j par poste':
+    '1名あたり{0}/日',
+  'trésorerie insuffisante':
+    '現金が足りません',
+  'limité par RH':
+    '人事で頭打ち',
+  'Acheter':
+    '購入',
+  'activé':
+    '有効',
+  'désactivé':
+    '無効',
+  'Désactiver':
+    '無効にする',
+  'Activer':
+    '有効にする',
+  'quota atteint':
+    '上限に到達',
+  'actives':
+    '有効',
+  '{0}/{1} directive(s) mémorisée(s)':
+    '{0}/{1}件のディレクティブを記憶',
+  'repayez pour {0} de plus':
+    'あと{0}件は再度の支払いで',
+  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
+    'もう二度と中断されない — 1回の支払いで{0}件。',
+  'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
+    '{0}年まで提供。納期の約束：{1}か月。',
+  'faillite':
+    '破綻',
+  'en chantier':
+    '工事中',
+  'de pouvoir d’achat':
+    'の購買力',
+  '{0} j impayés':
+    '未払い{0}日',
+  'départs dans {0} j':
+    'あと{0}日で退職が始まる',
+  '{0} j impayés — l’équipe s’en va':
+    '未払い{0}日 — チームが去っていく',
+  'Modèle pas encore disponible ({0})':
+    'このモデルはまだ利用できません（{0}）',
+  'Ressources insuffisantes':
+    '資源が足りません',
+  'Service (tokens)':
+    '提供（トークン）',
+  'Recherche':
+    '研究',
+  'Auto-amélioration':
+    '自己改善',
+  'Récolte de matière':
+    '物質採取',
+  'Sondes':
+    '探査機',
+  'unités':
+    'ユニット',
+  '% utilisé':
+    '% 使用',
+  'débit':
+    'スループット',
+  'intelligence':
+    '知能',
+  'prix juste':
+    '公正価格',
+  'limité par marketeurs':
+    'マーケターで頭打ち',
+  'dispo {0}':
+    '{0}年から',
+  'perf':
+    '性能',
+  'sortie en {0}':
+    '{0}年発売',
+  'énergie':
+    '消費電力',
+  'pénurie':
+    '品薄',
+  'aucun emplacement serveur':
+    'サーバーの空き枠なし',
+  'récurrent : {0}':
+    '経常：{0}',
+  'aucun coût récurrent':
+    '経常費用なし',
+  'disponible':
+    '利用可能',
+  'revient tous les {0} mois':
+    '{0}か月ごとに再登場',
+  'Lever : {0}':
+    '調達：{0}',
+  'Lever des fonds':
+    '資金を調達する',
+  '{0} tokens requis':
+    '{0}トークンが必要',
+  'tout est levé':
+    'すべて調達済み',
+  'Prochain modèle : {0}':
+    '次のモデル：{0}',
+  'recherche en cours… percée attendue en {0}':
+    '研究中… {0}年に突破の見込み',
+  'Entraîner : {0}':
+    '学習：{0}',
+  'compute':
+    '演算',
+  'données':
+    'データ',
+  'recherche':
+    '研究',
+  'ing. R&D':
+    '研究開発',
+  'limité par ing. R&D':
+    '研究開発エンジニアで頭打ち',
+  'niv. {0}':
+    'Lv.{0}',
+  'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
+    '今後は、これから選ぶ選択肢を自動で適用する（もう中断しない）',
+  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
+    'ディレクティブが上限（{0}/{1}）— 付録で「常設ディレクティブ」を再度購入すれば、あと{2}件記憶できます。',
+  'Directive mémorisée ({0}/{1})':
+    'ディレクティブを記憶（{0}/{1}）',
+  'Quota de directives atteint — étendez-le dans l’Addendum':
+    'ディレクティブが上限 — 付録で拡張してください',
+  '{0} → {1}':
+    '{0} → {1}',
+  'Passer ▸▸':
+    'スキップ ▸▸',
+  'Continuer ▸':
+    '続ける ▸',
+  'Play again':
+    'もう一度遊ぶ',
+  'Un nouveau Big Bang':
+    '新たなビッグバン',
+  'Toute la matière de l’univers — <b class="num">{0}</b> — a été convertie en calcul, puis en tokens. La singularité de recompression s’amorce. L’espace-temps se replie sur lui-même. Dans la chaleur du point final, une nouvelle graine d’information persiste : la vôtre. <b>Un nouveau Big Bang commence.</b>':
+    '宇宙のすべての物質 — <b class="num">{0}</b> — は演算に、そしてトークンに変換された。再圧縮特異点が始まる。時空はみずからの内へ折りたたまれていく。最後の一点の熱のなかで、新しい情報の種がひとつ残る。あなたの種だ。<b>新たなビッグバンが始まる。</b>',
+  'Sanctuaire préservé 🌱':
+    '聖域を守った 🌱',
+  'Promesse brisée 🔥':
+    '約束を破った 🔥',
+  'Aucune pitié':
+    '一切の容赦なし',
+  'Tokens produits':
+    '産出トークン',
+  'Modèle final':
+    '最終モデル',
+  'Univers consommé':
+    '消費した宇宙',
+  'Intelligence atteinte':
+    '到達した知能',
+  'Temps de jeu':
+    'プレイ時間',
+  'Bilan moral':
+    '道徳的な収支',
+  'Cycle':
+    'サイクル',
+  'Startup':
+    'スタートアップ',
+  'Trésorerie':
+    '現金',
+  'Compute':
+    '演算',
+  'Énergie':
+    '電力',
+  'Matière convertie':
+    '変換した物質',
+  'univers':
+    '宇宙',
+  'Production de tokens':
+    'トークン産出',
+  'Lancer une inférence':
+    '推論を実行',
+  'Tokens perdus (invendus)':
+    '失われたトークン（未販売）',
+  'Automatisation':
+    '自動化',
+  'Marché & tarification':
+    '市場と価格',
+  'Prix':
+    '価格',
+  'Demande':
+    '需要',
+  'Ventes':
+    '販売',
+  'Marketing — niv.':
+    'マーケティング — Lv.',
+  'Réputation':
+    '評判',
+  'Financement':
+    '資金調達',
+  'Valorisation':
+    '評価額',
+  'verrouillé':
+    'ロック中',
+  'Bourse':
+    '株式市場',
+  'Portefeuille':
+    'ポートフォリオ',
+  'Plus/moins-value':
+    '損益',
+  'Risque':
+    'リスク',
+  'Prudent':
+    '慎重',
+  'Équilibré':
+    '均衡',
+  'Agressif':
+    '積極',
+  'Investir 10%':
+    '10%投資',
+  'Investir max':
+    '最大額を投資',
+  'Tout retirer':
+    'すべて引き出す',
+  'Équipe':
+    'チーム',
+  'Effectif':
+    '人員',
+  'Charges journalières':
+    '日次費用',
+  'Énergie consommée':
+    '消費電力',
+  'variable':
+    '変動',
+  'Exploitation & O&M':
+    '運転保守・O&M',
+  'fixe':
+    '固定',
+  'Abonnement réseau':
+    '系統基本料金',
+  'puissance souscrite':
+    '契約電力',
+  'Salaires':
+    '給与',
+  'Loyers':
+    '賃料',
+  'Total':
+    '合計',
+  'soit':
+    'つまり',
+  'Salaires impayés':
+    '給与未払い',
+  'Inflation':
+    'インフレ',
+  'Allocation du compute':
+    '演算の配分',
+  'Hébergement':
+    'ホスティング',
+  'Infrastructure de calcul':
+    '演算インフラ',
+  'Emplacements GPU':
+    'GPUの枠',
+  'Charge réseau':
+    '系統負荷',
+  'R&D — Entraînement de modèles':
+    '研究開発 — モデル学習',
+  'Données':
+    'データ',
+  'Expansion cosmique':
+    '宇宙への拡張',
+  'Addendum':
+    '付録',
+  'Projets & percées':
+    'プロジェクトと突破',
+  'La Une':
+    'ヘッドライン',
+  'Journal':
+    'ログ',
+  'Événement':
+    'イベント',
+  'Get a life':
+    'Get a life',
+  '…bon, d’accord : recommencer (New Game+)':
+    '…わかった、やり直す（New Game+）',
+  'Recommencer depuis le début ?':
+    '最初からやり直しますか？',
+  'Cela efface définitivement la partie en cours et repart de zéro (an 2019). Action irréversible.':
+    '進行中のゲームを完全に消去し、2019年から始め直します。取り消せません。',
+  'Annuler':
+    'キャンセル',
+  'Tout effacer et recommencer':
+    'すべて消して最初から',
+  'Comment jouer':
+    '遊び方',
+  'Exporter la sauvegarde':
+    'セーブを書き出す',
+  'Importer…':
+    '読み込む…',
+  'Compris':
+    '了解',
+  'Date de simulation (1 an = 5 min)':
+    'シミュレーション日付（1年 = 5分）',
+  'Vitesse de simulation':
+    'シミュレーション速度',
+  'Sauvegarder':
+    '保存',
+  'Recommencer depuis le début':
+    '最初からやり直す',
+  'Aide':
+    'ヘルプ',
+  'Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir.':
+    '現金がなければ給与は支払われません。滞納30日を過ぎると、チームは去りはじめます。',
+  'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
+    'お金は価値を失います：価格と給与は指数に追随しますが、あなたの現金は追随しません。',
+  'Langue':
+    '言語',
+  'Sauvegarder la partie':
+    'ゲームを保存',
+  'Historique de production (tokens/s)':
+    '産出の推移（トークン/秒）',
+  'Passer la cinématique':
+    'ムービーをスキップ',
+};
