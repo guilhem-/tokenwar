@@ -538,10 +538,14 @@ export default {
     'Autocompra de GPU',
   'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
     'Activa la autocompra por tarjeta (en los modelos marcados ⟳). Una tarjeta por segundo si hay presupuesto.',
-  'Auto-hébergement':
-    'Autoalojamiento',
-  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
-    'Activa la autocompra por nivel marcado ⟳ cuando ese nivel vaya a ser el cuello de botella.',
+  'Auto-achat matériel':
+    'Autocompra de material',
+  'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.':
+    'Racks y servidores: recompra el nivel marcado ⟳ en cuanto vaya a faltar sitio.',
+  'Auto-achat immobilier':
+    'Autocompra inmobiliaria',
+  'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.':
+    'Edificios y centros de datos: recompra el nivel marcado ⟳ cuando ya no queda sitio para el nivel inferior.',
   'Auto-énergie':
     'Autoenergía',
   'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
@@ -1012,6 +1016,46 @@ export default {
     'una cápsula de criogenización reservada en vida',
   'une fusée personnelle pour observer la Terre le week-end':
     'un cohete personal para mirar la Tierra los fines de semana',
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus':
+    'Por falta de personal de operaciones, se pierden seis meses de registros de clientes',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue':
+    'Un conjunto de datos de entrenamiento corrompido por una inyección que nadie vio',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours':
+    'Tus secretos industriales quedan tres días en un repositorio público',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes':
+    'Se cancela el entrenamiento en curso: nadie vigilaba las copias',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert':
+    'Copias nunca probadas: la restauración falla el día que hace falta',
+  'Une montée de version ratée immobilise le parc pendant deux jours':
+    'Una actualización fallida deja el parque parado dos días',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte':
+    'Un certificado caducado corta la API: no había nadie de guardia',
+  'Une base de production effacée par un script lancé sans relecture':
+    'Una base de producción borrada por un script lanzado sin revisión',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi':
+    'Tus claves de acceso andaban por un repositorio: alguien las usó',
+  'Un an sans exercice de reprise : la panne dure trente heures':
+    'Un año sin simulacro de recuperación: la caída dura treinta horas',
+  'Entraînement au point mort : la courbe de perte ne descend plus':
+    'Entrenamiento estancado: la curva de pérdida ya no baja',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée':
+    'El nuevo modelo alucina más que el anterior: lanzamiento cancelado',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes':
+    'Resultados mal alineados: el modelo rechaza la mitad de las peticiones legítimas',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière':
+    'Precisión a la baja en todas las evaluaciones: marcha atrás',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur':
+    '30% de datos de entrenamiento duplicados: el modelo se lo aprendió de memoria',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien':
+    'El conjunto de evaluación se coló en el entrenamiento: las notas no valen nada',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues':
+    'Divergencia numérica a mitad de camino: semanas de cálculo perdidas',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web':
+    'Corpus mal filtrado: el modelo reproduce lo peor de la web',
+  'Le modèle s’effondre sur les langues autres que l’anglais':
+    'El modelo se hunde en cualquier lengua que no sea el inglés',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs':
+    'Etiquetado chapucero: el modelo aprendió los errores de sus anotadores',
   'But :':
     'Objetivo:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -1026,8 +1070,8 @@ export default {
     'una GPU debe caber en un servidor, en un rack, en un centro de datos, sobre inmuebles, y todos consumen energía. El material obsoleto se revende; una tarjeta con más de 5 años desaparece del mercado. También puedes alquilar un centro de datos o espacio en colocation.',
   '⚡ Au départ :':
     '⚡ Al principio:',
-  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
-    'tu acometida es de solo 10 kW, el contador del garaje. Vigila la Portada: una subvención energética para empresas jóvenes la reforzará, y una acometida de red cuesta un puñado de dólares.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'no tienes potencia disponible, ni rack ni servidor: solo un local, una sala y 10 000 $. Tu primera decisión es conectarte, y luego montar un rack y un servidor antes de poder alojar una sola tarjeta. Vigila la Portada: una subvención energética para empresas jóvenes reforzará tu acometida.',
   '⚡ Coûts d’énergie :':
     '⚡ Costes de energía:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1038,8 +1082,8 @@ export default {
     'nada es instantáneo. Cada pedido entra en obra (distintivo ⏳) durante un tiempo proporcional a su complejidad: segundos para una tarjeta, varios meses simulados para un centro de datos o un reactor. La plaza se reserva al pedir.',
   'Équipe :':
     'Equipo:',
-  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
-    'RR. HH. abre puestos, los ingenieros de I+D desbloquean el entrenamiento de modelos, los de marketing suben el techo de marketing. Cada contratación cuesta 1.000 $, más un salario diario. RR. HH. ocupa también un puesto: una plantilla mal dosificada puede bloquear tu próximo modelo.',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.':
+    'RR. HH. abre puestos, los ingenieros de I+D desbloquean el entrenamiento de modelos, los de marketing suben el techo de marketing. Cada contratación cuesta 1.000 $, más un salario diario. RR. HH. ocupa también un puesto: una plantilla mal dosificada puede bloquear tu próximo modelo. Dos descuidos se pagan: menos de un 10 % de ingenieros SRE y, cada año tras la salida a Bolsa, un incidente de explotación tiene un 20 % de probabilidades de costarte un 15 % del valor; menos de un 20 % de ingenieros de datos y cada entrenamiento tiene un 5 % de riesgo de fallar: recursos gastados, nivel no alcanzado.',
   '💸 Salaires impayés :':
     '💸 Salarios impagados:',
   'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
@@ -1060,14 +1104,18 @@ export default {
     '₿ Cripto:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
     'un segundo mercado, mucho más violento que la Bolsa, calcado de los ciclos reales (burbuja de 2017, invierno de 2018, subidón de 2021, desplome de 2022, ETF y halving de 2024). No sirve solo para apostar: durante las subidas, los mineros se pelean por las mismas tarjetas que tú y el precio de las GPU sube.',
+  'Percées :':
+    'Avances:',
+  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
+    'solo se ofrece una a la vez, y hay que dejar pasar dos meses tras adquirirla para que aparezca la siguiente. Eliges una vía, la llevas a término y luego miras la siguiente.',
   '🔧 Optimisations récurrentes :':
     '🔧 Optimizaciones recurrentes:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
     'una optimización CUDA cada 18 meses, una del motor de inferencia cada 9 meses, una pasada de gestión de contexto cada 12 meses. 1.000 $ cada una: lo difícil es acordarse. La línea desaparece al tomarla y vuelve al vencimiento.',
   'Automatisation :':
     'Automatización:',
-  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    'compra los autoclickers y luego marca ⟳ auto en cada elemento concreto que quieras recomprar solo. Los botones ⟳ y ×10 solo aparecen a partir de 20 unidades en servicio; ×100 desde 200.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    'una automatización solo aparece tras **50 gestos hechos a mano** en su familia: no se automatiza lo que no se ha aprendido. Son distintas: inferencia, tarjetas, material (racks y servidores), inmobiliario (edificios y centros de datos), energía. Cómpralas y luego marca ⟳ auto en cada elemento concreto a recomprar. La tarjeta late en cada acción, para que veas lo que la máquina hace en tu lugar. Los botones ⟳ y ×10 solo aparecen a partir de 20 unidades en servicio; ×100 desde 200.',
   '📋 Directives permanentes :':
     '📋 Directivas permanentes:',
   'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
@@ -1534,6 +1582,10 @@ export default {
     '👋 Baja: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     'Atrasos salariales saldados. El equipo se queda.',
+  'Entraînement de {0} ÉCHOUÉ : {1}':
+    'Entrenamiento de {0} FALLIDO: {1}',
+  '❌ Entraînement échoué':
+    '❌ Entrenamiento fallido',
   'Modèle entraîné : {0}':
     'Modelo entrenado: {0}',
   'Nouveau modèle : {0}':
@@ -1592,6 +1644,10 @@ export default {
     '🛰️ Quiebra del consorcio orbital',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (directiva permanente)',
+  'Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.':
+    'Incidente de explotación: {0}. El valor de la empresa cae un {1} %.',
+  '⚠️ Incident d’exploitation':
+    '⚠️ Incidente de explotación',
   'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
     'Un país entero pasa bajo tu tutela. Se construirán allí {0} centros de datos.',
   '🏛️ Dette souveraine rachetée':
@@ -1618,8 +1674,8 @@ export default {
     'La mitad del universo observable ha sido convertida.',
   'Succès : {0} — {1}':
     'Logro: {0} — {1}',
-  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
-    'Actualización de las reglas: la acometida gratuita es ahora de solo 10 kW. Tu capacidad se ha ajustado (las fuentes compradas se conservan).',
+  'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    'Actualización de las reglas: la acometida gratuita pasa a {0}. Tu capacidad se ha ajustado (las fuentes compradas se conservan).',
   '{0} h {1}':
     '{0} h {1}',
   '{0} min':

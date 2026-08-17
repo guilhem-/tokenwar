@@ -5,10 +5,13 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          START_YEAR, SECONDS_PER_YEAR, HEADLINES,
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
          BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
-         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, OPTIMS,
+         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, AUTO_CLICKS_REQUIRED,
+         PROJECT_GAP_MONTHS, OPTIMS,
          PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK,
-         CHRONICLE, EXTRAVAGANCES, SOVEREIGN } from './data.js';
-import { clamp } from './util.js';
+         CHRONICLE, EXTRAVAGANCES, SOVEREIGN,
+         OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
+         OPS_INCIDENTS, TRAINING_FAILURES } from './data.js';
+import { clamp, fmtPower } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -39,7 +42,7 @@ export class Game {
     // score & ressources
     s.lifetimeTokens = 0;
     s.unsold = 0;
-    s.money = 1500;          // petit capital de départ (vos économies) pour amorcer l'infra + 1ʳᵉ carte
+    s.money = 10000;         // capital de départ : de quoi se raccorder, monter une baie et un serveur
     s.research = 0;
     s.data = 0;
     s.reputation = 50;
@@ -50,15 +53,21 @@ export class Game {
     s.probes = 0;            // phase 3
     // infrastructure
     s.gpuCounts = {};        // id -> nombre
-    s.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 }; // chaîne d'hébergement (1 de chaque offert)
+    // On démarre avec un local et une salle, mais NI BAIE NI SERVEUR : la première
+    // décision du joueur est de monter sa machine, pas d'acheter une carte.
+    s.infraCounts = { realestate:1, datacenter:1, rack:0, server:0 };
     s.rentedDC = 0;          // datacenters loués (coût journalier)
     s.rentedSpace = 0;       // espaces de colocation loués (coût journalier)
     s.employees = { hr:0, rnd:0, marketer:0, ops:0, data:0 }; // ressources humaines
     s.stock = { invested:0, basis:0, risk:1, index:1, hist:[] };  // position, risque, INDICE de marché et son historique
     s.stockUnlocked = false; // la bourse se débloque à 100 000$ de trésorerie
     // automatisations (auto-clickers payants, activables/désactivables)
-    s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true }, infra:{ owned:false, on:true }, energy:{ owned:false, on:true } };
-    s.autoItems = { gpu:{}, energy:{}, infra:{} }; // auto-achat PAR élément (id -> bool), mémorisé individuellement
+    s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true },
+               hardware:{ owned:false, on:true }, housing:{ owned:false, on:true },
+               energy:{ owned:false, on:true } };
+    s.autoItems = { gpu:{}, energy:{}, hardware:{}, housing:{} }; // auto-achat PAR élément (id -> bool)
+    // gestes faits À LA MAIN, par famille : une automatisation ne se propose qu'après 50
+    s.clicks = { click:0, gpu:0, hardware:0, housing:0, energy:0 };
     s.autoTimer = 0;
     // chantiers en cours : rien n'est instantané. {f:'gpu'|'infra'|'energy', id, t0, t1}
     s.builds = [];
@@ -79,10 +88,12 @@ export class Game {
     s.crypto = { invested:0, basis:0, price:1, unlocked:false, hist:[] };
     s.chronicle = {};        // id|année -> déjà publié
     s.sovereign = { status:'none', at:0 };   // rachat de dette souveraine
+    s.opsCheckYear = 0;      // dernier contrôle annuel du risque d'exploitation
+    s.lastIncident = null;   // pour ne pas tirer deux fois le même article de suite
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
     s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
-    s.energyCap = BASE_GRID_MW; // 10 kW : le compteur du garage, offert
+    s.energyCap = BASE_GRID_MW; // rien : il faut se raccorder avant de calculer
     s.baseGridMW = BASE_GRID_MW; // marqueur de règle : permet de migrer les vieilles sauvegardes
     s.unpaidDays = 0;        // jours d'arriérés de salaire (30 → les gens partent)
     s.quitDebt = 0;          // départs accumulés en attente d'être appliqués
@@ -93,6 +104,7 @@ export class Game {
     // progression
     s.phase = 1;
     s.projectsDone = {};
+    s.lastProjectAt = -1e9;  // dernière percée acquise (délai avant la suivante)
     s.fundingDone = {};
     s.eventsSeen = {};
     s.eventCooldown = {};   // id -> playSeconds du dernier déclenchement
@@ -546,6 +558,12 @@ export class Game {
     this.state.autoItems[family][id] = !this.isAutoItem(family, id);
     return true;
   }
+  // Marge à conserver avant qu'un niveau ne devienne limitant. Elle doit être
+  // RELATIVE à ce que le niveau accueille : un serveur offre 8 emplacements GPU
+  // (consommés en continu, donc marge confortable), un bâtiment n'accueille que
+  // 4 datacenters — exiger 4 places libres revenait à en racheter en permanence.
+  autoBuffer(it) { return it.child === 'gpu' ? 4 : 1; }
+
   tickAuto(dt) {
     const s = this.state, au = s.auto;
     // inférence + achat des GPU sélectionnés : « par seconde »
@@ -553,9 +571,11 @@ export class Game {
     let guard = 0;
     while (s.autoTimer >= 1 && guard++ < 100) {
       s.autoTimer -= 1;
-      if (au.click.owned && au.click.on) this.manualGenerate();
+      if (au.click.owned && au.click.on) { this.manualGenerate(); this.autoFired('click'); }
       if (this.phase < 2 && au.gpu.owned && au.gpu.on) {
-        for (const g of GPUS) if (this.isAutoItem('gpu', g.id) && this.canBuyGPU(g.id)) this.buyGPU(g.id);
+        for (const g of GPUS) if (this.isAutoItem('gpu', g.id) && this.canBuyGPU(g.id)) {
+          this.buyGPU(g.id); this.autoFired('gpu', g.id);
+        }
       }
     }
     if (this.phase < 2) {
@@ -565,18 +585,37 @@ export class Game {
           if (!this.isAutoItem('energy', e.id)) continue;
           // on compte la capacité déjà en chantier : sinon on recommande en boucle
           if (this.energyUse() <= this.energyCapPlanned() * 0.98) break;
-          if ((!e.phase || this.phase >= e.phase) && this.dateUnlocked(e) && s.money >= this.energyCost(e)) this.buyEnergy(e.id);
+          if ((!e.phase || this.phase >= e.phase) && this.dateUnlocked(e) && s.money >= this.energyCost(e)) {
+            this.buyEnergy(e.id); this.autoFired('energy', e.id);
+          }
         }
       }
-      // hébergement : on achète un niveau coché quand IL va devenir limitant
-      if (au.infra.owned && au.infra.on) {
+      // hébergement, en deux familles distinctes : MATÉRIEL (baie, serveur) et
+      // IMMOBILIER (bâtiment, datacenter). Chacune s'achète et s'active à part.
+      for (const family of ['hardware', 'housing']) {
+        if (!au[family].owned || !au[family].on) continue;
         for (const it of INFRA) {
-          // idem : la capacité en chantier compte dans la décision
-          if (this.isAutoItem('infra', it.id) && this.plannedFreeSlots(it.child) < 4 && this.canBuyInfra(it.id)) this.buyInfra(it.id);
+          if (it.family !== family) continue;
+          if (!this.isAutoItem(family, it.id)) continue;
+          // la capacité en chantier compte dans la décision, la marge dépend du niveau
+          if (this.plannedFreeSlots(it.child) >= this.autoBuffer(it)) continue;
+          if (this.canBuyInfra(it.id)) { this.buyInfra(it.id); this.autoFired(family, it.id); }
         }
       }
     }
   }
+
+  // ---- gestes manuels et déblocage des automatisations ----
+  // Une automatisation ne se propose qu'après 50 gestes faits à la main dans sa
+  // famille : on n'automatise pas ce qu'on n'a pas encore appris.
+  countClick(family, n = 1) {
+    if (!this.state.clicks) this.state.clicks = {};
+    this.state.clicks[family] = (this.state.clicks[family] || 0) + n;
+  }
+  clickCount(family) { return (this.state.clicks && this.state.clicks[family]) || 0; }
+  autoUnlocked(family) { return this.clickCount(family) >= AUTO_CLICKS_REQUIRED; }
+  // signale à l'interface qu'une automatisation vient d'agir (pour l'animation)
+  autoFired(family, itemId) { this.ui && this.ui.onAutoFire && this.ui.onAutoFire(family, itemId); }
 
   // ---- CHARGES JOURNALIÈRES (électricité + salaires + loyers) ----
   // L'ÉLECTRICITÉ se décompose en trois natures bien distinctes :
@@ -734,6 +773,16 @@ export class Game {
     this.state.money -= money;
     this.state.data -= (c.data || 0);
     this.state.research -= (c.research || 0);
+    // Trop peu de data engineers : le corpus est mal préparé et l'entraînement
+    // peut échouer. Les ressources sont consommées, le palier n'est pas franchi.
+    if (this.dataUnderstaffed() && Math.random() < TRAIN_FAIL_RISK) {
+      const article = this.pickIncident(TRAINING_FAILURES);
+      this.publish(td(article), 'bad');
+      this.changeRep(-3);
+      this.log(t('Entraînement de {0} ÉCHOUÉ : {1}', td(m.name), td(article)), 'bad');
+      this.toast(t('❌ Entraînement échoué'), 'bad');
+      return false;
+    }
     this.state.modelTier++;
     this.state._freshModelUntil = this.state.playSeconds + 18; // titres de presse réactifs
     this.log(t('Modèle entraîné : {0}', td(m.name)), 'milestone');
@@ -754,9 +803,22 @@ export class Game {
     return true;
   }
 
+  // Une seule percée est proposée à la fois — la première de la liste dont les
+  // conditions sont réunies — et seulement après un délai depuis la précédente.
+  projectGapLeft() {
+    const gap = PROJECT_GAP_MONTHS * (SECONDS_PER_YEAR / 12);
+    return Math.max(0, this.state.lastProjectAt + gap - this.state.playSeconds);
+  }
+  nextProject() {
+    if (this.projectGapLeft() > 0) return null;
+    return PROJECTS.find(p => !this.state.projectsDone[p.id] && p.req(this)) || null;
+  }
   buyProject(id) {
     const p = PROJECTS.find(x => x.id === id);
     if (!p || this.state.projectsDone[id]) return false;
+    // on ne peut acquérir que la percée effectivement proposée
+    const next = this.nextProject();
+    if (!next || next.id !== id) return false;
     const c = p.cost;
     const money = this.moneyCost(c.money);
     if (money > this.state.money) return false;
@@ -770,6 +832,7 @@ export class Game {
     this.state.data -= (c.data || 0);
     this.state.matter -= (c.matter || 0);
     this.state.projectsDone[id] = true;
+    this.state.lastProjectAt = this.state.playSeconds;
     this.applyProjectEffect(p.effect);
     this.log(t('Projet : {0}', td(p.name)), 'milestone');
     this.toast(t('Percée : {0}', td(p.name)), 'good');
@@ -1302,6 +1365,41 @@ export class Game {
   }
 
   // =================================================================
+  //  RISQUES LIÉS À L'EFFECTIF
+  // =================================================================
+  // part d'une catégorie dans l'effectif total (0 si personne n'est employé)
+  staffShare(id) { const h = this.headcount(); return h > 0 ? this.empCount(id) / h : 1; }
+  opsUnderstaffed() { return this.headcount() > 0 && this.staffShare('ops') < OPS_RATIO; }
+  dataUnderstaffed() { return this.headcount() > 0 && this.staffShare('data') < DATA_RATIO; }
+  // tire un article sans répéter le précédent
+  pickIncident(list) {
+    const pool = list.filter(x => x !== this.state.lastIncident);
+    const pick = (pool.length ? pool : list)[Math.floor(Math.random() * (pool.length ? pool.length : list.length))];
+    this.state.lastIncident = pick;
+    return pick;
+  }
+  // Contrôle ANNUEL : trop peu d'ingénieurs SRE et l'exploitation finit par
+  // lâcher. Sans introduction en Bourse, il n'y a pas encore de valeur de
+  // marché à détruire — le risque ne s'ouvre qu'après.
+  tickOpsRisk() {
+    const s = this.state;
+    if (s.ended || this._offline || this.phase >= 2) return;
+    if (!s.fundingDone || !s.fundingDone.ipo) return;
+    const year = this.simYearInt();
+    if (s.opsCheckYear >= year) return;
+    s.opsCheckYear = year;
+    if (!this.opsUnderstaffed()) return;
+    if (Math.random() >= OPS_RISK) return;
+    const article = this.pickIncident(OPS_INCIDENTS);
+    s.mods.valuationMult *= (1 - OPS_VALUE_LOSS);
+    this.changeRep(-4);
+    this.publish(td(article), 'bad');
+    this.log(t('Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.',
+      td(article), Math.round(OPS_VALUE_LOSS * 100)), 'bad');
+    this.toast(t('⚠️ Incident d’exploitation'), 'bad');
+  }
+
+  // =================================================================
   //  MISE SOUS TUTELLE D'UN ÉTAT — au-delà de 4 000 milliards, l'offre
   //  apparaît : racheter la dette souveraine d'un pays pour 2 000 milliards,
   //  et y bâtir cent datacenters.
@@ -1599,6 +1697,7 @@ export class Game {
     this.tickEvents(dt);
     this.tickHeadlines(dt);
     this.tickChronicle();          // articles datés (climat, démographie, richesses…)
+    this.tickOpsRisk();            // contrôle annuel du sous-effectif d'exploitation
     this.checkMilestones();
   }
 
@@ -1678,14 +1777,43 @@ export class Game {
     // Le raccordement offert est passé de 500 kW à 10 kW. On reconnaît une
     // sauvegarde d'avant ce changement à l'absence de `baseGridMW` — on ne peut
     // pas se fier au numéro de version, qui avait déjà été incrémenté avant.
-    if (raw.baseGridMW === undefined) {
-      const OLD_BASE = 0.5;
-      s.energyCap = Math.max(BASE_GRID_MW, (s.energyCap || OLD_BASE) - (OLD_BASE - BASE_GRID_MW));
-      this.log(t('Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).'), 'info');
+    // Forme générale : on retire la DIFFÉRENCE entre l'ancien raccordement offert
+    // et le nouveau, quel que soit le changement. Les sauvegardes d'avant le
+    // marqueur `baseGridMW` viennent de l'époque des 500 kW.
+    const oldBase = raw.baseGridMW === undefined ? 0.5 : raw.baseGridMW;
+    if (Math.abs(oldBase - BASE_GRID_MW) > 1e-12) {
+      s.energyCap = Math.max(BASE_GRID_MW, (s.energyCap || oldBase) - (oldBase - BASE_GRID_MW));
+      this.log(t('Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).',
+        fmtPower(BASE_GRID_MW)), 'info');
     }
     // Les directives permanentes se comptent désormais en lots de 5 : une partie
     // qui les avait déjà payées conserve son premier lot.
     if (s.addendum && !s.addendumBlocks) s.addendumBlocks = 1;
+    // L'auto-hébergement s'est scindé en « matériel » et « immobilier ».
+    // On reporte l'ancien achat sur les deux, et les éléments cochés sur la
+    // bonne famille — le joueur ne perd pas ce qu'il avait payé.
+    if (raw.auto && raw.auto.infra) {
+      const old = raw.auto.infra;
+      for (const fam of ['hardware', 'housing']) {
+        if (!s.auto[fam]) s.auto[fam] = { owned:false, on:true };
+        s.auto[fam].owned = s.auto[fam].owned || !!old.owned;
+        s.auto[fam].on = old.on !== false;
+      }
+      delete s.auto.infra;
+    }
+    if (raw.autoItems && raw.autoItems.infra) {
+      for (const it of INFRA) {
+        if (raw.autoItems.infra[it.id]) {
+          if (!s.autoItems[it.family]) s.autoItems[it.family] = {};
+          s.autoItems[it.family][it.id] = true;
+        }
+      }
+      delete s.autoItems.infra;
+    }
+    // Une automatisation déjà payée reste proposée : on crédite le seuil de clics.
+    for (const fam of ['click', 'gpu', 'hardware', 'housing', 'energy']) {
+      if (s.auto[fam] && s.auto[fam].owned) s.clicks[fam] = Math.max(s.clicks[fam] || 0, AUTO_CLICKS_REQUIRED);
+    }
     s.baseGridMW = BASE_GRID_MW;
   }
   load() {

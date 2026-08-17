@@ -538,10 +538,14 @@ export default {
     'GPU 자동 구매',
   'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
     '카드 단위 자동 구매를 켠다 (⟳ 표시한 모델만). 예산이 되면 초당 한 장.',
-  'Auto-hébergement':
-    '호스팅 자동 구매',
-  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
-    '⟳ 표시한 계층이 병목이 되려 할 때 자동으로 구매한다.',
+  'Auto-achat matériel':
+    '하드웨어 자동 구매',
+  'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.':
+    '랙과 서버: ⟳ 표시한 계층의 자리가 떨어지려 하면 다시 구매한다.',
+  'Auto-achat immobilier':
+    '부지 자동 구매',
+  'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.':
+    '건물과 데이터센터: ⟳ 표시한 계층은 아래 계층 자리가 없을 때 다시 구매한다.',
   'Auto-énergie':
     '에너지 자동 구매',
   'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
@@ -1012,6 +1016,46 @@ export default {
     '살아 있는 동안 예약해 둔 냉동 보존 캡슐',
   'une fusée personnelle pour observer la Terre le week-end':
     '주말에 지구를 내려다보기 위한 개인 로켓',
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus':
+    '운영 인력 부족으로 6개월치 고객 로그가 사라지다',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue':
+    '아무도 눈치채지 못한 주입으로 학습 데이터셋이 오염되다',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours':
+    '당신의 산업 기밀이 사흘간 공개 저장소에 놓여 있었다',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes':
+    '진행 중이던 학습이 취소되다: 아무도 체크포인트를 보지 않았다',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert':
+    '한 번도 시험하지 않은 백업: 정작 필요한 날 복구가 실패하다',
+  'Une montée de version ratée immobilise le parc pendant deux jours':
+    '실패한 업그레이드로 장비가 이틀간 멈추다',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte':
+    '인증서 만료로 API가 끊기다: 당직자가 아무도 없었다',
+  'Une base de production effacée par un script lancé sans relecture':
+    '검토 없이 돌린 스크립트가 운영 데이터베이스를 지웠다',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi':
+    '접근 키가 저장소에 방치돼 있었고, 누군가 그것을 썼다',
+  'Un an sans exercice de reprise : la panne dure trente heures':
+    '1년간 복구 훈련 없음: 장애가 서른 시간 이어지다',
+  'Entraînement au point mort : la courbe de perte ne descend plus':
+    '학습 정체: 손실 곡선이 더 이상 내려가지 않는다',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée':
+    '새 모델이 이전보다 더 환각을 낸다: 출시 취소',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes':
+    '정렬 불량: 모델이 정당한 요청의 절반을 거부한다',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière':
+    '모든 평가셋에서 정확도 하락: 되돌리기',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur':
+    '학습 데이터 30%가 중복: 모델이 통째로 외웠다',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien':
+    '평가셋이 학습에 섞여 들어가다: 점수는 무의미하다',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues':
+    '중간에 수치 발산: 몇 주치 연산이 날아가다',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web':
+    '코퍼스 필터링 부실: 모델이 웹의 최악을 그대로 재현한다',
+  'Le modèle s’effondre sur les langues autres que l’anglais':
+    '영어 외의 언어에서는 모델이 무너진다',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs':
+    '허술한 라벨링: 모델이 주석자의 실수를 배웠다',
   'But :':
     '목표:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -1026,8 +1070,8 @@ export default {
     'GPU는 서버에, 서버는 랙에, 랙은 데이터센터에, 데이터센터는 부동산 위에 들어가야 한다 — 그 모두가 전기를 먹는다. 낡은 장비는 되팔 수 있고, 출시된 지 5년이 넘은 카드는 시장에서 사라진다. 데이터센터나 코로케이션 공간을 빌릴 수도 있다.',
   '⚡ Au départ :':
     '⚡ 시작할 때:',
-  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
-    '수전 용량은 겨우 10kW — 차고의 계량기다. 헤드라인을 주시하라: 신생 기업 에너지 보조금이 이를 늘려 주고, 계통 연결 자체는 몇십 달러면 된다.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '쓸 수 있는 전력이 없고, 랙도 서버도 없다. 있는 것은 건물과 방, 그리고 1만 달러뿐이다. 첫 결정은 계통에 연결하는 것, 그다음이 랙과 서버를 세우는 것이다. 카드 한 장을 놓는 건 그 뒤의 이야기다. 헤드라인을 주시하라: 신생 기업 에너지 보조금이 수전 용량을 늘려 준다.',
   '⚡ Coûts d’énergie :':
     '⚡ 에너지 비용:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1038,8 +1082,8 @@ export default {
     '즉시 끝나는 것은 없다. 모든 주문은 공사에 들어가고 (⏳ 표시), 그 길이는 복잡도에 비례한다. 카드는 몇 초, 데이터센터나 원자로는 시뮬레이션으로 몇 달. 자리는 주문하는 순간 확보된다.',
   'Équipe :':
     '팀:',
-  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
-    '인사가 자리를 열고, 연구개발 엔지니어가 모델 학습을 풀고, 마케터가 마케팅 상한을 올린다. 채용할 때마다 $1,000, 이후엔 매일 급여. 인사도 한 자리를 차지하므로, 인원 배분을 그르치면 다음 모델에서 막힌다.',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.':
+    '인사가 자리를 열고, 연구개발 엔지니어가 모델 학습을 풀고, 마케터가 상한을 올린다. 채용마다 1,000달러, 그 뒤로는 매일 급여. 인사도 한 자리를 차지하므로 배분을 그르치면 다음 모델에서 막힌다. 두 가지 태만에는 대가가 따른다. SRE가 10% 미만이면 상장 이후 해마다 20% 확률로 운영 사고가 나 기업가치의 15%를 잃는다. 데이터 엔지니어가 20% 미만이면 학습마다 5% 확률로 실패한다 — 자원은 쓰이고, 단계는 오르지 않는다.',
   '💸 Salaires impayés :':
     '💸 급여 체불:',
   'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
@@ -1060,14 +1104,18 @@ export default {
     '₿ 크립토:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
     '증시보다 훨씬 거친 두 번째 시장. 실제 주기를 따라간다(2017년 거품, 2018년 겨울, 2021년 급등, 2022년 붕괴, 2024년 ETF와 반감기). 베팅용만은 아니다. 급등기에는 채굴자들이 당신과 같은 카드를 두고 다투고, GPU 가격이 오른다.',
+  'Percées :':
+    '돌파:',
+  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
+    '한 번에 하나만 제시되며, 획득한 뒤 두 달이 지나야 다음이 나타난다. 하나를 골라 끝까지 밀고, 그다음을 본다.',
   '🔧 Optimisations récurrentes :':
     '🔧 주기적 최적화:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
     'CUDA 최적화는 18개월마다, 추론 엔진은 9개월마다, 컨텍스트 관리는 12개월마다. 하나에 $1,000 — 어려운 건 기억해 두는 일이다. 한 번 취하면 줄이 사라지고, 기한이 되면 다시 나타난다.',
   'Automatisation :':
     '자동화:',
-  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    '오토클리커를 사고, 자동으로 다시 사고 싶은 개별 항목마다 ⟳ auto를 체크한다. ⟳와 ×10 버튼은 해당 항목이 20대 가동될 때부터, ×100은 200대부터 나타난다.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    '자동화는 같은 계열에서 **손으로 50번**을 해야 나타난다. 배우지 않은 것은 자동화하지 않는다. 계열은 각각 따로다 — 추론, 카드, 하드웨어(랙과 서버), 부지(건물과 데이터센터), 에너지. 구매한 뒤 개별 항목마다 ⟳ auto를 체크한다. 동작할 때마다 카드가 맥동해, 기계가 대신 무엇을 했는지 눈에 보인다. ⟳와 ×10 버튼은 20대 가동부터, ×100은 200대부터 나타난다.',
   '📋 Directives permanentes :':
     '📋 상시 지침:',
   'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
@@ -1534,6 +1582,10 @@ export default {
     '👋 이탈: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     '체불 급여를 정산했습니다. 팀이 남습니다.',
+  'Entraînement de {0} ÉCHOUÉ : {1}':
+    '{0} 학습 실패: {1}',
+  '❌ Entraînement échoué':
+    '❌ 학습 실패',
   'Modèle entraîné : {0}':
     '모델 학습 완료: {0}',
   'Nouveau modèle : {0}':
@@ -1592,6 +1644,10 @@ export default {
     '🛰️ 궤도 컨소시엄 파산',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (상시 지침)',
+  'Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.':
+    '운영 사고: {0}. 기업가치가 {1}% 하락.',
+  '⚠️ Incident d’exploitation':
+    '⚠️ 운영 사고',
   'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
     '한 나라 전체가 당신의 후견 아래 들어간다. 그곳에 데이터센터 {0}곳이 세워진다.',
   '🏛️ Dette souveraine rachetée':
@@ -1618,8 +1674,8 @@ export default {
     '관측 가능한 우주의 절반이 전환되었습니다.',
   'Succès : {0} — {1}':
     '업적: {0} — {1}',
-  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
-    '규칙 변경: 무상 수전 용량이 이제 10kW뿐입니다. 용량을 조정했습니다 (구매한 전원은 유지됩니다).',
+  'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    '규칙 변경: 무상 수전이 {0}(으)로 바뀌었습니다. 용량을 조정했습니다(구매한 전원은 유지).',
   '{0} h {1}':
     '{0}시간 {1}',
   '{0} min':

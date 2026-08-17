@@ -1,20 +1,23 @@
-name: Deploy to GitHub Pages
+name: Tests
+
+# Ce dépôt ne déploie plus rien. La mise en ligne est manuelle, depuis le poste
+# de l'auteur, avec tools/deploy.sh — voir DEPLOIEMENT.md.
+# Ce workflow ne fait donc que garder le filet de sécurité : il dit si un commit
+# casse la partie, sans jamais toucher à ce qui est en ligne.
 
 on:
   push:
     branches:
       - claude/token-production-game-ci5u4l
       - main
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Une seule exécution de déploiement à la fois
 concurrency:
-  group: pages
+  group: tests-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -47,28 +50,3 @@ jobs:
         run: |
           node test-sim.mjs > sim.log
           tail -8 sim.log
-
-  deploy:
-    needs: test
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Site statique à la racine du dépôt
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4

@@ -1,0 +1,12 @@
+# Copiez ce fichier en tools/deploy.conf (ignoré par git) et remplissez-le.
+#
+# Destination du transfert. Tout ce que rsync accepte convient :
+#   - un serveur distant :  "user@serveur:/var/www/tokenwar"
+#   - un chemin local    :  "/srv/www/tokenwar"
+DEPLOY_TARGET="user@serveur:/var/www/tokenwar"
+
+# Port SSH, si ce n'est pas 22.
+#DEPLOY_SSH_PORT=22
+
+# Purement décoratif : l'adresse affichée à la fin d'un déploiement réussi.
+DEPLOY_URL="https://tokenwar.bonnafous.org"

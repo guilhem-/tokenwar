@@ -189,7 +189,7 @@ export class UI {
 
   bind() {
     const g = this.game;
-    this.el.btnGenerate.addEventListener('click', () => g.manualGenerate());
+    this.el.btnGenerate.addEventListener('click', () => { g.manualGenerate(); g.countClick('click'); });
     this.el.priceSlider.value = g.state.priceSlider;
     this.el.priceSlider.addEventListener('input', e => { g.state.priceSlider = +e.target.value; });
     this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.deny(this.el.btnMarketing, t('Trésorerie insuffisante')); });
@@ -421,6 +421,17 @@ export class UI {
 
   // reconstruction complète de l'UI (après un redémarrage / New Game+)
   fullRebuild() {
+    // les courbes vivent dans l'interface, pas dans l'état : sans ce nettoyage,
+    // une nouvelle partie hériterait du graphe de la précédente.
+    this.sparkData = []; this.sparkLastT = -1;
+    this.universe = null;
+    this.drawSpark();
+    this.drawMarket(this.el.stockChart, [], null, '#fff');
+    this.drawMarket(this.el.cryptoChart, [], null, '#fff');
+    if (this.el.universeMap && this.el.universeMap.getContext) {
+      const c = this.el.universeMap.getContext('2d');
+      if (c) c.clearRect(0, 0, this.el.universeMap.width, this.el.universeMap.height);
+    }
     this.onCrisisEnd();
     this.onPhaseChange(this.game.phase);
     this.buildStaticRows();
@@ -558,9 +569,9 @@ export class UI {
       const r = this.makeRow(this.el.infraList, it.id, this.rows.infra);
       r.name.textContent = td(it.name);
       r.desc.textContent = td(it.desc);
-      r.el.addEventListener('click', () => { this.game.buyInfra(it.id); }); // grisé → no-op
-      this.addBulk(r, () => this.game.buyInfra(it.id));
-      this.addAutoToggle(r, 'infra', it.id);
+      r.el.addEventListener('click', () => { if (this.game.buyInfra(it.id)) this.game.countClick(it.family); });
+      this.addBulk(r, () => { const ok = this.game.buyInfra(it.id); if (ok) this.game.countClick(it.family); return ok; });
+      this.addAutoToggle(r, it.family, it.id);
       // location (datacenter uniquement) : pas de capex, coût journalier
       if (it.rentDaily) {
         const rent = document.createElement('div');
@@ -620,9 +631,9 @@ export class UI {
       r.sell = sell;
       r.el.addEventListener('click', () => {
         if (!this.game.dateUnlocked(g)) return;   // verrouillé par date → silencieux (grisé/label)
-        this.game.buyGPU(g.id);                   // non achetable → no-op (grisé)
+        if (this.game.buyGPU(g.id)) this.game.countClick('gpu');   // non achetable → no-op (grisé)
       });
-      this.addBulk(r, () => this.game.buyGPU(g.id));
+      this.addBulk(r, () => { const ok = this.game.buyGPU(g.id); if (ok) this.game.countClick('gpu'); return ok; });
       this.addAutoToggle(r, 'gpu', g.id);
     });
     // Energy
@@ -631,8 +642,8 @@ export class UI {
       const r = this.makeRow(this.el.energyList, e.id, this.rows.energy);
       r.name.textContent = td(e.name);
       r.desc.textContent = td(e.desc);
-      r.el.addEventListener('click', () => { if (this.game.dateUnlocked(e)) this.game.buyEnergy(e.id); });
-      this.addBulk(r, () => this.game.buyEnergy(e.id));
+      r.el.addEventListener('click', () => { if (this.game.dateUnlocked(e) && this.game.buyEnergy(e.id)) this.game.countClick('energy'); });
+      this.addBulk(r, () => { const ok = this.game.buyEnergy(e.id); if (ok) this.game.countClick('energy'); return ok; });
       this.addAutoToggle(r, 'energy', e.id);
     });
     // Optimisations récurrentes (elles reviennent tous les N mois)
@@ -704,7 +715,7 @@ export class UI {
         this.buildBadge('infra', it.id);
       this.setAfford(r.el, g.canBuyInfra(it.id));
       this.updateBulk(r, count, g.canBuyInfra(it.id));
-      this.updateAutoToggle(r, 'infra', it.id, count);
+      this.updateAutoToggle(r, it.family, it.id, count);
       if (r.rentInfo) {
         const rented = s.rentedDC || 0;
         r.rentInfo.textContent = t('loué ×{0} · {1}/j', rented, fmtMoney(g.dcRentDaily())) + (rented > 0 ? ` (−${fmtMoney(g.dcRentPerSec())}/s)` : '');
@@ -739,10 +750,15 @@ export class UI {
 
   renderAuto() {
     const g = this.game, s = g.state;
+    let any = false;
     AUTOMATIONS.forEach(a => {
       const r = this.rows.auto[a.id];
       const st = s.auto[a.id];
       const cost = g.autoCost(a);
+      // la carte n'apparaît qu'après 50 gestes faits à la main dans cette famille
+      if (!st.owned && !g.autoUnlocked(a.id)) { r.el.classList.add('hidden'); return; }
+      r.el.classList.remove('hidden');
+      any = true;
       if (!st.owned) {
         r.cost.textContent = fmtMoney(cost);
         r.btn.textContent = t('Acheter');
@@ -755,6 +771,17 @@ export class UI {
         r.el.classList.remove('locked', 'affordable');
       }
     });
+    this.el.panelAuto.classList.toggle('empty', !any);
+  }
+
+  // Animation à chaque action d'une automatisation : la carte pulse, et la
+  // ligne concernée clignote — on voit ce que la machine fait à notre place.
+  onAutoFire(family, itemId) {
+    const r = this.rows.auto && this.rows.auto[family];
+    if (r) { r.el.classList.remove('fired'); void r.el.offsetWidth; r.el.classList.add('fired'); }
+    const fam = { gpu:'gpu', energy:'energy', hardware:'infra', housing:'infra' }[family];
+    const row = itemId && this.rows[fam] && this.rows[fam][itemId];
+    if (row) { row.el.classList.remove('auto-hit'); void row.el.offsetWidth; row.el.classList.add('auto-hit'); }
   }
 
   renderAddendum() {
@@ -1017,7 +1044,7 @@ export class UI {
     const moneyHidden = g.phase >= 2;
     if (this.el.moneyStat) this.el.moneyStat.classList.toggle('hidden', moneyHidden);
     this.el.panelMarket.classList.toggle('hidden', moneyHidden);
-    this.el.panelAuto.classList.toggle('hidden', moneyHidden);
+    this.el.panelAuto.classList.toggle('hidden', moneyHidden || this.el.panelAuto.classList.contains('empty'));
     // l'Addendum survit à la phase 2 si les directives sont actives ou le chantier orbital en cours
     this.el.panelAddendum.classList.toggle('hidden', moneyHidden && !s.addendum && !g.spaceDCVisible());
     this.el.panelCharges.classList.toggle('hidden', moneyHidden);
@@ -1392,10 +1419,9 @@ export class UI {
     const g = this.game, s = g.state;
     PROJECTS.forEach(p => {
       const r = this.rows.project[p.id];
-      const done = s.projectsDone[p.id];
-      const avail = p.req(g);
-      // projet acquis (épuisé) ou non encore disponible → on le retire de la liste
-      if (done || !avail) { r.el.classList.add('hidden'); return; }
+      // une seule percée à la fois, et pas avant le délai depuis la précédente
+      const next = g.nextProject();
+      if (!next || next.id !== p.id) { r.el.classList.add('hidden'); return; }
       r.el.classList.remove('hidden');
       const c = p.cost;
       const parts = [];

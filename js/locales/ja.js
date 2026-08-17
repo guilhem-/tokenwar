@@ -538,10 +538,14 @@ export default {
     'GPU自動購入',
   'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
     'カード単位の自動購入を有効化（⟳を付けた型番のみ）。予算が許せば毎秒1枚。',
-  'Auto-hébergement':
-    'ホスティング自動購入',
-  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
-    '⟳を付けた階層が制約になりそうなときに自動で購入する。',
+  'Auto-achat matériel':
+    'ハードウェア自動購入',
+  'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.':
+    'ラックとサーバー：⟳ を付けた階層の空きが尽きかけたら買い足す。',
+  'Auto-achat immobilier':
+    '施設の自動購入',
+  'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.':
+    '建物とデータセンター：⟳ を付けた階層は、下の階層に空きがなくなったら買い足す。',
   'Auto-énergie':
     'エネルギー自動購入',
   'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
@@ -1012,6 +1016,46 @@ export default {
     '存命中に予約した冷凍保存カプセル',
   'une fusée personnelle pour observer la Terre le week-end':
     '週末に地球を眺めるための自家用ロケット',
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus':
+    '運用要員が足りず、6か月分の顧客ログが失われる',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue':
+    '誰も気づかない注入で、学習用データセットが汚染される',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours':
+    'あなたの企業秘密が3日間、公開リポジトリに置かれていた',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes':
+    '進行中の学習が中止：誰もチェックポイントを見ていなかった',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert':
+    '一度も試していないバックアップ：必要な日に復元が失敗する',
+  'Une montée de version ratée immobilise le parc pendant deux jours':
+    '失敗したアップグレードで、設備が2日間止まる',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte':
+    '証明書の期限切れでAPIが停止：当番が誰もいなかった',
+  'Une base de production effacée par un script lancé sans relecture':
+    'レビューなしで走らせたスクリプトが本番DBを消した',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi':
+    'アクセスキーがリポジトリに放置され、誰かに使われた',
+  'Un an sans exercice de reprise : la panne dure trente heures':
+    '1年間、復旧訓練なし：障害は30時間続いた',
+  'Entraînement au point mort : la courbe de perte ne descend plus':
+    '学習が頭打ち：損失曲線がもう下がらない',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée':
+    '新モデルは前より幻覚が多い：リリース中止',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes':
+    'アラインメント不良：モデルが正当な要求の半分を拒む',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière':
+    'すべての評価セットで精度低下：巻き戻し',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur':
+    '学習データの30%が重複：モデルは丸暗記していた',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien':
+    '評価セットが学習に混入：スコアは無意味',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues':
+    '途中で数値が発散：数週間分の計算が無駄に',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web':
+    'コーパスの選別が甘く、モデルがウェブの最悪の部分を再現する',
+  'Le modèle s’effondre sur les langues autres que l’anglais':
+    '英語以外の言語では、モデルが総崩れになる',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs':
+    '雑なラベル付け：モデルは注釈者の間違いを学んだ',
   'But :':
     '目的：',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -1026,8 +1070,8 @@ export default {
     'GPUはサーバーに、サーバーはラックに、ラックはデータセンターに、データセンターは不動産の上に収まらねばならない——そのどれもが電気を食う。古い機材は転売でき、発売から5年を超えたカードは市場から消える。データセンターやコロケーション枠を借りることもできる。',
   '⚡ Au départ :':
     '⚡ 開始時：',
-  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
-    '受電はわずか10kW——ガレージのメーターだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が増強してくれるし、系統連系そのものは数十ドルで済む。',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '使える電力はゼロ、ラックもサーバーもない。あるのは建物と部屋、そして1万ドルだけだ。最初の判断は系統につなぐこと、次にラックとサーバーを立てること。カード1枚を置けるのはそのあとだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が受電を増強してくれる。',
   '⚡ Coûts d’énergie :':
     '⚡ エネルギー費用：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1038,8 +1082,8 @@ export default {
     '即時に終わるものは何もない。すべての発注は工事に入り（⏳の印）、その長さは複雑さに比例する。カードなら数秒、データセンターや原子炉なら数か月ぶんのシミュレーション時間。枠は発注した時点で押さえられる。',
   'Équipe :':
     'チーム：',
-  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
-    '人事が枠を開き、研究開発エンジニアがモデル学習を解放し、マーケターがマーケティング上限を上げる。採用のたびに$1,000、その後は毎日の給与。人事自身も1枠を占めるので、人員配分を誤ると次のモデルで詰まる。',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.':
+    '人事が枠を開き、研究開発エンジニアがモデル学習を解放し、マーケターが上限を上げる。採用のたびに1,000ドル、その後は毎日の給与。人事自身も1枠を占めるので、配分を誤ると次のモデルで詰まる。二つの怠りには代償がある。SREが1割を切ると、上場後は毎年20%の確率で運用インシデントが起き、企業価値の15%を失う。データエンジニアが2割を切ると、学習のたびに5%の確率で失敗する——資源は消え、段階は上がらない。',
   '💸 Salaires impayés :':
     '💸 給与の未払い：',
   'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
@@ -1060,14 +1104,18 @@ export default {
     '₿ クリプト：',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
     '株式市場よりはるかに荒い第二の市場。現実の周期をなぞる（2017年のバブル、2018年の冬、2021年の高騰、2022年の暴落、2024年のETFと半減期）。賭けのためだけではない。高騰のあいだ、マイナーはあなたと同じカードを奪い合い、GPU価格は上がる。',
+  'Percées :':
+    '突破：',
+  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
+    '提示されるのは一度にひとつだけ。取得してから2か月おかないと次は現れない。ひとつ選び、やり切り、それから次を見る。',
   '🔧 Optimisations récurrentes :':
     '🔧 定期的な最適化：',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
     'CUDA最適化は18か月ごと、推論エンジンは9か月ごと、文脈管理は12か月ごと。1件$1,000——難しいのは思い出すこと。取得すると行は消え、次の期限に戻ってくる。',
   'Automatisation :':
     '自動化：',
-  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    'オートクリッカーを買い、自動で買い足したい個々の項目に⟳ autoを付ける。⟳と×10のボタンは稼働20台から、×100は200台から現れる。',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    '自動化は、その系統で**手作業を50回**こなすまで現れない。学んでいないものは自動化しない。系統は別々だ——推論、カード、ハードウェア（ラックとサーバー）、施設（建物とデータセンター）、エネルギー。買ったうえで、個々の項目に ⟳ auto を付ける。動作のたびにカードが脈打つので、機械が代わりに何をしたのか目で追える。⟳ と ×10 のボタンは稼働20台から、×100 は200台から現れる。',
   '📋 Directives permanentes :':
     '📋 常設ディレクティブ：',
   'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
@@ -1534,6 +1582,10 @@ export default {
     '👋 退職：{0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     '給与の滞納を解消。チームは残ります。',
+  'Entraînement de {0} ÉCHOUÉ : {1}':
+    '{0} の学習に失敗：{1}',
+  '❌ Entraînement échoué':
+    '❌ 学習に失敗',
   'Modèle entraîné : {0}':
     'モデルを学習：{0}',
   'Nouveau modèle : {0}':
@@ -1592,6 +1644,10 @@ export default {
     '🛰️ 軌道連合が破綻',
   '{0} → {1} (directive permanente)':
     '{0} → {1}（常設ディレクティブ）',
+  'Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.':
+    '運用インシデント：{0}。企業価値が {1}% 下落。',
+  '⚠️ Incident d’exploitation':
+    '⚠️ 運用インシデント',
   'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
     '一国まるごとがあなたの後見下に入る。そこに {0} のデータセンターが建設される。',
   '🏛️ Dette souveraine rachetée':
@@ -1618,8 +1674,8 @@ export default {
     '観測可能な宇宙の半分が変換されました。',
   'Succès : {0} — {1}':
     '実績：{0} — {1}',
-  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
-    'ルール変更：無償の受電は10kWのみになりました。容量を調整しました（購入済みの電源は保持されます）。',
+  'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    'ルール変更：無償の受電は {0} になりました。容量を調整しました（購入済みの電源は保持されます）。',
   '{0} h {1}':
     '{0}時間{1}',
   '{0} min':

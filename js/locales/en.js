@@ -538,10 +538,14 @@ export default {
     'GPU auto-buy',
   'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
     'Enables per-card auto-buy (on models ticked ⟳). One card per second if the budget allows.',
-  'Auto-hébergement':
-    'Hosting auto-buy',
-  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
-    'Enables auto-buy per ticked ⟳ tier, as soon as that tier is about to become the bottleneck.',
+  'Auto-achat matériel':
+    'Hardware auto-buy',
+  'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.':
+    'Racks and servers: re-buys the ticked ⟳ tier as soon as it is about to run out of room.',
+  'Auto-achat immobilier':
+    'Housing auto-buy',
+  'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.':
+    'Buildings and datacenters: re-buys the ticked ⟳ tier when there is no room left for the tier below.',
   'Auto-énergie':
     'Energy auto-buy',
   'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
@@ -1012,6 +1016,46 @@ export default {
     'a cryogenic pod booked while still alive',
   'une fusée personnelle pour observer la Terre le week-end':
     'a personal rocket for weekend views of Earth',
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus':
+    'For lack of operations staff, six months of customer logs are lost',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue':
+    'A training dataset corrupted by an injection nobody spotted',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours':
+    'Your trade secrets sit in a public repository for three days',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes':
+    'The training run is cancelled: nobody had been watching the checkpoints',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert':
+    'Backups never tested: the restore fails the day it is needed',
+  'Une montée de version ratée immobilise le parc pendant deux jours':
+    'A botched upgrade takes the fleet down for two days',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte':
+    'An expired certificate cuts the API: nobody was on call',
+  'Une base de production effacée par un script lancé sans relecture':
+    'A production database wiped by a script run without review',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi':
+    'Your access keys were lying in a repository: somebody used them',
+  'Un an sans exercice de reprise : la panne dure trente heures':
+    'A year with no recovery drill: the outage lasts thirty hours',
+  'Entraînement au point mort : la courbe de perte ne descend plus':
+    'Training stalled: the loss curve has stopped going down',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée':
+    'The new model hallucinates more than the last one: release cancelled',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes':
+    'Poorly aligned results: the model refuses half the legitimate requests',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière':
+    'Accuracy down on every benchmark: rolling back',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur':
+    '30% duplicated training data: the model learned it by heart',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien':
+    'Evaluation set leaked into training: the scores are worthless',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues':
+    'Numerical divergence halfway through: weeks of compute lost',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web':
+    'Badly filtered corpus: the model reproduces the worst of the web',
+  'Le modèle s’effondre sur les langues autres que l’anglais':
+    'The model collapses on any language other than English',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs':
+    'Sloppy labelling: the model learned its annotators\' mistakes',
   'But :':
     'Goal:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -1026,8 +1070,8 @@ export default {
     'a GPU must sit in a server, in a rack, in a datacenter, on real estate — all of which draw power too. Obsolete hardware can be resold; a card released more than 5 years ago disappears from the market. You can also rent a datacenter or colocation space.',
   '⚡ Au départ :':
     '⚡ At the start:',
-  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
-    'your connection is only 10 kW — the garage meter. Watch the Front Page: an energy grant for young companies will upgrade it, and a grid connection costs a handful of dollars.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'you have no power available, no rack and no server — only a building, a room and $10,000. Your first decision is to get connected, then to put up a rack and a server before you can house a single card. Watch the Front Page: an energy grant for young companies will upgrade your connection.',
   '⚡ Coûts d’énergie :':
     '⚡ Energy costs:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1038,8 +1082,8 @@ export default {
     'nothing is instant. Every order goes on site (badge ⏳) for a duration proportional to its complexity: seconds for a card, several simulated months for a datacenter or a reactor. The slot is reserved as soon as you order.',
   'Équipe :':
     'Team:',
-  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
-    'HR opens positions, R&D engineers unlock model training, marketers raise the marketing cap. Each hire costs $1,000, then a salary every day. HR staff take up a position themselves: a badly balanced headcount can block your next model.',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.':
+    'HR opens positions, R&D engineers unlock model training, marketers raise the marketing cap. Each hire costs $1,000, then a salary every day. HR staff take up a position themselves: a badly balanced headcount can block your next model. Two forms of neglect are punished: under 10% SRE engineers and, every year after the IPO, an operations incident has a 20% chance of costing you 15% of your value; under 20% data engineers and every training run has a 5% chance of failing — resources spent, tier not gained.',
   '💸 Salaires impayés :':
     '💸 Unpaid salaries:',
   'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
@@ -1060,14 +1104,18 @@ export default {
     '₿ Crypto:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
     'a second market, far more violent than the stock exchange, tracking the real cycles (2017 bubble, 2018 winter, 2021 surge, 2022 collapse, 2024 ETFs and halving). It is not only for betting: during the surges, miners fight over the same cards as you and GPU prices climb.',
+  'Percées :':
+    'Breakthroughs:',
+  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
+    'only one is offered at a time, and two months must pass after you acquire it before the next appears. You pick a line, you see it through, then you look at the next one.',
   '🔧 Optimisations récurrentes :':
     '🔧 Recurring optimisations:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
     'a CUDA optimisation every 18 months, an inference-engine one every 9 months, a context-management pass every 12 months. $1,000 each: the point is remembering to take them. The row disappears once taken and returns at the next due date.',
   'Automatisation :':
     'Automation:',
-  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    'buy the auto-clickers, then tick ⟳ auto on each specific item to re-buy automatically. The ⟳ and ×10 buttons only appear once 20 units are in service; ×100 from 200.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    'an automation only appears after **50 actions done by hand** in its family: you do not automate what you have not learned. They are separate — inference, cards, hardware (racks and servers), housing (buildings and datacenters), energy. Buy them, then tick ⟳ auto on each specific item to re-buy. The card pulses on every action, so you can see what the machine does in your place. The ⟳ and ×10 buttons only appear from 20 units in service; ×100 from 200.',
   '📋 Directives permanentes :':
     '📋 Standing directives:',
   'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
@@ -1534,6 +1582,10 @@ export default {
     '👋 Departure: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     'Salary arrears cleared. The team stays.',
+  'Entraînement de {0} ÉCHOUÉ : {1}':
+    'Training of {0} FAILED: {1}',
+  '❌ Entraînement échoué':
+    '❌ Training failed',
   'Modèle entraîné : {0}':
     'Model trained: {0}',
   'Nouveau modèle : {0}':
@@ -1592,6 +1644,10 @@ export default {
     '🛰️ Orbital consortium bankrupt',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (standing directive)',
+  'Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.':
+    'Operations incident: {0}. The company\'s value drops by {1}%.',
+  '⚠️ Incident d’exploitation':
+    '⚠️ Operations incident',
   'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
     'An entire country falls under your tutelage. {0} datacenters will be built there.',
   '🏛️ Dette souveraine rachetée':
@@ -1618,8 +1674,8 @@ export default {
     'Half of the observable universe has been converted.',
   'Succès : {0} — {1}':
     'Achievement: {0} — {1}',
-  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
-    'Rules update: the free connection is now only 10 kW. Your capacity has been adjusted (purchased sources are kept).',
+  'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    'Rules update: the free connection is now {0}. Your capacity has been adjusted (purchased sources are kept).',
   '{0} h {1}':
     '{0}h {1}',
   '{0} min':

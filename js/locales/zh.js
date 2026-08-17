@@ -538,10 +538,14 @@ export default {
     'GPU 自动采购',
   'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
     '按显卡启用自动采购（在勾选 ⟳ 的型号上）。预算允许时每秒一张。',
-  'Auto-hébergement':
-    '托管自动采购',
-  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
-    '对勾选 ⟳ 的层级启用自动采购，在该层级即将成为瓶颈时触发。',
+  'Auto-achat matériel':
+    '硬件自动采购',
+  'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.':
+    '机柜与服务器：勾选 ⟳ 的层级快没位置时自动补货。',
+  'Auto-achat immobilier':
+    '场地自动采购',
+  'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.':
+    '建筑与数据中心：勾选 ⟳ 的层级在下层没位置时自动补货。',
   'Auto-énergie':
     '能源自动采购',
   'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
@@ -1012,6 +1016,46 @@ export default {
     '生前就预订好的冷冻舱',
   'une fusée personnelle pour observer la Terre le week-end':
     '一枚周末上去看地球的私人火箭',
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus':
+    '因缺少运维人员，六个月的客户日志丢失',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue':
+    '一份训练数据集被无人察觉的注入污染',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours':
+    '你的工业机密在公开仓库里躺了三天',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes':
+    '进行中的训练被取消：没人盯着检查点',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert':
+    '备份从未演练：真要用的那天恢复失败',
+  'Une montée de version ratée immobilise le parc pendant deux jours':
+    '一次失败的升级让整个机群停摆两天',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte':
+    '证书过期切断了 API：当时没人值班',
+  'Une base de production effacée par un script lancé sans relecture':
+    '一段没人复核的脚本抹掉了生产数据库',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi':
+    '你的访问密钥躺在仓库里：有人用了它们',
+  'Un an sans exercice de reprise : la panne dure trente heures':
+    '一年没做恢复演练：这次故障持续三十小时',
+  'Entraînement au point mort : la courbe de perte ne descend plus':
+    '训练停滞：损失曲线不再下降',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée':
+    '新模型比上一代幻觉更多：发布取消',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes':
+    '对齐失当：模型拒绝了一半的正当请求',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière':
+    '所有评测集上准确率下降：回滚',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur':
+    '训练数据 30% 重复：模型是背下来的',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien':
+    '评测集混进了训练：分数毫无意义',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues':
+    '训练中途数值发散：数周算力打了水漂',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web':
+    '语料过滤不当：模型复现了网上最糟的内容',
+  'Le modèle s’effondre sur les langues autres que l’anglais':
+    '除英语外，模型在其他语言上全面崩坏',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs':
+    '标注草率：模型学会了标注员的错误',
   'But :':
     '目标：',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -1026,8 +1070,8 @@ export default {
     '一张 GPU 必须装进服务器，服务器装进机柜，机柜放进数据中心，数据中心建在不动产上——而这些同样耗电。过时的硬件可以转卖；上市超过 5 年的显卡会退出市场。你也可以租数据中心或租托管机位。',
   '⚡ Au départ :':
     '⚡ 开局时：',
-  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
-    '你的电力接入只有 10 kW——车库里的那块电表。留意头条：面向初创企业的能源补贴会给你增容，而一个电网接入只要几十美元。',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '你没有任何可用电力，没有机柜也没有服务器——只有一处场地、一间机房和一万美元。第一个决定是接电，然后搭起机柜和服务器，才谈得上放一张卡。留意头条：面向初创企业的能源补贴会给你增容。',
   '⚡ Coûts d’énergie :':
     '⚡ 能源成本：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1038,8 +1082,8 @@ export default {
     '没有什么是瞬间完成的。每一笔订单都会进入施工（⏳ 标记），时长与复杂度成正比：一张显卡只要几秒，一座数据中心或一座反应堆则要好几个模拟月。机位在下单时就已经预留。',
   'Équipe :':
     '团队：',
-  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
-    'HR 开出岗位，研发工程师解锁模型训练，市场专员提高营销上限。每次招聘花费 1000 美元，之后每天还要付工资。HR 本身也占一个岗位：人员配比失当会卡住你的下一个模型。',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.':
+    '人事开出岗位，研发工程师解锁模型训练，市场专员提高营销上限。每次招聘花 1000 美元，之后每天还要付工资。人事本身也占一个岗位：配比失当会卡住下一个模型。两种疏忽要付代价：SRE 工程师占比低于 10%，上市之后每年有 20% 的概率发生运维事故，代价是 15% 的公司价值；数据工程师占比低于 20%，每次训练有 5% 的失败风险——资源照扣，层级不涨。',
   '💸 Salaires impayés :':
     '💸 拖欠工资：',
   'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
@@ -1060,14 +1104,18 @@ export default {
     '₿ 加密资产：',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
     '第二个市场，比股市剧烈得多，按真实周期走（2017 泡沫、2018 寒冬、2021 暴涨、2022 崩盘、2024 ETF 与减半）。它不只是用来下注：行情暴涨时，矿工和你抢同样的显卡，GPU 价格随之上涨。',
+  'Percées :':
+    '突破：',
+  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
+    '一次只提供一项，取得之后要等两个月，下一项才会出现。选定一条路，走完，再看下一条。',
   '🔧 Optimisations récurrentes :':
     '🔧 周期性优化：',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
     '每 18 个月一次 CUDA 优化，每 9 个月一次推理引擎优化，每 12 个月一次上下文管理调整。每次 1000 美元：难的是记得去做。取用之后条目消失，到期后重新出现。',
   'Automatisation :':
     '自动化：',
-  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    '先买下自动点击器，再在每一个具体条目上勾选 ⟳ auto 来自动补货。⟳ 和 ×10 按钮要在该条目投入使用 20 个之后才出现；×100 则要 200 个。',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    '一项自动化要在同一类别里**手动操作 50 次**之后才出现：没学会的事不自动化。它们互相独立——推理、显卡、硬件（机柜与服务器）、场地（建筑与数据中心）、能源。买下之后，在每个具体条目上勾选 ⟳ auto。每次动作卡片都会脉动一下，让你看见机器替你做了什么。⟳ 和 ×10 按钮要在该项投入使用 20 个之后才出现，×100 则要 200 个。',
   '📋 Directives permanentes :':
     '📋 常设指令：',
   'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
@@ -1534,6 +1582,10 @@ export default {
     '👋 离职：{0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     '拖欠的工资已结清。团队留下了。',
+  'Entraînement de {0} ÉCHOUÉ : {1}':
+    '{0} 的训练失败：{1}',
+  '❌ Entraînement échoué':
+    '❌ 训练失败',
   'Modèle entraîné : {0}':
     '已训练模型：{0}',
   'Nouveau modèle : {0}':
@@ -1592,6 +1644,10 @@ export default {
     '🛰️ 轨道联合体破产',
   '{0} → {1} (directive permanente)':
     '{0} → {1}（常设指令）',
+  'Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.':
+    '运维事故：{0}。公司价值下跌 {1}%。',
+  '⚠️ Incident d’exploitation':
+    '⚠️ 运维事故',
   'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
     '一整个国家落入你的托管。将在那里建设 {0} 座数据中心。',
   '🏛️ Dette souveraine rachetée':
@@ -1618,8 +1674,8 @@ export default {
     '可观测宇宙的一半已被转化。',
   'Succès : {0} — {1}':
     '成就：{0} — {1}',
-  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
-    '规则更新：赠送的电力接入现在只有 10 kW。你的容量已相应调整（已购买的能源保留）。',
+  'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    '规则更新：赠送的接电容量变为 {0}。你的容量已相应调整（已购买的能源保留）。',
   '{0} h {1}':
     '{0} 小时 {1}',
   '{0} min':

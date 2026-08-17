@@ -1586,3 +1586,24 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 }
 .market-legend .num { color: var(--text); }
 .market-entry { margin-left: auto; }
+
+/* =====================================================================
+   AUTOMATISATIONS — on VOIT la machine agir : la carte pulse à chaque
+   action, et la ligne concernée clignote brièvement.
+   ===================================================================== */
+@keyframes autoFire {
+  0%   { box-shadow: 0 0 0 0 var(--glow); border-color: var(--accent); }
+  40%  { box-shadow: 0 0 18px 2px var(--glow); border-color: var(--accent); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.item.fired { animation: autoFire 620ms var(--ease); }
+@keyframes autoHit {
+  0%   { background: var(--accent-soft); }
+  100% { background: transparent; }
+}
+.item.auto-hit { animation: autoHit 520ms var(--ease); }
+/* panneau Automatisation vide (aucune automatisation encore méritée) */
+#panel-auto.empty { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .item.fired, .item.auto-hit { animation: none; }
+}

@@ -538,10 +538,14 @@ export default {
     'GPU-Autokauf',
   'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.':
     'Aktiviert den Autokauf pro Karte (bei den mit ⟳ markierten Modellen). Eine Karte pro Sekunde, wenn das Budget reicht.',
-  'Auto-hébergement':
-    'Hosting-Autokauf',
-  'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.':
-    'Aktiviert den Autokauf je markierter ⟳ Stufe, sobald diese Stufe zum Engpass wird.',
+  'Auto-achat matériel':
+    'Hardware-Autokauf',
+  'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.':
+    'Racks und Server: kauft die markierte ⟳ Stufe nach, sobald ihr der Platz ausgeht.',
+  'Auto-achat immobilier':
+    'Immobilien-Autokauf',
+  'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.':
+    'Gebäude und Rechenzentren: kauft die markierte ⟳ Stufe nach, wenn für die darunter kein Platz mehr ist.',
   'Auto-énergie':
     'Energie-Autokauf',
   'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.':
@@ -1012,6 +1016,46 @@ export default {
     'eine zu Lebzeiten reservierte Kryokapsel',
   'une fusée personnelle pour observer la Terre le week-end':
     'eine eigene Rakete, um am Wochenende die Erde zu betrachten',
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus':
+    'Mangels Betriebspersonal gehen sechs Monate Kundenprotokolle verloren',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue':
+    'Ein Trainingsdatensatz, verdorben durch eine unbemerkte Injektion',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours':
+    'Deine Betriebsgeheimnisse liegen drei Tage in einem öffentlichen Repository',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes':
+    'Der laufende Trainingslauf wird abgebrochen: Niemand hatte die Sicherungen im Blick',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert':
+    'Nie getestete Sicherungen: Die Wiederherstellung scheitert am Tag der Wahrheit',
+  'Une montée de version ratée immobilise le parc pendant deux jours':
+    'Ein misslungenes Upgrade legt den Park zwei Tage lahm',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte':
+    'Ein abgelaufenes Zertifikat legt die API lahm: Niemand hatte Bereitschaft',
+  'Une base de production effacée par un script lancé sans relecture':
+    'Eine Produktionsdatenbank, gelöscht von einem ungeprüften Skript',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi':
+    'Deine Zugangsschlüssel lagen in einem Repository: Jemand hat sie benutzt',
+  'Un an sans exercice de reprise : la panne dure trente heures':
+    'Ein Jahr ohne Wiederanlaufübung: Der Ausfall dauert dreißig Stunden',
+  'Entraînement au point mort : la courbe de perte ne descend plus':
+    'Training am Toten Punkt: Die Verlustkurve sinkt nicht mehr',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée':
+    'Das neue Modell halluziniert mehr als das alte: Auslieferung abgesagt',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes':
+    'Schlecht ausgerichtete Ergebnisse: Das Modell lehnt die Hälfte der legitimen Anfragen ab',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière':
+    'Genauigkeit auf allen Benchmarks gesunken: Rückzieher',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur':
+    '30% doppelte Trainingsdaten: Das Modell hat auswendig gelernt',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien':
+    'Der Evaluationssatz ist ins Training gesickert: Die Werte sind wertlos',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues':
+    'Numerische Divergenz auf halber Strecke: Wochen an Rechenzeit verloren',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web':
+    'Schlecht gefilterter Korpus: Das Modell gibt das Schlimmste des Netzes wieder',
+  'Le modèle s’effondre sur les langues autres que l’anglais':
+    'Das Modell bricht bei allen Sprachen außer Englisch ein',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs':
+    'Schlampige Annotation: Das Modell hat die Fehler seiner Annotatoren gelernt',
   'But :':
     'Ziel:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -1026,8 +1070,8 @@ export default {
     'eine GPU muss in einen Server, in ein Rack, in ein Rechenzentrum, auf Immobilien passen — die alle ebenfalls Strom ziehen. Veraltete Hardware lässt sich verkaufen; eine Karte, die vor über 5 Jahren erschien, verschwindet vom Markt. Du kannst auch ein Rechenzentrum oder Colocation-Fläche mieten.',
   '⚡ Au départ :':
     '⚡ Am Anfang:',
-  'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.':
-    'dein Anschluss liefert nur 10 kW — der Garagenzähler. Behalte die Schlagzeilen im Auge: Ein Energiezuschuss für junge Unternehmen wird ihn verstärken, und ein Netzanschluss kostet eine Handvoll Dollar.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'du hast keine Leistung, kein Rack und keinen Server — nur ein Gebäude, einen Raum und 10.000 $. Deine erste Entscheidung ist der Netzanschluss, dann ein Rack und ein Server, bevor auch nur eine Karte Platz findet. Behalte die Schlagzeilen im Auge: Ein Energiezuschuss für junge Unternehmen verstärkt deinen Anschluss.',
   '⚡ Coûts d’énergie :':
     '⚡ Energiekosten:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1038,8 +1082,8 @@ export default {
     'nichts geht sofort. Jede Bestellung geht in den Bau (Abzeichen ⏳), für eine Dauer proportional zur Komplexität: Sekunden für eine Karte, mehrere simulierte Monate für ein Rechenzentrum oder einen Reaktor. Der Platz ist ab der Bestellung reserviert.',
   'Équipe :':
     'Team:',
-  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.':
-    'HR schafft Stellen, F&E-Ingenieure schalten das Modelltraining frei, Marketer heben die Marketing-Obergrenze. Jede Einstellung kostet 1.000 $, dazu täglich ein Gehalt. HR belegt selbst eine Stelle: eine schlecht austarierte Belegschaft kann das nächste Modell blockieren.',
+  'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.':
+    'HR schafft Stellen, F&E-Ingenieure schalten das Modelltraining frei, Marketer heben die Marketing-Obergrenze. Jede Einstellung kostet 1.000 $, dazu täglich ein Gehalt. HR belegt selbst eine Stelle: eine schlecht austarierte Belegschaft kann das nächste Modell blockieren. Zwei Nachlässigkeiten rächen sich: unter 10 % SRE-Ingenieure, und nach dem Börsengang kostet dich ein Betriebsvorfall jedes Jahr mit 20 % Wahrscheinlichkeit 15 % deines Werts; unter 20 % Data Engineers, und jeder Trainingslauf scheitert mit 5 % Wahrscheinlichkeit — Ressourcen weg, Stufe nicht erreicht.',
   '💸 Salaires impayés :':
     '💸 Unbezahlte Gehälter:',
   'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.':
@@ -1060,14 +1104,18 @@ export default {
     '₿ Krypto:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
     'ein zweiter Markt, weit heftiger als die Börse, an den realen Zyklen ausgerichtet (Blase 2017, Winter 2018, Höhenflug 2021, Absturz 2022, ETFs und Halving 2024). Er dient nicht nur zum Wetten: In den Höhenflügen streiten sich Miner um dieselben Karten wie du, und die GPU-Preise steigen.',
+  'Percées :':
+    'Durchbrüche:',
+  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
+    'es wird immer nur einer angeboten, und nach dem Erwerb müssen zwei Monate vergehen, bis der nächste erscheint. Man wählt eine Richtung, führt sie zu Ende und schaut dann weiter.',
   '🔧 Optimisations récurrentes :':
     '🔧 Wiederkehrende Optimierungen:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
     'eine CUDA-Optimierung alle 18 Monate, eine der Inferenz-Engine alle 9 Monate, ein Durchgang zur Kontextverwaltung alle 12 Monate. Je 1.000 $: Die Kunst ist, daran zu denken. Die Zeile verschwindet nach der Auswahl und kehrt zum nächsten Termin zurück.',
   'Automatisation :':
     'Automatisierung:',
-  'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    'kaufe die Autoklicker und markiere dann ⟳ auto bei jedem konkreten Element, das automatisch nachgekauft werden soll. Die Schaltflächen ⟳ und ×10 erscheinen erst ab 20 Einheiten im Betrieb; ×100 ab 200.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
+    'eine Automatisierung erscheint erst nach **50 von Hand ausgeführten Handgriffen** in ihrer Familie: Man automatisiert nicht, was man nicht gelernt hat. Sie sind getrennt — Inferenz, Karten, Hardware (Racks und Server), Immobilien (Gebäude und Rechenzentren), Energie. Kauf sie, dann markiere ⟳ auto bei jedem konkreten Element. Die Karte pulsiert bei jeder Aktion, damit du siehst, was die Maschine an deiner Stelle tut. Die Schaltflächen ⟳ und ×10 erscheinen erst ab 20 Einheiten im Betrieb; ×100 ab 200.',
   '📋 Directives permanentes :':
     '📋 Dauerhafte Direktiven:',
   'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
@@ -1534,6 +1582,10 @@ export default {
     '👋 Abgang: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     'Gehaltsrückstände beglichen. Das Team bleibt.',
+  'Entraînement de {0} ÉCHOUÉ : {1}':
+    'Training von {0} FEHLGESCHLAGEN: {1}',
+  '❌ Entraînement échoué':
+    '❌ Training fehlgeschlagen',
   'Modèle entraîné : {0}':
     'Modell trainiert: {0}',
   'Nouveau modèle : {0}':
@@ -1592,6 +1644,10 @@ export default {
     '🛰️ Insolvenz des Orbit-Konsortiums',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (dauerhafte Direktive)',
+  'Incident d’exploitation : {0}. La valeur de l’entreprise chute de {1}%.':
+    'Betriebsvorfall: {0}. Der Unternehmenswert fällt um {1} %.',
+  '⚠️ Incident d’exploitation':
+    '⚠️ Betriebsvorfall',
   'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
     'Ein ganzes Land kommt unter deine Vormundschaft. Dort werden {0} Rechenzentren gebaut.',
   '🏛️ Dette souveraine rachetée':
@@ -1618,8 +1674,8 @@ export default {
     'Die Hälfte des beobachtbaren Universums ist umgewandelt.',
   'Succès : {0} — {1}':
     'Erfolg: {0} — {1}',
-  'Mise à jour des règles : le raccordement offert ne fait plus que 10 kW. Votre capacité a été ajustée (les sources achetées sont conservées).':
-    'Regeländerung: Der kostenlose Anschluss liefert nur noch 10 kW. Deine Kapazität wurde angepasst (gekaufte Quellen bleiben erhalten).',
+  'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
+    'Regeländerung: Der kostenlose Anschluss beträgt jetzt {0}. Deine Kapazität wurde angepasst (gekaufte Quellen bleiben erhalten).',
   '{0} h {1}':
     '{0} Std. {1}',
   '{0} min':

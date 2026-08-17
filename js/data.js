@@ -153,13 +153,13 @@ export const GPUS = [
 //  memoire 2025-2026) ; rentDaily = location possible au cout journalier.
 // ---------------------------------------------------------------------
 export const INFRA = [
-  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:30000, energy:0.005,
+  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:30000, energy:0.005, family:'housing',
     desc:'Du garage au campus : il faut poser les machines quelque part.' },
-  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:20000, energy:0.02, rentDaily:800,
+  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:20000, energy:0.02, rentDaily:800, family:'housing',
     desc:'Salle climatisée (le cooling consomme). Achat, ou location à la journée.' },
-  { id:'rack',       name:'Baie (rack)', unit:'baie', needs:'datacenter', child:'server', capacity:12, cost:1500, energy:0.0002,
+  { id:'rack',       name:'Baie (rack)', unit:'baie', needs:'datacenter', child:'server', capacity:12, cost:1500, energy:0.0002, family:'hardware',
     desc:'Armoire 42U (PDU, switch). Occupe une place en datacenter.' },
-  { id:'server',     name:'Serveur', unit:'serveur', needs:'rack', child:'gpu', capacity:8, cost:8000, energy:0.0004,
+  { id:'server',     name:'Serveur', unit:'serveur', needs:'rack', child:'gpu', capacity:8, cost:8000, energy:0.0004, family:'hardware',
     eraPrice:[[0,8000],[2025,22000],[2027,15000]],
     desc:'Châssis multi-GPU. Prix tiré vers le haut par la flambée mémoire (2025-2026).' },
 ];
@@ -892,13 +892,20 @@ export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
 export const BASE_MARKETING = 10;     // niveau de marketing atteignable sans marketeur
 export const ELEC_PRICE_MWH = 80;    // prix de l electricite ($/MWh) -> charge journaliere
 export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (colocation)
+// Une automatisation ne se propose qu'après avoir fait le geste 50 fois à la main :
+// on n'automatise pas ce qu'on n'a pas encore appris.
+export const AUTO_CLICKS_REQUIRED = 50;
+// Les percées ne se bousculent pas : une seule est proposée à la fois, et il
+// faut laisser passer deux mois après l'avoir acquise pour que la suivante
+// apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.
+export const PROJECT_GAP_MONTHS = 2;
 export const HIRE_COST = 1000;       // frais d'embauche (annonce, entretiens, materiel, onboarding)
 // Salaires impayes : au bout de 30 jours d'arrieres, les salaries commencent a
 // partir — un depart tous les 2 jours supplementaires, jusqu'a l'entreprise vide.
 export const UNPAID_QUIT_DAYS = 30;
 export const UNPAID_QUIT_EVERY = 2;
-// Puissance du raccordement d'origine, offert : 10 kW (le compteur du garage).
-export const BASE_GRID_MW = 0.01;
+// Aucune puissance au départ : il faut commencer par se raccorder.
+export const BASE_GRID_MW = 0;
 
 
 // ---------------------------------------------------------------------
@@ -1000,6 +1007,47 @@ export const EXTRAVAGANCES = [
 ];
 
 // ---------------------------------------------------------------------
+//  RISQUES LIÉS À L'EFFECTIF — deux négligences se paient.
+//
+//  · Moins de 10% d'ingénieurs SRE/Ops dans l'effectif : une fois par an,
+//    20% de risque d'un incident d'exploitation qui coûte 15% de la valeur
+//    de l'entreprise. Ne s'applique qu'après l'introduction en Bourse — avant,
+//    il n'y a pas encore de valeur de marché à détruire.
+//  · Moins de 20% de data engineers : à chaque entraînement de modèle, 5% de
+//    risque que l'entraînement échoue. Les ressources sont consommées, le
+//    palier n'est pas franchi.
+//  Chaque incident tire UN article, jamais le même deux fois de suite.
+// ---------------------------------------------------------------------
+export const OPS_RATIO = 0.10, OPS_RISK = 0.20, OPS_VALUE_LOSS = 0.15;
+export const DATA_RATIO = 0.20, TRAIN_FAIL_RISK = 0.05;
+
+export const OPS_INCIDENTS = [
+  'Faute de personnel d’exploitation, six mois de journaux clients sont perdus',
+  'Un jeu de données d’entraînement corrompu par une injection passée inaperçue',
+  'Vos secrets industriels se retrouvent dans un dépôt public pendant trois jours',
+  'L’entraînement en cours annulé : personne n’avait surveillé les sauvegardes',
+  'Sauvegardes jamais testées : la restauration échoue le jour où elle sert',
+  'Une montée de version ratée immobilise le parc pendant deux jours',
+  'Un certificat expiré coupe l’API : personne n’était d’astreinte',
+  'Une base de production effacée par un script lancé sans relecture',
+  'Vos clés d’accès traînaient dans un dépôt : quelqu’un s’en est servi',
+  'Un an sans exercice de reprise : la panne dure trente heures',
+];
+
+export const TRAINING_FAILURES = [
+  'Entraînement au point mort : la courbe de perte ne descend plus',
+  'Le nouveau modèle hallucine plus que le précédent : livraison annulée',
+  'Résultats mal alignés : le modèle refuse la moitié des requêtes légitimes',
+  'Précision en baisse sur tous les jeux d’évaluation : retour en arrière',
+  'Données d’entraînement dupliquées à 30% : le modèle a appris par cœur',
+  'Fuite du jeu d’évaluation dans l’entraînement : les scores ne valent rien',
+  'Divergence numérique à mi-parcours : des semaines de calcul perdues',
+  'Corpus mal filtré : le modèle reproduit les pires pages du web',
+  'Le modèle s’effondre sur les langues autres que l’anglais',
+  'Étiquetage bâclé : le modèle a appris les erreurs de ses annotateurs',
+];
+
+// ---------------------------------------------------------------------
 //  MISE SOUS TUTELLE D'UN ÉTAT — au-delà de 4 000 milliards de trésorerie,
 //  vous pouvez racheter la dette souveraine d'un pays. 2 000 milliards, et
 //  cent datacenters y sont construits. La presse suit, évidemment.
@@ -1021,7 +1069,8 @@ export const SOVEREIGN = {
 export const AUTOMATIONS = [
   { id:'click',  name:'Auto-inférence',    cost:1000,  desc:'Lance une inférence chaque seconde.' },
   { id:'gpu',    name:'Auto-achat GPU',    cost:20000, desc:'Active l’auto-achat par carte (sur les modèles cochés ⟳). Une carte/seconde si budget.' },
-  { id:'infra',  name:'Auto-hébergement',  cost:10000, desc:'Active l’auto-achat par niveau coché ⟳, quand ce niveau va devenir limitant.' },
+  { id:'hardware', name:'Auto-achat matériel', cost:10000, desc:'Baies et serveurs : rachète le niveau coché ⟳ dès qu’il va manquer de place.' },
+  { id:'housing',  name:'Auto-achat immobilier', cost:14000, desc:'Bâtiments et datacenters : rachète le niveau coché ⟳ quand il n’y a plus de place pour le niveau inférieur.' },
   { id:'energy', name:'Auto-énergie',      cost:5000,  desc:'Active l’auto-achat par source cochée ⟳, dès que la conso dépasse la production.' },
 ];
 
@@ -1033,17 +1082,18 @@ export const HELP = [
   { b:'But :', p:'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.' },
   { b:'Phase 1 — Startup :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
   { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
-  { b:'⚡ Au départ :', p:'votre raccordement ne fait que 10 kW — le compteur du garage. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra le renforcer, et un raccordement réseau coûte une poignée de dollars.' },
+  { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
   { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
   { b:'🏗️ Délais :', p:'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.' },
-  { b:'Équipe :', p:'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.' },
+  { b:'Équipe :', p:'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.' },
   { b:'💸 Salaires impayés :', p:'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.' },
   { b:'📈 Inflation :', p:'l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés suivent l’indice — pas votre trésorerie. Dormir sur son cash coûte du pouvoir d’achat.' },
   { b:'🚨 Incidents :', p:'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.' },
   { b:'🔬 Grands programmes :', p:'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.' },
   { b:'₿ Crypto :', p:'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.' },
+  { b:'Percées :', p:'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.' },
   { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.' },
-  { b:'Automatisation :', p:'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.' },
+  { b:'Automatisation :', p:'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.' },
   { b:'📋 Directives permanentes :', p:'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.' },
   { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },
   { b:'Allocation :', p:'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.' },

@@ -312,7 +312,8 @@ await step('chantiers : délais croissants avec la complexité', () => {
   // et le badge « en chantier » apparaît bien dans la liste
   game.state.money = 1e9;
   game.state.playSeconds = 60;
-  game.buyGPU('consumer');
+  game.state.infraCounts.rack = 4; game.state.infraCounts.server = 4;   // de quoi loger une carte
+  if (!game.buyGPU('consumer')) throw new Error('achat de carte refusé alors qu il y a de la place');
   ui.render();
   if (!/chantier/.test(ui.rows.gpu['consumer'].effect.innerHTML)) throw new Error('badge de chantier absent');
   game.tick(30);
@@ -395,15 +396,20 @@ await step('presse : titres corrélés au palier de modèle', () => {
 });
 
 // ---- énergie de départ : 10 kW, puis subvention « jeunes pousses » ----
-await step('énergie de départ à 10 kW + subvention', async () => {
+await step('énergie de départ nulle + subvention', async () => {
   const fresh = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
-  if (Math.abs(fresh.state.energyCap - 0.01) > 1e-9) throw new Error('le raccordement de départ devrait faire 10 kW');
+  if (fresh.state.energyCap !== 0) throw new Error('aucune puissance ne devrait être offerte au départ');
+  if (fresh.energyThrottle() !== 0) throw new Error('sans raccordement, le calcul doit être totalement bridé');
+  if (fresh.money !== 10000) throw new Error('la trésorerie de départ devrait être de 10 000');
+  if (fresh.infraCount('rack') !== 0 || fresh.infraCount('server') !== 0)
+    throw new Error('la partie doit démarrer sans baie ni serveur');
+  if (fresh.freeSlots('gpu') !== 0) throw new Error('aucun emplacement GPU tant que rien n est bâti');
   const { HEADLINES } = await import('./js/data.js');
   const grant = HEADLINES.find(h => h.id === 'energy_grant');
   if (!grant) throw new Error('titre de subvention énergie absent');
   if (!grant.cond(fresh)) throw new Error('la subvention devrait être proposée à une startup sous-alimentée');
   grant.effect(fresh);
-  if (!(fresh.state.energyCap > 0.15)) throw new Error('la subvention n a pas renforcé le raccordement');
+  if (!(fresh.state.energyCap >= 0.15)) throw new Error('la subvention n a pas renforcé le raccordement');
   fresh.state.headlinesFired[grant.id] = true;
   if (fresh.pickHeadline() === grant) throw new Error('la subvention devrait être unique');
 });
@@ -479,7 +485,7 @@ await step('directives : quota de 5, extension payante', () => {
 });
 
 // ---- migration : une vieille sauvegarde ne doit pas conserver les 500 kW ----
-await step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
+await step('migration : ancienne sauvegarde ramenée au nouveau raccordement', () => {
   const stub = { toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false };
   // sauvegarde d'avant le changement de règle : base 500 kW + 2 raccordements achetés,
   // et PAS de marqueur `baseGridMW` (c'est à cela qu'on la reconnaît).
@@ -488,14 +494,14 @@ await step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
   window.localStorage.setItem('tokenwar_save_v1', JSON.stringify(old));
   const g = new Game(stub);
   if (!g.load()) throw new Error('sauvegarde non chargée');
-  // 1,5 MW − (0,5 offert − 0,01 offert) = 1,01 MW : les 2 raccordements achetés restent
-  if (Math.abs(g.state.energyCap - 1.01) > 1e-6) throw new Error('capacité migrée incorrecte : ' + g.state.energyCap);
-  if (g.state.baseGridMW !== 0.01) throw new Error('marqueur de règle non posé');
+  // 1,5 MW − (0,5 offert autrefois − 0 aujourd'hui) = 1,0 MW : les 2 raccordements achetés restent
+  if (Math.abs(g.state.energyCap - 1.0) > 1e-6) throw new Error('capacité migrée incorrecte : ' + g.state.energyCap);
+  if (g.state.baseGridMW !== 0) throw new Error('marqueur de règle non posé');
   // une sauvegarde déjà migrée ne doit PAS être amputée une seconde fois
   const again = new Game(stub);
-  again.state = Object.assign(again.state, { energyCap: 1.01 });
-  again.migrate({ baseGridMW: 0.01, energyCap: 1.01 });
-  if (Math.abs(again.state.energyCap - 1.01) > 1e-6) throw new Error('migration appliquée deux fois');
+  again.state = Object.assign(again.state, { energyCap: 1.0 });
+  again.migrate({ baseGridMW: 0, energyCap: 1.0 });
+  if (Math.abs(again.state.energyCap - 1.0) > 1e-6) throw new Error('migration appliquée deux fois');
   window.localStorage.removeItem('tokenwar_save_v1');
 });
 
@@ -811,6 +817,173 @@ await step('graphe : rendu sans contexte 2D et sans données', () => {
   ui.drawMarket(null, [1, 2], null, '#fff');
   ui.renderMarketLegend(ui.el.stockEntry, { invested: 0, basis: 0 }, null);
   if (!ui.el.stockEntry.classList.contains('hidden')) throw new Error('le niveau d entrée doit disparaître sans position');
+});
+
+// ---- automatisations : déblocage, familles, animation ----
+await step('automatisation : carte cachée avant 50 gestes manuels', () => {
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  if (g2.autoUnlocked('click')) throw new Error('automatisation proposée sans aucun geste');
+  for (let i = 0; i < 49; i++) g2.countClick('click');
+  if (g2.autoUnlocked('click')) throw new Error('proposée dès 49 gestes');
+  g2.countClick('click');
+  if (!g2.autoUnlocked('click')) throw new Error('toujours pas proposée à 50 gestes');
+  // chaque famille compte séparément
+  if (g2.autoUnlocked('gpu')) throw new Error('les familles ne doivent pas partager le compteur');
+  // et l interface le reflète
+  const ui2 = ui;
+  game.state.clicks = { click:0, gpu:0, hardware:0, housing:0, energy:0 };
+  game.state.auto.click.owned = false;
+  ui2.render();
+  if (!ui2.rows.auto['click'].el.classList.contains('hidden')) throw new Error('carte visible sans les 50 gestes');
+  game.countClick('click', 50);
+  ui2.render();
+  if (ui2.rows.auto['click'].el.classList.contains('hidden')) throw new Error('carte toujours cachée après 50 gestes');
+});
+
+await step('automatisation : matériel et immobilier sont distincts', async () => {
+  const { AUTOMATIONS, INFRA } = await import('./js/data.js');
+  const ids = AUTOMATIONS.map(a => a.id);
+  if (!ids.includes('hardware') || !ids.includes('housing')) throw new Error('les deux familles doivent exister');
+  if (ids.includes('infra')) throw new Error('l ancienne automatisation unique devrait avoir disparu');
+  const fam = Object.fromEntries(INFRA.map(i => [i.id, i.family]));
+  if (fam.rack !== 'hardware' || fam.server !== 'hardware') throw new Error('baie et serveur = matériel');
+  if (fam.realestate !== 'housing' || fam.datacenter !== 'housing') throw new Error('bâtiment et datacenter = immobilier');
+  // l une peut être active sans l autre
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  g2.state.money = 1e9;
+  g2.state.auto.hardware.owned = true; g2.state.auto.housing.owned = false;
+  g2.state.autoItems.hardware.server = true; g2.state.autoItems.housing.realestate = true;
+  g2.state.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 };
+  g2.state.gpuCounts = { consumer: 8 };
+  for (let i = 0; i < 200; i++) g2.tick(0.25);
+  if (g2.infraCount('server') < 2) throw new Error('le matériel n a pas été racheté');
+  if (g2.infraCount('realestate') !== 1) throw new Error('l immobilier a été acheté alors qu il est désactivé');
+});
+
+await step('automatisation : l immobilier ne s achète plus pour rien', () => {
+  // l ancien seuil absolu (4 places libres) rachetait un bâtiment en permanence,
+  // puisqu un bâtiment n accueille que 4 datacenters
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  g2.state.money = 1e9;
+  g2.state.auto.housing.owned = true;
+  g2.state.autoItems.housing.realestate = true; g2.state.autoItems.housing.datacenter = true;
+  g2.state.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 };
+  for (let i = 0; i < 400; i++) g2.tick(0.25);
+  if (g2.infraCount('realestate') !== 1) throw new Error('bâtiment racheté sans nécessité : ' + g2.infraCount('realestate'));
+  // …mais il s achète bien quand la place manque vraiment
+  g2.state.infraCounts.datacenter = 4;                    // bâtiment plein
+  for (let i = 0; i < 400; i++) g2.tick(0.25);
+  if (g2.infraCount('realestate') < 2) throw new Error('bâtiment non racheté alors que la place manque');
+});
+
+await step('automatisation : animation déclenchée à chaque action', () => {
+  let vus = [];
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false,
+    onAutoFire(fam, id) { vus.push(fam + (id ? ':' + id : '')); } });
+  g2.state.auto.click.owned = true;
+  for (let i = 0; i < 12; i++) g2.tick(0.25);
+  if (!vus.some(v => v === 'click')) throw new Error('aucune notification d auto-inférence');
+  // et l interface pose bien la classe d animation
+  ui.onAutoFire('click');
+  if (!ui.rows.auto['click'].el.classList.contains('fired')) throw new Error('pas d animation sur la carte');
+});
+
+// ---- risques liés à l effectif ----
+await step('sous-effectif SRE : 20% de risque annuel après l IPO', () => {
+  const mk = ops => {
+    const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+    g2.state.fundingDone.ipo = true;
+    g2.state.employees = { hr:2, rnd:10, marketer:5, ops, data:3 };
+    g2.state.playSeconds = 300 * 3;
+    return g2;
+  };
+  // avant l IPO : aucun risque
+  const avant = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  avant.state.employees = { hr:2, rnd:10, marketer:5, ops:0, data:3 };
+  avant.state.playSeconds = 300 * 3;
+  const v = avant.state.mods.valuationMult;
+  for (let i = 0; i < 50; i++) { avant.state.opsCheckYear = 0; avant.tickOpsRisk(); }
+  if (avant.state.mods.valuationMult !== v) throw new Error('risque appliqué avant l IPO');
+  // sous-effectif : environ 20% des années
+  let touches = 0;
+  for (let k = 0; k < 300; k++) { const g2 = mk(0); const v0 = g2.state.mods.valuationMult; g2.tickOpsRisk();
+    if (g2.state.mods.valuationMult < v0) touches++; }
+  const taux = touches / 300;
+  if (taux < 0.12 || taux > 0.30) throw new Error('taux hors cible : ' + (taux * 100).toFixed(0) + '%');
+  // effectif suffisant : jamais
+  for (let k = 0; k < 100; k++) { const g2 = mk(5); const v0 = g2.state.mods.valuationMult; g2.tickOpsRisk();
+    if (g2.state.mods.valuationMult < v0) throw new Error('incident malgré assez de SRE'); }
+  // la perte est bien de 15% et un article est publié
+  const g3 = mk(0);
+  g3.state.mods.valuationMult = 1;
+  let n = 0;
+  while (g3.state.mods.valuationMult === 1 && n++ < 200) { g3.state.opsCheckYear = 0; g3.tickOpsRisk(); }
+  if (Math.abs(g3.state.mods.valuationMult - 0.85) > 1e-9) throw new Error('la perte devrait être de 15%');
+  if (!g3.state.headlines.length) throw new Error('aucun article publié');
+});
+
+await step('sous-effectif data : 5% d échec à l entraînement', async () => {
+  const { TRAINING_FAILURES } = await import('./js/data.js');
+  if (TRAINING_FAILURES.length !== 10) throw new Error('il faut dix articles d échec');
+  const essai = (dataEng, rnd) => {
+    let echecs = 0;
+    for (let k = 0; k < 1500; k++) {
+      const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+      g2.state.playSeconds = 300 * 3; g2.state.modelTier = 1;
+      g2.state.employees = { hr:5, rnd, marketer:0, ops:0, data:dataEng };
+      g2.state.money = 1e9; g2.state.data = 1e9; g2.state.research = 1e9;
+      g2.state.gpuCounts = { consumer: 1000 };
+      if (!g2.trainNext() && g2.state.modelTier === 1) echecs++;
+    }
+    return echecs / 1500;
+  };
+  const sous = essai(0, 10);
+  if (sous < 0.02 || sous > 0.09) throw new Error('taux d échec hors cible : ' + (sous * 100).toFixed(1) + '%');
+  if (essai(8, 4) !== 0) throw new Error('échec malgré assez de data engineers');
+});
+
+// ---- percées : une seule à la fois, deux mois d écart ----
+await step('percées : une seule proposée, deux mois entre chacune', async () => {
+  const { PROJECT_GAP_MONTHS } = await import('./js/data.js');
+  if (PROJECT_GAP_MONTHS !== 2) throw new Error('le délai devrait être de deux mois');
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  g2.state.money = 1e12; g2.state.research = 1e12; g2.state.data = 1e12;
+  g2.state.lifetimeTokens = 1e9; g2.state.modelTier = 8; g2.state.gpuCounts = { consumer: 1e6 };
+  const premiere = g2.nextProject();
+  if (!premiere) throw new Error('aucune percée proposée');
+  // les autres sont refusées, même finançables
+  const autre = (await import('./js/data.js')).PROJECTS.find(p => p.id !== premiere.id && p.req(g2));
+  if (autre && g2.buyProject(autre.id)) throw new Error('une percée non proposée a été acquise');
+  if (!g2.buyProject(premiere.id)) throw new Error('la percée proposée est refusée');
+  // …puis plus rien pendant deux mois
+  if (g2.nextProject()) throw new Error('une percée apparaît immédiatement après');
+  g2.state.playSeconds += 1.9 * (300 / 12);
+  if (g2.nextProject()) throw new Error('une percée apparaît avant les deux mois');
+  g2.state.playSeconds += 0.2 * (300 / 12);
+  const suivante = g2.nextProject();
+  if (!suivante) throw new Error('aucune percée après les deux mois');
+  if (suivante.id === premiere.id) throw new Error('la même percée est reproposée');
+  // l interface n en affiche qu une
+  game.state.projectsDone = {}; game.state.lastProjectAt = -1e9;
+  ui.render();
+  const visibles = Object.values(ui.rows.project).filter(r => !r.el.classList.contains('hidden'));
+  if (visibles.length > 1) throw new Error(visibles.length + ' percées affichées au lieu d une');
+});
+
+// ---- remise à zéro des graphes ----
+await step('nouvelle partie : les graphes repartent de zéro', () => {
+  game.state.stock.hist = [1, 2, 3]; game.state.crypto.hist = [1, 2];
+  // valeurs volontairement reconnaissables : aucune ne doit survivre
+  ui.sparkData = [{ tok: 4242, cash: 4242 }, { tok: 4243, cash: 4243 }];
+  ui.buildUniverse();
+  const carteAvant = ui.universe;
+  game.restartFresh();
+  ui.fullRebuild();
+  if (ui.sparkData.some(d => d.tok >= 4242)) throw new Error('la courbe de production garde ses anciens points');
+  if (ui.sparkData.length > 1) throw new Error('la courbe devrait repartir du seul échantillon courant');
+  if (ui.universe === carteAvant) throw new Error('la carte de l univers n est pas reconstruite');
+  if (game.state.stock.hist.length !== 0) throw new Error('l historique boursier survit');
+  if (game.state.crypto.hist.length !== 0) throw new Error('l historique crypto survit');
 });
 
 // toast + log

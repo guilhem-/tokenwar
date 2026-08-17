@@ -7,7 +7,7 @@ De votre première inférence sur un GPU de gamer jusqu'à la **conversion de l'
 en calcul** — et le **nouveau Big Bang** qui s'ensuit — vous pilotez un laboratoire d'IA à
 travers toute l'histoire (réelle puis spéculative) des grands modèles de langage.
 
-> 🎮 **Jouer :** https://guilhem-.github.io/tokenwar/
+> 🎮 **Jouer :** https://tokenwar.bonnafous.org
 > ⏱️ Terminable en moins de 4 h. Sauvegarde automatique locale + export/import.
 > 🌍 **8 langues** — français, English, 中文, 日本語, 한국어, Deutsch, Español, Português.
 
@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 025 chaînes × 7 langues = 7 175 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 053 chaînes × 7 langues = 7 371 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -95,9 +95,18 @@ de son année.
 - **Salaires impayés** : trésorerie à zéro = salaires non versés. Un compteur d'arriérés
   s'affiche, et au bout de **30 jours** quelqu'un **démissionne** — puis un départ tous les
   2 jours, jusqu'à l'entreprise vide. Repayez avant, et l'équipe reste.
-- **Démarrage sous-alimenté** : le raccordement d'origine ne fait que **10 kW**. Une
-  actualité — la *subvention énergie pour les jeunes pousses* — le renforce vraiment
-  (les titres de presse ne font pas que commenter : certains débloquent quelque chose).
+- **On part de rien** : **$10 000** de capital, **aucun serveur, aucune baie**, et surtout
+  **0 kW** — pas le moindre raccordement électrique. Le premier geste n'est pas d'acheter un
+  GPU, c'est d'aller chercher du courant, puis de quoi le loger. Une actualité — la
+  *subvention énergie pour les jeunes pousses* — donne un vrai coup de pouce (les titres de
+  presse ne font pas que commenter : certains débloquent quelque chose).
+- **Sous-effectif = incidents** : une équipe déséquilibrée se paie. Moins de **10 % d'Ops/SRE**
+  et, chaque année après l'introduction en bourse, **20 % de risque de perdre 15 % de la
+  valorisation** — fuite de données, secret industriel dans la nature, entraînement en cours
+  annulé… Moins de **20 % de Data engineers** et chaque entraînement de modèle porte **5 % de
+  risque d'échec** — hallucinations, résultats désalignés, précision qui plafonne, corpus
+  empoisonné. **Vingt titres de presse** couvrent ces deux familles, un seul à la fois, jamais
+  deux fois le même tant qu'il reste des inédits.
 - **Charges journalières** affichées et prélevées en continu, ventilées par nature.
 - **Tokens invendus = perdus** : la production doit suivre la demande, pas l'inverse.
 - **Bourse** (débloquée à $100k) : trois profils de risque, mouvement brownien géométrique.
@@ -184,10 +193,20 @@ toujours la même carte.
 
 ## Confort de jeu
 
-- **Automatisations** achetables : auto-inférence, auto-achat **par élément coché ⟳**
-  (carte précise, source précise, niveau d'infra précis), activables/désactivables.
-- **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200. Le bouton
-  **⟳ auto** obéit au même seuil : on n'automatise que ce qu'on a déjà maîtrisé.
+- **Automatisations** achetables : auto-inférence, auto-achat **GPU**, auto-achat **matériel**
+  (baies et serveurs) et auto-achat **immobilier** (bâtiments et datacenters) — deux métiers
+  distincts, deux cartes distinctes, parce qu'on ne veut pas laisser un robot commander un
+  immeuble pour caser un serveur. Chaque automatisation vise **l'élément coché ⟳** (carte
+  précise, source précise, niveau d'infra précis) et s'active/désactive à la volée.
+  À chaque achat automatique, **la carte pulse et la ligne concernée s'illumine** : on voit
+  ce que la machine fait en son nom.
+- **Une carte d'automatisation n'apparaît qu'après 50 clics** sur ce qu'elle automatise. On
+  n'automatise que ce qu'on a réellement fait à la main — et l'interface reste vide de boutons
+  dont on ne comprend pas encore l'usage.
+- **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200.
+- **Un chantier de recherche à la fois** : projets et percées se présentent **un par un**, et
+  il s'écoule **au moins 2 mois de jeu** entre l'achat de l'un et l'apparition du suivant. Le
+  panneau cesse d'être une liste de courses ; chaque décision a le temps de compter.
 - **Optimisations récurrentes** : le travail d'ingénierie ne s'arrête jamais. Une
   optimisation **CUDA tous les 18 mois** (+10% compute), une du **moteur d'inférence
   tous les 9 mois** (+6% compute, −2% énergie), une passe sur la **gestion du contexte
@@ -269,11 +288,27 @@ js/main.js        boucle de jeu, vitesse, autosave
 
 ```bash
 node test-sim.mjs    # partie complète en headless (équilibrage, NaN, code de sortie CI)
-node test-ui.mjs     # test de fumée de l'UI réelle via jsdom (35+ étapes)
+node test-ui.mjs     # test de fumée de l'UI réelle via jsdom (40+ étapes)
+node test-i18n.mjs   # couverture des 7 langues, substitutions, écritures
 ```
 
-Le déploiement GitHub Pages (`.github/workflows/pages.yml`) **exécute ces tests avant de
-publier** : un commit qui casse la partie ne part pas en production.
+`.github/workflows/tests.yml` rejoue ces trois suites à chaque push et sur les pull requests.
+
+### Déploiement
+
+**Le dépôt ne déploie rien.** Pousser sur git ne met pas le jeu en ligne — la mise en ligne
+est un geste manuel, depuis le poste de l'auteur :
+
+```bash
+tools/deploy.sh              # tests complets, puis rsync vers le serveur
+tools/deploy.sh --dry-run    # montre ce qui changerait, ne transfère rien
+```
+
+Le script refuse d'envoyer quoi que ce soit si un test échoue, et n'expédie qu'une **liste
+explicite** de fichiers (`index.html`, `styles.css`, `js/`) — jamais les tests, les outils ou
+`node_modules`. La destination vit dans `tools/deploy.conf`, ignoré par git. Détails,
+prérequis serveur et la question des sauvegardes `localStorage` qui **ne suivent pas** un
+changement de domaine : [`DEPLOIEMENT.md`](DEPLOIEMENT.md).
 
 ---
 
