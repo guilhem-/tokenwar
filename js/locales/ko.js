@@ -1070,8 +1070,8 @@ export default {
     'GPU는 서버에, 서버는 랙에, 랙은 데이터센터에, 데이터센터는 부동산 위에 들어가야 한다 — 그 모두가 전기를 먹는다. 낡은 장비는 되팔 수 있고, 출시된 지 5년이 넘은 카드는 시장에서 사라진다. 데이터센터나 코로케이션 공간을 빌릴 수도 있다.',
   '⚡ Au départ :':
     '⚡ 시작할 때:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    '쓸 수 있는 전력이 없고, 랙도 서버도 없다. 있는 것은 건물과 방, 그리고 1만 달러뿐이다. 첫 결정은 계통에 연결하는 것, 그다음이 랙과 서버를 세우는 것이다. 카드 한 장을 놓는 건 그 뒤의 이야기다. 헤드라인을 주시하라: 신생 기업 에너지 보조금이 수전 용량을 늘려 준다.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '쓸 수 있는 전력이 없고, 랙도 서버도 없다. 있는 것은 건물과 방, 그리고 3만 달러뿐이다. 첫 결정은 계통에 연결하는 것, 그다음이 랙과 서버를 세우는 것이다. 카드 한 장을 놓는 건 그 뒤의 이야기다. 헤드라인을 주시하라: 신생 기업 에너지 보조금이 수전 용량을 늘려 준다.',
   '⚡ Coûts d’énergie :':
     '⚡ 에너지 비용:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1106,12 +1106,12 @@ export default {
     '증시보다 훨씬 거친 두 번째 시장. 실제 주기를 따라간다(2017년 거품, 2018년 겨울, 2021년 급등, 2022년 붕괴, 2024년 ETF와 반감기). 베팅용만은 아니다. 급등기에는 채굴자들이 당신과 같은 카드를 두고 다투고, GPU 가격이 오른다.',
   'Percées :':
     '돌파:',
-  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
-    '한 번에 하나만 제시되며, 획득한 뒤 두 달이 지나야 다음이 나타난다. 하나를 골라 끝까지 밀고, 그다음을 본다.',
+  'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.':
+    '한 번에 하나만 제시된다. 값을 치러도 곧바로 효과가 나지는 않는다. 통합에는 1~4주가 걸리며 진행 막대가 이를 보여 주고, 효과는 끝나야 나타난다. 그때 항목이 사라지고, 다음이 나타나기까지 두 달이 걸린다.',
   '🔧 Optimisations récurrentes :':
     '🔧 주기적 최적화:',
-  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
-    'CUDA 최적화는 18개월마다, 추론 엔진은 9개월마다, 컨텍스트 관리는 12개월마다. 하나에 $1,000 — 어려운 건 기억해 두는 일이다. 한 번 취하면 줄이 사라지고, 기한이 되면 다시 나타난다.',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
+    'CUDA 최적화는 18개월마다, 추론 엔진은 9개월마다, 컨텍스트 관리 정비는 12개월마다. 각 1,000달러, 관건은 잊지 않는 것이다. 한 번에 하나만 제시되고, 돌파구와 같은 방식으로 통합되며, 사라진 것과 다음 것 사이에는 두 달의 간격이 있다.',
   'Automatisation :':
     '자동화:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
@@ -1836,6 +1836,8 @@ export default {
     '반복: {0}',
   'aucun coût récurrent':
     '반복 비용 없음',
+  'intégration':
+    '통합 중',
   'disponible':
     '사용 가능',
   'revient tous les {0} mois':

@@ -1070,8 +1070,8 @@ export default {
     'a GPU must sit in a server, in a rack, in a datacenter, on real estate — all of which draw power too. Obsolete hardware can be resold; a card released more than 5 years ago disappears from the market. You can also rent a datacenter or colocation space.',
   '⚡ Au départ :':
     '⚡ At the start:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    'you have no power available, no rack and no server — only a building, a room and $10,000. Your first decision is to get connected, then to put up a rack and a server before you can house a single card. Watch the Front Page: an energy grant for young companies will upgrade your connection.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'you have no power available, no rack and no server — only a building, a room and $30,000. Your first decision is to get connected, then to put up a rack and a server before you can house a single card. Watch the Front Page: an energy grant for young companies will upgrade your connection.',
   '⚡ Coûts d’énergie :':
     '⚡ Energy costs:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1106,12 +1106,12 @@ export default {
     'a second market, far more violent than the stock exchange, tracking the real cycles (2017 bubble, 2018 winter, 2021 surge, 2022 collapse, 2024 ETFs and halving). It is not only for betting: during the surges, miners fight over the same cards as you and GPU prices climb.',
   'Percées :':
     'Breakthroughs:',
-  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
-    'only one is offered at a time, and two months must pass after you acquire it before the next appears. You pick a line, you see it through, then you look at the next one.',
+  'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.':
+    'only one is offered at a time. Once paid for, it does nothing yet: integration takes one to four weeks, tracked by a progress bar, and the effect only lands at the end. The row then disappears, and two months pass before the next one shows up.',
   '🔧 Optimisations récurrentes :':
     '🔧 Recurring optimisations:',
-  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
-    'a CUDA optimisation every 18 months, an inference-engine one every 9 months, a context-management pass every 12 months. $1,000 each: the point is remembering to take them. The row disappears once taken and returns at the next due date.',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
+    'a CUDA optimisation every 18 months, an inference-engine one every 9 months, a context-management pass every 12 months. $1,000 each: the point is remembering them. Only one is offered at a time, it integrates like a breakthrough, and two quiet months separate the one that disappears from the next.',
   'Automatisation :':
     'Automation:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
@@ -1836,6 +1836,8 @@ export default {
     'recurring: {0}',
   'aucun coût récurrent':
     'no recurring cost',
+  'intégration':
+    'integrating',
   'disponible':
     'available',
   'revient tous les {0} mois':

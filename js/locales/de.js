@@ -1070,8 +1070,8 @@ export default {
     'eine GPU muss in einen Server, in ein Rack, in ein Rechenzentrum, auf Immobilien passen — die alle ebenfalls Strom ziehen. Veraltete Hardware lässt sich verkaufen; eine Karte, die vor über 5 Jahren erschien, verschwindet vom Markt. Du kannst auch ein Rechenzentrum oder Colocation-Fläche mieten.',
   '⚡ Au départ :':
     '⚡ Am Anfang:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    'du hast keine Leistung, kein Rack und keinen Server — nur ein Gebäude, einen Raum und 10.000 $. Deine erste Entscheidung ist der Netzanschluss, dann ein Rack und ein Server, bevor auch nur eine Karte Platz findet. Behalte die Schlagzeilen im Auge: Ein Energiezuschuss für junge Unternehmen verstärkt deinen Anschluss.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'du hast keine Leistung, kein Rack und keinen Server — nur ein Gebäude, einen Raum und 30.000 $. Deine erste Entscheidung ist der Netzanschluss, dann ein Rack und ein Server, bevor auch nur eine Karte Platz findet. Behalte die Schlagzeilen im Auge: Ein Energiezuschuss für junge Unternehmen verstärkt deinen Anschluss.',
   '⚡ Coûts d’énergie :':
     '⚡ Energiekosten:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1106,12 +1106,12 @@ export default {
     'ein zweiter Markt, weit heftiger als die Börse, an den realen Zyklen ausgerichtet (Blase 2017, Winter 2018, Höhenflug 2021, Absturz 2022, ETFs und Halving 2024). Er dient nicht nur zum Wetten: In den Höhenflügen streiten sich Miner um dieselben Karten wie du, und die GPU-Preise steigen.',
   'Percées :':
     'Durchbrüche:',
-  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
-    'es wird immer nur einer angeboten, und nach dem Erwerb müssen zwei Monate vergehen, bis der nächste erscheint. Man wählt eine Richtung, führt sie zu Ende und schaut dann weiter.',
+  'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.':
+    'es wird immer nur eine angeboten. Einmal bezahlt, bewirkt sie noch nichts: Die Integration dauert ein bis vier Wochen, ein Fortschrittsbalken zeigt sie an, und die Wirkung tritt erst am Ende ein. Dann verschwindet die Zeile, und es vergehen zwei Monate, bis die nächste erscheint.',
   '🔧 Optimisations récurrentes :':
     '🔧 Wiederkehrende Optimierungen:',
-  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
-    'eine CUDA-Optimierung alle 18 Monate, eine der Inferenz-Engine alle 9 Monate, ein Durchgang zur Kontextverwaltung alle 12 Monate. Je 1.000 $: Die Kunst ist, daran zu denken. Die Zeile verschwindet nach der Auswahl und kehrt zum nächsten Termin zurück.',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
+    'eine CUDA-Optimierung alle 18 Monate, eine der Inferenz-Engine alle 9 Monate, ein Durchgang zur Kontextverwaltung alle 12 Monate. Je 1.000 $: Die Kunst ist, daran zu denken. Es wird nur eine auf einmal angeboten, sie wird wie ein Durchbruch integriert, und zwei ruhige Monate trennen die verschwundene von der nächsten.',
   'Automatisation :':
     'Automatisierung:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
@@ -1836,6 +1836,8 @@ export default {
     'laufend: {0}',
   'aucun coût récurrent':
     'keine laufenden Kosten',
+  'intégration':
+    'Integration',
   'disponible':
     'verfügbar',
   'revient tous les {0} mois':

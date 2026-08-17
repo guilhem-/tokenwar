@@ -1070,8 +1070,8 @@ export default {
     'una GPU debe caber en un servidor, en un rack, en un centro de datos, sobre inmuebles, y todos consumen energía. El material obsoleto se revende; una tarjeta con más de 5 años desaparece del mercado. También puedes alquilar un centro de datos o espacio en colocation.',
   '⚡ Au départ :':
     '⚡ Al principio:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    'no tienes potencia disponible, ni rack ni servidor: solo un local, una sala y 10 000 $. Tu primera decisión es conectarte, y luego montar un rack y un servidor antes de poder alojar una sola tarjeta. Vigila la Portada: una subvención energética para empresas jóvenes reforzará tu acometida.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'no tienes potencia disponible, ni rack ni servidor: solo un local, una sala y 30 000 $. Tu primera decisión es conectarte, y luego montar un rack y un servidor antes de poder alojar una sola tarjeta. Vigila la Portada: una subvención energética para empresas jóvenes reforzará tu acometida.',
   '⚡ Coûts d’énergie :':
     '⚡ Costes de energía:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1106,12 +1106,12 @@ export default {
     'un segundo mercado, mucho más violento que la Bolsa, calcado de los ciclos reales (burbuja de 2017, invierno de 2018, subidón de 2021, desplome de 2022, ETF y halving de 2024). No sirve solo para apostar: durante las subidas, los mineros se pelean por las mismas tarjetas que tú y el precio de las GPU sube.',
   'Percées :':
     'Avances:',
-  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
-    'solo se ofrece una a la vez, y hay que dejar pasar dos meses tras adquirirla para que aparezca la siguiente. Eliges una vía, la llevas a término y luego miras la siguiente.',
+  'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.':
+    'solo se ofrece una a la vez. Una vez pagada, no produce nada de inmediato: su integración lleva de una a cuatro semanas, seguida por una barra de progreso, y el efecto solo llega al final. Entonces la línea desaparece y pasan dos meses antes de que aparezca la siguiente.',
   '🔧 Optimisations récurrentes :':
     '🔧 Optimizaciones recurrentes:',
-  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
-    'una optimización CUDA cada 18 meses, una del motor de inferencia cada 9 meses, una pasada de gestión de contexto cada 12 meses. 1.000 $ cada una: lo difícil es acordarse. La línea desaparece al tomarla y vuelve al vencimiento.',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
+    'una optimización CUDA cada 18 meses, una del motor de inferencia cada 9 meses, una pasada de gestión del contexto cada 12 meses. $1 000 cada una: lo que cuesta es acordarse. Solo se ofrece una a la vez, se integra como un avance, y dos meses de calma separan la que desaparece de la siguiente.',
   'Automatisation :':
     'Automatización:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
@@ -1836,6 +1836,8 @@ export default {
     'recurrente: {0}',
   'aucun coût récurrent':
     'sin coste recurrente',
+  'intégration':
+    'integración',
   'disponible':
     'disponible',
   'revient tous les {0} mois':

@@ -11,6 +11,7 @@ import { t, td, LANGS, lang, setLang, needsPicker, onChange } from './i18n.js';
 
 const $ = id => document.getElementById(id);
 const AUTO_MIN_OWNED = 20;   // seuil d'apparition du bouton ⟳ auto (même palier que ×10)
+const FUNDING_VISIBLE = 2;   // levées affichées à la fois : la prochaine, et celle d'après
 
 export class UI {
   constructor() {
@@ -470,6 +471,18 @@ export class UI {
     return store[key];
   }
 
+  // Barre de progression attachée à une ligne, masquée tant qu'il n'y a rien à
+  // montrer. Sert aux programmes (étapes longues) et à l'intégration des avancées.
+  addBar(r, extraClass = 'integration-bar') {
+    const bar = document.createElement('div');
+    bar.className = `progress ${extraClass} hidden`;
+    bar.innerHTML = '<div class="progress-fill" style="width:0%"></div>';
+    r.el.appendChild(bar);
+    r.bar = bar;
+    r.barFill = bar.querySelector('.progress-fill');
+    return r;
+  }
+
   // boutons d'achat groupé : ×10 dès 20 exemplaires, ×100 dès 200
   addBulk(r, buyFn) {
     const bulk = document.createElement('span');
@@ -653,6 +666,7 @@ export class UI {
       r.el.classList.add('optim');
       r.name.textContent = td(o.name);
       r.desc.textContent = td(o.desc);
+      this.addBar(r);                       // barre d'intégration (masquée au repos)
       r.el.addEventListener('click', () => { this.game.buyOptim(o.id); });
     });
     // Grands programmes (fusion, sphère de Dyson)
@@ -662,11 +676,7 @@ export class UI {
       r.el.classList.add('program');
       r.name.textContent = p.icon + ' ' + td(p.name);
       r.desc.textContent = td(p.desc);
-      const bar = document.createElement('div');
-      bar.className = 'progress program-bar hidden';
-      bar.innerHTML = '<div class="progress-fill" style="width:0%"></div>';
-      r.el.appendChild(bar);
-      r.bar = bar; r.barFill = bar.querySelector('.progress-fill');
+      this.addBar(r, 'program-bar');
       r.el.addEventListener('click', () => { this.game.orderProgram(p.id); });
     });
     // Projects
@@ -675,6 +685,7 @@ export class UI {
       const r = this.makeRow(this.el.projectList, p.id, this.rows.project);
       r.name.textContent = td(p.name);
       r.desc.textContent = td(p.desc);
+      this.addBar(r);                       // barre d'intégration (masquée au repos)
       r.el.addEventListener('click', () => { this.game.buyProject(p.id); });
     });
     // Funding
@@ -1175,20 +1186,34 @@ export class UI {
   }
   // Optimisations : la ligne n'apparaît que lorsque la prochaine version est due
   // (sinon elle disparaît, comme toute option indisponible).
+  // Une seule optimisation à l'écran : celle que le moteur propose, ou celle
+  // qui s'intègre. Les autres restent en coulisse, même si elles sont dues.
   renderOptims() {
     const g = this.game;
+    const shown = g.nextOptim();
+    const prog = g.integrationProgress('optim');
     OPTIMS.forEach(o => {
       const r = this.rows.optim[o.id];
       if (!r) return;
-      const st = g.optimState(o.id);
-      const ready = g.optimReady(o);
-      // en phase 2+, l'argent n'existe plus : l'ASI optimise seule
-      if (!ready || g.phase >= 2) { r.el.classList.add('hidden'); return; }
+      if (!shown || shown.id !== o.id) { r.el.classList.add('hidden'); return; }
       r.el.classList.remove('hidden');
+      const st = g.optimState(o.id);
+      const count = st.n > 0 ? ` <span class="badge">×${st.n}</span>` : '';
+      if (prog != null) {
+        // payée, en cours de mise en production : plus de prix, plus de clic utile
+        r.el.classList.remove('locked', 'affordable');
+        r.cost.innerHTML = count;
+        r.effect.innerHTML = `<span class="badge">${t('intégration')}</span> `
+          + `<span class="text-muted">${o.gain}</span>`;
+        r.bar.classList.remove('hidden');
+        r.barFill.style.width = (prog * 100).toFixed(1) + '%';
+        return;
+      }
+      r.bar.classList.add('hidden');
       r.cost.textContent = fmtMoney(g.optimCost(o));
       r.effect.innerHTML = `<span class="badge badge-new">${t('disponible')}</span> `
         + `<span class="text-good">${o.gain}</span>`
-        + (st.n > 0 ? ` <span class="badge">×${st.n}</span>` : '')
+        + count
         + ` <span class="text-muted">· ${t('revient tous les {0} mois', o.months)}</span>`;
       this.setAfford(r.el, g.canBuyOptim(o.id));
     });
@@ -1417,12 +1442,23 @@ export class UI {
 
   renderProjects() {
     const g = this.game, s = g.state;
+    // une seule percée à la fois, et pas avant le délai depuis la précédente
+    const next = g.nextProject();
+    const prog = g.integrationProgress('project');
     PROJECTS.forEach(p => {
       const r = this.rows.project[p.id];
-      // une seule percée à la fois, et pas avant le délai depuis la précédente
-      const next = g.nextProject();
       if (!next || next.id !== p.id) { r.el.classList.add('hidden'); return; }
       r.el.classList.remove('hidden');
+      if (prog != null) {
+        // acquise, pas encore en production : la barre tient lieu de compte à rebours
+        r.el.classList.remove('locked', 'affordable');
+        r.cost.innerHTML = `<span class="badge">${td(p.cat)}</span>`;
+        r.effect.innerHTML = `<span class="badge">${t('intégration')}</span>`;
+        r.bar.classList.remove('hidden');
+        r.barFill.style.width = (prog * 100).toFixed(1) + '%';
+        return;
+      }
+      r.bar.classList.add('hidden');
       const c = p.cost;
       const parts = [];
       const need = (label, val, have) => { if (val) parts.push(`<span class="${have >= val ? 'text-good' : 'text-bad'}">${label} ${fmt(val)}</span>`); };
@@ -1444,16 +1480,21 @@ export class UI {
     // toutes les levées bouclées → on retire entièrement le panneau Financement
     this.el.panelFunding.classList.toggle('hidden', FUNDING.every(f => s.fundingDone[f.id]));
     let nextRound = null;
+    let shown = 0;
     FUNDING.forEach(f => {
       const r = this.rows.funding[f.id];
       const done = s.fundingDone[f.id];
       const yearOk = g.simYear() >= (f.year || 0);
       const ready = !done && s.lifetimeTokens >= f.need && yearOk;
-      if (done) { r.el.classList.add('hidden'); return; } // levée bouclée → retirée
+      if (ready && !nextRound) nextRound = f;
+      // Levée bouclée → retirée. Au-delà des deux prochaines, on ne montre rien :
+      // la feuille de route reste courte, et la suite se découvre en avançant.
+      if (done || shown >= FUNDING_VISIBLE) { r.el.classList.add('hidden'); return; }
+      shown++;
+      r.el.classList.remove('hidden');
       r.cost.innerHTML = !yearOk ? `<span class="badge badge-warn">${t('dispo {0}', f.year)}</span>` : `<span class="num">${fmt(f.need)} tok</span>`;
       r.effect.innerHTML = `+${fmtMoney(g.moneyCost(f.cash))} · ${f.desc}`;
       this.setAfford(r.el, ready);
-      if (ready && !nextRound) nextRound = f;
     });
     if (nextRound) {
       this.el.btnFunding.disabled = false;

@@ -400,7 +400,7 @@ await step('énergie de départ nulle + subvention', async () => {
   const fresh = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
   if (fresh.state.energyCap !== 0) throw new Error('aucune puissance ne devrait être offerte au départ');
   if (fresh.energyThrottle() !== 0) throw new Error('sans raccordement, le calcul doit être totalement bridé');
-  if (fresh.money !== 10000) throw new Error('la trésorerie de départ devrait être de 10 000');
+  if (fresh.money !== 30000) throw new Error('la trésorerie de départ devrait être de 30 000');
   if (fresh.infraCount('rack') !== 0 || fresh.infraCount('server') !== 0)
     throw new Error('la partie doit démarrer sans baie ni serveur');
   if (fresh.freeSlots('gpu') !== 0) throw new Error('aucun emplacement GPU tant que rien n est bâti');
@@ -415,37 +415,60 @@ await step('énergie de départ nulle + subvention', async () => {
 });
 
 // ---- optimisations récurrentes (CUDA 18 mois, moteur 9 mois, contexte 12 mois) ----
-await step('optimisations : périodicité, coût négligeable, cumul', async () => {
+await step('optimisations : une seule proposée, intégrée puis deux mois de calme', async () => {
   const { OPTIMS } = await import('./js/data.js');
   const per = Object.fromEntries(OPTIMS.map(o => [o.id, o.months]));
   if (per.cuda !== 18 || per.engine !== 9 || per.context !== 12)
     throw new Error('périodicités attendues : CUDA 18, moteur 9, contexte 12');
+  const { OPTIM_GAP_MONTHS, INTEGRATION_WEEKS } = await import('./js/data.js');
+  if (OPTIM_GAP_MONTHS !== 2) throw new Error('le calme entre deux optimisations devrait être de deux mois');
   game.state.playSeconds = 60; game.state.money = 1e6;
-  game.state.optims = {};
-  const monthSec = 300 / 12;
-  for (const o of OPTIMS) {
-    if (Math.abs(game.optimCost(o) - 1000 * game.inflIndex()) > 1e-6) throw new Error('coût ≠ 1000 $');
-    if (!game.optimReady(o)) throw new Error(`${o.id} devrait être disponible d entrée`);
-    const before = { cmp: game.mods.computeMult, q: game.mods.qualityMult, e: game.mods.energyEff };
-    if (!game.buyOptim(o.id)) throw new Error(`${o.id} non achetable`);
-    const gained = game.mods.computeMult > before.cmp || game.mods.qualityMult > before.q || game.mods.energyEff < before.e;
-    if (!gained) throw new Error(`${o.id} sans effet`);
-    if (game.optimReady(o)) throw new Error(`${o.id} de nouveau disponible immédiatement`);
-    // …et elle revient exactement à l'échéance annoncée
-    const wait = game.optimWait(o);
-    if (Math.abs(wait - o.months * monthSec) > 0.5) throw new Error(`${o.id} : échéance incorrecte`);
-    game.state.playSeconds += o.months * monthSec;
-    if (!game.optimReady(o)) throw new Error(`${o.id} ne revient pas après ${o.months} mois`);
-    if (game.optimState(o.id).n !== 1) throw new Error('compteur d optimisations incorrect');
-  }
-  // la ligne disparaît tant qu'elle n'est pas due
-  game.state.optims = { cuda: { n:1, nextAt: game.state.playSeconds + 999 } };
+  game.state.optims = {}; game.state.integrations = []; game.state.lastOptimAt = -1e9;
+  const monthSec = 300 / 12, weekSec = 300 / 52;
+
+  // les trois sont dues d'entrée, mais une seule est proposée
+  if (OPTIMS.some(o => !game.optimReady(o))) throw new Error('les trois devraient être dues d entrée');
+  const proposee = game.nextOptim();
+  if (!proposee) throw new Error('aucune optimisation proposée');
+  const autre = OPTIMS.find(o => o.id !== proposee.id);
+  if (game.buyOptim(autre.id)) throw new Error('une optimisation non proposée a été achetée');
+  if (Math.abs(game.optimCost(proposee) - 1000 * game.inflIndex()) > 1e-6) throw new Error('coût ≠ 1000 $');
+
+  // payée tout de suite, effective seulement une fois intégrée
+  const avant = { cmp: game.mods.computeMult, q: game.mods.qualityMult, e: game.mods.energyEff, argent: game.money };
+  if (!game.buyOptim(proposee.id)) throw new Error(`${proposee.id} non achetable`);
+  if (!(game.money < avant.argent)) throw new Error('l optimisation n a pas été payée');
+  if (game.mods.computeMult !== avant.cmp || game.mods.qualityMult !== avant.q || game.mods.energyEff !== avant.e)
+    throw new Error('l effet est tombé avant la fin de l intégration');
+  const p0 = game.integrationProgress('optim');
+  if (p0 == null || p0 > 0.01) throw new Error('la barre d intégration ne démarre pas à zéro');
+
+  // l'intégration dure entre 1 et 4 semaines : rien avant, tout après
+  game.state.playSeconds += INTEGRATION_WEEKS[0] * weekSec * 0.99; game.tickIntegrations();
+  if (game.optimState(proposee.id).n !== 0) throw new Error('intégrée en moins d une semaine');
+  game.state.playSeconds += INTEGRATION_WEEKS[1] * weekSec; game.tickIntegrations();
+  if (game.optimState(proposee.id).n !== 1) throw new Error('toujours pas intégrée après quatre semaines');
+  const gained = game.mods.computeMult > avant.cmp || game.mods.qualityMult > avant.q || game.mods.energyEff < avant.e;
+  if (!gained) throw new Error(`${proposee.id} sans effet une fois intégrée`);
+  if (game.integrationProgress('optim') != null) throw new Error('l intégration devrait être terminée');
+  // …et elle revient exactement à l'échéance annoncée, comptée depuis l'intégration
+  if (Math.abs(game.optimWait(proposee) - proposee.months * monthSec) > 0.5)
+    throw new Error(`${proposee.id} : échéance incorrecte`);
+
+  // deux mois de calme avant qu'une autre soit proposée
+  if (game.nextOptim()) throw new Error('une optimisation est proposée aussitôt après');
+  game.state.playSeconds += 1.9 * monthSec;
+  if (game.nextOptim()) throw new Error('une optimisation apparaît avant les deux mois');
+  game.state.playSeconds += 0.2 * monthSec;
+  const suivante = game.nextOptim();
+  if (!suivante) throw new Error('aucune optimisation après les deux mois');
+  if (suivante.id === proposee.id) throw new Error('la même optimisation est reproposée aussitôt');
+
+  // l'interface n'en montre jamais plus d'une
   ui.render();
-  if (!ui.rows.optim['cuda'].el.classList.contains('hidden')) throw new Error('optimisation non due mais affichée');
-  game.state.optims = {};
-  ui.render();
-  if (ui.rows.optim['cuda'].el.classList.contains('hidden')) throw new Error('optimisation due mais masquée');
-  game.state.playSeconds = 60;
+  const visibles = Object.values(ui.rows.optim).filter(r => !r.el.classList.contains('hidden'));
+  if (visibles.length > 1) throw new Error(visibles.length + ' optimisations affichées au lieu d une');
+  game.state.playSeconds = 60; game.state.optims = {}; game.state.integrations = []; game.state.lastOptimAt = -1e9;
 });
 
 // ---- directives permanentes : quota par lots de 5, il faut repayer ----
@@ -943,7 +966,7 @@ await step('sous-effectif data : 5% d échec à l entraînement', async () => {
 });
 
 // ---- percées : une seule à la fois, deux mois d écart ----
-await step('percées : une seule proposée, deux mois entre chacune', async () => {
+await step('percées : une seule proposée, intégrée, deux mois entre chacune', async () => {
   const { PROJECT_GAP_MONTHS } = await import('./js/data.js');
   if (PROJECT_GAP_MONTHS !== 2) throw new Error('le délai devrait être de deux mois');
   const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
@@ -955,6 +978,15 @@ await step('percées : une seule proposée, deux mois entre chacune', async () =
   const autre = (await import('./js/data.js')).PROJECTS.find(p => p.id !== premiere.id && p.req(g2));
   if (autre && g2.buyProject(autre.id)) throw new Error('une percée non proposée a été acquise');
   if (!g2.buyProject(premiere.id)) throw new Error('la percée proposée est refusée');
+  // payée, mais pas acquise : elle reste affichée le temps de s'intégrer
+  const { INTEGRATION_WEEKS } = await import('./js/data.js');
+  if (g2.state.projectsDone[premiere.id]) throw new Error('percée acquise avant la fin de l intégration');
+  if (g2.integrationProgress('project') == null) throw new Error('aucune intégration en cours');
+  const encore = g2.nextProject();
+  if (!encore || encore.id !== premiere.id) throw new Error('la percée en intégration devrait rester affichée');
+  if (g2.buyProject(premiere.id)) throw new Error('la percée a pu être payée deux fois');
+  g2.state.playSeconds += INTEGRATION_WEEKS[1] * (300 / 52); g2.tickIntegrations();
+  if (!g2.state.projectsDone[premiere.id]) throw new Error('intégration jamais terminée');
   // …puis plus rien pendant deux mois
   if (g2.nextProject()) throw new Error('une percée apparaît immédiatement après');
   g2.state.playSeconds += 1.9 * (300 / 12);

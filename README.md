@@ -95,7 +95,7 @@ de son année.
 - **Salaires impayés** : trésorerie à zéro = salaires non versés. Un compteur d'arriérés
   s'affiche, et au bout de **30 jours** quelqu'un **démissionne** — puis un départ tous les
   2 jours, jusqu'à l'entreprise vide. Repayez avant, et l'équipe reste.
-- **On part de rien** : **$10 000** de capital, **aucun serveur, aucune baie**, et surtout
+- **On part de rien** : **$30 000** de capital, **aucun serveur, aucune baie**, et surtout
   **0 kW** — pas le moindre raccordement électrique. Le premier geste n'est pas d'acheter un
   GPU, c'est d'aller chercher du courant, puis de quoi le loger. Une actualité — la
   *subvention énergie pour les jeunes pousses* — donne un vrai coup de pouce (les titres de
@@ -205,13 +205,16 @@ toujours la même carte.
   dont on ne comprend pas encore l'usage.
 - **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200.
 - **Un chantier de recherche à la fois** : projets et percées se présentent **un par un**, et
-  il s'écoule **au moins 2 mois de jeu** entre l'achat de l'un et l'apparition du suivant. Le
-  panneau cesse d'être une liste de courses ; chaque décision a le temps de compter.
+  il s'écoule **au moins 2 mois de jeu** entre la disparition de l'un et l'apparition du
+  suivant. Le panneau cesse d'être une liste de courses ; chaque décision a le temps de compter.
+- **Rien n'est acquis le jour où c'est payé** : une percée comme une optimisation demande
+  **1 à 4 semaines d'intégration**, tirées au hasard et suivies par une **barre de
+  progression**. L'effet ne tombe qu'à la fin — et c'est de là que partent les 2 mois.
 - **Optimisations récurrentes** : le travail d'ingénierie ne s'arrête jamais. Une
   optimisation **CUDA tous les 18 mois** (+10% compute), une du **moteur d'inférence
   tous les 9 mois** (+6% compute, −2% énergie), une passe sur la **gestion du contexte
   tous les 12 mois** (+5% prix accepté). $1 000 pièce : le montant est négligeable,
-  l'enjeu est d'y penser. La ligne disparaît une fois prise et réapparaît à l'échéance.
+  l'enjeu est d'y penser. **Une seule est proposée à la fois**, comme les percées.
 - **Graphe de production** (tokens/s et $/s, échelle log).
 - **17 succès** à débloquer, écran de fin avec bilan moral (le sanctuaire de la biosphère…).
 - **Addendum — Directives permanentes** : cochez un choix d’événement pour qu’il s’applique

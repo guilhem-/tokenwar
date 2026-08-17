@@ -6,7 +6,7 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
          BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
          HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, AUTO_CLICKS_REQUIRED,
-         PROJECT_GAP_MONTHS, OPTIMS,
+         PROJECT_GAP_MONTHS, OPTIM_GAP_MONTHS, INTEGRATION_WEEKS, OPTIMS,
          PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK,
          CHRONICLE, EXTRAVAGANCES, SOVEREIGN,
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
@@ -42,7 +42,7 @@ export class Game {
     // score & ressources
     s.lifetimeTokens = 0;
     s.unsold = 0;
-    s.money = 10000;         // capital de départ : de quoi se raccorder, monter une baie et un serveur
+    s.money = 30000;         // capital de départ : de quoi se raccorder, monter une baie et un serveur
     s.research = 0;
     s.data = 0;
     s.reputation = 50;
@@ -104,7 +104,11 @@ export class Game {
     // progression
     s.phase = 1;
     s.projectsDone = {};
-    s.lastProjectAt = -1e9;  // dernière percée acquise (délai avant la suivante)
+    s.lastProjectAt = -1e9;  // fin d'intégration de la dernière percée (délai avant la suivante)
+    s.lastOptimAt = -1e9;    // idem pour les optimisations récurrentes
+    // Avancées en cours d'intégration : au plus une percée et une optimisation.
+    // { kind:'project'|'optim', id, t0, t1 } — l'effet ne tombe qu'à t1.
+    s.integrations = [];
     s.fundingDone = {};
     s.eventsSeen = {};
     s.eventCooldown = {};   // id -> playSeconds du dernier déclenchement
@@ -803,6 +807,58 @@ export class Game {
     return true;
   }
 
+  // =================================================================
+  //  INTÉGRATION DES AVANCÉES — une percée ou une optimisation payée
+  //  n'agit pas le jour même : il faut la mettre en production. La durée
+  //  est tirée au hasard dans INTEGRATION_WEEKS et une barre l'affiche.
+  //  L'effet ne tombe qu'à la fin ; c'est seulement là que la ligne
+  //  disparaît et que le délai avant la suivante commence à courir.
+  // =================================================================
+  integrationSeconds() {
+    const [minW, maxW] = INTEGRATION_WEEKS;
+    return (minW + Math.random() * (maxW - minW)) * (SECONDS_PER_YEAR / 52);
+  }
+  integrationOf(kind) { return (this.state.integrations || []).find(i => i.kind === kind) || null; }
+  // 0..1 pour la barre de progression, ou null si rien ne s'intègre de ce type
+  integrationProgress(kind) {
+    const i = this.integrationOf(kind);
+    if (!i) return null;
+    return clamp((this.state.playSeconds - i.t0) / Math.max(0.001, i.t1 - i.t0), 0, 1);
+  }
+  startIntegration(kind, id) {
+    const t0 = this.state.playSeconds;
+    this.state.integrations.push({ kind, id, t0, t1: t0 + this.integrationSeconds() });
+  }
+  tickIntegrations() {
+    const s = this.state;
+    if (!s.integrations || !s.integrations.length) return;
+    const done = s.integrations.filter(i => s.playSeconds >= i.t1);
+    if (!done.length) return;
+    s.integrations = s.integrations.filter(i => s.playSeconds < i.t1);
+    for (const i of done) this.finishIntegration(i);
+  }
+  finishIntegration(i) {
+    const s = this.state;
+    if (i.kind === 'project') {
+      const p = PROJECTS.find(x => x.id === i.id);
+      if (!p) return;
+      s.projectsDone[i.id] = true;
+      s.lastProjectAt = s.playSeconds;   // le délai part de la disparition de la ligne
+      this.applyProjectEffect(p.effect);
+      this.log(t('Projet : {0}', td(p.name)), 'milestone');
+      this.toast(t('Percée : {0}', td(p.name)), 'good');
+    } else if (i.kind === 'optim') {
+      const o = OPTIMS.find(x => x.id === i.id);
+      if (!o) return;
+      const st = this.optimState(i.id);
+      o.effect(this);
+      st.n++;
+      st.nextAt = s.playSeconds + o.months * (SECONDS_PER_YEAR / 12);
+      s.lastOptimAt = s.playSeconds;
+      this.log(t('{0} déployée (n°{1}) — {2}.', td(o.name), st.n, td(o.gain)), 'good');
+    }
+  }
+
   // Une seule percée est proposée à la fois — la première de la liste dont les
   // conditions sont réunies — et seulement après un délai depuis la précédente.
   projectGapLeft() {
@@ -810,12 +866,16 @@ export class Game {
     return Math.max(0, this.state.lastProjectAt + gap - this.state.playSeconds);
   }
   nextProject() {
+    // celle qui s'intègre reste affichée jusqu'au bout : c'est elle qui porte la barre
+    const pending = this.integrationOf('project');
+    if (pending) return PROJECTS.find(p => p.id === pending.id) || null;
     if (this.projectGapLeft() > 0) return null;
     return PROJECTS.find(p => !this.state.projectsDone[p.id] && p.req(this)) || null;
   }
   buyProject(id) {
     const p = PROJECTS.find(x => x.id === id);
     if (!p || this.state.projectsDone[id]) return false;
+    if (this.integrationOf('project')) return false;   // une intégration à la fois
     // on ne peut acquérir que la percée effectivement proposée
     const next = this.nextProject();
     if (!next || next.id !== id) return false;
@@ -831,11 +891,9 @@ export class Game {
     this.state.research -= (c.research || 0);
     this.state.data -= (c.data || 0);
     this.state.matter -= (c.matter || 0);
-    this.state.projectsDone[id] = true;
-    this.state.lastProjectAt = this.state.playSeconds;
-    this.applyProjectEffect(p.effect);
-    this.log(t('Projet : {0}', td(p.name)), 'milestone');
-    this.toast(t('Percée : {0}', td(p.name)), 'good');
+    // La percée est payée, mais rien n'est acquis : elle part en intégration.
+    // C'est finishIntegration() qui la marquera faite et appliquera son effet.
+    this.startIntegration('project', id);
     return true;
   }
   applyProjectEffect(effect) {
@@ -873,19 +931,34 @@ export class Game {
   optimReady(o) { return this.state.playSeconds >= this.optimState(o.id).nextAt; }
   // secondes restantes avant la prochaine disponibilité (0 si déjà due)
   optimWait(o) { return Math.max(0, this.optimState(o.id).nextAt - this.state.playSeconds); }
+  // Délai de calme après la disparition de la précédente optimisation. Distinct
+  // de la périodicité propre à chaque optimisation (optimReady) : celle-ci dit
+  // qu'elle est DUE, celui-là qu'on accepte d'en MONTRER une nouvelle.
+  optimGapLeft() {
+    const gap = OPTIM_GAP_MONTHS * (SECONDS_PER_YEAR / 12);
+    return Math.max(0, (this.state.lastOptimAt ?? -1e9) + gap - this.state.playSeconds);
+  }
+  // Une seule optimisation proposée à la fois : celle qui s'intègre, sinon la
+  // première due — et rien du tout tant que le délai de calme n'est pas passé.
+  nextOptim() {
+    const pending = this.integrationOf('optim');
+    if (pending) return OPTIMS.find(o => o.id === pending.id) || null;
+    if (this.phase >= 2) return null;          // en phase 2+, l'ASI optimise seule
+    if (this.optimGapLeft() > 0) return null;
+    return OPTIMS.find(o => this.optimReady(o)) || null;
+  }
   canBuyOptim(id) {
-    const o = OPTIMS.find(x => x.id === id);
-    return !!o && this.optimReady(o) && this.state.money >= this.optimCost(o);
+    if (this.integrationOf('optim')) return false;   // une intégration à la fois
+    const next = this.nextOptim();
+    if (!next || next.id !== id) return false;
+    return this.state.money >= this.optimCost(next);
   }
   buyOptim(id) {
     const o = OPTIMS.find(x => x.id === id);
     if (!o || !this.canBuyOptim(id)) return false;
-    const st = this.optimState(id);
     this.state.money -= this.optimCost(o);
-    o.effect(this);
-    st.n++;
-    st.nextAt = this.state.playSeconds + o.months * (SECONDS_PER_YEAR / 12);
-    this.log(t('{0} déployée (n°{1}) — {2}.', td(o.name), st.n, td(o.gain)), 'good');
+    // Comme les percées : payée maintenant, effective à la fin de l'intégration.
+    this.startIntegration('optim', id);
     return true;
   }
 
@@ -1690,6 +1763,7 @@ export class Game {
     }
 
     this.tickBuilds();                            // chantiers arrivés à terme
+    this.tickIntegrations();                      // percées et optimisations mises en production
     this.tickPrograms();                          // recherche → mise au point → déploiement
     this.tickAuto(dt);
     this.tickSpaceDC();

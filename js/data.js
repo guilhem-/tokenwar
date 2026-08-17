@@ -891,14 +891,24 @@ export const BASE_HEADCOUNT = 3;     // postes disponibles sans RH (le fondateur
 export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
 export const BASE_MARKETING = 10;     // niveau de marketing atteignable sans marketeur
 export const ELEC_PRICE_MWH = 80;    // prix de l electricite ($/MWh) -> charge journaliere
-export const COLO = { racks:3, daily:250 }; // espace loue en datacenter (colocation)
+export const COLO = { racks:3, daily:120 }; // espace loue en datacenter (colocation)
 // Une automatisation ne se propose qu'après avoir fait le geste 50 fois à la main :
 // on n'automatise pas ce qu'on n'a pas encore appris.
 export const AUTO_CLICKS_REQUIRED = 50;
 // Les percées ne se bousculent pas : une seule est proposée à la fois, et il
-// faut laisser passer deux mois après l'avoir acquise pour que la suivante
-// apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.
+// faut laisser passer deux mois APRES QU'ELLE A DISPARU (donc une fois son
+// integration terminee) pour que la suivante apparaisse. On choisit une piste,
+// on la mene, puis on regarde la suivante.
 export const PROJECT_GAP_MONTHS = 2;
+// Meme regle pour les optimisations recurrentes : une seule proposee a la fois,
+// et deux mois de calme entre celle qui disparait et celle qui arrive. Leur
+// periodicite propre (months) continue de courir en parallele : elle dit quand
+// une optimisation redevient DUE, ce delai dit quand elle peut etre MONTREE.
+export const OPTIM_GAP_MONTHS = 2;
+// Une avancee ne s'applique pas au moment ou on la paie : elle s'integre. La
+// duree est tiree au hasard dans cette fourchette (en semaines) et une barre de
+// progression l'affiche. L'effet ne tombe qu'a la fin.
+export const INTEGRATION_WEEKS = [1, 4];
 export const HIRE_COST = 1000;       // frais d'embauche (annonce, entretiens, materiel, onboarding)
 // Salaires impayes : au bout de 30 jours d'arrieres, les salaries commencent a
 // partir — un depart tous les 2 jours supplementaires, jusqu'a l'entreprise vide.
@@ -1082,7 +1092,7 @@ export const HELP = [
   { b:'But :', p:'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.' },
   { b:'Phase 1 — Startup :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
   { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
-  { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
+  { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
   { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
   { b:'🏗️ Délais :', p:'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.' },
   { b:'Équipe :', p:'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.' },
@@ -1091,8 +1101,8 @@ export const HELP = [
   { b:'🚨 Incidents :', p:'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.' },
   { b:'🔬 Grands programmes :', p:'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.' },
   { b:'₿ Crypto :', p:'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.' },
-  { b:'Percées :', p:'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.' },
-  { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.' },
+  { b:'Percées :', p:'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.' },
+  { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.' },
   { b:'Automatisation :', p:'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.' },
   { b:'📋 Directives permanentes :', p:'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.' },
   { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },

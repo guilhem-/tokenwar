@@ -1070,8 +1070,8 @@ export default {
     '一张 GPU 必须装进服务器，服务器装进机柜，机柜放进数据中心，数据中心建在不动产上——而这些同样耗电。过时的硬件可以转卖；上市超过 5 年的显卡会退出市场。你也可以租数据中心或租托管机位。',
   '⚡ Au départ :':
     '⚡ 开局时：',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    '你没有任何可用电力，没有机柜也没有服务器——只有一处场地、一间机房和一万美元。第一个决定是接电，然后搭起机柜和服务器，才谈得上放一张卡。留意头条：面向初创企业的能源补贴会给你增容。',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '你没有任何可用电力，没有机柜也没有服务器——只有一处场地、一间机房和三万美元。第一个决定是接电，然后搭起机柜和服务器，才谈得上放一张卡。留意头条：面向初创企业的能源补贴会给你增容。',
   '⚡ Coûts d’énergie :':
     '⚡ 能源成本：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1106,12 +1106,12 @@ export default {
     '第二个市场，比股市剧烈得多，按真实周期走（2017 泡沫、2018 寒冬、2021 暴涨、2022 崩盘、2024 ETF 与减半）。它不只是用来下注：行情暴涨时，矿工和你抢同样的显卡，GPU 价格随之上涨。',
   'Percées :':
     '突破：',
-  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
-    '一次只提供一项，取得之后要等两个月，下一项才会出现。选定一条路，走完，再看下一条。',
+  'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.':
+    '一次只提供一个。付款后并不会立刻生效：整合需要一到四周，由进度条显示，效果要到最后才落地。届时该条目消失，再过两个月下一个才会出现。',
   '🔧 Optimisations récurrentes :':
     '🔧 周期性优化：',
-  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
-    '每 18 个月一次 CUDA 优化，每 9 个月一次推理引擎优化，每 12 个月一次上下文管理调整。每次 1000 美元：难的是记得去做。取用之后条目消失，到期后重新出现。',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
+    'CUDA 优化每 18 个月一次，推理引擎每 9 个月一次，上下文管理每 12 个月梳理一次。每项 1 000 美元，难的是记得去做。一次只提供一个，整合方式与突破相同，消失的那个与下一个之间相隔两个月。',
   'Automatisation :':
     '自动化：',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
@@ -1836,6 +1836,8 @@ export default {
     '经常性：{0}',
   'aucun coût récurrent':
     '无经常性成本',
+  'intégration':
+    '整合中',
   'disponible':
     '可用',
   'revient tous les {0} mois':

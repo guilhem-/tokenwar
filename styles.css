@@ -1512,8 +1512,8 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 
 /* grands programmes : recherche → mise au point → commande → déploiement */
 .item.program { border-left: 2px solid var(--accent-2, var(--accent)); }
-.program-bar { margin-top: 0.5rem; }
-.program-bar .progress-fill { transition: width 0.4s linear; }
+.program-bar, .integration-bar { margin-top: 0.5rem; }
+.program-bar .progress-fill, .integration-bar .progress-fill { transition: width 0.4s linear; }
 
 /* second marché : crypto */
 .crypto-block { margin-top: 0.75rem; border-top: 1px dashed var(--line); padding-top: 0.6rem; }

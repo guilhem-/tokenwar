@@ -1070,8 +1070,8 @@ export default {
     'GPUはサーバーに、サーバーはラックに、ラックはデータセンターに、データセンターは不動産の上に収まらねばならない——そのどれもが電気を食う。古い機材は転売でき、発売から5年を超えたカードは市場から消える。データセンターやコロケーション枠を借りることもできる。',
   '⚡ Au départ :':
     '⚡ 開始時：',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $10 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    '使える電力はゼロ、ラックもサーバーもない。あるのは建物と部屋、そして1万ドルだけだ。最初の判断は系統につなぐこと、次にラックとサーバーを立てること。カード1枚を置けるのはそのあとだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が受電を増強してくれる。',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '使える電力はゼロ、ラックもサーバーもない。あるのは建物と部屋、そして3万ドルだけだ。最初の判断は系統につなぐこと、次にラックとサーバーを立てること。カード1枚を置けるのはそのあとだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が受電を増強してくれる。',
   '⚡ Coûts d’énergie :':
     '⚡ エネルギー費用：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1106,12 +1106,12 @@ export default {
     '株式市場よりはるかに荒い第二の市場。現実の周期をなぞる（2017年のバブル、2018年の冬、2021年の高騰、2022年の暴落、2024年のETFと半減期）。賭けのためだけではない。高騰のあいだ、マイナーはあなたと同じカードを奪い合い、GPU価格は上がる。',
   'Percées :':
     '突破：',
-  'une seule est proposée à la fois, et il faut laisser passer deux mois après l’avoir acquise pour que la suivante apparaisse. On choisit une piste, on la mène, puis on regarde la suivante.':
-    '提示されるのは一度にひとつだけ。取得してから2か月おかないと次は現れない。ひとつ選び、やり切り、それから次を見る。',
+  'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.':
+    '提示されるのは一度に一つだけ。支払ってもすぐには効かない。統合には1〜4週間かかり、進捗バーがそれを示す。効果が出るのは終わったときだ。そこで行は消え、次が現れるまで2か月かかる。',
   '🔧 Optimisations récurrentes :':
     '🔧 定期的な最適化：',
-  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
-    'CUDA最適化は18か月ごと、推論エンジンは9か月ごと、文脈管理は12か月ごと。1件$1,000——難しいのは思い出すこと。取得すると行は消え、次の期限に戻ってくる。',
+  'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
+    'CUDA最適化は18か月ごと、推論エンジンは9か月ごと、コンテキスト管理の見直しは12か月ごと。1件1,000ドル、問題は忘れないことだ。提示されるのは一度に一つだけで、ブレークスルーと同じように統合され、消えたものと次のものの間には2か月の間が空く。',
   'Automatisation :':
     '自動化：',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
@@ -1836,6 +1836,8 @@ export default {
     '経常：{0}',
   'aucun coût récurrent':
     '経常費用なし',
+  'intégration':
+    '統合中',
   'disponible':
     '利用可能',
   'revient tous les {0} mois':
