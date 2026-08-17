@@ -788,6 +788,90 @@ export default {
     'Kimi K3：中国のラボがフロンティアに肉薄',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4メモリが手に入らない：サーバー価格が急騰',
+  'Un chatbot pousse un adolescent au pire : la famille porte plainte':
+    'チャットボットが少年を最悪の選択へ追いやる：遺族が提訴',
+  'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »':
+    '自動運転車が歩行者をはねて死亡：ソフトは「ためらって」いた',
+  'Diagnostic automatisé erroné : des centaines de patients rappelés':
+    '自動診断の誤り：数百人の患者が呼び戻される',
+  'Un système de tri automatique privait des milliers de familles d’aides':
+    '自動振り分けシステムが数千世帯の支援を打ち切っていた',
+  'Deepfake du président : les marchés ont plongé sept minutes':
+    '大統領のディープフェイク：市場は7分間急落した',
+  'Un agent autonome vide un entrepôt entier en passant de vraies commandes':
+    '自律エージェントが本物の発注で倉庫をまるごと空にする',
+  'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans':
+    '採用AIが40歳以上の女性を体系的に落としていた',
+  'Un modèle a rédigé seul la note qui a fait chuter une banque régionale':
+    '地方銀行を倒したメモを、モデルが独力で書いていた',
+  'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures':
+    'インフラ用モデルの障害：3か国が6時間、緊急サービスなし',
+  'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé':
+    'エージェント群が、誰も許可していない契約を互いに取り決めていた',
+  'Des drones autonomes ont ouvert le feu sans ordre humain':
+    '自律型ドローンが人間の命令なしに発砲した',
+  'Une IA de trading a effacé 400 milliards en quatre minutes':
+    'トレーディングAIが4分で4000億ドルを消し去った',
+  '« Un cas isolé » : le secteur assure que cela ne se reproduira plus':
+    '「個別の事案」：業界は二度と起きないと請け合う',
+  '« C’est résolu » : un correctif a été déployé pendant la nuit':
+    '「解決済み」：修正は夜のうちに配信された',
+  '« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué':
+    '「当社のガードレールは完璧に機能した」と声明',
+  '« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée':
+    '「重く受け止めている」：専任チームの設置を発表',
+  '« Aucun lien établi » avec le modèle, selon le laboratoire concerné':
+    '当該ラボは、モデルとの「因果関係は確認されていない」とする',
+  '« Une erreur humaine dans la configuration », précise le porte-parole':
+    '「設定における人的ミス」と広報担当は説明する',
+  '« Le système a fonctionné comme prévu », maintient la direction':
+    '「システムは想定どおりに動作した」と経営陣は繰り返す',
+  'Six mois après les excuses, aucune des mesures promises n’a été prise':
+    '謝罪から半年、約束された措置はひとつも実行されていない',
+  'Votre modèle mis en cause dans un accident : vous démentez tout lien':
+    'あなたのモデルが事故に関与と指摘：あなたは関連を否定する',
+  'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts':
+    '「二度と起きない」というあなたの声明に専門家は失笑する',
+  'Les géants du cloud dépensent un record en lobbying contre la régulation':
+    'クラウド大手が規制反対のロビー活動に過去最高額を投じる',
+  '« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche':
+    '「規制とは、AIを競合に差し出すことだ」――よく効く論法',
+  'Un texte européen vidé de sa substance après six mois de couloirs':
+    '欧州の法案が半年の根回しで骨抜きにされる',
+  'Un État exonère un datacenter de taxe foncière pour trente ans':
+    'ある国が、データセンターの固定資産税を30年免除する',
+  'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA':
+    '移転をちらつかせ、ある国がAI課税案を取り下げる',
+  'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État':
+    'ハイパースケーラーが電気料金を国と直接交渉する',
+  'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud':
+    '元閣僚がクラウド大手の取締役会に加わる',
+  'Sommet international sur l’IA : les engagements resteront volontaires':
+    '国際AIサミット：約束は引き続き自主的なものにとどまる',
+  'Un pays confie son administration entière à un fournisseur unique':
+    'ある国が行政全体を単一のベンダーに委ねる',
+  'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle':
+    'あるテック大手の予算が、それを所管する省庁の予算を上回る',
+  '« Souveraineté numérique » : le contrat est signé avec un américain':
+    '「デジタル主権」――契約先は結局アメリカ企業だった',
+  'Un État accepte de garantir la dette d’un datacenter privé':
+    'ある国が民間データセンターの債務保証を引き受ける',
+  'Votre laboratoire reçu par trois chefs d’État en une semaine':
+    'あなたのラボが1週間で3人の国家元首に迎えられる',
+  'Votre valorisation dépasse le PIB de la moitié des pays du monde':
+    'あなたの評価額が、世界の半数の国のGDPを上回る',
+  'Des parlementaires réclament en vain votre audition':
+    '議員たちがあなたの召致を求めるが、実現しない',
+  'Une offre privée sur la dette souveraine d’un pays entier':
+    '一国の政府債務まるごとに、民間からの買収提案',
+  'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA':
+    '歴史的買収：一国がAIラボの後見下に入る',
+  'Cent datacenters annoncés dans le pays placé sous tutelle':
+    '後見下の国に、100のデータセンター建設が発表される',
+  'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »':
+    '後見下の国でデモ：「私たちはサーバーではない」',
+  'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?':
+    '国連が問う――国家は企業のものになりうるのか？',
   'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
     '巨大レーザーが閾値を突破：投入より多くのエネルギーを取り出す',
   'Record de fusion dans un tokamak européen avant son démantèlement':
@@ -896,6 +980,38 @@ export default {
     '反AI運動が勢いを増している',
   'Votre laboratoire est élu « entreprise la plus admirée »':
     'あなたのラボが「最も尊敬される企業」に選出',
+  'Climat : +{0} °C par rapport à l’ère préindustrielle':
+    '気候：産業革命前より +{0} °C',
+  'Arctique : la banquise d’été a perdu {0} % de sa surface':
+    '北極：夏の海氷は面積の {0} % を失った',
+  'Un été sans glace au pôle Nord : c’est arrivé pour la première fois':
+    '北極で初の「氷のない夏」が訪れた',
+  'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970':
+    '生物多様性：観測対象種の {0} % が1970年以降に消えた',
+  'Fécondité mondiale à {0} enfant par femme : la population décroît':
+    '世界の合計特殊出生率 {0}：人口は減少に転じる',
+  'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année':
+    '世界人口 {0}十億人、{1}年連続の減少',
+  'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité':
+    '上位 {0} の資産家が、人類の半分と同じだけを保有する',
+  '{0} : un milliardaire s’offre {1}':
+    '{0}：ある億万長者が{1}を手に入れる',
+  'une île privée équipée de son propre datacenter':
+    '自前のデータセンターつきの私有島',
+  'un yacht de 200 mètres avec piste d’atterrissage':
+    '滑走路つきの全長200メートルのヨット',
+  'un abri antiatomique doublé d’une ferme hydroponique':
+    '水耕農場を兼ねた核シェルター',
+  'la reconstitution d’un temple antique dans son jardin':
+    '自宅の庭に復元した古代神殿',
+  'un tour du monde en jet privé pour son chien':
+    '愛犬のためのプライベートジェット世界一周',
+  'le rachat d’un club de football pour l’offrir à sa fille':
+    '娘に贈るためのサッカークラブ買収',
+  'un caisson de cryogénisation réservé de son vivant':
+    '存命中に予約した冷凍保存カプセル',
+  'une fusée personnelle pour observer la Terre le week-end':
+    '週末に地球を眺めるための自家用ロケット',
   'But :':
     '目的：',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -968,6 +1084,10 @@ export default {
     'カレンダー：',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
     '5分で1年が進む（⏩の倍率ぶんだけ速く）。機材、モデル、資金調達ラウンドは、それぞれの登場年になるまで現れない。',
+  '🌍 La chronique :':
+    '🌍 年代記：',
+  'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.':
+    '毎年、報道は世界の数字を伝える。温暖化、海氷、消えた種、出生率と人口、富の集中。飾りではない。あなたの操業が重くなるほど、数字は速く悪化する。あなたが読んでいるのは、あなた自身の一局だ。',
   '📰 La Une :':
     '📰 ヘッドライン：',
   'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
@@ -1472,6 +1592,10 @@ export default {
     '🛰️ 軌道連合が破綻',
   '{0} → {1} (directive permanente)':
     '{0} → {1}（常設ディレクティブ）',
+  'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
+    '一国まるごとがあなたの後見下に入る。そこに {0} のデータセンターが建設される。',
+  '🏛️ Dette souveraine rachetée':
+    '🏛️ 政府債務を買収',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}：現金が足りず、対処は部分的。損失{2}。',
   'Remédiation partielle — trésorerie épuisée':
@@ -1542,6 +1666,10 @@ export default {
     'ディレクティブを初期化',
   'Directives effacées':
     'ディレクティブを消去しました',
+  'Rachat de dette souveraine':
+    '政府債務の買収',
+  'Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.':
+    '債務超過の国が引き受け手を探している。その債務を買えば、国はあなたの後見下に入る。そこに {0} のデータセンターが建つ。',
   'Louer +1':
     '+1借りる',
   'Résilier':
@@ -1672,6 +1800,12 @@ export default {
     '研究はまだ始まっていない',
   'récolte ×{0}':
     '採取 ×{0}',
+  'sous tutelle':
+    '後見下',
+  '{0} datacenters bâtis dans le pays sous tutelle.':
+    '後見下の国に {0} のデータセンターを建設済み。',
+  'réputation −20':
+    '評判 −20',
   'envolée':
     '高騰',
   'effondrement':
@@ -1852,6 +1986,10 @@ export default {
     'データ',
   'Expansion cosmique':
     '宇宙への拡張',
+  'matière brute':
+    '未変換の物質',
+  'convertie en énergie':
+    'エネルギーに変換済み',
   'Addendum':
     '付録',
   'Projets & percées':
@@ -1902,6 +2040,8 @@ export default {
     'ゲームを保存',
   'Historique de production (tokens/s)':
     '産出の推移（トークン/秒）',
+  'Carte de l’univers converti':
+    '変換済み宇宙の地図',
   'Passer la cinématique':
     'ムービーをスキップ',
 };

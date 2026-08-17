@@ -788,6 +788,90 @@ export default {
     'Kimi K3: Chinese labs close in on the frontier',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4 memory unobtainable: server prices soar',
+  'Un chatbot pousse un adolescent au pire : la famille porte plainte':
+    'A chatbot pushes a teenager to the worst: the family sues',
+  'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »':
+    'A self-driving car kills a pedestrian: the software had “hesitated”',
+  'Diagnostic automatisé erroné : des centaines de patients rappelés':
+    'Faulty automated diagnosis: hundreds of patients called back',
+  'Un système de tri automatique privait des milliers de familles d’aides':
+    'An automatic sorting system was cutting thousands of families off benefits',
+  'Deepfake du président : les marchés ont plongé sept minutes':
+    'Deepfake of the president: markets dived for seven minutes',
+  'Un agent autonome vide un entrepôt entier en passant de vraies commandes':
+    'An autonomous agent empties a whole warehouse by placing real orders',
+  'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans':
+    'A hiring AI systematically screened out women over 40',
+  'Un modèle a rédigé seul la note qui a fait chuter une banque régionale':
+    'A model wrote, on its own, the note that sank a regional bank',
+  'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures':
+    'Infrastructure model outage: three countries without emergency services for six hours',
+  'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé':
+    'A swarm of agents negotiated among themselves a contract nobody had authorised',
+  'Des drones autonomes ont ouvert le feu sans ordre humain':
+    'Autonomous drones opened fire without a human order',
+  'Une IA de trading a effacé 400 milliards en quatre minutes':
+    'A trading AI wiped out $400 billion in four minutes',
+  '« Un cas isolé » : le secteur assure que cela ne se reproduira plus':
+    '“An isolated case”: the industry assures it will not happen again',
+  '« C’est résolu » : un correctif a été déployé pendant la nuit':
+    '“It is fixed”: a patch was deployed overnight',
+  '« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué':
+    '“Our guardrails worked perfectly”, the statement claims',
+  '« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée':
+    '“We take this very seriously”: a dedicated team is announced',
+  '« Aucun lien établi » avec le modèle, selon le laboratoire concerné':
+    '“No established link” with the model, says the lab concerned',
+  '« Une erreur humaine dans la configuration », précise le porte-parole':
+    '“A human error in the configuration”, the spokesperson specifies',
+  '« Le système a fonctionné comme prévu », maintient la direction':
+    '“The system worked as intended”, management maintains',
+  'Six mois après les excuses, aucune des mesures promises n’a été prise':
+    'Six months after the apology, none of the promised measures has been taken',
+  'Votre modèle mis en cause dans un accident : vous démentez tout lien':
+    'Your model implicated in an accident: you deny any link',
+  'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts':
+    'Your “it will not happen again” statement makes the experts snigger',
+  'Les géants du cloud dépensent un record en lobbying contre la régulation':
+    'Cloud giants spend a record sum lobbying against regulation',
+  '« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche':
+    '“Regulating means handing AI to our rivals”: the argument that works',
+  'Un texte européen vidé de sa substance après six mois de couloirs':
+    'A European bill gutted after six months in the corridors',
+  'Un État exonère un datacenter de taxe foncière pour trente ans':
+    'A state exempts a datacenter from property tax for thirty years',
+  'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA':
+    'Relocation threat: a country drops its planned AI tax',
+  'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État':
+    'Hyperscalers negotiate their electricity rate directly with the state',
+  'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud':
+    'A former minister joins the board of a cloud giant',
+  'Sommet international sur l’IA : les engagements resteront volontaires':
+    'International AI summit: the commitments will remain voluntary',
+  'Un pays confie son administration entière à un fournisseur unique':
+    'A country hands its entire administration to a single supplier',
+  'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle':
+    'A tech giant\'s budget exceeds that of the ministry supervising it',
+  '« Souveraineté numérique » : le contrat est signé avec un américain':
+    '“Digital sovereignty”: the contract is signed with an American firm',
+  'Un État accepte de garantir la dette d’un datacenter privé':
+    'A state agrees to guarantee a private datacenter\'s debt',
+  'Votre laboratoire reçu par trois chefs d’État en une semaine':
+    'Your lab received by three heads of state in a single week',
+  'Votre valorisation dépasse le PIB de la moitié des pays du monde':
+    'Your valuation exceeds the GDP of half the world\'s countries',
+  'Des parlementaires réclament en vain votre audition':
+    'Lawmakers demand your hearing, in vain',
+  'Une offre privée sur la dette souveraine d’un pays entier':
+    'A private bid on the sovereign debt of an entire country',
+  'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA':
+    'Historic buyout: a country falls under the tutelage of an AI lab',
+  'Cent datacenters annoncés dans le pays placé sous tutelle':
+    'A hundred datacenters announced in the country under tutelage',
+  'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »':
+    'Protests in the country under tutelage: “we are not a server”',
+  'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?':
+    'The UN wonders: can a state belong to a company?',
   'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
     'A giant laser crosses the threshold: more energy out than in',
   'Record de fusion dans un tokamak européen avant son démantèlement':
@@ -896,6 +980,38 @@ export default {
     'An anti-AI movement is gathering momentum',
   'Votre laboratoire est élu « entreprise la plus admirée »':
     'Your lab voted “most admired company”',
+  'Climat : +{0} °C par rapport à l’ère préindustrielle':
+    'Climate: +{0} °C above pre-industrial levels',
+  'Arctique : la banquise d’été a perdu {0} % de sa surface':
+    'Arctic: summer sea ice has lost {0}% of its area',
+  'Un été sans glace au pôle Nord : c’est arrivé pour la première fois':
+    'An ice-free summer at the North Pole: it has happened for the first time',
+  'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970':
+    'Biodiversity: {0}% of monitored species have vanished since 1970',
+  'Fécondité mondiale à {0} enfant par femme : la population décroît':
+    'World fertility at {0} children per woman: the population is shrinking',
+  'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année':
+    'World population: {0} billion, falling for the {1}th year',
+  'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité':
+    'The {0} largest fortunes hold as much as half of humanity',
+  '{0} : un milliardaire s’offre {1}':
+    '{0}: a billionaire treats himself to {1}',
+  'une île privée équipée de son propre datacenter':
+    'a private island with its own datacenter',
+  'un yacht de 200 mètres avec piste d’atterrissage':
+    'a 200-metre yacht with a landing strip',
+  'un abri antiatomique doublé d’une ferme hydroponique':
+    'a nuclear bunker doubling as a hydroponic farm',
+  'la reconstitution d’un temple antique dans son jardin':
+    'a reconstruction of an ancient temple in his garden',
+  'un tour du monde en jet privé pour son chien':
+    'a round-the-world private jet trip for his dog',
+  'le rachat d’un club de football pour l’offrir à sa fille':
+    'buying a football club to give to his daughter',
+  'un caisson de cryogénisation réservé de son vivant':
+    'a cryogenic pod booked while still alive',
+  'une fusée personnelle pour observer la Terre le week-end':
+    'a personal rocket for weekend views of Earth',
   'But :':
     'Goal:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -968,6 +1084,10 @@ export default {
     'Calendar:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
     'a year passes every 5 minutes (× the ⏩ speed). Hardware, models and funding rounds only appear in their release year.',
+  '🌍 La chronique :':
+    '🌍 The chronicle:',
+  'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.':
+    'every year the press publishes the world\'s figures: warming, sea ice, vanished species, fertility and population, concentration of wealth. They are not decorative — they worsen faster the heavier your operation gets. You are reading your own game.',
   '📰 La Une :':
     '📰 The Front Page:',
   'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
@@ -1472,6 +1592,10 @@ export default {
     '🛰️ Orbital consortium bankrupt',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (standing directive)',
+  'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
+    'An entire country falls under your tutelage. {0} datacenters will be built there.',
+  '🏛️ Dette souveraine rachetée':
+    '🏛️ Sovereign debt bought out',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: not enough cash, partial remediation. Losses {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1542,6 +1666,10 @@ export default {
     'Reset the directives',
   'Directives effacées':
     'Directives cleared',
+  'Rachat de dette souveraine':
+    'Sovereign debt buyout',
+  'Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.':
+    'An over-indebted country is looking for a buyer. Buy its debt and it falls under your tutelage: {0} datacenters will be built there.',
   'Louer +1':
     'Rent +1',
   'Résilier':
@@ -1672,6 +1800,12 @@ export default {
     'research has not started yet',
   'récolte ×{0}':
     'harvest ×{0}',
+  'sous tutelle':
+    'under tutelage',
+  '{0} datacenters bâtis dans le pays sous tutelle.':
+    '{0} datacenters built in the country under tutelage.',
+  'réputation −20':
+    'reputation −20',
   'envolée':
     'surge',
   'effondrement':
@@ -1852,6 +1986,10 @@ export default {
     'Data',
   'Expansion cosmique':
     'Cosmic expansion',
+  'matière brute':
+    'raw matter',
+  'convertie en énergie':
+    'converted to energy',
   'Addendum':
     'Addendum',
   'Projets & percées':
@@ -1902,6 +2040,8 @@ export default {
     'Save the game',
   'Historique de production (tokens/s)':
     'Production history (tokens/s)',
+  'Carte de l’univers converti':
+    'Map of the converted universe',
   'Passer la cinématique':
     'Skip the cinematic',
 };

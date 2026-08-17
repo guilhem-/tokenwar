@@ -286,7 +286,17 @@
       <!-- PHASE 3+ : cosmos -->
       <div class="panel hidden" id="panel-cosmos">
         <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
-        <div class="panel-body" id="cosmos-body"></div>
+        <div class="panel-body">
+          <div class="universe-wrap">
+            <canvas id="universe-map" height="150" data-i18n-aria="Carte de l’univers converti" aria-label="Carte de l’univers converti"></canvas>
+            <div class="universe-legend">
+              <span><i class="dot raw"></i> <span data-i18n="matière brute">matière brute</span></span>
+              <span><i class="dot done"></i> <span data-i18n="convertie en énergie">convertie en énergie</span></span>
+              <span class="num" id="universe-pct">0,000 %</span>
+            </div>
+          </div>
+          <div id="cosmos-body"></div>
+        </div>
       </div>
 
     </section>
@@ -298,6 +308,7 @@
         <div class="panel-title" data-i18n="Addendum">Addendum</div>
         <div class="panel-body">
           <div class="item-list" id="addendum-list"></div>
+          <div class="item-list" id="sovereign-list"></div>
         </div>
       </div>
 
@@ -383,8 +394,10 @@
   <div class="modal-overlay hidden" id="help-overlay">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
       <div class="modal-title" id="help-title" data-i18n="Comment jouer">Comment jouer</div>
-      <div class="modal-body" id="help-body"></div>
-      <div class="modal-body" id="achievements-body"></div>
+      <div class="modal-scroll">
+        <div class="modal-body" id="help-body"></div>
+        <div class="modal-body" id="achievements-body"></div>
+      </div>
       <div class="modal-choices save-tools">
         <button class="btn choice" id="save-export" data-i18n="Exporter la sauvegarde">Exporter la sauvegarde</button>
         <button class="btn choice" id="save-import" data-i18n="Importer…">Importer…</button>

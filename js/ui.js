@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS,
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
@@ -69,6 +69,8 @@ export class UI {
       achievementsBody: $('achievements-body'),
       saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
+      sovereignList: $('sovereign-list'),
+      universeMap: $('universe-map'), universePct: $('universe-pct'),
       langSelect: $('lang-select'),
       cine: $('cine'), cineCanvas: $('cine-canvas'), cineSkip: $('cine-skip'), cineCredit: $('cine-credit'),
       endingGetalife: $('ending-getalife'), endingNgplus: $('ending-ngplus'),
@@ -521,6 +523,14 @@ export class UI {
       r.el.appendChild(bar);
       r.bar = bar; r.barFill = bar.querySelector('.progress-fill');
       r.el.addEventListener('click', () => { this.game.buySpaceDC(); });
+    }
+    // Rachat de dette souveraine : n'apparaît qu'au-delà de 4 000 milliards
+    this.el.sovereignList.innerHTML = ''; this.rows.sovereign = {};
+    {
+      const r = this.makeRow(this.el.sovereignList, 'sovereign', this.rows.sovereign);
+      r.name.textContent = '🏛️ ' + t('Rachat de dette souveraine');
+      r.desc.textContent = t('Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.', SOVEREIGN.datacenters);
+      r.el.addEventListener('click', () => { this.game.buySovereign(); });
     }
     // Automatisations (auto-clickers payants, activables/désactivables)
     this.el.autoList.innerHTML = ''; this.rows.auto = {};
@@ -980,6 +990,7 @@ export class UI {
     this.renderCrypto();
     this.renderGPUs();
     this.renderEnergy();
+    this.renderSovereign();
     this.renderPrograms();
     this.renderOptims();
     this.renderProjects();
@@ -993,7 +1004,7 @@ export class UI {
       this.el.statMatterSub.textContent = (g.phase >= 3 ? 'univers ' : 'Terre ') + (consumed * 100).toFixed(consumed < 0.01 ? 4 : 2) + '%';
       this.refreshAllocLabels();
     }
-    if (g.phase >= 3) this.renderCosmos();
+    if (g.phase >= 3) { this.renderCosmos(); this.renderUniverse(); }
 
     // phase 2+ : l'argent ne compte plus — tout se monnaie en tokens. On masque les marqueurs $.
     const moneyHidden = g.phase >= 2;
@@ -1199,6 +1210,80 @@ export class UI {
       }
     });
     this.el.panelPrograms.classList.toggle('hidden', !any);
+  }
+
+  renderSovereign() {
+    const g = this.game, r = this.rows.sovereign && this.rows.sovereign['sovereign'];
+    if (!r) return;
+    const s = g.state.sovereign;
+    if (s.status === 'signed') {
+      r.el.classList.remove('hidden', 'locked', 'affordable');
+      r.cost.innerHTML = `<span class="badge badge-danger">${t('sous tutelle')}</span>`;
+      r.effect.innerHTML = `<span class="text-muted">${t('{0} datacenters bâtis dans le pays sous tutelle.', SOVEREIGN.datacenters)}</span>`;
+      return;
+    }
+    if (!g.sovereignAvailable()) { r.el.classList.add('hidden'); return; }
+    r.el.classList.remove('hidden');
+    r.cost.textContent = fmtMoney(g.sovereignCost());
+    r.effect.innerHTML = `<span class="text-bad">${t('réputation −20')}</span> · `
+      + `<span class="text-good">+${SOVEREIGN.datacenters} ${t('datacenter')}</span>`;
+    this.setAfford(r.el, g.canBuySovereign());
+  }
+
+  // ------------------------------------------------------------------
+  //  CARTE DE L'UNIVERS (phase 3) — un champ de galaxies qui vire au bleu
+  //  à mesure qu'il est converti en énergie, puis en tokens. La disposition
+  //  est déterministe : la même partie donne toujours la même carte, et les
+  //  régions s'éteignent toujours dans le même ordre, du centre vers le bord.
+  // ------------------------------------------------------------------
+  buildUniverse() {
+    const N = 320;
+    this.universe = [];
+    // suite déterministe (pas de Math.random : la carte doit être stable)
+    let seed = 12345;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    for (let i = 0; i < N; i++) {
+      // spirale : rayon croissant, angle en nombre d'or → répartition régulière
+      const f = i / N;
+      const r = Math.sqrt(f);
+      const a = i * 2.399963;                      // angle d'or
+      this.universe.push({
+        x: 0.5 + Math.cos(a) * r * 0.47,
+        y: 0.5 + Math.sin(a) * r * 0.47,
+        s: 0.6 + rnd() * 1.8,
+        order: f + rnd() * 0.06,                   // ordre de conversion, du centre vers le bord
+      });
+    }
+  }
+  renderUniverse() {
+    const c = this.el.universeMap;
+    if (!c || !c.getContext) return;
+    if (!this.universe) this.buildUniverse();
+    const w = c.parentElement ? (c.parentElement.clientWidth || 280) : 280;
+    if (c.width !== w) c.width = w;
+    const h = c.height, ctx = c.getContext('2d');
+    if (!ctx) return;
+    const done = clamp(this.game.state.universeConsumed, 0, 1);
+    ctx.clearRect(0, 0, w, h);
+    for (const g of this.universe) {
+      const x = g.x * w, y = g.y * h;
+      // une galaxie bascule au bleu quand la conversion atteint son rang
+      const k = clamp((done - g.order) / 0.06 + 1, 0, 1);   // transition douce
+      const col = k <= 0
+        ? 'rgba(216,210,196,'
+        : 'rgba(' + Math.round(216 - 157 * k) + ',' + Math.round(210 - 41 * k) + ',' + Math.round(196 + 59 * k) + ',';
+      ctx.beginPath();
+      ctx.arc(x, y, g.s * (1 + k * 0.5), 0, Math.PI * 2);
+      ctx.fillStyle = col + (0.45 + k * 0.55).toFixed(2) + ')';
+      ctx.fill();
+      if (k > 0.5) {                                        // halo des régions converties
+        ctx.beginPath();
+        ctx.arc(x, y, g.s * 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(59,169,255,${(0.07 * k).toFixed(3)})`;
+        ctx.fill();
+      }
+    }
+    if (this.el.universePct) this.el.universePct.textContent = (done * 100).toFixed(3) + ' %';
   }
 
   renderCrypto() {

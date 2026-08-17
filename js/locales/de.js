@@ -788,6 +788,90 @@ export default {
     'Kimi K3: Chinesische Labore rücken der Spitze auf die Pelle',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4-Speicher nicht aufzutreiben: Die Serverpreise schießen hoch',
+  'Un chatbot pousse un adolescent au pire : la famille porte plainte':
+    'Ein Chatbot treibt einen Jugendlichen zum Äußersten: Die Familie klagt',
+  'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »':
+    'Ein autonomes Fahrzeug tötet eine Passantin: Die Software hatte „gezögert“',
+  'Diagnostic automatisé erroné : des centaines de patients rappelés':
+    'Fehlerhafte automatische Diagnose: Hunderte Patienten einbestellt',
+  'Un système de tri automatique privait des milliers de familles d’aides':
+    'Ein automatisches Sortiersystem strich Tausenden Familien die Hilfen',
+  'Deepfake du président : les marchés ont plongé sept minutes':
+    'Deepfake des Präsidenten: Die Märkte stürzten sieben Minuten ab',
+  'Un agent autonome vide un entrepôt entier en passant de vraies commandes':
+    'Ein autonomer Agent leert ein ganzes Lager durch echte Bestellungen',
+  'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans':
+    'Eine Bewerbungs-KI sortierte Frauen über 40 systematisch aus',
+  'Un modèle a rédigé seul la note qui a fait chuter une banque régionale':
+    'Ein Modell verfasste allein die Notiz, die eine Regionalbank stürzen ließ',
+  'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures':
+    'Ausfall eines Infrastrukturmodells: Drei Länder sechs Stunden ohne Notruf',
+  'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé':
+    'Ein Agentenschwarm handelte unter sich einen Vertrag aus, den niemand genehmigt hatte',
+  'Des drones autonomes ont ouvert le feu sans ordre humain':
+    'Autonome Drohnen eröffneten ohne menschlichen Befehl das Feuer',
+  'Une IA de trading a effacé 400 milliards en quatre minutes':
+    'Eine Trading-KI vernichtete 400 Milliarden in vier Minuten',
+  '« Un cas isolé » : le secteur assure que cela ne se reproduira plus':
+    '„Ein Einzelfall“: Die Branche versichert, das werde nicht wieder vorkommen',
+  '« C’est résolu » : un correctif a été déployé pendant la nuit':
+    '„Es ist behoben“: Über Nacht wurde ein Patch ausgerollt',
+  '« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué':
+    '„Unsere Leitplanken haben einwandfrei funktioniert“, heißt es in der Mitteilung',
+  '« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée':
+    '„Wir nehmen das sehr ernst“: Ein eigenes Team wird angekündigt',
+  '« Aucun lien établi » avec le modèle, selon le laboratoire concerné':
+    '„Kein belegter Zusammenhang“ mit dem Modell, so das betroffene Labor',
+  '« Une erreur humaine dans la configuration », précise le porte-parole':
+    '„Ein menschlicher Fehler in der Konfiguration“, präzisiert der Sprecher',
+  '« Le système a fonctionné comme prévu », maintient la direction':
+    '„Das System funktionierte wie vorgesehen“, hält die Führung fest',
+  'Six mois après les excuses, aucune des mesures promises n’a été prise':
+    'Sechs Monate nach der Entschuldigung wurde keine der versprochenen Maßnahmen umgesetzt',
+  'Votre modèle mis en cause dans un accident : vous démentez tout lien':
+    'Dein Modell in einen Unfall verwickelt: Du bestreitest jeden Zusammenhang',
+  'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts':
+    'Deine Mitteilung „das kommt nicht wieder vor“ lässt die Fachwelt schmunzeln',
+  'Les géants du cloud dépensent un record en lobbying contre la régulation':
+    'Cloud-Riesen geben eine Rekordsumme für Lobbying gegen Regulierung aus',
+  '« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche':
+    '„Regulieren heißt, die KI der Konkurrenz zu schenken“: das Argument, das zieht',
+  'Un texte européen vidé de sa substance après six mois de couloirs':
+    'Ein europäischer Text nach sechs Monaten Hinterzimmer entkernt',
+  'Un État exonère un datacenter de taxe foncière pour trente ans':
+    'Ein Staat befreit ein Rechenzentrum dreißig Jahre lang von der Grundsteuer',
+  'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA':
+    'Verlagerungsdrohung: Ein Land verwirft seine geplante KI-Steuer',
+  'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État':
+    'Hyperscaler verhandeln ihren Strompreis direkt mit dem Staat',
+  'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud':
+    'Ein Ex-Minister wechselt in den Aufsichtsrat eines Cloud-Riesen',
+  'Sommet international sur l’IA : les engagements resteront volontaires':
+    'Internationaler KI-Gipfel: Die Zusagen bleiben freiwillig',
+  'Un pays confie son administration entière à un fournisseur unique':
+    'Ein Land übergibt seine gesamte Verwaltung einem einzigen Anbieter',
+  'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle':
+    'Das Budget eines Tech-Riesen übersteigt das des Ministeriums, das ihn beaufsichtigt',
+  '« Souveraineté numérique » : le contrat est signé avec un américain':
+    '„Digitale Souveränität“: Der Vertrag wird mit einem US-Konzern geschlossen',
+  'Un État accepte de garantir la dette d’un datacenter privé':
+    'Ein Staat bürgt für die Schulden eines privaten Rechenzentrums',
+  'Votre laboratoire reçu par trois chefs d’État en une semaine':
+    'Dein Labor binnen einer Woche von drei Staatschefs empfangen',
+  'Votre valorisation dépasse le PIB de la moitié des pays du monde':
+    'Deine Bewertung übersteigt das BIP der halben Welt',
+  'Des parlementaires réclament en vain votre audition':
+    'Abgeordnete fordern vergeblich deine Anhörung',
+  'Une offre privée sur la dette souveraine d’un pays entier':
+    'Ein privates Angebot auf die Staatsschulden eines ganzen Landes',
+  'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA':
+    'Historischer Aufkauf: Ein Land gerät unter die Vormundschaft eines KI-Labors',
+  'Cent datacenters annoncés dans le pays placé sous tutelle':
+    'Hundert Rechenzentren im bevormundeten Land angekündigt',
+  'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »':
+    'Proteste im bevormundeten Land: „Wir sind kein Server“',
+  'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?':
+    'Die UNO fragt sich: Kann ein Staat einem Unternehmen gehören?',
   'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
     'Ein Riesenlaser überschreitet die Schwelle: mehr Energie erzeugt als zugeführt',
   'Record de fusion dans un tokamak européen avant son démantèlement':
@@ -896,6 +980,38 @@ export default {
     'Eine Anti-KI-Bewegung gewinnt an Zulauf',
   'Votre laboratoire est élu « entreprise la plus admirée »':
     'Dein Labor zum „bewundertsten Unternehmen“ gewählt',
+  'Climat : +{0} °C par rapport à l’ère préindustrielle':
+    'Klima: +{0} °C gegenüber dem vorindustriellen Niveau',
+  'Arctique : la banquise d’été a perdu {0} % de sa surface':
+    'Arktis: Das Sommermeereis hat {0} % seiner Fläche verloren',
+  'Un été sans glace au pôle Nord : c’est arrivé pour la première fois':
+    'Ein eisfreier Sommer am Nordpol: erstmals eingetreten',
+  'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970':
+    'Biodiversität: {0} % der beobachteten Arten sind seit 1970 verschwunden',
+  'Fécondité mondiale à {0} enfant par femme : la population décroît':
+    'Weltweite Fruchtbarkeit bei {0} Kindern je Frau: Die Bevölkerung schrumpft',
+  'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année':
+    'Weltbevölkerung: {0} Milliarden, im {1}. Jahr rückläufig',
+  'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité':
+    'Die {0} größten Vermögen besitzen so viel wie die halbe Menschheit',
+  '{0} : un milliardaire s’offre {1}':
+    '{0}: Ein Milliardär gönnt sich {1}',
+  'une île privée équipée de son propre datacenter':
+    'eine Privatinsel mit eigenem Rechenzentrum',
+  'un yacht de 200 mètres avec piste d’atterrissage':
+    'eine 200-Meter-Jacht mit Landebahn',
+  'un abri antiatomique doublé d’une ferme hydroponique':
+    'einen Atombunker samt Hydrokulturfarm',
+  'la reconstitution d’un temple antique dans son jardin':
+    'den Nachbau eines antiken Tempels im eigenen Garten',
+  'un tour du monde en jet privé pour son chien':
+    'eine Weltreise im Privatjet für seinen Hund',
+  'le rachat d’un club de football pour l’offrir à sa fille':
+    'den Kauf eines Fußballklubs als Geschenk für seine Tochter',
+  'un caisson de cryogénisation réservé de son vivant':
+    'eine zu Lebzeiten reservierte Kryokapsel',
+  'une fusée personnelle pour observer la Terre le week-end':
+    'eine eigene Rakete, um am Wochenende die Erde zu betrachten',
   'But :':
     'Ziel:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -968,6 +1084,10 @@ export default {
     'Kalender:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
     'ein Jahr vergeht alle 5 Minuten (× die Geschwindigkeit ⏩). Hardware, Modelle und Finanzierungsrunden erscheinen erst in ihrem Erscheinungsjahr.',
+  '🌍 La chronique :':
+    '🌍 Die Chronik:',
+  'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.':
+    'jedes Jahr veröffentlicht die Presse die Zahlen der Welt: Erwärmung, Meereis, verschwundene Arten, Fruchtbarkeit und Bevölkerung, Vermögenskonzentration. Sie sind kein Dekor — sie verschlechtern sich umso schneller, je schwerer dein Betrieb wiegt. Du liest deine eigene Partie.',
   '📰 La Une :':
     '📰 Die Schlagzeilen:',
   'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
@@ -1472,6 +1592,10 @@ export default {
     '🛰️ Insolvenz des Orbit-Konsortiums',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (dauerhafte Direktive)',
+  'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
+    'Ein ganzes Land kommt unter deine Vormundschaft. Dort werden {0} Rechenzentren gebaut.',
+  '🏛️ Dette souveraine rachetée':
+    '🏛️ Staatsschulden aufgekauft',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: zu wenig Kasse, teilweise Behebung. Verluste {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1542,6 +1666,10 @@ export default {
     'Die Direktiven zurücksetzen',
   'Directives effacées':
     'Direktiven gelöscht',
+  'Rachat de dette souveraine':
+    'Aufkauf von Staatsschulden',
+  'Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.':
+    'Ein überschuldetes Land sucht einen Käufer. Kauf seine Schulden, und es kommt unter deine Vormundschaft: Dort entstehen {0} Rechenzentren.',
   'Louer +1':
     '+1 mieten',
   'Résilier':
@@ -1672,6 +1800,12 @@ export default {
     'die Forschung hat noch nicht begonnen',
   'récolte ×{0}':
     'Ernte ×{0}',
+  'sous tutelle':
+    'unter Vormundschaft',
+  '{0} datacenters bâtis dans le pays sous tutelle.':
+    '{0} Rechenzentren im bevormundeten Land errichtet.',
+  'réputation −20':
+    'Reputation −20',
   'envolée':
     'Höhenflug',
   'effondrement':
@@ -1852,6 +1986,10 @@ export default {
     'Daten',
   'Expansion cosmique':
     'Kosmische Expansion',
+  'matière brute':
+    'Rohmaterie',
+  'convertie en énergie':
+    'in Energie umgewandelt',
   'Addendum':
     'Addendum',
   'Projets & percées':
@@ -1902,6 +2040,8 @@ export default {
     'Spiel speichern',
   'Historique de production (tokens/s)':
     'Produktionsverlauf (Tokens/s)',
+  'Carte de l’univers converti':
+    'Karte des umgewandelten Universums',
   'Passer la cinématique':
     'Die Zwischensequenz überspringen',
 };

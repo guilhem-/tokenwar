@@ -788,6 +788,90 @@ export default {
     'Kimi K3：中国实验室紧咬前沿',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4 内存一芯难求：服务器价格飙升',
+  'Un chatbot pousse un adolescent au pire : la famille porte plainte':
+    '聊天机器人把一名少年推向绝路：家属提起诉讼',
+  'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »':
+    '自动驾驶车辆撞死一名行人：软件当时「犹豫」了',
+  'Diagnostic automatisé erroné : des centaines de patients rappelés':
+    '自动诊断出错：数百名患者被召回复查',
+  'Un système de tri automatique privait des milliers de familles d’aides':
+    '一套自动分拣系统把数千个家庭排除在补助之外',
+  'Deepfake du président : les marchés ont plongé sept minutes':
+    '总统的深度伪造视频：市场下挫了七分钟',
+  'Un agent autonome vide un entrepôt entier en passant de vraies commandes':
+    '一个自主智能体用真实订单搬空了整座仓库',
+  'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans':
+    '一套招聘 AI 系统性地筛掉了 40 岁以上的女性',
+  'Un modèle a rédigé seul la note qui a fait chuter une banque régionale':
+    '一份让区域银行崩盘的报告，是模型独自写的',
+  'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures':
+    '基础设施模型宕机：三个国家六小时无急救服务',
+  'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé':
+    '一群智能体自行谈成了一份没人授权的合同',
+  'Des drones autonomes ont ouvert le feu sans ordre humain':
+    '自主无人机在无人下令的情况下开火',
+  'Une IA de trading a effacé 400 milliards en quatre minutes':
+    '一套交易 AI 在四分钟里抹去了四千亿',
+  '« Un cas isolé » : le secteur assure que cela ne se reproduira plus':
+    '「个别事件」：业界保证不会再发生',
+  '« C’est résolu » : un correctif a été déployé pendant la nuit':
+    '「已经解决」：补丁在夜间完成部署',
+  '« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué':
+    '声明称：「我们的护栏运作完美」',
+  '« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée':
+    '「我们高度重视」：宣布成立专门团队',
+  '« Aucun lien établi » avec le modèle, selon le laboratoire concerné':
+    '涉事实验室称与模型「并无确证关联」',
+  '« Une erreur humaine dans la configuration », précise le porte-parole':
+    '发言人补充：「是配置上的人为失误」',
+  '« Le système a fonctionné comme prévu », maintient la direction':
+    '管理层坚持：「系统按预期运行」',
+  'Six mois après les excuses, aucune des mesures promises n’a été prise':
+    '道歉六个月后，承诺的措施一条都没落实',
+  'Votre modèle mis en cause dans un accident : vous démentez tout lien':
+    '你的模型被指涉及一起事故：你否认存在关联',
+  'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts':
+    '你那句「不会再发生」的声明让专家们发笑',
+  'Les géants du cloud dépensent un record en lobbying contre la régulation':
+    '云计算巨头在反监管游说上创下支出纪录',
+  '« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche':
+    '「监管等于把 AI 拱手让给对手」：屡试不爽的说辞',
+  'Un texte européen vidé de sa substance après six mois de couloirs':
+    '一部欧洲法案在六个月的走廊博弈后被掏空',
+  'Un État exonère un datacenter de taxe foncière pour trente ans':
+    '某国给一座数据中心免除三十年房产税',
+  'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA':
+    '以搬迁相要挟：某国放弃 AI 税草案',
+  'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État':
+    '超大规模厂商直接与政府谈电价',
+  'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud':
+    '一位前部长进入云计算巨头董事会',
+  'Sommet international sur l’IA : les engagements resteront volontaires':
+    '国际 AI 峰会：承诺仍将是自愿性质',
+  'Un pays confie son administration entière à un fournisseur unique':
+    '一个国家把整套行政系统交给单一供应商',
+  'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle':
+    '某科技巨头的预算超过了监管它的那个部',
+  '« Souveraineté numérique » : le contrat est signé avec un américain':
+    '「数字主权」：合同最后签给了一家美国公司',
+  'Un État accepte de garantir la dette d’un datacenter privé':
+    '某国同意为一座私营数据中心的债务作担保',
+  'Votre laboratoire reçu par trois chefs d’État en une semaine':
+    '一周之内，三国元首接见了你的实验室',
+  'Votre valorisation dépasse le PIB de la moitié des pays du monde':
+    '你的估值超过了世界上一半国家的 GDP',
+  'Des parlementaires réclament en vain votre audition':
+    '议员们徒劳地要求传唤你出席听证',
+  'Une offre privée sur la dette souveraine d’un pays entier':
+    '一份私人报价，买下一个国家的全部主权债务',
+  'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA':
+    '历史性收购：一个国家落入某 AI 实验室的托管之下',
+  'Cent datacenters annoncés dans le pays placé sous tutelle':
+    '托管国宣布新建一百座数据中心',
+  'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »':
+    '托管国爆发示威：「我们不是服务器」',
+  'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?':
+    '联合国发问：一个国家可以属于一家公司吗？',
   'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
     '巨型激光装置越过临界点：产出能量超过输入',
   'Record de fusion dans un tokamak européen avant son démantèlement':
@@ -896,6 +980,38 @@ export default {
     '一场反 AI 运动正在壮大',
   'Votre laboratoire est élu « entreprise la plus admirée »':
     '你的实验室当选「最受敬佩的企业」',
+  'Climat : +{0} °C par rapport à l’ère préindustrielle':
+    '气候：较工业化前升温 +{0} °C',
+  'Arctique : la banquise d’été a perdu {0} % de sa surface':
+    '北极：夏季海冰面积已减少 {0} %',
+  'Un été sans glace au pôle Nord : c’est arrivé pour la première fois':
+    '北极出现首个无冰之夏',
+  'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970':
+    '生物多样性：自 1970 年以来，受监测物种已消失 {0} %',
+  'Fécondité mondiale à {0} enfant par femme : la population décroît':
+    '全球总和生育率降至 {0}：人口开始萎缩',
+  'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année':
+    '世界人口 {0} 亿（十亿计），连续第 {1} 年下降',
+  'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité':
+    '最富有的 {0} 人所持财富，相当于全人类的一半',
+  '{0} : un milliardaire s’offre {1}':
+    '{0}：一位亿万富翁给自己添置了{1}',
+  'une île privée équipée de son propre datacenter':
+    '一座配了自家数据中心的私人岛屿',
+  'un yacht de 200 mètres avec piste d’atterrissage':
+    '一艘带跑道的两百米游艇',
+  'un abri antiatomique doublé d’une ferme hydroponique':
+    '一座兼作水培农场的核掩体',
+  'la reconstitution d’un temple antique dans son jardin':
+    '在自家花园里复原了一座古代神庙',
+  'un tour du monde en jet privé pour son chien':
+    '带着自家的狗坐私人飞机环游世界',
+  'le rachat d’un club de football pour l’offrir à sa fille':
+    '买下一家足球俱乐部送给女儿',
+  'un caisson de cryogénisation réservé de son vivant':
+    '生前就预订好的冷冻舱',
+  'une fusée personnelle pour observer la Terre le week-end':
+    '一枚周末上去看地球的私人火箭',
   'But :':
     '目标：',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -968,6 +1084,10 @@ export default {
     '日历：',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
     '每 5 分钟过去一年（乘以 ⏩ 倍速）。硬件、模型和融资轮次只会在各自的发布年份出现。',
+  '🌍 La chronique :':
+    '🌍 编年纪事：',
+  'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.':
+    '每年，媒体都会公布世界的数字：升温、海冰、消失的物种、生育率与人口、财富集中度。它们不是装饰——你的经营越重，它们恶化得越快。你读到的是自己这一局。',
   '📰 La Une :':
     '📰 头条：',
   'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
@@ -1472,6 +1592,10 @@ export default {
     '🛰️ 轨道联合体破产',
   '{0} → {1} (directive permanente)':
     '{0} → {1}（常设指令）',
+  'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
+    '一整个国家落入你的托管。将在那里建设 {0} 座数据中心。',
+  '🏛️ Dette souveraine rachetée':
+    '🏛️ 主权债务已被买下',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}：现金不足，只能部分处置。损失 {2}。',
   'Remédiation partielle — trésorerie épuisée':
@@ -1542,6 +1666,10 @@ export default {
     '重置全部指令',
   'Directives effacées':
     '指令已清空',
+  'Rachat de dette souveraine':
+    '收购主权债务',
+  'Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.':
+    '一个债台高筑的国家在找接盘者。买下它的债务，它就落入你的托管：将在那里建设 {0} 座数据中心。',
   'Louer +1':
     '租 +1',
   'Résilier':
@@ -1672,6 +1800,12 @@ export default {
     '研究尚未开始',
   'récolte ×{0}':
     '采集 ×{0}',
+  'sous tutelle':
+    '处于托管',
+  '{0} datacenters bâtis dans le pays sous tutelle.':
+    '在托管国已建成 {0} 座数据中心。',
+  'réputation −20':
+    '声誉 −20',
   'envolée':
     '暴涨',
   'effondrement':
@@ -1852,6 +1986,10 @@ export default {
     '数据',
   'Expansion cosmique':
     '宇宙扩张',
+  'matière brute':
+    '原始物质',
+  'convertie en énergie':
+    '已转化为能量',
   'Addendum':
     '附录',
   'Projets & percées':
@@ -1902,6 +2040,8 @@ export default {
     '保存游戏',
   'Historique de production (tokens/s)':
     '产出曲线（token/秒）',
+  'Carte de l’univers converti':
+    '已转化宇宙地图',
   'Passer la cinématique':
     '跳过过场动画',
 };

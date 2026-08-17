@@ -947,6 +947,71 @@ export const SPACE_DC = {
 };
 
 // ---------------------------------------------------------------------
+//  CHRONIQUE — des articles DATÉS, à échéance fixe, qui ne dépendent pas du
+//  tirage aléatoire de La Une : ils tombent quand l'année arrive, une seule
+//  fois, chiffres à l'appui. Les valeurs sont calculées par le moteur et
+//  dépendent de VOTRE partie : plus vous consommez d'énergie et de matière,
+//  plus le monde se dégrade vite. Un seul texte traduit sert 80 années.
+//    every : périodicité en années · from/to : fenêtre
+//    val(g, year) : substitutions {0}, {1}… du titre
+// ---------------------------------------------------------------------
+export const CHRONICLE = [
+  // — climat, tous les ans : trajectoire GIEC + votre propre contribution
+  { id:'warming', every:1, from:2020, p:'bad',
+    t:'Climat : +{0} °C par rapport à l’ère préindustrielle',
+    val:g => [g.decimal(g.warming())] },
+  // — banquise, tous les 2 ans
+  { id:'ice', every:2, from:2021, p:'bad',
+    t:'Arctique : la banquise d’été a perdu {0} % de sa surface',
+    val:g => [Math.round(g.iceLoss() * 100)] },
+  { id:'ice_free', every:5, from:2035, p:'bad', cond:g => g.warming() > 2.2,
+    t:'Un été sans glace au pôle Nord : c’est arrivé pour la première fois',
+    val:() => [] },
+  // — biodiversité, tous les 2 ans
+  { id:'species', every:2, from:2022, p:'bad',
+    t:'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970',
+    val:g => [Math.round(g.speciesLost() * 100)] },
+  // — démographie, tous les 3 ans à partir de 2030
+  { id:'fertility', every:3, from:2030, p:'neutral',
+    t:'Fécondité mondiale à {0} enfant par femme : la population décroît',
+    val:g => [g.decimal(g.fertility())] },
+  { id:'population', every:3, from:2033, p:'bad',
+    t:'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année',
+    val:(g, y) => [g.decimal(g.population()), Math.max(1, y - 2030)] },
+  // — concentration des richesses, tous les 4 ans
+  { id:'wealth', every:4, from:2024, p:'bad',
+    t:'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité',
+    val:g => [g.topFortunes()] },
+  { id:'extravagance', every:4, from:2026, p:'bad',
+    t:'{0} : un milliardaire s’offre {1}',
+    val:(g, y) => [y, ''] },   // le second champ est tiré parmi EXTRAVAGANCES
+];
+
+// Extravagances tirées au sort pour la chronique des ultra-riches.
+export const EXTRAVAGANCES = [
+  'une île privée équipée de son propre datacenter',
+  'un yacht de 200 mètres avec piste d’atterrissage',
+  'un abri antiatomique doublé d’une ferme hydroponique',
+  'la reconstitution d’un temple antique dans son jardin',
+  'un tour du monde en jet privé pour son chien',
+  'le rachat d’un club de football pour l’offrir à sa fille',
+  'un caisson de cryogénisation réservé de son vivant',
+  'une fusée personnelle pour observer la Terre le week-end',
+];
+
+// ---------------------------------------------------------------------
+//  MISE SOUS TUTELLE D'UN ÉTAT — au-delà de 4 000 milliards de trésorerie,
+//  vous pouvez racheter la dette souveraine d'un pays. 2 000 milliards, et
+//  cent datacenters y sont construits. La presse suit, évidemment.
+// ---------------------------------------------------------------------
+export const SOVEREIGN = {
+  need: 4e12,          // trésorerie requise pour que l'offre apparaisse
+  cost: 2e12,          // prix du rachat de la dette
+  datacenters: 100,    // construits sur place
+  realestate: 25,      // et l'immobilier qui va avec
+};
+
+// ---------------------------------------------------------------------
 //  CALENDRIER DE SIMULATION
 //  1 année de simulation = 5 minutes de jeu au rythme normal (× la vitesse ⏩)
 // ---------------------------------------------------------------------
@@ -983,6 +1048,7 @@ export const HELP = [
   { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },
   { b:'Allocation :', p:'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.' },
   { b:'Calendrier :', p:'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.' },
+  { b:'🌍 La chronique :', p:'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.' },
   { b:'📰 La Une :', p:'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.' },
   { b:'😴 Inactivité :', p:'au-delà de 15 s sans rien faire, l’écran se manifeste (douze animations courtes, jamais deux fois la même de suite) et la presse publie.' },
   { b:'Astuce :', p:'le bouton ⏩ accélère la simulation. Sauvegarde automatique toutes les 10 s.' },
@@ -1128,6 +1194,57 @@ export const HEADLINES = [
   { t:'Un agent IA contrôle l’ordinateur : les DSI s’inquiètent', p:'bad', from:2026 },
   { t:'Kimi K3 : les labos chinois talonnent la frontière', p:'neutral', from:2026 },
   { t:'Mémoire HBM4 introuvable : les prix serveurs s’envolent', p:'bad', from:2025, to:2028 },
+
+  // ═══ Catastrophes liées à l'IA — gravité indexée sur VOTRE avancement ═══
+  { t:'Un chatbot pousse un adolescent au pire : la famille porte plainte', p:'bad', from:2024, minTier:4 },
+  { t:'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »', p:'bad', from:2023, minTier:3 },
+  { t:'Diagnostic automatisé erroné : des centaines de patients rappelés', p:'bad', from:2025, minTier:5 },
+  { t:'Un système de tri automatique privait des milliers de familles d’aides', p:'bad', from:2024, minTier:4 },
+  { t:'Deepfake du président : les marchés ont plongé sept minutes', p:'bad', from:2025, minTier:5 },
+  { t:'Un agent autonome vide un entrepôt entier en passant de vraies commandes', p:'bad', from:2026, minTier:6 },
+  { t:'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans', p:'bad', from:2023, minTier:3 },
+  { t:'Un modèle a rédigé seul la note qui a fait chuter une banque régionale', p:'bad', from:2026, minTier:6 },
+  { t:'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures', p:'bad', from:2027, minTier:7 },
+  { t:'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé', p:'bad', from:2029, minTier:10 },
+  { t:'Des drones autonomes ont ouvert le feu sans ordre humain', p:'bad', from:2028, minTier:8 },
+  { t:'Une IA de trading a effacé 400 milliards en quatre minutes', p:'bad', from:2027, minTier:7 },
+  // …et les communiqués rassurants qui suivent toujours
+  { t:'« Un cas isolé » : le secteur assure que cela ne se reproduira plus', p:'neutral', from:2023, minTier:3 },
+  { t:'« C’est résolu » : un correctif a été déployé pendant la nuit', p:'neutral', from:2023, minTier:3 },
+  { t:'« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué', p:'neutral', from:2024, minTier:4 },
+  { t:'« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée', p:'neutral', from:2024, minTier:4 },
+  { t:'« Aucun lien établi » avec le modèle, selon le laboratoire concerné', p:'neutral', from:2025, minTier:5 },
+  { t:'« Une erreur humaine dans la configuration », précise le porte-parole', p:'neutral', from:2025, minTier:5 },
+  { t:'« Le système a fonctionné comme prévu », maintient la direction', p:'bad', from:2026, minTier:6 },
+  { t:'Six mois après les excuses, aucune des mesures promises n’a été prise', p:'bad', from:2027, minTier:6 },
+  // …et quand c'est chez VOUS
+  { t:'Votre modèle mis en cause dans un accident : vous démentez tout lien', p:'bad', cond:g=>g.modelTier>=5 && g.reputation<45 },
+  { t:'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts', p:'bad', cond:g=>g.modelTier>=6 && g.reputation<35 },
+
+  // ═══ Hyperscaleurs et États : lobbying, chantage, capture ═══
+  { t:'Les géants du cloud dépensent un record en lobbying contre la régulation', p:'bad', from:2023 },
+  { t:'« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche', p:'bad', from:2024 },
+  { t:'Un texte européen vidé de sa substance après six mois de couloirs', p:'bad', from:2024 },
+  { t:'Un État exonère un datacenter de taxe foncière pour trente ans', p:'bad', from:2025 },
+  { t:'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA', p:'bad', from:2025 },
+  { t:'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État', p:'bad', from:2025 },
+  { t:'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud', p:'bad', from:2024 },
+  { t:'Sommet international sur l’IA : les engagements resteront volontaires', p:'neutral', from:2024 },
+  { t:'Un pays confie son administration entière à un fournisseur unique', p:'bad', from:2027 },
+  { t:'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle', p:'bad', from:2026 },
+  { t:'« Souveraineté numérique » : le contrat est signé avec un américain', p:'bad', from:2026 },
+  { t:'Un État accepte de garantir la dette d’un datacenter privé', p:'bad', from:2028 },
+  // …et vous, quand vous pesez assez lourd
+  { t:'Votre laboratoire reçu par trois chefs d’État en une semaine', p:'neutral', cond:g=>g.money>1e11 },
+  { t:'Votre valorisation dépasse le PIB de la moitié des pays du monde', p:'neutral', cond:g=>g.valuation()>2e12 },
+  { t:'Des parlementaires réclament en vain votre audition', p:'bad', cond:g=>g.money>5e11 && g.reputation<50 },
+
+  // ═══ Mise sous tutelle d'un État — le feuilleton (état du jeu) ═══
+  { t:'Une offre privée sur la dette souveraine d’un pays entier', p:'bad', cond:g=>g.sovereignNews('offer') },
+  { t:'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA', p:'bad', cond:g=>g.sovereignNews('signed') },
+  { t:'Cent datacenters annoncés dans le pays placé sous tutelle', p:'neutral', cond:g=>g.sovereignNews('build') },
+  { t:'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »', p:'bad', cond:g=>g.sovereignNews('protest') },
+  { t:'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?', p:'bad', cond:g=>g.sovereignNews('un') },
 
   // ═══ Fusion nucléaire — l'actualité réelle, puis VOTRE programme ═══
   { t:'Un laser géant franchit le seuil : plus d’énergie produite que déposée', p:'good', from:2022, to:2025 },

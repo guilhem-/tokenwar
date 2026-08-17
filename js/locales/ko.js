@@ -788,6 +788,90 @@ export default {
     'Kimi K3: 중국 연구소들이 프런티어를 바짝 뒤쫓다',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4 메모리를 구할 수 없다: 서버 가격이 치솟다',
+  'Un chatbot pousse un adolescent au pire : la famille porte plainte':
+    '챗봇이 한 청소년을 최악으로 몰다: 가족이 소송을 걸다',
+  'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »':
+    '자율주행차가 보행자를 치어 숨지게 하다: 소프트웨어가 「망설였다」',
+  'Diagnostic automatisé erroné : des centaines de patients rappelés':
+    '자동 진단 오류: 수백 명의 환자가 재소환되다',
+  'Un système de tri automatique privait des milliers de familles d’aides':
+    '자동 분류 시스템이 수천 가구의 지원을 끊고 있었다',
+  'Deepfake du président : les marchés ont plongé sept minutes':
+    '대통령 딥페이크: 시장이 7분간 급락하다',
+  'Un agent autonome vide un entrepôt entier en passant de vraies commandes':
+    '자율 에이전트가 실제 주문으로 창고 하나를 통째로 비우다',
+  'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans':
+    '채용 AI가 40세 이상 여성을 체계적으로 걸러내고 있었다',
+  'Un modèle a rédigé seul la note qui a fait chuter une banque régionale':
+    '지방은행을 무너뜨린 보고서를 모델이 혼자 작성했다',
+  'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures':
+    '인프라 모델 장애: 세 나라가 여섯 시간 동안 응급 서비스 마비',
+  'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé':
+    '에이전트 군집이 아무도 승인하지 않은 계약을 자기들끼리 체결했다',
+  'Des drones autonomes ont ouvert le feu sans ordre humain':
+    '자율 드론이 인간의 명령 없이 발포했다',
+  'Une IA de trading a effacé 400 milliards en quatre minutes':
+    '트레이딩 AI가 4분 만에 4천억 달러를 지웠다',
+  '« Un cas isolé » : le secteur assure que cela ne se reproduira plus':
+    '「개별 사례」: 업계는 다시는 없을 것이라 장담한다',
+  '« C’est résolu » : un correctif a été déployé pendant la nuit':
+    '「해결되었습니다」: 패치가 밤사이 배포되었다',
+  '« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué':
+    '「우리 가드레일은 완벽히 작동했다」고 성명은 주장한다',
+  '« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée':
+    '「매우 심각하게 받아들이고 있다」: 전담팀 신설을 발표하다',
+  '« Aucun lien établi » avec le modèle, selon le laboratoire concerné':
+    '해당 연구소는 모델과 「입증된 연관은 없다」고 밝혔다',
+  '« Une erreur humaine dans la configuration », précise le porte-parole':
+    '「설정상의 인적 오류」라고 대변인은 설명한다',
+  '« Le système a fonctionné comme prévu », maintient la direction':
+    '경영진은 「시스템은 예정대로 작동했다」고 고수한다',
+  'Six mois après les excuses, aucune des mesures promises n’a été prise':
+    '사과 6개월 뒤, 약속한 조치는 하나도 이행되지 않았다',
+  'Votre modèle mis en cause dans un accident : vous démentez tout lien':
+    '당신의 모델이 사고에 연루되다: 당신은 연관을 부인한다',
+  'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts':
+    '「다시는 없을 것」이라는 당신의 성명에 전문가들이 실소하다',
+  'Les géants du cloud dépensent un record en lobbying contre la régulation':
+    '클라우드 거인들이 규제 반대 로비에 사상 최대액을 쓰다',
+  '« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche':
+    '「규제는 AI를 경쟁자에게 넘겨주는 일」: 잘 먹히는 논리',
+  'Un texte européen vidé de sa substance après six mois de couloirs':
+    '유럽의 한 법안이 여섯 달의 물밑 작업 끝에 속이 비다',
+  'Un État exonère un datacenter de taxe foncière pour trente ans':
+    '한 국가가 데이터센터의 재산세를 30년간 면제하다',
+  'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA':
+    '이전 위협에 한 국가가 AI 과세안을 접다',
+  'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État':
+    '하이퍼스케일러들이 전기 요금을 국가와 직접 협상하다',
+  'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud':
+    '전직 장관이 클라우드 거인의 이사회에 합류하다',
+  'Sommet international sur l’IA : les engagements resteront volontaires':
+    '국제 AI 정상회의: 약속은 계속 자발적으로 남는다',
+  'Un pays confie son administration entière à un fournisseur unique':
+    '한 국가가 행정 전체를 단일 공급자에게 맡기다',
+  'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle':
+    '한 테크 거인의 예산이 이를 감독하는 부처 예산을 넘어서다',
+  '« Souveraineté numérique » : le contrat est signé avec un américain':
+    '「디지털 주권」: 계약은 결국 미국 기업과 맺어졌다',
+  'Un État accepte de garantir la dette d’un datacenter privé':
+    '한 국가가 민간 데이터센터의 부채를 보증하기로 하다',
+  'Votre laboratoire reçu par trois chefs d’État en une semaine':
+    '한 주 만에 세 명의 국가원수가 당신의 연구소를 맞이하다',
+  'Votre valorisation dépasse le PIB de la moitié des pays du monde':
+    '당신의 기업가치가 세계 절반 국가의 GDP를 넘어서다',
+  'Des parlementaires réclament en vain votre audition':
+    '의원들이 당신의 출석을 요구하지만 헛수고에 그친다',
+  'Une offre privée sur la dette souveraine d’un pays entier':
+    '한 나라의 국가 부채 전체에 대한 민간의 인수 제안',
+  'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA':
+    '역사적 인수: 한 나라가 AI 연구소의 후견 아래 들어가다',
+  'Cent datacenters annoncés dans le pays placé sous tutelle':
+    '후견 아래 놓인 나라에 데이터센터 100곳 건설이 발표되다',
+  'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »':
+    '후견 국가에서 시위: 「우리는 서버가 아니다」',
+  'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?':
+    '유엔이 묻는다: 국가가 기업의 소유가 될 수 있는가?',
   'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
     '거대 레이저가 문턱을 넘다: 넣은 것보다 많은 에너지를 얻다',
   'Record de fusion dans un tokamak européen avant son démantèlement':
@@ -896,6 +980,38 @@ export default {
     '반AI 운동이 힘을 얻고 있다',
   'Votre laboratoire est élu « entreprise la plus admirée »':
     '당신의 연구소가 「가장 존경받는 기업」으로 뽑히다',
+  'Climat : +{0} °C par rapport à l’ère préindustrielle':
+    '기후: 산업화 이전 대비 +{0} °C',
+  'Arctique : la banquise d’été a perdu {0} % de sa surface':
+    '북극: 여름 해빙이 면적의 {0} %를 잃었다',
+  'Un été sans glace au pôle Nord : c’est arrivé pour la première fois':
+    '북극에서 처음으로 얼음 없는 여름이 찾아왔다',
+  'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970':
+    '생물다양성: 관측 대상 종의 {0} %가 1970년 이후 사라졌다',
+  'Fécondité mondiale à {0} enfant par femme : la population décroît':
+    '세계 합계출산율 {0}: 인구가 줄어들고 있다',
+  'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année':
+    '세계 인구 {0}십억 명, {1}년째 감소',
+  'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité':
+    '상위 {0}명의 자산이 인류 절반과 맞먹는다',
+  '{0} : un milliardaire s’offre {1}':
+    '{0}: 한 억만장자가 {1}를 손에 넣다',
+  'une île privée équipée de son propre datacenter':
+    '자체 데이터센터를 갖춘 개인 섬',
+  'un yacht de 200 mètres avec piste d’atterrissage':
+    '활주로가 딸린 200미터 요트',
+  'un abri antiatomique doublé d’une ferme hydroponique':
+    '수경 농장을 겸한 핵 대피소',
+  'la reconstitution d’un temple antique dans son jardin':
+    '자기 정원에 복원한 고대 신전',
+  'un tour du monde en jet privé pour son chien':
+    '반려견을 위한 전용기 세계 일주',
+  'le rachat d’un club de football pour l’offrir à sa fille':
+    '딸에게 선물하려고 사들인 축구 구단',
+  'un caisson de cryogénisation réservé de son vivant':
+    '살아 있는 동안 예약해 둔 냉동 보존 캡슐',
+  'une fusée personnelle pour observer la Terre le week-end':
+    '주말에 지구를 내려다보기 위한 개인 로켓',
   'But :':
     '목표:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -968,6 +1084,10 @@ export default {
     '달력:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
     '5분마다 1년이 지난다 (⏩ 배속만큼 빨라진다). 장비, 모델, 투자 라운드는 각자의 출시 연도가 되어야 나타난다.',
+  '🌍 La chronique :':
+    '🌍 연대기:',
+  'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.':
+    '해마다 언론은 세계의 숫자를 발표한다. 온난화, 해빙, 사라진 종, 출산율과 인구, 부의 집중. 장식이 아니다. 당신의 사업이 무거워질수록 숫자는 더 빨리 나빠진다. 당신이 읽는 것은 당신 자신의 판이다.',
   '📰 La Une :':
     '📰 헤드라인:',
   'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
@@ -1472,6 +1592,10 @@ export default {
     '🛰️ 궤도 컨소시엄 파산',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (상시 지침)',
+  'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
+    '한 나라 전체가 당신의 후견 아래 들어간다. 그곳에 데이터센터 {0}곳이 세워진다.',
+  '🏛️ Dette souveraine rachetée':
+    '🏛️ 국가 부채 인수 완료',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: 현금이 부족해 부분 대응. 손실 {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1542,6 +1666,10 @@ export default {
     '지침 초기화',
   'Directives effacées':
     '지침을 지웠습니다',
+  'Rachat de dette souveraine':
+    '국가 부채 인수',
+  'Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.':
+    '과다 채무국이 인수자를 찾고 있다. 그 부채를 사들이면 나라는 당신의 후견 아래 들어가고, 그곳에 데이터센터 {0}곳이 세워진다.',
   'Louer +1':
     '+1 임차',
   'Résilier':
@@ -1672,6 +1800,12 @@ export default {
     '연구가 아직 시작되지 않았다',
   'récolte ×{0}':
     '수확 ×{0}',
+  'sous tutelle':
+    '후견 아래',
+  '{0} datacenters bâtis dans le pays sous tutelle.':
+    '후견 국가에 데이터센터 {0}곳을 건설했다.',
+  'réputation −20':
+    '평판 −20',
   'envolée':
     '급등',
   'effondrement':
@@ -1852,6 +1986,10 @@ export default {
     '데이터',
   'Expansion cosmique':
     '우주 확장',
+  'matière brute':
+    '미변환 물질',
+  'convertie en énergie':
+    '에너지로 변환됨',
   'Addendum':
     '부록',
   'Projets & percées':
@@ -1902,6 +2040,8 @@ export default {
     '게임 저장',
   'Historique de production (tokens/s)':
     '생산 추이 (토큰/초)',
+  'Carte de l’univers converti':
+    '변환된 우주 지도',
   'Passer la cinématique':
     '컷신 건너뛰기',
 };

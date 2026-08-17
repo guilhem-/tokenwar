@@ -788,6 +788,90 @@ export default {
     'Kimi K3: os laboratórios chineses colam-se à fronteira',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'Memória HBM4 impossível de encontrar: os preços dos servidores disparam',
+  'Un chatbot pousse un adolescent au pire : la famille porte plainte':
+    'Um chatbot empurra um adolescente para o pior: a família processa',
+  'Un véhicule autonome tue une passante : le pilote logiciel avait « hésité »':
+    'Um veículo autónomo mata uma peã: o piloto de software tinha «hesitado»',
+  'Diagnostic automatisé erroné : des centaines de patients rappelés':
+    'Diagnóstico automatizado errado: centenas de doentes chamados de volta',
+  'Un système de tri automatique privait des milliers de familles d’aides':
+    'Um sistema de triagem automática privava milhares de famílias de apoios',
+  'Deepfake du président : les marchés ont plongé sept minutes':
+    'Deepfake do presidente: os mercados afundaram sete minutos',
+  'Un agent autonome vide un entrepôt entier en passant de vraies commandes':
+    'Um agente autónomo esvazia um armazém inteiro fazendo encomendas reais',
+  'Une IA de recrutement écartait systématiquement les femmes de plus de 40 ans':
+    'Uma IA de recrutamento excluía sistematicamente as mulheres com mais de 40',
+  'Un modèle a rédigé seul la note qui a fait chuter une banque régionale':
+    'Um modelo redigiu sozinho a nota que afundou um banco regional',
+  'Panne d’un modèle d’infrastructure : trois pays sans service d’urgence pendant six heures':
+    'Falha de um modelo de infraestrutura: três países sem serviços de emergência durante seis horas',
+  'Un essaim d’agents a négocié entre eux un contrat que personne n’avait autorisé':
+    'Um enxame de agentes negociou entre si um contrato que ninguém autorizou',
+  'Des drones autonomes ont ouvert le feu sans ordre humain':
+    'Drones autónomos abriram fogo sem ordem humana',
+  'Une IA de trading a effacé 400 milliards en quatre minutes':
+    'Uma IA de trading apagou 400 mil milhões em quatro minutos',
+  '« Un cas isolé » : le secteur assure que cela ne se reproduira plus':
+    '«Um caso isolado»: o setor garante que não voltará a acontecer',
+  '« C’est résolu » : un correctif a été déployé pendant la nuit':
+    '«Está resolvido»: foi implantada uma correção durante a noite',
+  '« Nos garde-fous ont parfaitement fonctionné », affirme le communiqué':
+    '«As nossas salvaguardas funcionaram na perfeição», afirma o comunicado',
+  '« Nous prenons cela très au sérieux » : une équipe dédiée est annoncée':
+    '«Levamos isto muito a sério»: é anunciada uma equipa dedicada',
+  '« Aucun lien établi » avec le modèle, selon le laboratoire concerné':
+    '«Nenhuma ligação estabelecida» com o modelo, diz o laboratório visado',
+  '« Une erreur humaine dans la configuration », précise le porte-parole':
+    '«Um erro humano na configuração», precisa o porta-voz',
+  '« Le système a fonctionné comme prévu », maintient la direction':
+    '«O sistema funcionou como previsto», mantém a direção',
+  'Six mois après les excuses, aucune des mesures promises n’a été prise':
+    'Seis meses após o pedido de desculpas, nenhuma das medidas prometidas foi tomada',
+  'Votre modèle mis en cause dans un accident : vous démentez tout lien':
+    'O teu modelo apontado num acidente: negas qualquer ligação',
+  'Votre communiqué « cela ne se reproduira plus » fait ricaner les experts':
+    'O teu comunicado «não voltará a acontecer» faz rir os especialistas',
+  'Les géants du cloud dépensent un record en lobbying contre la régulation':
+    'Os gigantes da cloud gastam um recorde em lobby contra a regulação',
+  '« Réguler, c’est offrir l’IA à nos concurrents » : l’argument qui marche':
+    '«Regular é oferecer a IA aos nossos concorrentes»: o argumento que resulta',
+  'Un texte européen vidé de sa substance après six mois de couloirs':
+    'Um texto europeu esvaziado de substância após seis meses de corredores',
+  'Un État exonère un datacenter de taxe foncière pour trente ans':
+    'Um Estado isenta um centro de dados de imposto predial durante trinta anos',
+  'Menace de délocalisation : un pays renonce à son projet de taxe sur l’IA':
+    'Ameaça de deslocalização: um país abandona o seu projeto de imposto sobre a IA',
+  'Les hyperscaleurs négocient directement leur tarif d’électricité avec l’État':
+    'Os hiperescaladores negoceiam a sua tarifa elétrica diretamente com o Estado',
+  'Un ancien ministre rejoint le conseil d’administration d’un géant du cloud':
+    'Um antigo ministro entra no conselho de administração de um gigante da cloud',
+  'Sommet international sur l’IA : les engagements resteront volontaires':
+    'Cimeira internacional sobre IA: os compromissos continuarão voluntários',
+  'Un pays confie son administration entière à un fournisseur unique':
+    'Um país entrega toda a sua administração a um único fornecedor',
+  'Le budget d’un géant de la tech dépasse celui du ministère qui le contrôle':
+    'O orçamento de um gigante tecnológico ultrapassa o do ministério que o fiscaliza',
+  '« Souveraineté numérique » : le contrat est signé avec un américain':
+    '«Soberania digital»: o contrato é assinado com uma empresa americana',
+  'Un État accepte de garantir la dette d’un datacenter privé':
+    'Um Estado aceita garantir a dívida de um centro de dados privado',
+  'Votre laboratoire reçu par trois chefs d’État en une semaine':
+    'O teu laboratório recebido por três chefes de Estado numa semana',
+  'Votre valorisation dépasse le PIB de la moitié des pays du monde':
+    'A tua avaliação ultrapassa o PIB de metade dos países do mundo',
+  'Des parlementaires réclament en vain votre audition':
+    'Os parlamentares reclamam em vão a tua audição',
+  'Une offre privée sur la dette souveraine d’un pays entier':
+    'Uma oferta privada sobre a dívida soberana de um país inteiro',
+  'Rachat historique : un pays passe sous tutelle d’un laboratoire d’IA':
+    'Compra histórica: um país fica sob tutela de um laboratório de IA',
+  'Cent datacenters annoncés dans le pays placé sous tutelle':
+    'Cem centros de dados anunciados no país sob tutela',
+  'Manifestations dans le pays sous tutelle : « nous ne sommes pas un serveur »':
+    'Manifestações no país sob tutela: «não somos um servidor»',
+  'L’ONU s’interroge : un État peut-il appartenir à une entreprise ?':
+    'A ONU interroga-se: pode um Estado pertencer a uma empresa?',
   'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
     'Um laser gigante ultrapassa o limiar: mais energia produzida do que injetada',
   'Record de fusion dans un tokamak européen avant son démantèlement':
@@ -896,6 +980,38 @@ export default {
     'Um movimento anti-IA ganha força',
   'Votre laboratoire est élu « entreprise la plus admirée »':
     'O teu laboratório eleito «empresa mais admirada»',
+  'Climat : +{0} °C par rapport à l’ère préindustrielle':
+    'Clima: +{0} °C face à era pré-industrial',
+  'Arctique : la banquise d’été a perdu {0} % de sa surface':
+    'Ártico: o gelo marinho de verão perdeu {0} % da sua área',
+  'Un été sans glace au pôle Nord : c’est arrivé pour la première fois':
+    'Um verão sem gelo no Polo Norte: aconteceu pela primeira vez',
+  'Biodiversité : {0} % des espèces suivies ont disparu depuis 1970':
+    'Biodiversidade: {0} % das espécies acompanhadas desapareceram desde 1970',
+  'Fécondité mondiale à {0} enfant par femme : la population décroît':
+    'Fecundidade mundial em {0} filhos por mulher: a população decresce',
+  'Population mondiale : {0} milliards, en recul pour la {1}ᵉ année':
+    'População mundial: {0} mil milhões, em recuo pelo {1}.º ano',
+  'Les {0} plus grandes fortunes détiennent autant que la moitié de l’humanité':
+    'As {0} maiores fortunas detêm tanto como metade da humanidade',
+  '{0} : un milliardaire s’offre {1}':
+    '{0}: um bilionário oferece a si próprio {1}',
+  'une île privée équipée de son propre datacenter':
+    'uma ilha privada com o seu próprio centro de dados',
+  'un yacht de 200 mètres avec piste d’atterrissage':
+    'um iate de 200 metros com pista de aterragem',
+  'un abri antiatomique doublé d’une ferme hydroponique':
+    'um abrigo antiatómico com quinta hidropónica incluída',
+  'la reconstitution d’un temple antique dans son jardin':
+    'a reconstrução de um templo antigo no seu jardim',
+  'un tour du monde en jet privé pour son chien':
+    'uma volta ao mundo em jato privado para o seu cão',
+  'le rachat d’un club de football pour l’offrir à sa fille':
+    'a compra de um clube de futebol para oferecer à filha',
+  'un caisson de cryogénisation réservé de son vivant':
+    'uma cápsula de criogenização reservada ainda em vida',
+  'une fusée personnelle pour observer la Terre le week-end':
+    'um foguetão pessoal para ver a Terra ao fim de semana',
   'But :':
     'Objetivo:',
   'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
@@ -968,6 +1084,10 @@ export default {
     'Calendário:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
     'passa um ano a cada 5 minutos (× a velocidade ⏩). Material, modelos e rondas de financiamento só aparecem no seu ano de lançamento.',
+  '🌍 La chronique :':
+    '🌍 A crónica:',
+  'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.':
+    'todos os anos a imprensa publica os números do mundo: aquecimento, gelo marinho, espécies desaparecidas, fecundidade e população, concentração da riqueza. Não são decorativos: agravam-se tanto mais depressa quanto mais pesada for a tua exploração. Estás a ler a tua própria partida.',
   '📰 La Une :':
     '📰 A Primeira Página:',
   'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.':
@@ -1472,6 +1592,10 @@ export default {
     '🛰️ Falência do consórcio orbital',
   '{0} → {1} (directive permanente)':
     '{0} → {1} (diretiva permanente)',
+  'Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.':
+    'Um país inteiro passa sob a tua tutela. Serão construídos lá {0} centros de dados.',
+  '🏛️ Dette souveraine rachetée':
+    '🏛️ Dívida soberana comprada',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: sem caixa suficiente, remediação parcial. Perdas {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1542,6 +1666,10 @@ export default {
     'Reiniciar as diretivas',
   'Directives effacées':
     'Diretivas apagadas',
+  'Rachat de dette souveraine':
+    'Compra de dívida soberana',
+  'Un pays surendetté cherche un repreneur. Rachetez sa dette et il passe sous votre tutelle : {0} datacenters y seront construits.':
+    'Um país sobre-endividado procura comprador. Compra a sua dívida e ele passa sob a tua tutela: serão construídos lá {0} centros de dados.',
   'Louer +1':
     'Alugar +1',
   'Résilier':
@@ -1672,6 +1800,12 @@ export default {
     'a investigação ainda não começou',
   'récolte ×{0}':
     'colheita ×{0}',
+  'sous tutelle':
+    'sob tutela',
+  '{0} datacenters bâtis dans le pays sous tutelle.':
+    '{0} centros de dados construídos no país sob tutela.',
+  'réputation −20':
+    'reputação −20',
   'envolée':
     'disparada',
   'effondrement':
@@ -1852,6 +1986,10 @@ export default {
     'Dados',
   'Expansion cosmique':
     'Expansão cósmica',
+  'matière brute':
+    'matéria bruta',
+  'convertie en énergie':
+    'convertida em energia',
   'Addendum':
     'Adendo',
   'Projets & percées':
@@ -1902,6 +2040,8 @@ export default {
     'Gravar o jogo',
   'Historique de production (tokens/s)':
     'Histórico de produção (tokens/s)',
+  'Carte de l’univers converti':
+    'Mapa do universo convertido',
   'Passer la cinématique':
     'Saltar a cinemática',
 };

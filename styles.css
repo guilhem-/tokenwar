@@ -1518,3 +1518,53 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 /* second marché : crypto */
 .crypto-block { margin-top: 0.75rem; border-top: 1px dashed var(--line); padding-top: 0.6rem; }
 .crypto-head { font-weight: 600; }
+
+/* =====================================================================
+   MODALES QUI DÉBORDENT — l'aide dépassait la hauteur de l'écran et
+   devenait illisible : les modales sont désormais bornées à la fenêtre,
+   avec un titre et des boutons fixes et un CORPS qui défile entre les deux.
+   ===================================================================== */
+.modal {
+  display: flex;
+  flex-direction: column;
+  max-height: min(88vh, 100dvh - 2rem);
+}
+.modal-title { flex: 0 0 auto; }
+.modal-choices { flex: 0 0 auto; }
+/* le corps prend la place restante et défile de lui-même */
+.modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+/* l'aide est longue : on lui laisse plus de largeur et un défilement confortable */
+#help-overlay .modal { width: min(94vw, 780px); }
+#help-overlay .modal-body:first-of-type { flex: 1 1 auto; }
+/* deux corps (aide + succès) : ils partagent la zone défilante */
+#help-overlay #achievements-body { flex: 0 0 auto; overflow: visible; }
+#help-overlay .modal-scroll {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+}
+@media (max-width: 760px) {
+  .modal { max-height: min(92vh, 100dvh - 1rem); }
+  #help-overlay .modal { width: 96vw; }
+}
+
+/* carte de l'univers (phase 3) : les régions virent au bleu à mesure
+   qu'elles sont converties en énergie puis en tokens */
+.universe-wrap { margin-bottom: 0.75rem; }
+#universe-map {
+  width: 100%; display: block; border-radius: 10px;
+  background: radial-gradient(120% 90% at 50% 40%, #0a0f1d, #04060c 70%);
+  border: 1px solid var(--line);
+}
+.universe-legend {
+  display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+  margin-top: 0.4rem; font-size: 0.7rem; color: var(--text-mute);
+}
+.universe-legend .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.universe-legend .dot.raw  { background: #d8d2c4; box-shadow: 0 0 6px rgba(216,210,196,0.6); }
+.universe-legend .dot.done { background: #3ba9ff; box-shadow: 0 0 8px rgba(59,169,255,0.9); }
+.universe-legend .num { margin-left: auto; color: #7fd0ff; }

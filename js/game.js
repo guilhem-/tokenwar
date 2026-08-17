@@ -6,9 +6,10 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
          BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
          HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, OPTIMS,
-         PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK } from './data.js';
+         PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK,
+         CHRONICLE, EXTRAVAGANCES, SOVEREIGN } from './data.js';
 import { clamp } from './util.js';
-import { t, td, months as i18nMonths, intlLocale } from './i18n.js';
+import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
 const SAVE_VERSION = 5;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
@@ -76,6 +77,8 @@ export class Game {
     s.programs = {};
     // second marché, bien plus violent que la Bourse
     s.crypto = { invested:0, basis:0, price:1, unlocked:false };
+    s.chronicle = {};        // id|année -> déjà publié
+    s.sovereign = { status:'none', at:0 };   // rachat de dette souveraine
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
     s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
@@ -152,6 +155,9 @@ export class Game {
     for (const m of this.state.timed) if (m.key === key) f *= m.factor;
     return f;
   }
+
+  // nombre décimal au format de la langue (1,10 en français, 1.10 en anglais)
+  decimal(v, digits = 2) { return v.toFixed(digits).replace('.', decimalSep()); }
 
   changeRep(d) {
     this.state.reputation = clamp(this.state.reputation + d, 0, 100);
@@ -1197,6 +1203,122 @@ export class Game {
   }
 
   // =================================================================
+  //  ÉTAT DU MONDE — les chiffres que publie la chronique. Ils partent des
+  //  trajectoires réelles (GIEC, démographie) et se dégradent d'autant plus
+  //  vite que VOTRE exploitation est lourde : la presse parle donc de votre
+  //  partie, pas d'un décor figé.
+  // =================================================================
+  // part de responsabilité du joueur : sa consommation énergétique rapportée
+  // à un ordre de grandeur mondial, plus la matière déjà convertie.
+  worldImpact() {
+    const power = this.energyUse();                       // MW appelés
+    const share = Math.min(1.5, power / 2e5);             // 200 GW ≈ impact « mondial »
+    return share + this.state.earthConsumed * 2 + (this.phase >= 3 ? 2 : 0);
+  }
+  // Réchauffement : +1,1 °C en 2020, ~+1,5 en 2024 (GIEC), puis ~+0,022 °C/an
+  // sur une trajectoire intermédiaire — accélérée par votre propre empreinte.
+  warming() {
+    const y = this.simYear();
+    const base = 1.1 + Math.max(0, y - 2020) * 0.022;
+    return Math.min(12, base + this.worldImpact() * 0.35);
+  }
+  // Banquise d'été : ~40% perdus en 2020, la fonte suit le réchauffement.
+  iceLoss() { return clamp(0.40 + (this.warming() - 1.1) * 0.22, 0, 1); }
+  // Populations suivies : ~69% de déclin depuis 1970 (Living Planet), ça continue.
+  speciesLost() { return clamp(0.69 + (this.warming() - 1.1) * 0.06 + this.state.earthConsumed * 0.3, 0, 1); }
+  // Fécondité mondiale : 2,25 en 2024, elle glisse sous le seuil de renouvellement.
+  fertility() { return Math.max(0.85, 2.25 - Math.max(0, this.simYear() - 2024) * 0.03); }
+  // Population mondiale en milliards : pic ~10,3 vers 2084 dans les projections
+  // ONU ; ici le pic arrive plus tôt et le recul s'accélère en phase 2+.
+  population() {
+    const y = this.simYear();
+    const peak = 10.3, peakYear = 2060;
+    let p = y <= peakYear ? 8.1 + (y - 2024) * 0.061 : peak - (y - peakYear) * 0.09;
+    if (this.phase >= 2) p -= this.state.earthConsumed * 6;
+    return Math.max(0, p);
+  }
+  // Concentration : le nombre de fortunes qui pèsent autant que la moitié de
+  // l'humanité fond avec le temps… et vous en faites partie.
+  topFortunes() {
+    const y = this.simYear();
+    let n = Math.max(3, Math.round(26 - (y - 2019) * 0.55));
+    if (this.valuation() > 1e12) n = Math.max(2, n - 3);   // vous comptez dans le calcul
+    return n;
+  }
+
+  // =================================================================
+  //  CHRONIQUE — articles datés, à échéance fixe, publiés une seule fois.
+  //  Ils ne passent pas par le tirage aléatoire de La Une : quand l'année
+  //  arrive, l'article tombe.
+  // =================================================================
+  tickChronicle() {
+    const s = this.state;
+    if (s.ended || this._offline) return;
+    const year = this.simYearInt();
+    for (const c of CHRONICLE) {
+      if (year < c.from || (c.to != null && year > c.to)) continue;
+      if ((year - c.from) % c.every !== 0) continue;
+      const key = c.id + '|' + year;
+      if (s.chronicle[key]) continue;
+      if (c.cond && !c.cond(this)) continue;
+      s.chronicle[key] = true;
+      let args = c.val ? c.val(this, year) : [];
+      // l'extravagance tire son objet dans la liste, sans répétition immédiate
+      if (c.id === 'extravagance') {
+        const i = (year * 7 + Math.floor(Math.random() * 3)) % EXTRAVAGANCES.length;
+        args = [year, td(EXTRAVAGANCES[i])];
+      }
+      this.publish(t(c.t, ...args), c.p);
+    }
+  }
+  // publie un titre déjà mis en forme (sans passer par le tirage aléatoire)
+  publish(text, polarity) {
+    const s = this.state;
+    const delta = polarity === 'good' ? 1 : (polarity === 'bad' ? -1 : 0);
+    if (delta) this.changeRep(delta);
+    const entry = { text, p: polarity, date: this.dateLabel(), raw: true };
+    s.headlines.unshift(entry);
+    if (s.headlines.length > 40) s.headlines.pop();
+    this.ui && this.ui.onHeadline && this.ui.onHeadline(entry);
+  }
+
+  // =================================================================
+  //  MISE SOUS TUTELLE D'UN ÉTAT — au-delà de 4 000 milliards, l'offre
+  //  apparaît : racheter la dette souveraine d'un pays pour 2 000 milliards,
+  //  et y bâtir cent datacenters.
+  // =================================================================
+  sovereignAvailable() {
+    return this.phase < 2 && this.state.sovereign.status === 'none' && this.state.money >= SOVEREIGN.need;
+  }
+  sovereignCost() { return this.moneyCost(SOVEREIGN.cost); }
+  canBuySovereign() { return this.sovereignAvailable() && this.state.money >= this.sovereignCost(); }
+  buySovereign() {
+    if (!this.canBuySovereign()) return false;
+    const s = this.state;
+    s.money -= this.sovereignCost();
+    s.sovereign.status = 'signed'; s.sovereign.at = s.playSeconds;
+    s.infraCounts.realestate = (s.infraCounts.realestate || 0) + SOVEREIGN.realestate;
+    s.infraCounts.datacenter = (s.infraCounts.datacenter || 0) + SOVEREIGN.datacenters;
+    this.changeRep(-20);
+    this.log(t('Un pays entier passe sous votre tutelle. {0} datacenters y seront construits.', SOVEREIGN.datacenters), 'milestone');
+    this.toast(t('🏛️ Dette souveraine rachetée'), 'bad');
+    return true;
+  }
+  // fenêtres de couverture presse du feuilleton
+  sovereignNews(kind) {
+    const s = this.state.sovereign;
+    const monthSec = SECONDS_PER_YEAR / 12;
+    if (kind === 'offer') return this.sovereignAvailable();
+    if (s.status !== 'signed') return false;
+    const since = this.state.playSeconds - s.at;
+    if (kind === 'signed') return since < 2 * monthSec;
+    if (kind === 'build') return since >= 2 * monthSec && since < 6 * monthSec;
+    if (kind === 'protest') return since >= 6 * monthSec && since < 14 * monthSec;
+    if (kind === 'un') return since >= 14 * monthSec && since < 30 * monthSec;
+    return false;
+  }
+
+  // =================================================================
   //  CRISES — un incident grave démarre en silence quelque part sur la page.
   //  Tant qu'il n'est pas repéré ET traité, il saigne la trésorerie de plus en
   //  plus vite (jusqu'à 70% de la fortune en 2 minutes). Passé ce délai, il se
@@ -1457,6 +1579,7 @@ export class Game {
     if (this.phase < 2) { this.tickStock(dt); this.tickCrypto(dt); this.tickCrisis(dt); } // ni bourse ni incident quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);
+    this.tickChronicle();          // articles datés (climat, démographie, richesses…)
     this.checkMilestones();
   }
 

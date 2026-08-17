@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**950 chaînes × 7 langues = 6 650 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 020 chaînes × 7 langues = 7 140 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -132,6 +132,49 @@ Il ne sert pas qu'à parier. Pendant les envolées, **les mineurs se disputent l
 que vous** : le prix des GPU monte de **45 % en 2021**, exactement comme dans la réalité. Le
 panneau affiche l'effet en cours, et la presse raconte le cycle — de la ruée sur les cartes
 graphiques aux fermes de minage reconverties en datacenters d'IA.
+
+## 🌍 La chronique — le monde se dégrade avec vous
+
+Chaque année, la presse publie **les chiffres du monde**, à échéance fixe et hors du tirage
+aléatoire : réchauffement (**tous les ans**), banquise et biodiversité (**tous les 2 ans**),
+fécondité et population (**tous les 3 ans à partir de 2030**), concentration des richesses et
+extravagances de milliardaires (**tous les 4 ans**).
+
+Ils ne sont pas décoratifs. Les trajectoires partent du réel — +1,1 °C en 2020, ~69 % des
+populations suivies disparues depuis 1970, fécondité mondiale sous le seuil de renouvellement —
+puis **s'aggravent d'autant plus vite que votre exploitation est lourde**. À 2040, une partie
+sage lit *+1,54 °C* ; la même année avec 200 GW de datacenters et 40 % de la Terre convertie
+affiche *+2,34 °C*, 67 % de banquise perdue et 88 % d'espèces disparues. Vous lisez votre
+propre partie. Un seul texte traduit sert quatre-vingts années, grâce aux substitutions.
+
+## ⚠️ Catastrophes, démentis et couloirs
+
+**Douze catastrophes liées à l'IA**, dont la gravité ne se débloque qu'avec votre niveau de
+modèle : diagnostic erroné, tri automatique privant des familles d'aides, deepfake qui fait
+plonger les marchés, agent autonome qui vide un entrepôt, drones qui ouvrent le feu sans ordre.
+Suivies des **communiqués rassurants** qui arrivent toujours après : « un cas isolé »,
+« c'est résolu », « nos garde-fous ont parfaitement fonctionné », et six mois plus tard aucune
+des mesures promises n'a été prise.
+
+**Douze articles sur les hyperscaleurs et les États** : lobbying record contre la régulation,
+texte européen vidé de sa substance, exonération de taxe foncière sur trente ans, menace de
+délocalisation qui enterre une taxe sur l'IA, ancien ministre au conseil d'administration.
+
+## 🏛️ Racheter un pays
+
+Au-delà de **4 000 milliards** de trésorerie, une offre apparaît dans l'Addendum : racheter la
+**dette souveraine** d'un pays surendetté pour **2 000 milliards**. Il passe sous votre tutelle
+et **cent datacenters** y sont bâtis (avec l'immobilier qui va avec) — au prix de 20 points de
+réputation. La presse suit le feuilleton : l'offre, le rachat historique, les cent datacenters
+annoncés, les manifestations (« nous ne sommes pas un serveur »), puis l'ONU qui se demande si
+un État peut appartenir à une entreprise.
+
+## 🗺️ La carte de l'univers
+
+En phase 3, un champ de **320 galaxies** disposées en spirale d'or. Chacune **vire au bleu**
+quand la conversion atteint son rang, du centre vers le bord, avec un halo pour les régions
+déjà transformées en énergie. La disposition est **déterministe** : la même partie donne
+toujours la même carte.
 
 ## Confort de jeu
 

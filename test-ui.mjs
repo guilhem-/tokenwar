@@ -673,6 +673,95 @@ await step('crypto : cycles historiques et pression sur les GPU', () => {
   if (g2.state.crypto.invested !== 0) throw new Error('position non soldée');
 });
 
+// ---- chronique datée : climat, banquise, démographie, richesses ----
+await step('chronique : articles datés, chiffrés et indexés sur la partie', async () => {
+  const { CHRONICLE } = await import('./js/data.js');
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  const titres = () => g2.state.headlines.map(h => h.text);
+  // rien avant l'année d'ouverture
+  g2.state.playSeconds = 0; g2.tickChronicle();
+  if (titres().some(t => /Climat/.test(t))) throw new Error('article climat publié avant 2020');
+  // …puis il tombe, avec un chiffre
+  g2.state.playSeconds = 300 * 1.2;                       // 2020
+  g2.tickChronicle();
+  const climat = titres().find(t => /Climat/.test(t));
+  if (!climat) throw new Error('article climat non publié en 2020');
+  if (!/\d/.test(climat)) throw new Error('article climat sans chiffre');
+  // publié UNE seule fois pour l'année
+  const n1 = titres().filter(t => /Climat/.test(t)).length;
+  g2.tickChronicle(); g2.tickChronicle();
+  if (titres().filter(t => /Climat/.test(t)).length !== n1) throw new Error('article répété la même année');
+  // l'année suivante, il revient avec un chiffre plus élevé
+  g2.state.playSeconds = 300 * 2.2;                       // 2021
+  g2.tickChronicle();
+  if (titres().filter(t => /Climat/.test(t)).length !== n1 + 1) throw new Error('article annuel non renouvelé');
+  // périodicités demandées
+  const per = Object.fromEntries(CHRONICLE.map(c => [c.id, [c.every, c.from]]));
+  if (per.warming[0] !== 1) throw new Error('le climat doit être annuel');
+  if (per.fertility[0] !== 3 || per.fertility[1] !== 2030) throw new Error('fécondité : tous les 3 ans à partir de 2030');
+  if (per.wealth[0] !== 4) throw new Error('richesses : tous les 4 ans');
+  if (per.extravagance[0] !== 4) throw new Error('extravagances : tous les 4 ans');
+  // les chiffres suivent VOTRE partie
+  const g3 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  g3.state.playSeconds = 300 * 21;                        // 2040
+  const doux = g3.warming();
+  g3.state.gpuCounts = { wafer: 5000 }; g3.state.phase = 2; g3.state.earthConsumed = 0.4;
+  if (!(g3.warming() > doux + 0.5)) throw new Error('le réchauffement ignore l exploitation du joueur');
+  if (!(g3.iceLoss() > 0.5)) throw new Error('la banquise ignore le réchauffement');
+  if (!(g3.speciesLost() > 0.8)) throw new Error('les espèces ignorent la conversion de la Terre');
+});
+
+// ---- rachat de dette souveraine ----
+await step('tutelle : offre à 4 000 milliards, 100 datacenters', () => {
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  g2.state.playSeconds = 0;
+  g2.state.money = 3e12;
+  if (g2.sovereignAvailable()) throw new Error('offre visible en dessous de 4 000 milliards');
+  g2.state.money = 5e12;
+  if (!g2.sovereignAvailable()) throw new Error('offre absente au-delà de 4 000 milliards');
+  if (!g2.sovereignNews('offer')) throw new Error('pas de couverture presse de l offre');
+  const dc0 = g2.infraCount('datacenter'), re0 = g2.infraCount('realestate'), rep0 = g2.reputation;
+  const m0 = g2.money;
+  if (!g2.buySovereign()) throw new Error('rachat refusé alors que finançable');
+  if (!(g2.money < m0 - 1.9e12)) throw new Error('le rachat devrait coûter 2 000 milliards');
+  if (g2.infraCount('datacenter') !== dc0 + 100) throw new Error('les 100 datacenters ne sont pas construits');
+  if (g2.infraCount('realestate') <= re0) throw new Error('pas d immobilier pour les accueillir');
+  if (!(g2.reputation < rep0)) throw new Error('aucun coût de réputation');
+  if (!g2.sovereignNews('signed')) throw new Error('pas de couverture presse du rachat');
+  // le feuilleton se déroule ensuite
+  g2.state.playSeconds += 3 * (300 / 12);
+  if (!g2.sovereignNews('build')) throw new Error('pas d article sur la construction');
+  g2.state.playSeconds += 6 * (300 / 12);
+  if (!g2.sovereignNews('protest')) throw new Error('pas d article sur les manifestations');
+  // et l offre ne revient pas
+  if (g2.sovereignAvailable()) throw new Error('offre encore disponible après rachat');
+});
+
+// ---- carte de l'univers (phase 3) ----
+await step('carte de l univers : disposition stable, bleuissement progressif', () => {
+  ui.buildUniverse();
+  const a = ui.universe.map(g => g.x + ',' + g.y).join('|');
+  ui.buildUniverse();
+  const b = ui.universe.map(g => g.x + ',' + g.y).join('|');
+  if (a !== b) throw new Error('la carte doit être déterministe d une construction à l autre');
+  if (ui.universe.length < 100) throw new Error('carte trop pauvre');
+  // l ordre de conversion va du centre vers le bord
+  const centre = ui.universe[0], bord = ui.universe[ui.universe.length - 1];
+  if (!(centre.order < bord.order)) throw new Error('la conversion devrait partir du centre');
+  if (!ui.el.universeMap) throw new Error('canvas de la carte absent');
+  game.state.universeConsumed = 0.5;
+  ui.renderUniverse();                                    // sans contexte 2D en jsdom : ne doit pas jeter
+  if (ui.el.universePct && !/%/.test(ui.el.universePct.textContent)) throw new Error('pourcentage non affiché');
+});
+
+// ---- modales bornées et défilantes ----
+await step('aide : modale bornée à l écran et défilante', () => {
+  const scroll = document.querySelector('#help-overlay .modal-scroll');
+  if (!scroll) throw new Error('conteneur défilant de l aide absent');
+  if (!scroll.querySelector('#help-body') || !scroll.querySelector('#achievements-body'))
+    throw new Error('le texte et les succès doivent partager la zone défilante');
+});
+
 // toast + log
 await step('toast & log', () => { ui.toast('hello','good'); ui.log('test log','milestone'); });
 
