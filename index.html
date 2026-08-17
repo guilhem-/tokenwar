@@ -140,6 +140,7 @@
       <div class="panel" id="panel-stock">
         <div class="panel-title" data-i18n="Bourse">Bourse</div>
         <div class="panel-body">
+          <div class="stock-block" id="stock-block">
           <div class="meter-row">
             <span class="text-muted" data-i18n="Portefeuille">Portefeuille</span>
             <span class="num" id="stock-value">$0</span>
@@ -160,6 +161,29 @@
             <button class="btn btn-buy" id="btn-stock-dep10" data-i18n="Investir 10%">Investir 10%</button>
             <button class="btn btn-buy" id="btn-stock-depmax" data-i18n="Investir max">Investir max</button>
             <button class="btn btn-ghost" id="btn-stock-withdraw" data-i18n="Tout retirer">Tout retirer</button>
+          </div>
+          </div>
+          <div class="crypto-block hidden" id="crypto-block">
+            <div class="meter-row crypto-head">
+              <span class="text-muted">₿ <span data-i18n="Crypto">Crypto</span></span>
+              <span class="num" id="crypto-trend">—</span>
+            </div>
+            <div class="meter-row">
+              <span class="text-muted" data-i18n="Portefeuille">Portefeuille</span>
+              <span class="num" id="crypto-value">$0</span>
+            </div>
+            <div class="meter-row">
+              <span class="text-muted" data-i18n="Plus/moins-value">Plus/moins-value</span>
+              <span class="num" id="crypto-pl">—</span>
+            </div>
+            <div class="meter-row">
+              <span class="text-muted" data-i18n="Effet sur le prix des GPU">Effet sur le prix des GPU</span>
+              <span class="num" id="crypto-gpu">×1,00</span>
+            </div>
+            <div class="stock-actions">
+              <button class="btn btn-buy" id="btn-crypto-dep10" data-i18n="Investir 10%">Investir 10%</button>
+              <button class="btn btn-ghost" id="btn-crypto-withdraw" data-i18n="Tout retirer">Tout retirer</button>
+            </div>
           </div>
         </div>
       </div>
@@ -232,6 +256,13 @@
             <span class="num" id="energy-load-value">0 / 0 MW</span>
           </div>
           <div class="item-list" id="energy-list"></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-programs">
+        <div class="panel-title" data-i18n="Grands programmes">Grands programmes</div>
+        <div class="panel-body">
+          <div class="item-list" id="program-list"></div>
         </div>
       </div>
 

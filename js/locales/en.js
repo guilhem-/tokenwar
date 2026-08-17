@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — EN
-//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
-//  une clé absente retombe sur le français, jamais sur une clé technique.
+//  Généré par tools/build-locale.mjs puis tools/patch-locale.mjs. La clé est
+//  la chaîne française source ; une clé absente retombe sur le français.
 // =====================================================================
 export default {
   'GPT-2':
@@ -238,10 +238,6 @@ export default {
     'Fusion reactor',
   'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
     'Near-limitless energy. The dream, finally realised — with a plasma team on site forever.',
-  'Collecteur Dyson':
-    'Dyson collector',
-  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
-    'You harvest a fraction of the star itself. Nothing left to pay, nobody left to pay.',
   'Optimisation CUDA':
     'CUDA optimisation',
   'Efficacité':
@@ -792,6 +788,74 @@ export default {
     'Kimi K3: Chinese labs close in on the frontier',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4 memory unobtainable: server prices soar',
+  'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
+    'A giant laser crosses the threshold: more energy out than in',
+  'Record de fusion dans un tokamak européen avant son démantèlement':
+    'Fusion record in a European tokamak before it is dismantled',
+  'Le grand réacteur international annonce dix ans de retard':
+    'The big international reactor announces a ten-year delay',
+  'Les start-up de la fusion lèvent des milliards sur une promesse':
+    'Fusion start-ups raise billions on a promise',
+  'Aimants supraconducteurs : le tokamak compact tient ses promesses':
+    'Superconducting magnets: the compact tokamak delivers',
+  'Un géant de la tech signe le premier contrat d’achat d’électricité de fusion':
+    'A tech giant signs the first fusion power purchase agreement',
+  'Tritium : la vraie pénurie n’est pas celle des puces':
+    'Tritium: the real shortage is not the one in chips',
+  'Votre laboratoire ouvre un programme de fusion : première ligne budgétaire':
+    'Your lab opens a fusion programme: the first budget line',
+  'Fusion : vos physiciens traquent l’instabilité du plasma nuit et jour':
+    'Fusion: your physicists hunt plasma instabilities day and night',
+  'Votre design de réacteur à fusion est déclaré constructible':
+    'Your fusion reactor design is declared buildable',
+  'Commande signée : votre premier réacteur à fusion sort des plans':
+    'Order signed: your first fusion reactor leaves the drawing board',
+  'Chantier de fusion : l’enceinte à vide est soudée, les aimants arrivent':
+    'Fusion site: the vacuum vessel is welded, the magnets are arriving',
+  'Ignition. Votre réacteur à fusion tient le plasma et alimente le réseau':
+    'Ignition. Your fusion reactor holds the plasma and feeds the grid',
+  'Une équipe étudie sérieusement l’enveloppement d’une étoile':
+    'A team is seriously studying how to wrap a star',
+  'Essaim de Dyson : les premiers collecteurs s’auto-assemblent en orbite solaire':
+    'Dyson swarm: the first collectors self-assemble in solar orbit',
+  'La sphère de Dyson passe du papier au constructible':
+    'The Dyson sphere moves from paper to buildable',
+  'Commande passée : une masse solaire de matériaux part vers l’étoile':
+    'Order placed: a solar mass of material heads for the star',
+  'Déploiement : l’étoile disparaît lentement derrière ses propres collecteurs':
+    'Deployment: the star slowly vanishes behind its own collectors',
+  'La sphère est refermée : une étoile entière ne travaille plus que pour vous':
+    'The sphere is closed: an entire star now works for you alone',
+  'Le ciel a une étoile de moins, et vous une sphère de plus':
+    'The sky has one star fewer, and you one sphere more',
+  'Une monnaie numérique dépasse les 20 000 dollars : la ruée commence':
+    'A digital currency passes $20,000: the rush begins',
+  'Les mineurs raflent les cartes graphiques : les joueurs s’étranglent':
+    'Miners hoover up the graphics cards: gamers are choking',
+  'Hiver crypto : le marché a perdu 80% en un an':
+    'Crypto winter: the market has lost 80% in a year',
+  'Des institutions mettent de la crypto à leur bilan':
+    'Institutions put crypto on their balance sheets',
+  'Pénurie de GPU : entre mineurs et IA, il ne reste rien pour personne':
+    'GPU shortage: between miners and AI, nothing is left for anyone',
+  'Une grande plateforme d’échange s’effondre en une semaine':
+    'A major exchange collapses in a week',
+  'Les cartes de minage inondent le marché de l’occasion':
+    'Mining cards flood the second-hand market',
+  'Feu vert aux fonds indiciels au comptant : la crypto entre en Bourse':
+    'Spot index funds cleared: crypto enters the stock market',
+  'Le halving réduit de moitié l’émission : les mineurs serrent les dents':
+    'The halving cuts issuance in two: miners grit their teeth',
+  'Les fermes de minage se reconvertissent en datacenters d’IA':
+    'Mining farms convert into AI datacenters',
+  'La crypto se cherche un récit pendant que l’IA rafle les capitaux':
+    'Crypto looks for a story while AI takes all the capital',
+  'Votre trésorerie en crypto fait tiquer votre commissaire aux comptes':
+    'Your crypto holdings make your auditor twitch',
+  'Votre pari crypto est cité en exemple dans la presse financière':
+    'Your crypto bet is held up as an example in the financial press',
+  'Vos pertes en crypto amusent beaucoup les analystes':
+    'Your crypto losses greatly amuse the analysts',
   'Contrat signé : votre datacenter IA sera assemblé en orbite':
     'Contract signed: your AI datacenter will be assembled in orbit',
   'Premiers modules lancés : le datacenter orbital prend forme':
@@ -872,6 +936,14 @@ export default {
     '🚨 Incidents:',
   'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
     'an alert with a red border and a pulsing halo can appear anywhere on the page, often off your screen, with no notification. Until it is handled it bleeds your cash — up to 70% in 2 minutes. The only clue: the red rim at the edges. Scroll the page.',
+  '🔬 Grands programmes :':
+    '🔬 Major programmes:',
+  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
+    'fusion and the Dyson sphere are not bought off the shelf. They go through research, development, availability, your order, then deployment — each stage covered by the press. Without a completed fusion programme, no fusion reactor can be bought. The sphere is paid for in matter, can be repeated, and lastingly speeds up harvesting.',
+  '₿ Crypto :':
+    '₿ Crypto:',
+  'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
+    'a second market, far more violent than the stock exchange, tracking the real cycles (2017 bubble, 2018 winter, 2021 surge, 2022 collapse, 2024 ETFs and halving). It is not only for betting: during the surges, miners fight over the same cards as you and GPU prices climb.',
   '🔧 Optimisations récurrentes :':
     '🔧 Recurring optimisations:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
@@ -1356,6 +1428,16 @@ export default {
     'Breakthrough: {0}',
   '{0} déployée (n°{1}) — {2}.':
     '{0} deployed (no.{1}) — {2}.',
+  '{0} : commande passée. Déploiement en cours.':
+    '{0}: order placed. Deployment under way.',
+  'Commande passée':
+    'Order placed',
+  '{0} : mise au point terminée, le système est constructible.':
+    '{0}: development complete, the system is buildable.',
+  'Disponible':
+    'Available',
+  'Opérationnel':
+    'Operational',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     'SINGULARITY. The system is improving itself. Matter conversion begins.',
   'Phase 2 — Autonomie':
@@ -1574,6 +1656,28 @@ export default {
     'available',
   'revient tous les {0} mois':
     'returns every {0} months',
+  'à l’étude':
+    'under study',
+  'recherche':
+    'research',
+  'mise au point':
+    'development',
+  'déploiement':
+    'deployment',
+  'nécessite la phase {0}':
+    'requires phase {0}',
+  'Commander':
+    'Order',
+  'la recherche n’a pas encore commencé':
+    'research has not started yet',
+  'récolte ×{0}':
+    'harvest ×{0}',
+  'envolée':
+    'surge',
+  'effondrement':
+    'collapse',
+  'marché atone':
+    'flat market',
   'Lever : {0}':
     'Raise: {0}',
   'Lever des fonds':
@@ -1592,8 +1696,6 @@ export default {
     'compute',
   'données':
     'data',
-  'recherche':
-    'research',
   'ing. R&D':
     'R&D eng.',
   'limité par ing. R&D':
@@ -1698,6 +1800,10 @@ export default {
     'Invest max',
   'Tout retirer':
     'Withdraw all',
+  'Crypto':
+    'Crypto',
+  'Effet sur le prix des GPU':
+    'Effect on GPU prices',
   'Équipe':
     'Team',
   'Effectif':
@@ -1738,6 +1844,8 @@ export default {
     'GPU slots',
   'Charge réseau':
     'Grid load',
+  'Grands programmes':
+    'Major programmes',
   'R&D — Entraînement de modèles':
     'R&D — Model training',
   'Données':

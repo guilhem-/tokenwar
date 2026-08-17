@@ -190,11 +190,8 @@ export const ENERGY = [
     fuelMWh:8, omDaily:7200, build:70,
     desc:'Petit réacteur modulaire : capex lourd, combustible négligeable, mais exploitation et sûreté à demeure.' },
   { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2,
-    fuelMWh:1, omDaily:9e4, build:110,
+    fuelMWh:1, omDaily:9e4, build:110, needsProgram:'fusion',
     desc:'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.' },
-  { id:'dyson',   name:'Collecteur Dyson',         year:2030, mw:5e8, costBase:1e13, costMult:1.10, rep:0, phase:3,
-    fuelMWh:0, omDaily:0, build:150,
-    desc:'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.' },
 ];
 
 // ---------------------------------------------------------------------
@@ -467,6 +464,61 @@ export const OPTIMS = [
     gain:'+5% prix accepté',
     effect:g=>{ g.mods.qualityMult *= 1.05; } },
 ];
+
+// ---------------------------------------------------------------------
+//  PROGRAMMES — les grandes percées ne s'achètent pas sur étagère : elles
+//  passent par la RECHERCHE, la MISE AU POINT, la DISPONIBILITÉ, la COMMANDE
+//  puis le DÉPLOIEMENT. Chaque étape est couverte par la presse.
+//  La recherche démarre seule quand les conditions sont réunies ; seule la
+//  commande demande une décision (et un paiement) du joueur.
+//  cost : ce que coûte UNE commande. repeat : on peut en commander d'autres,
+//  chaque exemplaire coûtant `costMult` fois plus cher que le précédent.
+// ---------------------------------------------------------------------
+export const PROGRAMS = [
+  { id:'fusion', icon:'⚛️', name:'Programme de fusion',
+    desc:'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.',
+    phase:1, hideAfter:2,
+    from:2026,                          // la recherche s’ouvre à cette date
+    researchMonths:10, tuningMonths:10, deployMonths:14,
+    cost:{ money:4e7, research:5e4 },
+    repeat:false,
+    done:'Vos réacteurs à fusion sont désormais constructibles.' },
+
+  { id:'dyson', icon:'☀️', name:'Sphère de Dyson',
+    desc:'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.',
+    phase:2, minEarth:0.5,              // étudiée pendant qu’on dévore la Terre
+    researchMonths:8, tuningMonths:8, deployMonths:10,
+    orderPhase:3,                       // commandable seulement une fois dans l’espace
+    cost:{ matter:2e33 },               // ≈ une masse solaire de matériaux
+    costMult:6, repeat:true,
+    done:'La sphère est refermée. L’étoile entière travaille pour vous.' },
+];
+export const DYSON_BOOST = 0.35;   // +35% de récolte par sphère…
+export const DYSON_BOOST_MAX = 3;  // …plafonné à ×3
+
+// ---------------------------------------------------------------------
+//  CRYPTO — un second marché, bien plus violent que la Bourse, calé sur les
+//  vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022,
+//  ETF et halving 2024…). Il ne sert pas qu'à parier : pendant les envolées,
+//  les mineurs se disputent les mêmes cartes que vous et le prix des GPU
+//  monte — exactement ce qui s'est passé en 2017 et en 2021.
+//  [année, dérive/s, volatilité/s, pression sur le prix des GPU]
+// ---------------------------------------------------------------------
+export const CRYPTO_CYCLE = [
+  [2016,  0.0020, 0.030, 1.00],
+  [2017,  0.0090, 0.075, 1.35],   // bulle : les mineurs raflent les cartes
+  [2018, -0.0060, 0.060, 1.00],   // hiver crypto
+  [2019,  0.0010, 0.045, 1.00],
+  [2020,  0.0055, 0.055, 1.10],
+  [2021,  0.0080, 0.070, 1.45],   // envolée + pénurie de GPU historique
+  [2022, -0.0075, 0.075, 0.95],   // effondrement d’une grande plateforme
+  [2023,  0.0035, 0.050, 1.00],
+  [2024,  0.0060, 0.055, 1.05],   // ETF au comptant + halving
+  [2025,  0.0015, 0.060, 1.05],
+  [2026, -0.0020, 0.065, 1.00],
+  [2028,  0.0010, 0.055, 1.00],
+];
+export const CRYPTO_UNLOCK = 25000;   // trésorerie à partir de laquelle le marché s'ouvre
 
 // ---------------------------------------------------------------------
 //  COSMOS — sondes (phase 3)
@@ -923,6 +975,8 @@ export const HELP = [
   { b:'💸 Salaires impayés :', p:'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.' },
   { b:'📈 Inflation :', p:'l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés suivent l’indice — pas votre trésorerie. Dormir sur son cash coûte du pouvoir d’achat.' },
   { b:'🚨 Incidents :', p:'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.' },
+  { b:'🔬 Grands programmes :', p:'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.' },
+  { b:'₿ Crypto :', p:'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.' },
   { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.' },
   { b:'Automatisation :', p:'achetez les auto-clickers, puis cochez ⟳ auto sur chaque élément précis à racheter automatiquement. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.' },
   { b:'📋 Directives permanentes :', p:'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.' },
@@ -1074,6 +1128,48 @@ export const HEADLINES = [
   { t:'Un agent IA contrôle l’ordinateur : les DSI s’inquiètent', p:'bad', from:2026 },
   { t:'Kimi K3 : les labos chinois talonnent la frontière', p:'neutral', from:2026 },
   { t:'Mémoire HBM4 introuvable : les prix serveurs s’envolent', p:'bad', from:2025, to:2028 },
+
+  // ═══ Fusion nucléaire — l'actualité réelle, puis VOTRE programme ═══
+  { t:'Un laser géant franchit le seuil : plus d’énergie produite que déposée', p:'good', from:2022, to:2025 },
+  { t:'Record de fusion dans un tokamak européen avant son démantèlement', p:'good', from:2024, to:2026 },
+  { t:'Le grand réacteur international annonce dix ans de retard', p:'bad', from:2024, to:2028 },
+  { t:'Les start-up de la fusion lèvent des milliards sur une promesse', p:'neutral', from:2023, to:2028 },
+  { t:'Aimants supraconducteurs : le tokamak compact tient ses promesses', p:'good', from:2025, to:2029 },
+  { t:'Un géant de la tech signe le premier contrat d’achat d’électricité de fusion', p:'neutral', from:2025, to:2030 },
+  { t:'Tritium : la vraie pénurie n’est pas celle des puces', p:'bad', from:2026, to:2032 },
+  // …et le feuilleton de votre propre programme (état du jeu)
+  { t:'Votre laboratoire ouvre un programme de fusion : première ligne budgétaire', p:'neutral', cond:g=>g.programNews('fusion','research') },
+  { t:'Fusion : vos physiciens traquent l’instabilité du plasma nuit et jour', p:'neutral', cond:g=>g.programNews('fusion','tuning') },
+  { t:'Votre design de réacteur à fusion est déclaré constructible', p:'good', cond:g=>g.programNews('fusion','ready') },
+  { t:'Commande signée : votre premier réacteur à fusion sort des plans', p:'good', cond:g=>g.programNews('fusion','ordered') },
+  { t:'Chantier de fusion : l’enceinte à vide est soudée, les aimants arrivent', p:'neutral', cond:g=>g.programNews('fusion','building') },
+  { t:'Ignition. Votre réacteur à fusion tient le plasma et alimente le réseau', p:'good', cond:g=>g.programNews('fusion','done') },
+
+  // ═══ Sphère de Dyson — recherche, mise au point, commande, déploiement ═══
+  { t:'Une équipe étudie sérieusement l’enveloppement d’une étoile', p:'neutral', cond:g=>g.programNews('dyson','research') },
+  { t:'Essaim de Dyson : les premiers collecteurs s’auto-assemblent en orbite solaire', p:'neutral', cond:g=>g.programNews('dyson','tuning') },
+  { t:'La sphère de Dyson passe du papier au constructible', p:'good', cond:g=>g.programNews('dyson','ready') },
+  { t:'Commande passée : une masse solaire de matériaux part vers l’étoile', p:'neutral', cond:g=>g.programNews('dyson','ordered') },
+  { t:'Déploiement : l’étoile disparaît lentement derrière ses propres collecteurs', p:'neutral', cond:g=>g.programNews('dyson','building') },
+  { t:'La sphère est refermée : une étoile entière ne travaille plus que pour vous', p:'good', cond:g=>g.programNews('dyson','done') },
+  { t:'Le ciel a une étoile de moins, et vous une sphère de plus', p:'bad', cond:g=>g.dysonCount() >= 2 },
+
+  // ═══ Crypto — les vrais cycles, et leur effet sur le prix des cartes ═══
+  { t:'Une monnaie numérique dépasse les 20 000 dollars : la ruée commence', p:'neutral', from:2017, to:2019 },
+  { t:'Les mineurs raflent les cartes graphiques : les joueurs s’étranglent', p:'bad', from:2017, to:2019 },
+  { t:'Hiver crypto : le marché a perdu 80% en un an', p:'bad', from:2018, to:2020 },
+  { t:'Des institutions mettent de la crypto à leur bilan', p:'neutral', from:2020, to:2022 },
+  { t:'Pénurie de GPU : entre mineurs et IA, il ne reste rien pour personne', p:'bad', from:2021, to:2023 },
+  { t:'Une grande plateforme d’échange s’effondre en une semaine', p:'bad', from:2022, to:2024 },
+  { t:'Les cartes de minage inondent le marché de l’occasion', p:'neutral', from:2022, to:2024 },
+  { t:'Feu vert aux fonds indiciels au comptant : la crypto entre en Bourse', p:'good', from:2024, to:2026 },
+  { t:'Le halving réduit de moitié l’émission : les mineurs serrent les dents', p:'neutral', from:2024, to:2026 },
+  { t:'Les fermes de minage se reconvertissent en datacenters d’IA', p:'neutral', from:2024 },
+  { t:'La crypto se cherche un récit pendant que l’IA rafle les capitaux', p:'bad', from:2026 },
+  // état du jeu : selon VOTRE portefeuille
+  { t:'Votre trésorerie en crypto fait tiquer votre commissaire aux comptes', p:'bad', cond:g=>g.state.crypto.invested > 1e6 },
+  { t:'Votre pari crypto est cité en exemple dans la presse financière', p:'good', cond:g=>g.cryptoGain() > 0.5 },
+  { t:'Vos pertes en crypto amusent beaucoup les analystes', p:'bad', cond:g=>g.cryptoGain() < -0.4 },
 
   // Datacenter orbital — feuilleton du chantier (état du jeu)
   { t:'Contrat signé : votre datacenter IA sera assemblé en orbite', p:'good', cond:g=>g.spaceDCNews('order') },

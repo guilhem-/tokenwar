@@ -8,21 +8,23 @@ import { LANGS, DEFAULT_LANG, MONTHS } from './js/i18n.js';
 
 const strings = allStrings();
 let errors = [];
-const step = (label, fn) => { try { fn(); console.log('OK  ' + label); }
+// await impératif : une étape asynchrone qui échoue doit être ENREGISTRÉE,
+// pas affichée « OK » pendant que le rejet part dans le vide.
+const step = async (label, fn) => { try { await fn(); console.log('OK  ' + label); }
   catch (e) { errors.push(label + ' :: ' + e.message); console.log('ERR ' + label + ' :: ' + e.message); } };
 
 const placeholders = s => (s.match(/\{\d+\}/g) || []).sort().join(',');
 
-step('inventaire non vide', () => {
+await step('inventaire non vide', () => {
   if (strings.length < 800) throw new Error('inventaire suspect : ' + strings.length);
 });
 
-step('le français est la langue source (aucun fichier requis)', () => {
+await step('le français est la langue source (aucun fichier requis)', () => {
   if (!LANGS.some(l => l.code === 'fr')) throw new Error('français absent de la liste');
   if (DEFAULT_LANG !== 'en') throw new Error('la langue par défaut devrait être l anglais');
 });
 
-step('mois définis pour chaque langue', () => {
+await step('mois définis pour chaque langue', () => {
   for (const l of LANGS) {
     const m = MONTHS[l.code];
     if (!m || m.length !== 12) throw new Error('mois manquants pour ' + l.code);
@@ -32,7 +34,7 @@ step('mois définis pour chaque langue', () => {
 const files = readdirSync('./js/locales').filter(f => f.endsWith('.js')).map(f => f.replace('.js', ''));
 const targets = LANGS.map(l => l.code).filter(c => c !== 'fr');
 
-step('un fichier de langue par langue déclarée', () => {
+await step('un fichier de langue par langue déclarée', () => {
   const missing = targets.filter(c => !files.includes(c));
   if (missing.length) throw new Error('fichiers manquants : ' + missing.join(', '));
 });
@@ -70,6 +72,19 @@ for (const code of targets) {
 }
 
 console.log(`\n${strings.length} chaînes × ${targets.length} langues`);
+// Filet de sécurité : aucune écriture étrangère ne doit polluer une langue
+// (un copier-coller malheureux avait glissé du cyrillique dans le japonais).
+await step('aucune contamination d écriture entre langues', async () => {
+  const CJK = '\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af';
+  const rules = { en:CJK, es:CJK, pt:CJK, de:CJK, zh:'\uac00-\ud7af', ja:'\uac00-\ud7af', ko:'' };
+  for (const [code, extra] of Object.entries(rules)) {
+    const re = new RegExp('[\u0400-\u04ff' + extra + ']');
+    const d = (await import(`./js/locales/${code}.js`)).default;
+    const bad = Object.entries(d).filter(([, v]) => re.test(v));
+    if (bad.length) throw new Error(`${code} : ${bad.length} traduction(s) dans une écriture étrangère — ex. ${JSON.stringify(bad[0][1].slice(0, 40))}`);
+  }
+});
+
 if (errors.length) { console.log(`\n=== ${errors.length} ERREUR(S) ===`); errors.forEach(e => console.log(' - ' + e)); process.exit(1); }
 console.log('=== i18n OK — couverture complète ===');
 
@@ -77,7 +92,7 @@ console.log('=== i18n OK — couverture complète ===');
 const { t, setLang, browserLang, supported, scale, decimalSep } = await import('./js/i18n.js');
 const { fmt } = await import('./js/util.js');
 
-step('détection : la langue du navigateur est réduite à sa base', () => {
+await step('détection : la langue du navigateur est réduite à sa base', () => {
   // navigator est en lecture seule sous Node : on le redéfinit proprement
   const nav = langs => Object.defineProperty(globalThis, 'navigator',
     { value: { languages: langs }, configurable: true, writable: true });
@@ -90,7 +105,7 @@ step('détection : la langue du navigateur est réduite à sa base', () => {
   if (supported('sv')) throw new Error('sv ne devrait pas être déclarée');
 });
 
-step('traduction et substitutions', async () => {
+await step('traduction et substitutions', async () => {
   globalThis.localStorage = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
   await setLang('de', false);
   if (t('Aide') !== 'Hilfe') throw new Error('traduction allemande absente');
@@ -99,7 +114,7 @@ step('traduction et substitutions', async () => {
     throw new Error('le repli doit rendre le français, pas une clé');
 });
 
-step('formatage : échelles longue, courte et par 10⁴', async () => {
+await step('formatage : échelles longue, courte et par 10⁴', async () => {
   await setLang('fr', false);
   if (fmt(1.2e9) !== '1,20 Md') throw new Error('échelle longue française : ' + fmt(1.2e9));
   await setLang('en', false);

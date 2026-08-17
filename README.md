@@ -26,9 +26,10 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**896 chaînes × 7 langues = 6 272 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**950 chaînes × 7 langues = 6 650 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
-aucune clé orpheline. `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
+aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
+`tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
 de jeu, appels `t()`, attributs `data-i18n`) — ajouter une chaîne la rend automatiquement
 obligatoire partout. Une langue n'est proposée que lorsque son fichier est complet.
 
@@ -100,6 +101,37 @@ de son année.
 - **Charges journalières** affichées et prélevées en continu, ventilées par nature.
 - **Tokens invendus = perdus** : la production doit suivre la demande, pas l'inverse.
 - **Bourse** (débloquée à $100k) : trois profils de risque, mouvement brownien géométrique.
+
+## 🔬 Grands programmes — rien ne s'achète sur étagère
+
+La **fusion** et la **sphère de Dyson** ne sont pas des lignes de catalogue : elles traversent
+**recherche → mise au point → disponibilité → commande → déploiement**, et **chaque étape est
+couverte par la presse**. Les phases d'étude s'enchaînent seules ; seule la commande demande
+une décision — et un paiement.
+
+- **Programme de fusion** (à partir de 2026) : confinement inertiel puis tokamak compact.
+  **Sans programme abouti, aucun réacteur à fusion n'est achetable** — le déblocage ne vient
+  plus de la date mais de ce que vous avez mené à terme. Payé en dollars et en recherche ;
+  l'ignition met 20 GW sur le réseau. La Une suit aussi l'actualité réelle : le seuil franchi
+  au laser, le record du tokamak européen, les dix ans de retard du réacteur international,
+  les milliards levés sur une promesse, la pénurie de tritium.
+- **Sphère de Dyson** (étudiée dès que la moitié de la Terre est consommée, commandable en
+  phase 3) : payée en **matière** — une masse solaire de matériaux — **répétable**, chaque
+  exemplaire coûtant six fois plus cher que le précédent, et **+35 % de récolte** cumulatifs
+  jusqu'à ×3. C'est enfin un objectif, plus un décor : l'ancien « Collecteur Dyson » libellé
+  en dollars, dans une phase où l'argent est masqué et où l'énergie n'est plus une contrainte,
+  ne servait à rien.
+
+## ₿ Crypto — un marché qui vous prend vos cartes
+
+Un second marché, bien plus violent que la Bourse, calé sur les **vrais cycles** : bulle 2017,
+hiver 2018, envolée 2021, effondrement 2022, ETF au comptant et halving 2024. Il se débloque
+dès **$25 000** de trésorerie.
+
+Il ne sert pas qu'à parier. Pendant les envolées, **les mineurs se disputent les mêmes cartes
+que vous** : le prix des GPU monte de **45 % en 2021**, exactement comme dans la réalité. Le
+panneau affiche l'effet en cours, et la presse raconte le cycle — de la ruée sur les cartes
+graphiques aux fermes de minage reconverties en datacenters d'IA.
 
 ## Confort de jeu
 

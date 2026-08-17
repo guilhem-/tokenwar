@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — KO
-//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
-//  une clé absente retombe sur le français, jamais sur une clé technique.
+//  Généré par tools/build-locale.mjs puis tools/patch-locale.mjs. La clé est
+//  la chaîne française source ; une clé absente retombe sur le français.
 // =====================================================================
 export default {
   'GPT-2':
@@ -238,10 +238,6 @@ export default {
     '핵융합로',
   'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
     '거의 무한한 에너지. 마침내 이룬 꿈 — 상주 플라스마 팀과 함께.',
-  'Collecteur Dyson':
-    '다이슨 집열기',
-  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
-    '항성 자체의 일부를 거둬들인다. 더 낼 것도, 낼 상대도 없다.',
   'Optimisation CUDA':
     'CUDA 최적화',
   'Efficacité':
@@ -792,6 +788,74 @@ export default {
     'Kimi K3: 중국 연구소들이 프런티어를 바짝 뒤쫓다',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4 메모리를 구할 수 없다: 서버 가격이 치솟다',
+  'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
+    '거대 레이저가 문턱을 넘다: 넣은 것보다 많은 에너지를 얻다',
+  'Record de fusion dans un tokamak européen avant son démantèlement':
+    '해체를 앞둔 유럽 토카막이 핵융합 기록을 세우다',
+  'Le grand réacteur international annonce dix ans de retard':
+    '국제 대형 원자로가 10년 지연을 발표하다',
+  'Les start-up de la fusion lèvent des milliards sur une promesse':
+    '핵융합 스타트업들이 약속 하나로 수십억을 조달하다',
+  'Aimants supraconducteurs : le tokamak compact tient ses promesses':
+    '초전도 자석: 소형 토카막이 약속을 지키다',
+  'Un géant de la tech signe le premier contrat d’achat d’électricité de fusion':
+    '테크 대기업이 최초의 핵융합 전력 구매 계약을 체결하다',
+  'Tritium : la vraie pénurie n’est pas celle des puces':
+    '삼중수소: 진짜 부족한 것은 칩이 아니다',
+  'Votre laboratoire ouvre un programme de fusion : première ligne budgétaire':
+    '당신의 연구소가 핵융합 프로그램을 시작하다: 첫 예산 항목',
+  'Fusion : vos physiciens traquent l’instabilité du plasma nuit et jour':
+    '핵융합: 당신의 물리학자들이 밤낮으로 플라스마 불안정을 쫓다',
+  'Votre design de réacteur à fusion est déclaré constructible':
+    '당신의 핵융합로 설계가 건설 가능 판정을 받다',
+  'Commande signée : votre premier réacteur à fusion sort des plans':
+    '발주 확정: 당신의 첫 핵융합로가 도면을 떠나다',
+  'Chantier de fusion : l’enceinte à vide est soudée, les aimants arrivent':
+    '핵융합 공사장: 진공 용기 용접 완료, 자석이 도착 중',
+  'Ignition. Votre réacteur à fusion tient le plasma et alimente le réseau':
+    '점화. 당신의 핵융합로가 플라스마를 유지하며 전력망에 전기를 보낸다',
+  'Une équipe étudie sérieusement l’enveloppement d’une étoile':
+    '한 팀이 항성을 감싸는 방법을 진지하게 연구하다',
+  'Essaim de Dyson : les premiers collecteurs s’auto-assemblent en orbite solaire':
+    '다이슨 군집: 첫 집광기들이 태양 궤도에서 스스로 조립되다',
+  'La sphère de Dyson passe du papier au constructible':
+    '다이슨 구가 종이에서 건설 가능으로 넘어가다',
+  'Commande passée : une masse solaire de matériaux part vers l’étoile':
+    '발주 완료: 태양 질량만큼의 자재가 항성으로 향하다',
+  'Déploiement : l’étoile disparaît lentement derrière ses propres collecteurs':
+    '전개 중: 항성이 자기 집광기 뒤로 서서히 사라지다',
+  'La sphère est refermée : une étoile entière ne travaille plus que pour vous':
+    '구가 닫혔다: 항성 하나가 오직 당신만을 위해 일한다',
+  'Le ciel a une étoile de moins, et vous une sphère de plus':
+    '하늘엔 별이 하나 줄고, 당신에겐 구가 하나 늘었다',
+  'Une monnaie numérique dépasse les 20 000 dollars : la ruée commence':
+    '한 디지털 화폐가 2만 달러를 넘다: 광풍이 시작되다',
+  'Les mineurs raflent les cartes graphiques : les joueurs s’étranglent':
+    '채굴자들이 그래픽카드를 쓸어가다: 게이머들은 숨이 막힌다',
+  'Hiver crypto : le marché a perdu 80% en un an':
+    '크립토 겨울: 시장이 1년 만에 80% 증발하다',
+  'Des institutions mettent de la crypto à leur bilan':
+    '기관들이 크립토를 재무제표에 올리다',
+  'Pénurie de GPU : entre mineurs et IA, il ne reste rien pour personne':
+    'GPU 품귀: 채굴자와 AI 사이에 누구 몫도 남지 않는다',
+  'Une grande plateforme d’échange s’effondre en une semaine':
+    '대형 거래소가 일주일 만에 무너지다',
+  'Les cartes de minage inondent le marché de l’occasion':
+    '채굴용 카드가 중고 시장에 넘쳐나다',
+  'Feu vert aux fonds indiciels au comptant : la crypto entre en Bourse':
+    '현물 지수 펀드 승인: 크립토가 증시로 들어오다',
+  'Le halving réduit de moitié l’émission : les mineurs serrent les dents':
+    '반감기로 발행량이 절반으로: 채굴자들이 이를 악물다',
+  'Les fermes de minage se reconvertissent en datacenters d’IA':
+    '채굴장이 AI 데이터센터로 전환되다',
+  'La crypto se cherche un récit pendant que l’IA rafle les capitaux':
+    '크립토가 서사를 찾는 사이, 자본은 AI가 쓸어가다',
+  'Votre trésorerie en crypto fait tiquer votre commissaire aux comptes':
+    '크립토에 넣어 둔 자금에 회계감사인이 눈살을 찌푸리다',
+  'Votre pari crypto est cité en exemple dans la presse financière':
+    '당신의 크립토 베팅이 경제지에서 모범 사례로 꼽히다',
+  'Vos pertes en crypto amusent beaucoup les analystes':
+    '당신의 크립토 손실이 애널리스트들을 크게 즐겁게 하다',
   'Contrat signé : votre datacenter IA sera assemblé en orbite':
     '계약 체결: 당신의 AI 데이터센터가 궤도에서 조립된다',
   'Premiers modules lancés : le datacenter orbital prend forme':
@@ -872,6 +936,14 @@ export default {
     '🚨 사고:',
   'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
     '빨간 테두리와 맥동하는 붉은 후광을 두른 경고가 페이지 어딘가에, 대개 화면 밖에, 아무 알림 없이 나타난다. 처리되기 전까지 현금을 계속 흘리며, 2분이면 최대 70%를 가져간다. 단서는 화면 가장자리의 붉은 테두리뿐이다. 페이지를 스크롤하라.',
+  '🔬 Grands programmes :':
+    '🔬 대형 프로그램:',
+  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
+    '핵융합과 다이슨 구는 진열대에서 사는 물건이 아니다. 연구, 개발, 사용 가능, 당신의 발주, 그리고 전개를 차례로 거치며 각 단계를 언론이 따라붙는다. 핵융합 프로그램을 끝내지 못하면 핵융합로는 살 수 없다. 구는 물질로 지불하고, 반복해서 지을 수 있으며, 수확을 지속적으로 가속한다.',
+  '₿ Crypto :':
+    '₿ 크립토:',
+  'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
+    '증시보다 훨씬 거친 두 번째 시장. 실제 주기를 따라간다(2017년 거품, 2018년 겨울, 2021년 급등, 2022년 붕괴, 2024년 ETF와 반감기). 베팅용만은 아니다. 급등기에는 채굴자들이 당신과 같은 카드를 두고 다투고, GPU 가격이 오른다.',
   '🔧 Optimisations récurrentes :':
     '🔧 주기적 최적화:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
@@ -1356,6 +1428,16 @@ export default {
     '돌파: {0}',
   '{0} déployée (n°{1}) — {2}.':
     '{0} 적용 ({1}회차) — {2}.',
+  '{0} : commande passée. Déploiement en cours.':
+    '{0}: 발주 완료. 전개 중입니다.',
+  'Commande passée':
+    '발주 완료',
+  '{0} : mise au point terminée, le système est constructible.':
+    '{0}: 개발이 끝나 건설 가능해졌습니다.',
+  'Disponible':
+    '사용 가능',
+  'Opérationnel':
+    '가동 시작',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     '특이점. 시스템이 스스로를 개선하기 시작했습니다. 물질 전환이 시작됩니다.',
   'Phase 2 — Autonomie':
@@ -1574,6 +1656,28 @@ export default {
     '사용 가능',
   'revient tous les {0} mois':
     '{0}개월마다 다시 나타남',
+  'à l’étude':
+    '검토 중',
+  'recherche':
+    '연구',
+  'mise au point':
+    '개발',
+  'déploiement':
+    '전개',
+  'nécessite la phase {0}':
+    '{0}단계 필요',
+  'Commander':
+    '발주',
+  'la recherche n’a pas encore commencé':
+    '연구가 아직 시작되지 않았다',
+  'récolte ×{0}':
+    '수확 ×{0}',
+  'envolée':
+    '급등',
+  'effondrement':
+    '폭락',
+  'marché atone':
+    '지지부진한 장세',
   'Lever : {0}':
     '조달: {0}',
   'Lever des fonds':
@@ -1592,8 +1696,6 @@ export default {
     '연산',
   'données':
     '데이터',
-  'recherche':
-    '연구',
   'ing. R&D':
     '연구개발',
   'limité par ing. R&D':
@@ -1698,6 +1800,10 @@ export default {
     '최대 투자',
   'Tout retirer':
     '전부 회수',
+  'Crypto':
+    '크립토',
+  'Effet sur le prix des GPU':
+    'GPU 가격에 미치는 영향',
   'Équipe':
     '팀',
   'Effectif':
@@ -1738,6 +1844,8 @@ export default {
     'GPU 자리',
   'Charge réseau':
     '계통 부하',
+  'Grands programmes':
+    '대형 프로그램',
   'R&D — Entraînement de modèles':
     '연구개발 — 모델 학습',
   'Données':

@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — ES
-//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
-//  une clé absente retombe sur le français, jamais sur une clé technique.
+//  Généré par tools/build-locale.mjs puis tools/patch-locale.mjs. La clé est
+//  la chaîne française source ; une clé absente retombe sur le français.
 // =====================================================================
 export default {
   'GPT-2':
@@ -238,10 +238,6 @@ export default {
     'Reactor de fusión',
   'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
     'Energía casi ilimitada. El sueño por fin cumplido — con un equipo de plasma en plantilla.',
-  'Collecteur Dyson':
-    'Colector Dyson',
-  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
-    'Captas una fracción de la propia estrella. Nada que pagar, nadie a quien pagar.',
   'Optimisation CUDA':
     'Optimización CUDA',
   'Efficacité':
@@ -792,6 +788,74 @@ export default {
     'Kimi K3: los laboratorios chinos pisan los talones a la frontera',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'Memoria HBM4 imposible de encontrar: los precios de servidor se disparan',
+  'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
+    'Un láser gigante cruza el umbral: más energía producida que aportada',
+  'Record de fusion dans un tokamak européen avant son démantèlement':
+    'Récord de fusión en un tokamak europeo antes de su desmantelamiento',
+  'Le grand réacteur international annonce dix ans de retard':
+    'El gran reactor internacional anuncia diez años de retraso',
+  'Les start-up de la fusion lèvent des milliards sur une promesse':
+    'Las start-up de la fusión levantan miles de millones sobre una promesa',
+  'Aimants supraconducteurs : le tokamak compact tient ses promesses':
+    'Imanes superconductores: el tokamak compacto cumple lo prometido',
+  'Un géant de la tech signe le premier contrat d’achat d’électricité de fusion':
+    'Un gigante tecnológico firma el primer contrato de compra de electricidad de fusión',
+  'Tritium : la vraie pénurie n’est pas celle des puces':
+    'Tritio: la verdadera escasez no es la de los chips',
+  'Votre laboratoire ouvre un programme de fusion : première ligne budgétaire':
+    'Tu laboratorio abre un programa de fusión: primera partida presupuestaria',
+  'Fusion : vos physiciens traquent l’instabilité du plasma nuit et jour':
+    'Fusión: tus físicos persiguen la inestabilidad del plasma día y noche',
+  'Votre design de réacteur à fusion est déclaré constructible':
+    'Tu diseño de reactor de fusión se declara construible',
+  'Commande signée : votre premier réacteur à fusion sort des plans':
+    'Pedido firmado: tu primer reactor de fusión sale de los planos',
+  'Chantier de fusion : l’enceinte à vide est soudée, les aimants arrivent':
+    'Obra de fusión: la cámara de vacío está soldada, llegan los imanes',
+  'Ignition. Votre réacteur à fusion tient le plasma et alimente le réseau':
+    'Ignición. Tu reactor de fusión sostiene el plasma y alimenta la red',
+  'Une équipe étudie sérieusement l’enveloppement d’une étoile':
+    'Un equipo estudia en serio cómo envolver una estrella',
+  'Essaim de Dyson : les premiers collecteurs s’auto-assemblent en orbite solaire':
+    'Enjambre de Dyson: los primeros colectores se autoensamblan en órbita solar',
+  'La sphère de Dyson passe du papier au constructible':
+    'La esfera de Dyson pasa del papel a lo construible',
+  'Commande passée : une masse solaire de matériaux part vers l’étoile':
+    'Pedido realizado: una masa solar de materiales parte hacia la estrella',
+  'Déploiement : l’étoile disparaît lentement derrière ses propres collecteurs':
+    'Despliegue: la estrella desaparece poco a poco tras sus propios colectores',
+  'La sphère est refermée : une étoile entière ne travaille plus que pour vous':
+    'La esfera está cerrada: una estrella entera ya solo trabaja para ti',
+  'Le ciel a une étoile de moins, et vous une sphère de plus':
+    'El cielo tiene una estrella menos, y tú una esfera más',
+  'Une monnaie numérique dépasse les 20 000 dollars : la ruée commence':
+    'Una moneda digital supera los 20 000 dólares: empieza la fiebre',
+  'Les mineurs raflent les cartes graphiques : les joueurs s’étranglent':
+    'Los mineros arrasan con las tarjetas gráficas: los jugadores se atragantan',
+  'Hiver crypto : le marché a perdu 80% en un an':
+    'Invierno cripto: el mercado ha perdido un 80% en un año',
+  'Des institutions mettent de la crypto à leur bilan':
+    'Las instituciones ponen cripto en su balance',
+  'Pénurie de GPU : entre mineurs et IA, il ne reste rien pour personne':
+    'Escasez de GPU: entre mineros e IA, no queda nada para nadie',
+  'Une grande plateforme d’échange s’effondre en une semaine':
+    'Una gran plataforma de intercambio se hunde en una semana',
+  'Les cartes de minage inondent le marché de l’occasion':
+    'Las tarjetas de minería inundan el mercado de segunda mano',
+  'Feu vert aux fonds indiciels au comptant : la crypto entre en Bourse':
+    'Luz verde a los fondos indexados al contado: la cripto entra en Bolsa',
+  'Le halving réduit de moitié l’émission : les mineurs serrent les dents':
+    'El halving reduce a la mitad la emisión: los mineros aprietan los dientes',
+  'Les fermes de minage se reconvertissent en datacenters d’IA':
+    'Las granjas de minería se reconvierten en centros de datos de IA',
+  'La crypto se cherche un récit pendant que l’IA rafle les capitaux':
+    'La cripto busca un relato mientras la IA se lleva todo el capital',
+  'Votre trésorerie en crypto fait tiquer votre commissaire aux comptes':
+    'Tu tesorería en cripto hace fruncir el ceño a tu auditor',
+  'Votre pari crypto est cité en exemple dans la presse financière':
+    'Tu apuesta cripto se cita como ejemplo en la prensa financiera',
+  'Vos pertes en crypto amusent beaucoup les analystes':
+    'Tus pérdidas en cripto divierten mucho a los analistas',
   'Contrat signé : votre datacenter IA sera assemblé en orbite':
     'Contrato firmado: tu centro de datos de IA se montará en órbita',
   'Premiers modules lancés : le datacenter orbital prend forme':
@@ -872,6 +936,14 @@ export default {
     '🚨 Incidentes:',
   'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
     'una alerta con borde rojo y halo pulsante puede aparecer en cualquier punto de la página, a menudo fuera de tu pantalla y sin aviso. Mientras no se trate, desangra tu caja: hasta un 70% en 2 minutos. Única pista: el ribete rojo de los bordes. Desplaza la página.',
+  '🔬 Grands programmes :':
+    '🔬 Grandes programas:',
+  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
+    'la fusión y la esfera de Dyson no se compran en una estantería. Pasan por la investigación, la puesta a punto, la disponibilidad, tu pedido y luego el despliegue, y cada etapa la cubre la prensa. Sin un programa de fusión terminado, ningún reactor de fusión es comprable. La esfera se paga en materia, se repite y acelera de forma duradera la cosecha.',
+  '₿ Crypto :':
+    '₿ Cripto:',
+  'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
+    'un segundo mercado, mucho más violento que la Bolsa, calcado de los ciclos reales (burbuja de 2017, invierno de 2018, subidón de 2021, desplome de 2022, ETF y halving de 2024). No sirve solo para apostar: durante las subidas, los mineros se pelean por las mismas tarjetas que tú y el precio de las GPU sube.',
   '🔧 Optimisations récurrentes :':
     '🔧 Optimizaciones recurrentes:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
@@ -1356,6 +1428,16 @@ export default {
     'Avance: {0}',
   '{0} déployée (n°{1}) — {2}.':
     '{0} desplegada (n.º {1}) — {2}.',
+  '{0} : commande passée. Déploiement en cours.':
+    '{0}: pedido realizado. Despliegue en curso.',
+  'Commande passée':
+    'Pedido realizado',
+  '{0} : mise au point terminée, le système est constructible.':
+    '{0}: puesta a punto terminada, el sistema es construible.',
+  'Disponible':
+    'Disponible',
+  'Opérationnel':
+    'Operativo',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     'SINGULARIDAD. El sistema se automejora. Comienza la conversión de la materia.',
   'Phase 2 — Autonomie':
@@ -1574,6 +1656,28 @@ export default {
     'disponible',
   'revient tous les {0} mois':
     'vuelve cada {0} meses',
+  'à l’étude':
+    'en estudio',
+  'recherche':
+    'investigación',
+  'mise au point':
+    'puesta a punto',
+  'déploiement':
+    'despliegue',
+  'nécessite la phase {0}':
+    'requiere la fase {0}',
+  'Commander':
+    'Encargar',
+  'la recherche n’a pas encore commencé':
+    'la investigación aún no ha empezado',
+  'récolte ×{0}':
+    'cosecha ×{0}',
+  'envolée':
+    'subidón',
+  'effondrement':
+    'desplome',
+  'marché atone':
+    'mercado plano',
   'Lever : {0}':
     'Levantar: {0}',
   'Lever des fonds':
@@ -1592,8 +1696,6 @@ export default {
     'cómputo',
   'données':
     'datos',
-  'recherche':
-    'investigación',
   'ing. R&D':
     'ing. I+D',
   'limité par ing. R&D':
@@ -1698,6 +1800,10 @@ export default {
     'Invertir el máximo',
   'Tout retirer':
     'Retirar todo',
+  'Crypto':
+    'Cripto',
+  'Effet sur le prix des GPU':
+    'Efecto en el precio de las GPU',
   'Équipe':
     'Equipo',
   'Effectif':
@@ -1738,6 +1844,8 @@ export default {
     'Plazas de GPU',
   'Charge réseau':
     'Carga de red',
+  'Grands programmes':
+    'Grandes programas',
   'R&D — Entraînement de modèles':
     'I+D — Entrenamiento de modelos',
   'Données':

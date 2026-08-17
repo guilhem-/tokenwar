@@ -1509,3 +1509,12 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
   animation: pulse 1.8s ease-in-out 4;
 }
 @media (max-width: 760px) { .lang-select { font-size: 0.75rem; max-width: 8.5rem; } }
+
+/* grands programmes : recherche → mise au point → commande → déploiement */
+.item.program { border-left: 2px solid var(--accent-2, var(--accent)); }
+.program-bar { margin-top: 0.5rem; }
+.program-bar .progress-fill { transition: width 0.4s linear; }
+
+/* second marché : crypto */
+.crypto-block { margin-top: 0.75rem; border-top: 1px dashed var(--line); padding-top: 0.6rem; }
+.crypto-head { font-weight: 600; }

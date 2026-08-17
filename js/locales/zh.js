@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — ZH
-//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
-//  une clé absente retombe sur le français, jamais sur une clé technique.
+//  Généré par tools/build-locale.mjs puis tools/patch-locale.mjs. La clé est
+//  la chaîne française source ; une clé absente retombe sur le français.
 // =====================================================================
 export default {
   'GPT-2':
@@ -238,10 +238,6 @@ export default {
     '聚变反应堆',
   'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
     '近乎无限的能源。梦想终于成真——代价是一支常驻的等离子团队。',
-  'Collecteur Dyson':
-    '戴森收集器',
-  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
-    '你直接采收恒星的一部分。再没有什么要付，也没有谁要付。',
   'Optimisation CUDA':
     'CUDA 优化',
   'Efficacité':
@@ -792,6 +788,74 @@ export default {
     'Kimi K3：中国实验室紧咬前沿',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4 内存一芯难求：服务器价格飙升',
+  'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
+    '巨型激光装置越过临界点：产出能量超过输入',
+  'Record de fusion dans un tokamak européen avant son démantèlement':
+    '欧洲某托卡马克在拆除前创下聚变纪录',
+  'Le grand réacteur international annonce dix ans de retard':
+    '国际大型反应堆宣布延期十年',
+  'Les start-up de la fusion lèvent des milliards sur une promesse':
+    '聚变初创公司凭一个承诺募得数十亿',
+  'Aimants supraconducteurs : le tokamak compact tient ses promesses':
+    '超导磁体：紧凑型托卡马克兑现承诺',
+  'Un géant de la tech signe le premier contrat d’achat d’électricité de fusion':
+    '一家科技巨头签下首份聚变电力采购协议',
+  'Tritium : la vraie pénurie n’est pas celle des puces':
+    '氚：真正短缺的不是芯片',
+  'Votre laboratoire ouvre un programme de fusion : première ligne budgétaire':
+    '你的实验室启动聚变计划：第一笔预算落地',
+  'Fusion : vos physiciens traquent l’instabilité du plasma nuit et jour':
+    '聚变：你的物理学家日夜追猎等离子体不稳定性',
+  'Votre design de réacteur à fusion est déclaré constructible':
+    '你的聚变堆设计被判定为可建造',
+  'Commande signée : votre premier réacteur à fusion sort des plans':
+    '合同签署：你的第一座聚变堆走出图纸',
+  'Chantier de fusion : l’enceinte à vide est soudée, les aimants arrivent':
+    '聚变工地：真空室焊接完成，磁体正在运抵',
+  'Ignition. Votre réacteur à fusion tient le plasma et alimente le réseau':
+    '点火成功。你的聚变堆稳住了等离子体，并向电网供电',
+  'Une équipe étudie sérieusement l’enveloppement d’une étoile':
+    '一支团队开始认真研究如何包裹一颗恒星',
+  'Essaim de Dyson : les premiers collecteurs s’auto-assemblent en orbite solaire':
+    '戴森群：首批集热器在日心轨道上自行组装',
+  'La sphère de Dyson passe du papier au constructible':
+    '戴森球从纸面走向可建造',
+  'Commande passée : une masse solaire de matériaux part vers l’étoile':
+    '订单下达：一个太阳质量的材料驶向恒星',
+  'Déploiement : l’étoile disparaît lentement derrière ses propres collecteurs':
+    '部署中：恒星缓缓隐没在自己的集热器之后',
+  'La sphère est refermée : une étoile entière ne travaille plus que pour vous':
+    '球壳合拢：一整颗恒星从此只为你工作',
+  'Le ciel a une étoile de moins, et vous une sphère de plus':
+    '天上少了一颗星，你多了一座球',
+  'Une monnaie numérique dépasse les 20 000 dollars : la ruée commence':
+    '一种数字货币突破两万美元：抢购开始',
+  'Les mineurs raflent les cartes graphiques : les joueurs s’étranglent':
+    '矿工把显卡一扫而空：玩家们气结',
+  'Hiver crypto : le marché a perdu 80% en un an':
+    '加密寒冬：市场一年蒸发八成',
+  'Des institutions mettent de la crypto à leur bilan':
+    '机构把加密资产写进资产负债表',
+  'Pénurie de GPU : entre mineurs et IA, il ne reste rien pour personne':
+    'GPU 短缺：矿工和 AI 之间，谁都分不到',
+  'Une grande plateforme d’échange s’effondre en une semaine':
+    '一家大型交易平台一周内崩塌',
+  'Les cartes de minage inondent le marché de l’occasion':
+    '矿卡涌入二手市场',
+  'Feu vert aux fonds indiciels au comptant : la crypto entre en Bourse':
+    '现货指数基金获批：加密资产走进证券市场',
+  'Le halving réduit de moitié l’émission : les mineurs serrent les dents':
+    '减半让发行量腰斩：矿工们咬牙硬撑',
+  'Les fermes de minage se reconvertissent en datacenters d’IA':
+    '矿场改造成 AI 数据中心',
+  'La crypto se cherche un récit pendant que l’IA rafle les capitaux':
+    '加密世界在找新叙事，资本却都涌向 AI',
+  'Votre trésorerie en crypto fait tiquer votre commissaire aux comptes':
+    '你放在加密资产里的资金让审计师直皱眉',
+  'Votre pari crypto est cité en exemple dans la presse financière':
+    '你的加密押注被财经媒体当作范例',
+  'Vos pertes en crypto amusent beaucoup les analystes':
+    '你在加密上的亏损让分析师们乐不可支',
   'Contrat signé : votre datacenter IA sera assemblé en orbite':
     '合同已签：你的 AI 数据中心将在轨道上组装',
   'Premiers modules lancés : le datacenter orbital prend forme':
@@ -872,6 +936,14 @@ export default {
     '🚨 突发事故：',
   'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
     '一个红框加红色脉冲光晕的警报可能出现在页面的任何位置，常常在你的屏幕之外，而且毫无提示。只要没有处理，它就会持续放血——2 分钟内最多吃掉 70%。唯一线索：屏幕边缘的红边。请滚动页面。',
+  '🔬 Grands programmes :':
+    '🔬 重大计划：',
+  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
+    '聚变和戴森球不是货架上的商品。它们要走完研究、调试、可用、你的下单、再到部署，每一步都有媒体跟进。聚变计划没有走完，就买不到聚变堆。戴森球用物质支付，可以反复建造，并持久加快采集。',
+  '₿ Crypto :':
+    '₿ 加密资产：',
+  'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
+    '第二个市场，比股市剧烈得多，按真实周期走（2017 泡沫、2018 寒冬、2021 暴涨、2022 崩盘、2024 ETF 与减半）。它不只是用来下注：行情暴涨时，矿工和你抢同样的显卡，GPU 价格随之上涨。',
   '🔧 Optimisations récurrentes :':
     '🔧 周期性优化：',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
@@ -1356,6 +1428,16 @@ export default {
     '突破：{0}',
   '{0} déployée (n°{1}) — {2}.':
     '{0} 已部署（第 {1} 次）——{2}。',
+  '{0} : commande passée. Déploiement en cours.':
+    '{0}：订单已下达。正在部署。',
+  'Commande passée':
+    '订单已下达',
+  '{0} : mise au point terminée, le système est constructible.':
+    '{0}：调试完成，系统已可建造。',
+  'Disponible':
+    '可用',
+  'Opérationnel':
+    '已投入运行',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     '奇点。系统开始自我改进。物质转化就此开始。',
   'Phase 2 — Autonomie':
@@ -1574,6 +1656,28 @@ export default {
     '可用',
   'revient tous les {0} mois':
     '每 {0} 个月回归一次',
+  'à l’étude':
+    '研究中',
+  'recherche':
+    '研究',
+  'mise au point':
+    '调试',
+  'déploiement':
+    '部署',
+  'nécessite la phase {0}':
+    '需要第 {0} 阶段',
+  'Commander':
+    '下单',
+  'la recherche n’a pas encore commencé':
+    '研究尚未开始',
+  'récolte ×{0}':
+    '采集 ×{0}',
+  'envolée':
+    '暴涨',
+  'effondrement':
+    '崩盘',
+  'marché atone':
+    '行情低迷',
   'Lever : {0}':
     '融资：{0}',
   'Lever des fonds':
@@ -1592,8 +1696,6 @@ export default {
     '算力',
   'données':
     '数据',
-  'recherche':
-    '研究',
   'ing. R&D':
     '研发工程师',
   'limité par ing. R&D':
@@ -1698,6 +1800,10 @@ export default {
     '全部投入',
   'Tout retirer':
     '全部取回',
+  'Crypto':
+    '加密资产',
+  'Effet sur le prix des GPU':
+    '对 GPU 价格的影响',
   'Équipe':
     '团队',
   'Effectif':
@@ -1738,6 +1844,8 @@ export default {
     'GPU 机位',
   'Charge réseau':
     '电网负荷',
+  'Grands programmes':
+    '重大计划',
   'R&D — Entraînement de modèles':
     '研发 — 模型训练',
   'Données':

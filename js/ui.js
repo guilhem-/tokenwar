@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — INTERFACE
 // =====================================================================
-import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP,
+import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
@@ -60,7 +60,7 @@ export class UI {
       crisisLayer: $('crisis-layer'), crisisVignette: $('crisis-vignette'), idleFx: $('idle-fx'),
       gpuCap: $('gpu-cap'),
       gpuList: $('gpu-list'),
-      panelStock: $('panel-stock'),
+      panelStock: $('panel-stock'), stockBlock: $('stock-block'),
       stockValue: $('stock-value'), stockPl: $('stock-pl'), riskTabs: $('risk-tabs'),
       btnStockDep10: $('btn-stock-dep10'), btnStockDepMax: $('btn-stock-depmax'), btnStockWithdraw: $('btn-stock-withdraw'),
       btnRestart: $('btn-restart'),
@@ -76,6 +76,10 @@ export class UI {
       researchValue: $('research-value'), researchRate: $('research-rate'), dataValue: $('data-value'), trainList: $('train-list'),
       panelCosmos: $('panel-cosmos'), cosmosBody: $('cosmos-body'),
       projectList: $('project-list'), optimList: $('optim-list'),
+      panelPrograms: $('panel-programs'), programList: $('program-list'),
+      cryptoBlock: $('crypto-block'), cryptoTrend: $('crypto-trend'), cryptoValue: $('crypto-value'),
+      cryptoPl: $('crypto-pl'), cryptoGpu: $('crypto-gpu'),
+      btnCryptoDep10: $('btn-crypto-dep10'), btnCryptoWithdraw: $('btn-crypto-withdraw'),
       log: $('log'),
       modalOverlay: $('modal-overlay'), modal: $('modal'), modalTitle: $('modal-title'),
       modalBody: $('modal-body'), modalChoices: $('modal-choices'),
@@ -215,6 +219,8 @@ export class UI {
     this.el.btnStockDep10.addEventListener('click', () => g.stockDeposit(g.money * 0.10));
     this.el.btnStockDepMax.addEventListener('click', () => g.stockDeposit(g.money));
     this.el.btnStockWithdraw.addEventListener('click', () => g.stockWithdraw());
+    this.el.btnCryptoDep10.addEventListener('click', () => g.cryptoDeposit(g.money * 0.10));
+    this.el.btnCryptoWithdraw.addEventListener('click', () => g.cryptoWithdraw());
     this.el.riskTabs.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => { g.setRisk(+tab.dataset.risk); this.syncRiskTabs(); });
     });
@@ -626,6 +632,20 @@ export class UI {
       r.desc.textContent = td(o.desc);
       r.el.addEventListener('click', () => { this.game.buyOptim(o.id); });
     });
+    // Grands programmes (fusion, sphère de Dyson)
+    this.el.programList.innerHTML = ''; this.rows.program = {};
+    PROGRAMS.forEach(p => {
+      const r = this.makeRow(this.el.programList, p.id, this.rows.program);
+      r.el.classList.add('program');
+      r.name.textContent = p.icon + ' ' + td(p.name);
+      r.desc.textContent = td(p.desc);
+      const bar = document.createElement('div');
+      bar.className = 'progress program-bar hidden';
+      bar.innerHTML = '<div class="progress-fill" style="width:0%"></div>';
+      r.el.appendChild(bar);
+      r.bar = bar; r.barFill = bar.querySelector('.progress-fill');
+      r.el.addEventListener('click', () => { this.game.orderProgram(p.id); });
+    });
     // Projects
     this.el.projectList.innerHTML = ''; this.rows.project = {};
     PROJECTS.forEach(p => {
@@ -797,7 +817,9 @@ export class UI {
   }
 
   renderStock() {
-    this.el.panelStock.classList.toggle('hidden', !this.game.state.stockUnlocked); // débloquée à 100k$
+    // le panneau reste si l'un des deux marchés est ouvert (crypto dès 25k$, Bourse à 100k$)
+    this.el.panelStock.classList.toggle('hidden', !this.game.state.stockUnlocked && !this.game.state.crypto.unlocked);
+    this.el.stockBlock.classList.toggle('hidden', !this.game.state.stockUnlocked);   // la Bourse s'ouvre à 100k$
     const g = this.game, s = g.state;
     const st = s.stock;
     this.el.stockValue.textContent = fmtMoney(st.invested);
@@ -955,8 +977,10 @@ export class UI {
     this.renderTeam();
     this.renderCharges();
     this.renderStock();
+    this.renderCrypto();
     this.renderGPUs();
     this.renderEnergy();
+    this.renderPrograms();
     this.renderOptims();
     this.renderProjects();
     this.renderCrisis();
@@ -1123,6 +1147,78 @@ export class UI {
         + ` <span class="text-muted">· ${t('revient tous les {0} mois', o.months)}</span>`;
       this.setAfford(r.el, g.canBuyOptim(o.id));
     });
+  }
+
+  // Grands programmes : une ligne d'état par étape, une barre pendant les
+  // phases qui durent, et un prix seulement quand la commande est possible.
+  renderPrograms() {
+    const g = this.game;
+    let any = false;
+    PROGRAMS.forEach(p => {
+      const r = this.rows.program[p.id];
+      if (!r) return;
+      if (!g.progVisible(p)) { r.el.classList.add('hidden'); return; }
+      any = true;
+      r.el.classList.remove('hidden');
+      const st = g.progState(p.id);
+      const prog = g.progProgress(p.id);
+      const labels = {
+        none:    t('à l’étude'),
+        research:t('recherche'),
+        tuning:  t('mise au point'),
+        ready:   t('disponible'),
+        ordered: t('déploiement'),
+      };
+      const badge = st.stage === 'ready' ? 'badge-new' : (st.stage === 'none' ? 'badge-warn' : '');
+      const count = st.n > 0 ? ` <span class="badge">×${st.n}</span>` : '';
+      if (st.stage === 'ready') {
+        const c = g.progCost(p);
+        const parts = [];
+        if (c.money != null) parts.push(`<span class="${g.money >= c.money ? 'text-good' : 'text-bad'}">${fmtMoney(c.money)}</span>`);
+        if (c.research != null) parts.push(`<span class="${g.research >= c.research ? 'text-good' : 'text-bad'}">${t('recherche')} ${fmt(c.research)}</span>`);
+        if (c.matter != null) parts.push(`<span class="${g.matter >= c.matter ? 'text-good' : 'text-bad'}">${fmtMass(c.matter)}</span>`);
+        const tooEarly = p.orderPhase != null && g.phase < p.orderPhase;
+        r.cost.innerHTML = `<span class="badge ${badge}">${labels.ready}</span>${count}`;
+        r.effect.innerHTML = tooEarly
+          ? `<span class="badge badge-warn">${t('nécessite la phase {0}', p.orderPhase)}</span>`
+          : `<span class="text-muted">${t('Commander')} :</span> ${parts.join(' · ')}`;
+        this.setAfford(r.el, g.canOrderProgram(p.id));
+        r.bar.classList.add('hidden');
+      } else {
+        r.el.classList.remove('locked', 'affordable');
+        r.cost.innerHTML = `<span class="badge ${badge}">${labels[st.stage] || ''}</span>${count}`;
+        r.effect.innerHTML = st.stage === 'none'
+          ? `<span class="text-muted">${t('la recherche n’a pas encore commencé')}</span>`
+          : `<span class="text-muted">${td(p.desc)}</span>`;
+        r.bar.classList.toggle('hidden', prog == null);
+        if (prog != null) r.barFill.style.width = (prog * 100).toFixed(1) + '%';
+      }
+      // la sphère de Dyson affiche son effet cumulé
+      if (p.id === 'dyson' && st.n > 0) {
+        r.effect.innerHTML += ` <span class="text-good">${t('récolte ×{0}', g.dysonBoost().toFixed(2))}</span>`;
+      }
+    });
+    this.el.panelPrograms.classList.toggle('hidden', !any);
+  }
+
+  renderCrypto() {
+    const g = this.game, c = g.state.crypto;
+    this.el.cryptoBlock.classList.toggle('hidden', !c.unlocked);
+    if (!c.unlocked) return;
+    const era = g.cryptoEra();
+    const trend = era.drift > 0.004 ? t('envolée') : (era.drift < -0.004 ? t('effondrement') : t('marché atone'));
+    this.el.cryptoTrend.innerHTML = `<span class="${era.drift > 0.004 ? 'text-good' : (era.drift < -0.004 ? 'text-bad' : 'text-muted')}">${trend}</span>`;
+    this.el.cryptoValue.textContent = fmtMoney(c.invested);
+    if (c.basis > 0 || c.invested > 0) {
+      const pl = c.invested - c.basis;
+      this.el.cryptoPl.textContent = (pl >= 0 ? '+' : '') + fmtMoney(pl)
+        + ` (${pl >= 0 ? '+' : ''}${(g.cryptoGain() * 100).toFixed(0)}%)`;
+      this.el.cryptoPl.className = 'num ' + (pl >= 0 ? 'text-good' : 'text-bad');
+    } else { this.el.cryptoPl.textContent = '—'; this.el.cryptoPl.className = 'num text-muted'; }
+    const p = g.cryptoPressure();
+    this.el.cryptoGpu.innerHTML = `<span class="${p > 1.05 ? 'text-bad' : 'text-muted'}">×${p.toFixed(2)}</span>`;
+    this.setAfford(this.el.btnCryptoDep10, g.money > 0);
+    this.el.btnCryptoWithdraw.classList.toggle('locked', c.invested <= 0);
   }
 
   renderProjects() {

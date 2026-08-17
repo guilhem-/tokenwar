@@ -21,7 +21,12 @@ globalThis.innerWidth = window.innerWidth; globalThis.innerHeight = window.inner
 window.__speed = 1;
 
 let errors = [];
-function step(label, fn) { try { fn(); console.log('OK  ' + label); } catch (e) { errors.push(label + ' :: ' + e.message); console.log('ERR ' + label + ' :: ' + e.stack.split('\n').slice(0,3).join(' | ')); } }
+// await impératif : une étape asynchrone qui échoue doit être ENREGISTRÉE,
+// pas affichée « OK » pendant que le rejet part dans le vide.
+async function step(label, fn) {
+  try { await fn(); console.log('OK  ' + label); }
+  catch (e) { errors.push(label + ' :: ' + e.message); console.log('ERR ' + label + ' :: ' + e.stack.split('\n').slice(0,3).join(' | ')); }
+}
 
 const { Game } = await import('./js/game.js');
 const { UI } = await import('./js/ui.js');
@@ -31,23 +36,23 @@ const { GPUS, INFRA, ENERGY } = await import('./js/data.js');
 const ui = new UI();
 const game = new Game(ui);
 
-step('ui.init', () => ui.init(game));
-step('render initial', () => ui.render(true));
+await step('ui.init', () => ui.init(game));
+await step('render initial', () => ui.render(true));
 
 // quelques ticks + rendus en phase 1
-step('ticks phase 1 + render', () => { for (let i=0;i<40;i++){ game.tick(0.25); if(i%5===0) ui.render(); } });
+await step('ticks phase 1 + render', () => { for (let i=0;i<40;i++){ game.tick(0.25); if(i%5===0) ui.render(); } });
 
 // clic manuel
-step('manualGenerate + render', () => { for(let i=0;i<5;i++) game.manualGenerate(); ui.render(); });
+await step('manualGenerate + render', () => { for(let i=0;i<5;i++) game.manualGenerate(); ui.render(); });
 
 // achats divers
-step('buyGPU consumer', () => { game.state.money = 1e6; game.buyGPU('consumer'); ui.render(); });
-step('buyEnergy grid', () => { game.buyEnergy('grid'); ui.render(); });
-step('buyMarketing', () => { game.buyMarketing(); ui.render(); });
-step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.dispatchEvent(new window.Event('input')); ui.render(); });
+await step('buyGPU consumer', () => { game.state.money = 1e6; game.buyGPU('consumer'); ui.render(); });
+await step('buyEnergy grid', () => { game.buyEnergy('grid'); ui.render(); });
+await step('buyMarketing', () => { game.buyMarketing(); ui.render(); });
+await step('slider prix', () => { ui.el.priceSlider.value = 55; ui.el.priceSlider.dispatchEvent(new window.Event('input')); ui.render(); });
 
 // clic manuel = vente directe (l'argent monte immédiatement)
-step('clic manuel vend directement', () => {
+await step('clic manuel vend directement', () => {
   const m0 = game.money;
   game.manualGenerate();
   if (game.money <= m0) throw new Error('le clic ne rapporte pas d argent');
@@ -56,13 +61,13 @@ step('clic manuel vend directement', () => {
   if (!/\$/.test(ui.el.btnGenerateSub.textContent)) throw new Error('valeur du clic non affichée');
 });
 // sparkline présente et échantillonnée
-step('sparkline de production', () => {
+await step('sparkline de production', () => {
   if (!ui.el.spark) throw new Error('canvas sparkline absent');
   for (let i = 0; i < 10; i++) { game.tick(0.25); ui.render(); }
   if (ui.sparkData.length < 2) throw new Error('aucun échantillon collecté');
 });
 // succès : déblocage + affichage dans l'aide
-step('succès débloqués + affichage', () => {
+await step('succès débloqués + affichage', () => {
   game.state.lifetimeTokens = Math.max(game.state.lifetimeTokens, 2e6);
   game.checkAchievements();
   if (!game.state.achievements['million']) throw new Error('succès "million" non débloqué');
@@ -70,12 +75,12 @@ step('succès débloqués + affichage', () => {
   if (!/🏆/.test(ui.el.achievementsBody.innerHTML)) throw new Error('succès non affichés dans l aide');
 });
 // export/import : présents et sans crash (jsdom n'a pas URL.createObjectURL)
-step('export/import de sauvegarde', () => {
+await step('export/import de sauvegarde', () => {
   if (!ui.el.saveExport || !ui.el.saveImport || !ui.el.saveFile) throw new Error('boutons export/import absents');
   ui.exportSave();   // ne doit pas jeter (toast d erreur acceptable en jsdom)
 });
 // automatisations (auto-clickers : achat + activation/désactivation)
-step('automatisations : achat + toggle', () => {
+await step('automatisations : achat + toggle', () => {
   game.state.money = 1e6;
   const r = ui.rows.auto['gpu'];
   r.btn.dispatchEvent(new window.Event('click'));          // acheter
@@ -88,7 +93,7 @@ step('automatisations : achat + toggle', () => {
 });
 
 // auto-achat PAR élément (toggle sur une carte précise)
-step('auto-achat par élément (toggle sur une carte)', () => {
+await step('auto-achat par élément (toggle sur une carte)', () => {
   game.state.auto.gpu.owned = true; game.state.auto.gpu.on = true;
   const r = ui.rows.gpu['consumer'];
   // le bouton n'apparaît qu'à partir de 20 exemplaires en service
@@ -107,7 +112,7 @@ step('auto-achat par élément (toggle sur une carte)', () => {
 });
 
 // boutons d'achat groupé ×10 / ×100
-step('boutons ×10 (≥20) et ×100 (≥200)', () => {
+await step('boutons ×10 (≥20) et ×100 (≥200)', () => {
   game.state.money = 1e12;
   game.state.infraCounts.realestate = 50; game.state.infraCounts.datacenter = 50; game.state.infraCounts.rack = 50; game.state.infraCounts.server = 500;
   const r = ui.rows.gpu['consumer'];
@@ -127,7 +132,7 @@ step('boutons ×10 (≥20) et ×100 (≥200)', () => {
 });
 
 // chaîne d'hébergement + GPU + revente
-step('buyInfra serveur (chantier puis mise en service)', () => {
+await step('buyInfra serveur (chantier puis mise en service)', () => {
   game.state.money = 1e9;
   const before = game.capacityFor('gpu');
   game.buyInfra('server');
@@ -140,10 +145,10 @@ step('buyInfra serveur (chantier puis mise en service)', () => {
   game.tick(30);
   if (game.capacityFor('gpu') <= before) throw new Error('capacité GPU non augmentée après le chantier');
 });
-step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
-step('sellGPU (revente)', () => { const n = game.state.gpuCounts['consumer'] || 0; if (n < 1) game.buyGPU('consumer'); ui.rows.gpu['consumer'].sell.dispatchEvent(new window.Event('click')); ui.render(); });
+await step('buyGPU avec emplacement + render slot', () => { game.buyGPU('consumer'); ui.render(); if (ui.el.gpuCap.textContent.indexOf('/') < 0) throw new Error('indicateur emplacements absent'); });
+await step('sellGPU (revente)', () => { const n = game.state.gpuCounts['consumer'] || 0; if (n < 1) game.buyGPU('consumer'); ui.rows.gpu['consumer'].sell.dispatchEvent(new window.Event('click')); ui.render(); });
 // équipe (RH) + charges + dépendances
-step('embauche/licenciement + charges affichées', () => {
+await step('embauche/licenciement + charges affichées', () => {
   ui.rows.team['hr'].hireBtn.dispatchEvent(new window.Event('click'));
   ui.rows.team['rnd'].hireBtn.dispatchEvent(new window.Event('click'));
   ui.render();
@@ -154,19 +159,19 @@ step('embauche/licenciement + charges affichées', () => {
   if (game.empCount('rnd') !== 0) throw new Error('licenciement échoué');
 });
 // tokens invendus perdus affichés
-step('affichage tokens perdus + date au jour', () => {
+await step('affichage tokens perdus + date au jour', () => {
   if (!/\/s/.test(ui.el.invTokens.textContent)) throw new Error('débit de tokens perdus non affiché');
   if (!/\d+ \w+ \d{4}/.test(ui.el.simDate.textContent)) throw new Error('date jour-mois-année absente');
 });
 // colocation (espace en datacenter)
-step('colocation : espace loué (+baies)', () => {
+await step('colocation : espace loué (+baies)', () => {
   const before = game.capacityFor('rack');
   ui.rows.infra['rack'].el.querySelector('[data-act=rent]').dispatchEvent(new window.Event('click'));
   if (game.capacityFor('rack') <= before) throw new Error('colocation sans effet');
   ui.render();
 });
 // location de datacenter
-step('location datacenter (coût journalier)', () => {
+await step('location datacenter (coût journalier)', () => {
   const before = game.capacityFor('rack');
   ui.rows.infra['datacenter'].el.querySelector('[data-act=rent]').dispatchEvent(new window.Event('click'));
   if (game.capacityFor('rack') <= before) throw new Error('capacité baies non augmentée par location');
@@ -175,7 +180,7 @@ step('location datacenter (coût journalier)', () => {
   ui.rows.infra['datacenter'].el.querySelector('[data-act=unrent]').dispatchEvent(new window.Event('click'));
 });
 // bourse
-step('bourse dépôt/retrait + risque', () => {
+await step('bourse dépôt/retrait + risque', () => {
   game.state.money = 1e6; game.state.stockUnlocked = true; // débloquée à 100k$
   ui.el.btnStockDepMax.dispatchEvent(new window.Event('click'));
   if (game.state.stock.invested <= 0) throw new Error('dépôt échoué');
@@ -187,9 +192,9 @@ step('bourse dépôt/retrait + risque', () => {
   ui.render();
 });
 // énergie en kW affichée
-step('énergie affichée en kW/MW', () => { if (!/kW|MW/.test(ui.el.statEnergy.textContent)) throw new Error('format puissance absent'); });
+await step('énergie affichée en kW/MW', () => { if (!/kW|MW/.test(ui.el.statEnergy.textContent)) throw new Error('format puissance absent'); });
 // redémarrage depuis le début
-step('redémarrage (restart)', () => {
+await step('redémarrage (restart)', () => {
   game.state.lifetimeTokens = 5e6; game.state.modelTier = 4;
   ui.el.btnRestart.dispatchEvent(new window.Event('click'));
   if (ui.el.restartOverlay.classList.contains('hidden')) throw new Error('confirmation non affichée');
@@ -199,7 +204,7 @@ step('redémarrage (restart)', () => {
 });
 
 // événement → modale → choix
-step('showEvent + choisir option 0', () => {
+await step('showEvent + choisir option 0', () => {
   const ev = game.pickEvent() || { id:'t', title:'Test', body:'b', phase:1, choices:[{label:'A',desc:'d',apply:()=>{}},{label:'B',desc:'d',apply:()=>{}}] };
   ui.showEvent(ev);
   if (ui.el.modalOverlay.classList.contains('hidden')) throw new Error('modale non affichée');
@@ -208,7 +213,7 @@ step('showEvent + choisir option 0', () => {
 });
 
 // directives permanentes : achat, case à cocher, résolution automatique
-step('addendum : directives + case « désormais » + auto-résolution', () => {
+await step('addendum : directives + case « désormais » + auto-résolution', () => {
   game.state.money = 1e6;
   ui.rows.addendum['directives'].el.dispatchEvent(new window.Event('click'));
   if (!game.state.addendum) throw new Error('achat des directives échoué');
@@ -225,7 +230,7 @@ step('addendum : directives + case « désormais » + auto-résolution', () => {
 });
 
 // datacenter orbital : commande → 18 mois → retard 6 mois → faillite
-step('datacenter orbital : chrono, retard, faillite', () => {
+await step('datacenter orbital : chrono, retard, faillite', () => {
   game.state.playSeconds = (2031 - 2019) * 300; // an 2031, fenêtre 2030-2040
   game.state.money = 1e8;
   ui.render();
@@ -249,7 +254,7 @@ step('datacenter orbital : chrono, retard, faillite', () => {
 });
 
 // ---- inflation simulée : les prix suivent l'indice, pas la trésorerie ----
-step('inflation : indice, prix et pouvoir d achat', () => {
+await step('inflation : indice, prix et pouvoir d achat', () => {
   game.state.playSeconds = 0;
   const idx0 = game.inflIndex();
   const gpu0 = game.gpuCost(GPUS[0]), sal0 = game.salaryPerDay ? game.salaryPerDay() : 0;
@@ -268,7 +273,7 @@ step('inflation : indice, prix et pouvoir d achat', () => {
 });
 
 // ---- coûts d'énergie : unique vs récurrents (fixe / variable / abonnement) ----
-step('énergie : coût unique vs coûts récurrents', () => {
+await step('énergie : coût unique vs coûts récurrents', () => {
   game.state.energyCounts = { grid: 2, gas: 1 };
   game.state.energyCap = 26;
   const b = game.energyBill();
@@ -286,7 +291,7 @@ step('énergie : coût unique vs coûts récurrents', () => {
 });
 
 // ---- délais de mise en service proportionnels à la complexité ----
-step('chantiers : délais croissants avec la complexité', () => {
+await step('chantiers : délais croissants avec la complexité', () => {
   const t = f => game.buildSeconds(f.id ? f.id : f, f);
   const secGpu = game.buildSeconds('gpu', GPUS.find(g => g.id === 'consumer'));
   const secRack = game.buildSeconds('gpu', GPUS.find(g => g.id === 'gb200'));
@@ -314,7 +319,7 @@ step('chantiers : délais croissants avec la complexité', () => {
 });
 
 // ---- crises : boîte rouge cachée, saignée, remédiation ----
-step('crise : apparition silencieuse, saignée puis remédiation', () => {
+await step('crise : apparition silencieuse, saignée puis remédiation', () => {
   game.state.money = 1e6; game.state.modelTier = 3;   // une exploitation réelle à mettre en péril
   game.state.crisis = null; game.state.crisisTimer = 0;
   const logs = ui.el.log.children.length;
@@ -339,7 +344,7 @@ step('crise : apparition silencieuse, saignée puis remédiation', () => {
   if (!(game.money < cash)) throw new Error('la remédiation devrait coûter');
   if (ui.el.crisisLayer.querySelector('.crisis-box')) throw new Error('boîte non retirée');
 });
-step('crise : résorption automatique au bout de 2 minutes', () => {
+await step('crise : résorption automatique au bout de 2 minutes', () => {
   ui.closeModal();                                   // un événement a pu s'ouvrir pendant les ticks
   game.state.money = 1e6; game.state.modelTier = 3;
   game.state.crisis = null; game.state.crisisTimer = 0;
@@ -351,7 +356,7 @@ step('crise : résorption automatique au bout de 2 minutes', () => {
 });
 
 // ---- animations d'inactivité : 12 types, jamais deux fois la même de suite ----
-step('inactivité : tirage sans remise des 12 animations', () => {
+await step('inactivité : tirage sans remise des 12 animations', () => {
   const seen = [];
   let prev = null;
   for (let i = 0; i < 24; i++) {
@@ -362,7 +367,7 @@ step('inactivité : tirage sans remise des 12 animations', () => {
   const uniq = new Set(seen.slice(0, 12));
   if (uniq.size !== 12) throw new Error('les 12 animations ne passent pas avant une répétition (' + uniq.size + ')');
 });
-step('inactivité : déclenchement après 15 s sans interaction', () => {
+await step('inactivité : déclenchement après 15 s sans interaction', () => {
   ui.closeModal();
   ui._lastAct = Date.now() - 20000;                  // 20 s d'immobilité
   ui._nextIdleAt = 0;
@@ -375,7 +380,7 @@ step('inactivité : déclenchement après 15 s sans interaction', () => {
 });
 
 // ---- presse corrélée à l'avancement du joueur ----
-step('presse : titres corrélés au palier de modèle', () => {
+await step('presse : titres corrélés au palier de modèle', () => {
   game.state.playSeconds = 300 * 6;                  // 2025
   game.state.modelTier = 0;
   game.state.recentHeadlines = []; game.state.lastHeadlineText = null;
@@ -390,7 +395,7 @@ step('presse : titres corrélés au palier de modèle', () => {
 });
 
 // ---- énergie de départ : 10 kW, puis subvention « jeunes pousses » ----
-step('énergie de départ à 10 kW + subvention', async () => {
+await step('énergie de départ à 10 kW + subvention', async () => {
   const fresh = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
   if (Math.abs(fresh.state.energyCap - 0.01) > 1e-9) throw new Error('le raccordement de départ devrait faire 10 kW');
   const { HEADLINES } = await import('./js/data.js');
@@ -404,7 +409,7 @@ step('énergie de départ à 10 kW + subvention', async () => {
 });
 
 // ---- optimisations récurrentes (CUDA 18 mois, moteur 9 mois, contexte 12 mois) ----
-step('optimisations : périodicité, coût négligeable, cumul', async () => {
+await step('optimisations : périodicité, coût négligeable, cumul', async () => {
   const { OPTIMS } = await import('./js/data.js');
   const per = Object.fromEntries(OPTIMS.map(o => [o.id, o.months]));
   if (per.cuda !== 18 || per.engine !== 9 || per.context !== 12)
@@ -438,7 +443,7 @@ step('optimisations : périodicité, coût négligeable, cumul', async () => {
 });
 
 // ---- directives permanentes : quota par lots de 5, il faut repayer ----
-step('directives : quota de 5, extension payante', () => {
+await step('directives : quota de 5, extension payante', () => {
   ui.closeModal();
   game.state.playSeconds = 0;                      // inflation neutre
   game.state.addendum = false; game.state.addendumBlocks = 0; game.state.autoChoices = {};
@@ -474,7 +479,7 @@ step('directives : quota de 5, extension payante', () => {
 });
 
 // ---- migration : une vieille sauvegarde ne doit pas conserver les 500 kW ----
-step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
+await step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
   const stub = { toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false };
   // sauvegarde d'avant le changement de règle : base 500 kW + 2 raccordements achetés,
   // et PAS de marqueur `baseGridMW` (c'est à cela qu'on la reconnaît).
@@ -495,7 +500,7 @@ step('migration : ancienne sauvegarde ramenée à 10 kW', () => {
 });
 
 // ---- l'embauche coûte 1000 $ ----
-step('embauche : coût fixe de 1000 $', () => {
+await step('embauche : coût fixe de 1000 $', () => {
   game.state.playSeconds = 0;                     // indice d'inflation = 1
   game.state.money = 2500;
   const before = game.money, head = game.headcount();
@@ -513,7 +518,7 @@ step('embauche : coût fixe de 1000 $', () => {
 });
 
 // ---- 30 jours d'arriérés : l'équipe s'en va ----
-step('salaires impayés : départs au bout de 30 jours', () => {
+await step('salaires impayés : départs au bout de 30 jours', () => {
   ui.closeModal();
   game.state.money = 0;
   game.state.employees = { hr:2, rnd:3, marketer:1, ops:1, data:1 };
@@ -539,7 +544,7 @@ step('salaires impayés : départs au bout de 30 jours', () => {
 });
 
 // ---- sélecteur de langue ----
-step('langue : sélecteur, changement à chaud, repli', async () => {
+await step('langue : sélecteur, changement à chaud, repli', async () => {
   const i18n = await import('./js/i18n.js');
   const sel = ui.el.langSelect;
   if (!sel) throw new Error('sélecteur de langue absent');
@@ -562,41 +567,147 @@ step('langue : sélecteur, changement à chaud, repli', async () => {
   if (panel.textContent !== 'Production de tokens') throw new Error('retour au français échoué');
 });
 
+// ---- programmes par étapes : fusion et sphère de Dyson ----
+await step('programme fusion : recherche → mise au point → commande → ignition', () => {
+  ui.closeModal();
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  const mois = 300 / 12;
+  const fusion = g2.progDef('fusion');
+  // avant 2026 la recherche ne s'ouvre pas
+  g2.state.playSeconds = 300 * 3;                       // 2022
+  g2.tickPrograms();
+  if (g2.progState('fusion').stage !== 'none') throw new Error('recherche ouverte trop tôt');
+  // le réacteur à fusion n'est pas achetable tant que le programme n'a pas abouti
+  const reac = ENERGY.find(e => e.id === 'fusion');
+  if (!reac.needsProgram) throw new Error('le réacteur devrait dépendre du programme');
+  g2.state.playSeconds = 300 * 12;                      // 2031, phase 2
+  g2.state.phase = 2;
+  if (g2.dateUnlocked(reac)) throw new Error('réacteur achetable sans programme abouti');
+  // la recherche démarre seule, puis s'enchaîne
+  g2.tickPrograms();
+  if (g2.progState('fusion').stage !== 'research') throw new Error('recherche non démarrée');
+  if (!g2.programNews('fusion', 'research')) throw new Error('pas de couverture presse de la recherche');
+  g2.state.playSeconds += fusion.researchMonths * mois; g2.tickPrograms();
+  if (g2.progState('fusion').stage !== 'tuning') throw new Error('mise au point non atteinte');
+  g2.state.playSeconds += fusion.tuningMonths * mois; g2.tickPrograms();
+  if (g2.progState('fusion').stage !== 'ready') throw new Error('disponibilité non atteinte');
+  if (!g2.programNews('fusion', 'ready')) throw new Error('pas de couverture presse de la disponibilité');
+  // commande : elle coûte, et elle est refusée sans les moyens
+  if (g2.canOrderProgram('fusion')) throw new Error('commande possible sans ressources');
+  g2.state.money = 1e12; g2.state.research = 1e9;
+  const cap0 = g2.state.energyCap, m0 = g2.money;
+  if (!g2.orderProgram('fusion')) throw new Error('commande refusée alors que finançable');
+  if (g2.money >= m0) throw new Error('la commande devrait coûter');
+  if (!g2.programNews('fusion', 'ordered')) throw new Error('pas de couverture presse de la commande');
+  // déploiement puis ignition
+  g2.state.playSeconds += fusion.deployMonths * mois; g2.tickPrograms();
+  if (g2.progState('fusion').stage !== 'done') throw new Error('programme non achevé');
+  if (!(g2.state.energyCap > cap0)) throw new Error('la fusion n a pas apporté d énergie');
+  if (!g2.programNews('fusion', 'done')) throw new Error('pas de couverture presse de l ignition');
+  if (!g2.dateUnlocked(reac)) throw new Error('le réacteur devrait être achetable après le programme');
+});
+
+await step('sphère de Dyson : payée en matière, répétable, effet réel', () => {
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  const mois = 300 / 12;
+  const dy = g2.progDef('dyson');
+  if (dy.cost.matter == null || dy.cost.money != null) throw new Error('la sphère doit se payer en matière, pas en dollars');
+  g2.state.phase = 2; g2.state.earthConsumed = 0.6; g2.state.playSeconds = 300 * 12;
+  g2.tickPrograms();
+  if (g2.progState('dyson').stage !== 'research') throw new Error('recherche non démarrée en phase 2');
+  g2.state.playSeconds += dy.researchMonths * mois; g2.tickPrograms();
+  if (g2.progState('dyson').stage !== 'tuning') throw new Error('mise au point non atteinte');
+  g2.state.playSeconds += dy.tuningMonths * mois; g2.tickPrograms();
+  if (g2.progState('dyson').stage !== 'ready') throw new Error('disponibilité non atteinte');
+  // commandable seulement une fois dans l'espace
+  g2.state.matter = 1e40;
+  if (g2.canOrderProgram('dyson')) throw new Error('sphère commandable avant la phase 3');
+  g2.state.phase = 3;
+  if (!g2.canOrderProgram('dyson')) throw new Error('sphère non commandable en phase 3');
+  const boost0 = g2.dysonBoost();
+  const mat0 = g2.matter;
+  g2.orderProgram('dyson');
+  if (!(g2.matter < mat0)) throw new Error('la matière n a pas été prélevée');
+  g2.state.playSeconds += dy.deployMonths * mois; g2.tickPrograms();
+  if (g2.dysonCount() !== 1) throw new Error('sphère non achevée');
+  if (!(g2.dysonBoost() > boost0)) throw new Error('la sphère n accélère pas la récolte');
+  // répétable, et la suivante coûte plus cher
+  if (g2.progState('dyson').stage !== 'ready') throw new Error('la sphère devrait être répétable');
+  const c1 = g2.progCost(dy).matter;
+  if (!(c1 > dy.cost.matter)) throw new Error('la sphère suivante devrait coûter plus cher');
+  // …mais le gain est plafonné
+  g2.progState('dyson').n = 50;
+  if (g2.dysonBoost() > 3.0001) throw new Error('gain non plafonné');
+});
+
+// ---- crypto : marché, cycles réels et pression sur le prix des GPU ----
+await step('crypto : cycles historiques et pression sur les GPU', () => {
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  const at = y => { g2.state.playSeconds = 300 * (y - 2019); return g2.cryptoEra(); };
+  if (!(at(2021).gpu > 1.3)) throw new Error('2021 devrait renchérir fortement les GPU');
+  if (!(at(2021).drift > 0)) throw new Error('2021 devrait être haussier');
+  if (!(at(2022).drift < 0)) throw new Error('2022 devrait être baissier');
+  if (!(at(2023).gpu <= 1.01)) throw new Error('la pression devrait retomber après le krach');
+  // la pression se voit vraiment sur le prix d'une carte
+  // on isole la pression du minage de l'inflation, qui pousse en sens inverse
+  const gpu = GPUS.find(x => x.id === 'rtx3090');
+  const reel = () => g2.gpuCost(gpu) / g2.inflIndex();
+  at(2023); const calme = reel();
+  at(2021); const ruee = reel();
+  if (!(ruee > calme * 1.4)) throw new Error('le minage ne renchérit pas les cartes');
+  // et en dollars courants la carte reste sensiblement plus chère malgré l'inflation
+  at(2023); const nom2023 = g2.gpuCost(gpu);
+  at(2021); const nom2021 = g2.gpuCost(gpu);
+  if (!(nom2021 > nom2023 * 1.2)) throw new Error('effet invisible en prix affiché');
+  // dépôt / retrait
+  g2.state.playSeconds = 300 * 5;
+  g2.state.money = 1e6; g2.tickCrypto(0.25);
+  if (!g2.state.crypto.unlocked) throw new Error('marché non débloqué à 1 M$');
+  if (!g2.cryptoDeposit(1e5)) throw new Error('dépôt refusé');
+  if (g2.state.crypto.basis !== 1e5) throw new Error('base de calcul incorrecte');
+  for (let i = 0; i < 200; i++) g2.tickCrypto(0.25);
+  if (!isFinite(g2.state.crypto.invested)) throw new Error('valeur non finie');
+  const avant = g2.money;
+  g2.cryptoWithdraw();
+  if (!(g2.money > avant)) throw new Error('retrait sans effet');
+  if (g2.state.crypto.invested !== 0) throw new Error('position non soldée');
+});
+
 // toast + log
-step('toast & log', () => { ui.toast('hello','good'); ui.log('test log','milestone'); });
+await step('toast & log', () => { ui.toast('hello','good'); ui.log('test log','milestone'); });
 
 // passage phase 2
-step('enterPhase 2 + alloc UI', () => {
+await step('enterPhase 2 + alloc UI', () => {
   game.state.modelTier = 7;
   game.enterPhase(2);
   if (ui.el.panelAlloc.classList.contains('hidden')) throw new Error('panel alloc non affiché');
   ui.render();
 });
-step('ticks phase 2', () => { game.state.alloc={serve:0.3,research:0.1,improve:0.2,harvest:0.4}; for(let i=0;i<40;i++){ game.tick(0.25); if(i%10===0) ui.render(); } });
-step('phase 2 : marqueurs argent masqués', () => {
+await step('ticks phase 2', () => { game.state.alloc={serve:0.3,research:0.1,improve:0.2,harvest:0.4}; for(let i=0;i<40;i++){ game.tick(0.25); if(i%10===0) ui.render(); } });
+await step('phase 2 : marqueurs argent masqués', () => {
   ui.render();
   if (!ui.el.moneyStat.classList.contains('hidden')) throw new Error('stat argent encore visible en phase 2');
   if (!ui.el.panelMarket.classList.contains('hidden')) throw new Error('panneau marché encore visible en phase 2');
   if (!ui.el.panelCharges.classList.contains('hidden')) throw new Error('panneau charges encore visible en phase 2');
 });
-step('slider alloc', () => { const k=Object.keys(ui.allocInputs)[0]; ui.allocInputs[k].input.value=60; ui.allocInputs[k].input.dispatchEvent(new window.Event('input')); ui.render(); });
+await step('slider alloc', () => { const k=Object.keys(ui.allocInputs)[0]; ui.allocInputs[k].input.value=60; ui.allocInputs[k].input.dispatchEvent(new window.Event('input')); ui.render(); });
 
 // passage phase 3 + cosmos
-step('enterPhase 3 + cosmos UI', () => {
+await step('enterPhase 3 + cosmos UI', () => {
   game.state.earthConsumed = 1;
   game.enterPhase(3);
   if (ui.el.panelCosmos.classList.contains('hidden')) throw new Error('panel cosmos non affiché');
   ui.render();
 });
-step('ticks phase 3 + upgrade sonde', () => { game.state.matter=1e30; for(let i=0;i<20;i++){ game.tick(0.25); } game.upgradeProbe('harvest'); ui.render(); });
+await step('ticks phase 3 + upgrade sonde', () => { game.state.matter=1e30; for(let i=0;i<20;i++){ game.tick(0.25); } game.upgradeProbe('harvest'); ui.render(); });
 
 // fin
-step('triggerEnding + showEnding', () => {
+await step('triggerEnding + showEnding', () => {
   game.state.universeConsumed = 1; game.state.lifetimeTokens = 1e62;
   game.triggerEnding();
   if (ui.el.endingScreen.classList.contains('hidden')) throw new Error('écran de fin non affiché');
 });
-step('écran final : Play again → « Get a life ;-) » → fermeture tentée', () => {
+await step('écran final : Play again → « Get a life ;-) » → fermeture tentée', () => {
   let closeTried = false;
   const origClose = window.close;
   window.close = () => { closeTried = true; };
@@ -613,7 +724,7 @@ step('écran final : Play again → « Get a life ;-) » → fermeture tentée',
   window.close = origClose;
 });
 // bouton fuyant + porte de sortie NG+
-step('Play again fuit la souris, NG+ reste accessible', () => {
+await step('Play again fuit la souris, NG+ reste accessible', () => {
   ui.renderEndingStats();
   const btn = ui.el.endingRestart;
   const before = btn.style.transform;
@@ -626,7 +737,7 @@ step('Play again fuit la souris, NG+ reste accessible', () => {
   ui.render(true);
 });
 // la capture de fin doit refléter l'ÉTAT DU JEU (vrai texte, overlays exclus)
-step('capture de fin fidèle à l écran de jeu', () => {
+await step('capture de fin fidèle à l écran de jeu', () => {
   // faux contexte 2D : on enregistre les textes peints et les rectangles de fond
   const painted = [];
   const fakeCtx = new Proxy({}, {
@@ -670,7 +781,7 @@ step('capture de fin fidèle à l écran de jeu', () => {
 });
 
 // raccourci Ctrl+Shift+E → cinématique de fin
-step('Ctrl+Shift+E lance la fin', () => {
+await step('Ctrl+Shift+E lance la fin', () => {
   ui.el.endingScreen.classList.add('hidden');
   document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'E', ctrlKey: true, shiftKey: true }));
   // sans canvas 2D (jsdom), showEnding() bascule directement sur l'écran final
@@ -680,7 +791,7 @@ step('Ctrl+Shift+E lance la fin', () => {
 });
 
 // save/load
-step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
+await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 
 console.log('\n=== ' + (errors.length ? errors.length + ' ERREUR(S) ===' : 'UI OK — aucune erreur ==='));
 errors.forEach(e => console.log(' - ' + e));

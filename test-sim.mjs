@@ -1,6 +1,6 @@
 // Simulateur headless : joue automatiquement pour valider l'équilibrage et la robustesse.
 import { Game } from './js/game.js';
-import { GPUS, ENERGY, PROJECTS, MODELS, INFRA, OPTIMS } from './js/data.js';
+import { GPUS, ENERGY, PROJECTS, MODELS, INFRA, OPTIMS, PROGRAMS } from './js/data.js';
 import { fmt } from './js/util.js';
 
 const stub = {
@@ -52,6 +52,14 @@ function bot() {
   // 3) projets abordables + optimisations récurrentes dès qu'elles sont dues
   for (const p of PROJECTS) { if (!s.projectsDone[p.id] && p.req(g)) g.buyProject(p.id); }
   for (const o of OPTIMS) if (g.canBuyOptim(o.id)) g.buyOptim(o.id);
+  // grands programmes : on commande dès que c'est finançable (fusion, sphères de Dyson)
+  for (const pr of PROGRAMS) if (g.canOrderProgram(pr.id)) g.orderProgram(pr.id);
+  // crypto : on suit le cycle — on entre quand le marché monte, on sort quand il tombe
+  if (g.phase < 2 && s.crypto.unlocked) {
+    const era = g.cryptoEra();
+    if (era.drift > 0.004 && s.crypto.invested < s.money * 0.05) g.cryptoDeposit(s.money * 0.05);
+    else if (era.drift < 0 && s.crypto.invested > 0) g.cryptoWithdraw();
+  }
 
   // 4) tarification optimale — helper partagé avec le jeu (une seule source de vérité)
   s.priceSlider = g.optimalPriceSlider();

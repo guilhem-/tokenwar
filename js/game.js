@@ -5,7 +5,8 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          START_YEAR, SECONDS_PER_YEAR, HEADLINES,
          EMPLOYEES, BASE_HEADCOUNT, HR_HEADCOUNT, BASE_MARKETING, ELEC_PRICE_MWH, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC,
          BUILD, INFLATION, INFLATION_TAIL, CRISES, CRISIS_MAX_LOSS, CRISIS_DURATION,
-         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, OPTIMS } from './data.js';
+         HIRE_COST, UNPAID_QUIT_DAYS, UNPAID_QUIT_EVERY, BASE_GRID_MW, OPTIMS,
+         PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK } from './data.js';
 import { clamp } from './util.js';
 import { t, td, months as i18nMonths, intlLocale } from './i18n.js';
 
@@ -71,6 +72,10 @@ export class Game {
     s.addendum = false;      // « Directives permanentes » achetées
     s.addendumBlocks = 0;    // lots de 5 directives payés (il faut repayer pour étendre)
     s.optims = {};           // optimisations récurrentes : id -> {n, nextAt}
+    // programmes par étapes (fusion, sphère de Dyson) : id -> {stage, at, n}
+    s.programs = {};
+    // second marché, bien plus violent que la Bourse
+    s.crypto = { invested:0, basis:0, price:1, unlocked:false };
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
     s.spaceDC = { status:'none', orderedAt:0, statusAt:0, paid:0 }; // datacenter orbital : none/building/delayed/bankrupt
     s.energyCounts = {};
@@ -163,7 +168,10 @@ export class Game {
     return `${d.getDate()} ${i18nMonths()[d.getMonth()]} ${year}`;
   }
   // un élément (GPU/énergie/modèle) est-il sorti à la date courante ?
-  dateUnlocked(item) { return !item.year || this.simYear() >= item.year; }
+  dateUnlocked(item) {
+    if (item.needsProgram && !this.programDone(item.needsProgram)) return false;
+    return !item.year || this.simYear() >= item.year;
+  }
   toast(msg, kind = 'info') { this.ui && this.ui.toast(msg, kind); }
   log(msg, kind = 'info') { this.ui && this.ui.log(msg, kind); }
 
@@ -332,7 +340,8 @@ export class Game {
   gpuCost(g) {
     let c = g.cost;                              // prix FIXE et réaliste (non exponentiel)
     if (g.scarce) c *= this.getTimed('gpuPrice'); // sauf flambée temporaire de pénurie
-    return c * this.state.mods.opex * this.inflIndex();
+    // pendant les envolées crypto, les mineurs se disputent les mêmes cartes
+    return c * this.state.mods.opex * this.inflIndex() * this.cryptoPressure();
   }
   // coût UNIQUE (capex) d'une source d'énergie — l'exploitation est facturée à part
   energyCost(e) {
@@ -790,6 +799,161 @@ export class Game {
     st.n++;
     st.nextAt = this.state.playSeconds + o.months * (SECONDS_PER_YEAR / 12);
     this.log(t('{0} déployée (n°{1}) — {2}.', td(o.name), st.n, td(o.gain)), 'good');
+    return true;
+  }
+
+  // =================================================================
+  //  PROGRAMMES — recherche → mise au point → disponibilité → commande
+  //  → déploiement → opérationnel. Les étapes d'étude s'enchaînent seules ;
+  //  seule la commande demande une décision et un paiement. Chaque passage
+  //  d'étape ouvre une fenêtre de couverture presse (voir programNews).
+  // =================================================================
+  progState(id) {
+    if (!this.state.programs[id]) this.state.programs[id] = { stage: 'none', at: 0, n: 0 };
+    return this.state.programs[id];
+  }
+  progDef(id) { return PROGRAMS.find(p => p.id === id); }
+  // le programme apparaît-il dans l'interface ?
+  progVisible(p) {
+    const st = this.progState(p.id);
+    if (st.stage !== 'none') return p.hideAfter == null || this.phase <= p.hideAfter || st.n > 0;
+    if (this.phase < p.phase) return false;
+    if (p.hideAfter != null && this.phase > p.hideAfter) return false;
+    return true;
+  }
+  // conditions d'ouverture de la recherche (date, phase, avancement)
+  progCanStart(p) {
+    if (this.progState(p.id).stage !== 'none') return false;
+    if (this.phase < p.phase) return false;
+    if (p.from != null && this.simYear() < p.from) return false;
+    if (p.minEarth != null && this.state.earthConsumed < p.minEarth) return false;
+    return true;
+  }
+  progCost(p) {
+    const st = this.progState(p.id);
+    const mult = Math.pow(p.costMult || 1, st.n);
+    const c = {};
+    if (p.cost.money != null) c.money = this.moneyCost(p.cost.money) * mult;
+    if (p.cost.research != null) c.research = p.cost.research * mult;
+    if (p.cost.matter != null) c.matter = p.cost.matter * mult;
+    return c;
+  }
+  canOrderProgram(id) {
+    const p = this.progDef(id), st = this.progState(id);
+    if (!p || st.stage !== 'ready') return false;
+    if (p.orderPhase != null && this.phase < p.orderPhase) return false;
+    const c = this.progCost(p);
+    return (c.money == null || this.state.money >= c.money)
+      && (c.research == null || this.state.research >= c.research)
+      && (c.matter == null || this.state.matter >= c.matter);
+  }
+  orderProgram(id) {
+    if (!this.canOrderProgram(id)) return false;
+    const p = this.progDef(id), st = this.progState(id), c = this.progCost(p);
+    if (c.money) this.state.money -= c.money;
+    if (c.research) this.state.research -= c.research;
+    if (c.matter) this.state.matter -= c.matter;
+    st.stage = 'ordered'; st.at = this.state.playSeconds;
+    this.log(t('{0} : commande passée. Déploiement en cours.', td(p.name)), 'milestone');
+    this.toast(`${p.icon} ${t('Commande passée')}`, 'good');
+    return true;
+  }
+  // avancement 0→1 de l'étape en cours (null si aucune barre à montrer)
+  progProgress(id) {
+    const p = this.progDef(id), st = this.progState(id);
+    const monthSec = SECONDS_PER_YEAR / 12;
+    const months = { research: p.researchMonths, tuning: p.tuningMonths, ordered: p.deployMonths }[st.stage];
+    if (!months) return null;
+    const el = this.state.playSeconds - st.at;
+    return clamp(el / (months * monthSec), 0, 1);
+  }
+  tickPrograms() {
+    const monthSec = SECONDS_PER_YEAR / 12;
+    for (const p of PROGRAMS) {
+      const st = this.progState(p.id);
+      const el = this.state.playSeconds - st.at;
+      if (st.stage === 'none') {
+        if (this.progCanStart(p)) { st.stage = 'research'; st.at = this.state.playSeconds; }
+      } else if (st.stage === 'research' && el >= p.researchMonths * monthSec) {
+        st.stage = 'tuning'; st.at = this.state.playSeconds;
+      } else if (st.stage === 'tuning' && el >= p.tuningMonths * monthSec) {
+        st.stage = 'ready'; st.at = this.state.playSeconds;
+        this.log(t('{0} : mise au point terminée, le système est constructible.', td(p.name)), 'milestone');
+        this.toast(`${p.icon} ${t('Disponible')}`, 'good');
+      } else if (st.stage === 'ordered' && el >= p.deployMonths * monthSec) {
+        st.stage = 'done'; st.at = this.state.playSeconds; st.n++;
+        this.applyProgram(p);
+        this.log(`${td(p.name)} — ${td(p.done)}`, 'milestone');
+        this.toast(`${p.icon} ${t('Opérationnel')}`, 'good');
+        // un programme répétable retourne à « disponible », le suivant coûtant plus cher
+        if (p.repeat) { st.stage = 'ready'; }
+      }
+    }
+  }
+  applyProgram(p) {
+    if (p.id === 'fusion') this.state.energyCap += 20000;     // 20 GW mis au réseau
+    // la sphère de Dyson agit via dysonBoost(), calculé sur st.n
+  }
+  programDone(id) { return this.progState(id).n > 0; }
+  dysonCount() { return this.progState('dyson').n; }
+  // chaque sphère accélère durablement la récolte, avec un plafond
+  dysonBoost() { return Math.min(DYSON_BOOST_MAX, 1 + DYSON_BOOST * this.dysonCount()); }
+  // fenêtre de couverture presse après un changement d'étape
+  programNews(id, kind) {
+    const st = this.progState(id);
+    if (st.stage === 'none') return false;
+    const monthSec = SECONDS_PER_YEAR / 12;
+    const since = this.state.playSeconds - st.at;
+    if (kind === 'done') return st.n > 0 && since < 4 * monthSec;
+    if (kind === 'ordered') return st.stage === 'ordered' && since < 3 * monthSec;
+    if (kind === 'building') return st.stage === 'ordered' && since >= 3 * monthSec;
+    if (kind === 'ready') return st.stage === 'ready' && since < 6 * monthSec && st.n === 0;
+    return st.stage === kind;
+  }
+
+  // =================================================================
+  //  CRYPTO — marché bien plus violent que la Bourse, calé sur les vrais
+  //  cycles. Il agit aussi sur le monde : pendant les envolées, les mineurs
+  //  se disputent les mêmes cartes que vous (cf. 2017 et 2021).
+  // =================================================================
+  cryptoEra() {
+    const y = this.simYear();
+    let e = CRYPTO_CYCLE[0];
+    for (const row of CRYPTO_CYCLE) if (y >= row[0]) e = row;
+    return { drift: e[1], vol: e[2], gpu: e[3] };
+  }
+  cryptoPressure() { return this.cryptoEra().gpu; }       // multiplicateur sur le prix des GPU
+  cryptoGain() {                                          // plus/moins-value relative
+    const c = this.state.crypto;
+    return c.basis > 0 ? (c.invested - c.basis) / c.basis : 0;
+  }
+  tickCrypto(dt) {
+    const c = this.state.crypto;
+    const e = this.cryptoEra();
+    // le cours existe même sans position : il alimente la presse et le prix des GPU
+    const change = e.drift * dt + e.vol * Math.sqrt(dt) * this._randn();
+    c.price = Math.max(1e-6, c.price * (1 + change));
+    if (!isFinite(c.price)) c.price = 1;
+    if (c.invested > 0) {
+      c.invested = Math.max(0, c.invested * (1 + change));
+      if (!isFinite(c.invested)) c.invested = 0;
+    }
+    if (!c.unlocked && this.state.money >= CRYPTO_UNLOCK) c.unlocked = true;
+  }
+  cryptoDeposit(amount) {
+    const c = this.state.crypto;
+    if (!c.unlocked) return false;
+    amount = Math.min(amount, this.state.money);
+    if (amount <= 0) return false;
+    this.state.money -= amount;
+    c.invested += amount; c.basis += amount;
+    return true;
+  }
+  cryptoWithdraw() {
+    const c = this.state.crypto;
+    if (c.invested <= 0) return false;
+    this.state.money += c.invested;
+    c.invested = 0; c.basis = 0;
     return true;
   }
 
@@ -1251,7 +1415,7 @@ export class Game {
 
       // RÉCOLTE DE BASE : pilote la boucle compute↔matière à τ ≈ 45 s, INDÉPENDANTE des bonus
       // (c'est la clé d'un rythme stable, quels que soient les choix du joueur).
-      const baseHarvest = rawUnits * a.harvest * 1.33;     // kg/s « bruts »
+      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost();  // kg/s « bruts »
 
       // bonus de consommation : intelligence + nanotech (matterMult) + événements. Borné → effet logarithmique sur le rythme.
       let consumeBonus = s.mods.matterMult
@@ -1287,9 +1451,10 @@ export class Game {
     }
 
     this.tickBuilds();                            // chantiers arrivés à terme
+    this.tickPrograms();                          // recherche → mise au point → déploiement
     this.tickAuto(dt);
     this.tickSpaceDC();
-    if (this.phase < 2) { this.tickStock(dt); this.tickCrisis(dt); } // ni bourse ni incident quand l'argent disparaît
+    if (this.phase < 2) { this.tickStock(dt); this.tickCrypto(dt); this.tickCrisis(dt); } // ni bourse ni incident quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);
     this.checkMilestones();

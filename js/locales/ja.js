@@ -1,7 +1,7 @@
 // =====================================================================
 //  TokenWar — JA
-//  Généré par tools/build-locale.mjs. La clé est la chaîne française source ;
-//  une clé absente retombe sur le français, jamais sur une clé technique.
+//  Généré par tools/build-locale.mjs puis tools/patch-locale.mjs. La clé est
+//  la chaîne française source ; une clé absente retombe sur le français.
 // =====================================================================
 export default {
   'GPT-2':
@@ -238,10 +238,6 @@ export default {
     '核融合炉',
   'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.':
     'ほぼ無限のエネルギー。ついに叶った夢——常駐のプラズマ班つきで。',
-  'Collecteur Dyson':
-    'ダイソン・コレクタ',
-  'On capte une fraction de l’étoile elle-même. Plus rien à payer, plus personne à payer.':
-    '恒星そのものの一部を回収する。もう払うものも、払う相手もいない。',
   'Optimisation CUDA':
     'CUDA最適化',
   'Efficacité':
@@ -792,6 +788,74 @@ export default {
     'Kimi K3：中国のラボがフロンティアに肉薄',
   'Mémoire HBM4 introuvable : les prix serveurs s’envolent':
     'HBM4メモリが手に入らない：サーバー価格が急騰',
+  'Un laser géant franchit le seuil : plus d’énergie produite que déposée':
+    '巨大レーザーが閾値を突破：投入より多くのエネルギーを取り出す',
+  'Record de fusion dans un tokamak européen avant son démantèlement':
+    '欧州のトカマクが解体前に核融合記録を樹立',
+  'Le grand réacteur international annonce dix ans de retard':
+    '国際大型炉が10年の遅延を発表',
+  'Les start-up de la fusion lèvent des milliards sur une promesse':
+    '核融合スタートアップが約束だけで数十億ドルを調達',
+  'Aimants supraconducteurs : le tokamak compact tient ses promesses':
+    '超伝導磁石：小型トカマクが約束を果たす',
+  'Un géant de la tech signe le premier contrat d’achat d’électricité de fusion':
+    'テック大手が核融合電力の初の購入契約に署名',
+  'Tritium : la vraie pénurie n’est pas celle des puces':
+    'トリチウム：本当に足りないのはチップではない',
+  'Votre laboratoire ouvre un programme de fusion : première ligne budgétaire':
+    'あなたのラボが核融合プログラムを立ち上げ：最初の予算計上',
+  'Fusion : vos physiciens traquent l’instabilité du plasma nuit et jour':
+    '核融合：あなたの物理学者たちが昼夜プラズマ不安定性を追う',
+  'Votre design de réacteur à fusion est déclaré constructible':
+    'あなたの核融合炉の設計が建設可能と認められる',
+  'Commande signée : votre premier réacteur à fusion sort des plans':
+    '発注完了：あなたの最初の核融合炉が図面を離れる',
+  'Chantier de fusion : l’enceinte à vide est soudée, les aimants arrivent':
+    '核融合の建設現場：真空容器の溶接が終わり、磁石が届きはじめる',
+  'Ignition. Votre réacteur à fusion tient le plasma et alimente le réseau':
+    '点火。あなたの核融合炉がプラズマを保ち、系統に電力を送る',
+  'Une équipe étudie sérieusement l’enveloppement d’une étoile':
+    'あるチームが恒星を包む方法を本気で研究しはじめる',
+  'Essaim de Dyson : les premiers collecteurs s’auto-assemblent en orbite solaire':
+    'ダイソン群：最初の集光器が太陽軌道で自己組立を始める',
+  'La sphère de Dyson passe du papier au constructible':
+    'ダイソン球が紙の上から建設可能へ',
+  'Commande passée : une masse solaire de matériaux part vers l’étoile':
+    '発注完了：太陽質量ぶんの資材が恒星へ向かう',
+  'Déploiement : l’étoile disparaît lentement derrière ses propres collecteurs':
+    '展開中：恒星が自らの集光器の陰へゆっくり消えていく',
+  'La sphère est refermée : une étoile entière ne travaille plus que pour vous':
+    '球殻が閉じた：ひとつの恒星がまるごとあなたのためだけに働く',
+  'Le ciel a une étoile de moins, et vous une sphère de plus':
+    '空から星がひとつ減り、あなたに球がひとつ増えた',
+  'Une monnaie numérique dépasse les 20 000 dollars : la ruée commence':
+    'あるデジタル通貨が2万ドルを突破：狂騒が始まる',
+  'Les mineurs raflent les cartes graphiques : les joueurs s’étranglent':
+    'マイナーがグラフィックカードを買い占め、ゲーマーは絶句',
+  'Hiver crypto : le marché a perdu 80% en un an':
+    'クリプトの冬：市場は1年で80%を失った',
+  'Des institutions mettent de la crypto à leur bilan':
+    '機関投資家がクリプトを貸借対照表に載せはじめる',
+  'Pénurie de GPU : entre mineurs et IA, il ne reste rien pour personne':
+    'GPU不足：マイナーとAIのあいだで、誰の分も残らない',
+  'Une grande plateforme d’échange s’effondre en une semaine':
+    '大手取引所が1週間で崩壊',
+  'Les cartes de minage inondent le marché de l’occasion':
+    'マイニング用カードが中古市場にあふれる',
+  'Feu vert aux fonds indiciels au comptant : la crypto entre en Bourse':
+    '現物型指数ファンドが承認：クリプトが証券市場に入る',
+  'Le halving réduit de moitié l’émission : les mineurs serrent les dents':
+    '半減期で発行量が半分に：マイナーは歯を食いしばる',
+  'Les fermes de minage se reconvertissent en datacenters d’IA':
+    'マイニング農場がAIデータセンターへ転換していく',
+  'La crypto se cherche un récit pendant que l’IA rafle les capitaux':
+    'クリプトが物語を探すあいだ、資本はAIへ流れていく',
+  'Votre trésorerie en crypto fait tiquer votre commissaire aux comptes':
+    'クリプトに置いた資金に、監査人が眉をひそめる',
+  'Votre pari crypto est cité en exemple dans la presse financière':
+    'あなたのクリプトの賭けが経済紙で模範として挙げられる',
+  'Vos pertes en crypto amusent beaucoup les analystes':
+    'あなたのクリプトの損失がアナリストたちを大いに楽しませる',
   'Contrat signé : votre datacenter IA sera assemblé en orbite':
     '契約成立：あなたのAIデータセンターは軌道上で組み立てられる',
   'Premiers modules lancés : le datacenter orbital prend forme':
@@ -872,6 +936,14 @@ export default {
     '🚨 インシデント：',
   'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.':
     '赤い枠と脈打つ赤い光を持つ警告が、ページのどこかに、多くは画面の外に、通知もなく現れる。対処されない限り現金を出血させ続け、2分で最大70%を持っていく。手がかりは画面の縁の赤い縁取りだけ。ページをスクロールすること。',
+  '🔬 Grands programmes :':
+    '🔬 大型プログラム：',
+  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
+    '核融合もダイソン球も、棚から買えるものではない。研究、作り込み、利用可能、あなたの発注、そして展開という順に進み、その各段階を報道が追う。核融合プログラムを終えていなければ、核融合炉は買えない。球は物質で支払い、何度でも建造でき、採取を恒久的に速める。',
+  '₿ Crypto :':
+    '₿ クリプト：',
+  'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
+    '株式市場よりはるかに荒い第二の市場。現実の周期をなぞる（2017年のバブル、2018年の冬、2021年の高騰、2022年の暴落、2024年のETFと半減期）。賭けのためだけではない。高騰のあいだ、マイナーはあなたと同じカードを奪い合い、GPU価格は上がる。',
   '🔧 Optimisations récurrentes :':
     '🔧 定期的な最適化：',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. La ligne disparaît une fois prise et revient à l’échéance.':
@@ -1356,6 +1428,16 @@ export default {
     '突破：{0}',
   '{0} déployée (n°{1}) — {2}.':
     '{0}を展開（{1}回目）——{2}。',
+  '{0} : commande passée. Déploiement en cours.':
+    '{0}：発注完了。展開中です。',
+  'Commande passée':
+    '発注完了',
+  '{0} : mise au point terminée, le système est constructible.':
+    '{0}：作り込みが完了し、建設可能になりました。',
+  'Disponible':
+    '利用可能',
+  'Opérationnel':
+    '稼働開始',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     'シンギュラリティ。システムが自己改善を始めた。物質の変換が始まる。',
   'Phase 2 — Autonomie':
@@ -1574,6 +1656,28 @@ export default {
     '利用可能',
   'revient tous les {0} mois':
     '{0}か月ごとに再登場',
+  'à l’étude':
+    '検討中',
+  'recherche':
+    '研究',
+  'mise au point':
+    '作り込み',
+  'déploiement':
+    '展開',
+  'nécessite la phase {0}':
+    '第{0}段階が必要',
+  'Commander':
+    '発注する',
+  'la recherche n’a pas encore commencé':
+    '研究はまだ始まっていない',
+  'récolte ×{0}':
+    '採取 ×{0}',
+  'envolée':
+    '高騰',
+  'effondrement':
+    '暴落',
+  'marché atone':
+    '低調な相場',
   'Lever : {0}':
     '調達：{0}',
   'Lever des fonds':
@@ -1592,8 +1696,6 @@ export default {
     '演算',
   'données':
     'データ',
-  'recherche':
-    '研究',
   'ing. R&D':
     '研究開発',
   'limité par ing. R&D':
@@ -1698,6 +1800,10 @@ export default {
     '最大額を投資',
   'Tout retirer':
     'すべて引き出す',
+  'Crypto':
+    'クリプト',
+  'Effet sur le prix des GPU':
+    'GPU価格への影響',
   'Équipe':
     'チーム',
   'Effectif':
@@ -1738,6 +1844,8 @@ export default {
     'GPUの枠',
   'Charge réseau':
     '系統負荷',
+  'Grands programmes':
+    '大型プログラム',
   'R&D — Entraînement de modèles':
     '研究開発 — モデル学習',
   'Données':
