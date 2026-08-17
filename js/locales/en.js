@@ -1800,6 +1800,8 @@ export default {
     'research has not started yet',
   'récolte ×{0}':
     'harvest ×{0}',
+  'entrée à {0}':
+    'entered at {0}',
   'sous tutelle':
     'under tutelage',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -1916,6 +1918,8 @@ export default {
     'locked',
   'Bourse':
     'Stock market',
+  'Indice':
+    'Index',
   'Portefeuille':
     'Portfolio',
   'Plus/moins-value':
@@ -1936,6 +1940,8 @@ export default {
     'Withdraw all',
   'Crypto':
     'Crypto',
+  'Cours':
+    'Price',
   'Effet sur le prix des GPU':
     'Effect on GPU prices',
   'Équipe':
@@ -2040,6 +2046,10 @@ export default {
     'Save the game',
   'Historique de production (tokens/s)':
     'Production history (tokens/s)',
+  'Évolution de l’indice boursier':
+    'Stock index over time',
+  'Évolution du cours de la crypto':
+    'Crypto price over time',
   'Carte de l’univers converti':
     'Map of the converted universe',
   'Passer la cinématique':

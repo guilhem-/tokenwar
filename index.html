@@ -141,6 +141,14 @@
         <div class="panel-title" data-i18n="Bourse">Bourse</div>
         <div class="panel-body">
           <div class="stock-block" id="stock-block">
+          <div class="market-chart">
+            <canvas id="stock-chart" height="64" data-i18n-aria="Évolution de l’indice boursier" aria-label="Évolution de l’indice boursier"></canvas>
+            <div class="market-legend">
+              <span data-i18n="Indice">Indice</span>
+              <span class="num" id="stock-index">1,00</span>
+              <span class="num market-entry hidden" id="stock-entry"></span>
+            </div>
+          </div>
           <div class="meter-row">
             <span class="text-muted" data-i18n="Portefeuille">Portefeuille</span>
             <span class="num" id="stock-value">$0</span>
@@ -167,6 +175,14 @@
             <div class="meter-row crypto-head">
               <span class="text-muted">₿ <span data-i18n="Crypto">Crypto</span></span>
               <span class="num" id="crypto-trend">—</span>
+            </div>
+            <div class="market-chart">
+              <canvas id="crypto-chart" height="64" data-i18n-aria="Évolution du cours de la crypto" aria-label="Évolution du cours de la crypto"></canvas>
+              <div class="market-legend">
+                <span data-i18n="Cours">Cours</span>
+                <span class="num" id="crypto-price">1,00</span>
+                <span class="num market-entry hidden" id="crypto-entry"></span>
+              </div>
             </div>
             <div class="meter-row">
               <span class="text-muted" data-i18n="Portefeuille">Portefeuille</span>

@@ -1800,6 +1800,8 @@ export default {
     '研究はまだ始まっていない',
   'récolte ×{0}':
     '採取 ×{0}',
+  'entrée à {0}':
+    '{0} で参入',
   'sous tutelle':
     '後見下',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -1916,6 +1918,8 @@ export default {
     'ロック中',
   'Bourse':
     '株式市場',
+  'Indice':
+    '指数',
   'Portefeuille':
     'ポートフォリオ',
   'Plus/moins-value':
@@ -1936,6 +1940,8 @@ export default {
     'すべて引き出す',
   'Crypto':
     'クリプト',
+  'Cours':
+    'レート',
   'Effet sur le prix des GPU':
     'GPU価格への影響',
   'Équipe':
@@ -2040,6 +2046,10 @@ export default {
     'ゲームを保存',
   'Historique de production (tokens/s)':
     '産出の推移（トークン/秒）',
+  'Évolution de l’indice boursier':
+    '株価指数の推移',
+  'Évolution du cours de la crypto':
+    'クリプト相場の推移',
   'Carte de l’univers converti':
     '変換済み宇宙の地図',
   'Passer la cinématique':

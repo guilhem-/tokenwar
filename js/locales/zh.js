@@ -1800,6 +1800,8 @@ export default {
     '研究尚未开始',
   'récolte ×{0}':
     '采集 ×{0}',
+  'entrée à {0}':
+    '建仓于 {0}',
   'sous tutelle':
     '处于托管',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -1916,6 +1918,8 @@ export default {
     '未解锁',
   'Bourse':
     '股市',
+  'Indice':
+    '指数',
   'Portefeuille':
     '持仓',
   'Plus/moins-value':
@@ -1936,6 +1940,8 @@ export default {
     '全部取回',
   'Crypto':
     '加密资产',
+  'Cours':
+    '行情',
   'Effet sur le prix des GPU':
     '对 GPU 价格的影响',
   'Équipe':
@@ -2040,6 +2046,10 @@ export default {
     '保存游戏',
   'Historique de production (tokens/s)':
     '产出曲线（token/秒）',
+  'Évolution de l’indice boursier':
+    '股票指数走势',
+  'Évolution du cours de la crypto':
+    '加密资产行情走势',
   'Carte de l’univers converti':
     '已转化宇宙地图',
   'Passer la cinématique':

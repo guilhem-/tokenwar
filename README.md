@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 020 chaînes × 7 langues = 7 140 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 025 chaînes × 7 langues = 7 175 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -101,6 +101,12 @@ de son année.
 - **Charges journalières** affichées et prélevées en continu, ventilées par nature.
 - **Tokens invendus = perdus** : la production doit suivre la demande, pas l'inverse.
 - **Bourse** (débloquée à $100k) : trois profils de risque, mouvement brownien géométrique.
+  Un **indice de marché** vit indépendamment de vos positions et alimente un **graphe** —
+  le même tirage aléatoire anime l'indice tracé et votre portefeuille, si bien que la courbe
+  affichée est exactement celle que vous subissez. La **ligne pointillée** marque votre niveau
+  d'entrée : l'aire entre la courbe et cette ligne *est* votre plus- ou moins-value, et elle se
+  teinte en vert ou en rouge. Le niveau d'entrée n'est pas stocké — il se déduit des valeurs
+  déjà calculées (`indice × mise / valeur`), donc il ne peut pas se désynchroniser.
 
 ## 🔬 Grands programmes — rien ne s'achète sur étagère
 

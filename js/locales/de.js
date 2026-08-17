@@ -1800,6 +1800,8 @@ export default {
     'die Forschung hat noch nicht begonnen',
   'récolte ×{0}':
     'Ernte ×{0}',
+  'entrée à {0}':
+    'Einstieg bei {0}',
   'sous tutelle':
     'unter Vormundschaft',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -1916,6 +1918,8 @@ export default {
     'gesperrt',
   'Bourse':
     'Börse',
+  'Indice':
+    'Index',
   'Portefeuille':
     'Portfolio',
   'Plus/moins-value':
@@ -1936,6 +1940,8 @@ export default {
     'Alles abheben',
   'Crypto':
     'Krypto',
+  'Cours':
+    'Kurs',
   'Effet sur le prix des GPU':
     'Wirkung auf die GPU-Preise',
   'Équipe':
@@ -2040,6 +2046,10 @@ export default {
     'Spiel speichern',
   'Historique de production (tokens/s)':
     'Produktionsverlauf (Tokens/s)',
+  'Évolution de l’indice boursier':
+    'Verlauf des Börsenindex',
+  'Évolution du cours de la crypto':
+    'Verlauf des Kryptokurses',
   'Carte de l’univers converti':
     'Karte des umgewandelten Universums',
   'Passer la cinématique':

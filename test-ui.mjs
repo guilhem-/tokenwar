@@ -762,6 +762,57 @@ await step('aide : modale bornée à l écran et défilante', () => {
     throw new Error('le texte et les succès doivent partager la zone défilante');
 });
 
+// ---- graphes de marché : l'indice tracé est celui qui bouge le portefeuille ----
+await step('bourse : indice, historique et niveau d entrée cohérents', () => {
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  const st = g2.state.stock;
+  if (st.index == null) throw new Error('la Bourse doit avoir un indice');
+  // l indice vit MÊME sans position (sinon le graphe serait vide avant d investir)
+  for (let i = 0; i < 60; i++) g2.tick(0.25);
+  if (st.hist.length < 5) throw new Error('aucun historique sans position');
+  if (st.index === 1) throw new Error('l indice ne bouge pas');
+  // un seul tirage anime l indice ET la position : les rapports doivent coïncider
+  g2.state.stockUnlocked = true; g2.state.money = 1e6;
+  g2.stockDeposit(1000);
+  const i0 = st.index, v0 = st.invested;
+  for (let i = 0; i < 120; i++) g2.tick(0.25);
+  const ri = st.index / i0, rv = st.invested / v0;
+  if (Math.abs(ri - rv) > 1e-9) throw new Error('la courbe ne suit pas le portefeuille : ' + ri + ' vs ' + rv);
+  // le niveau d entrée se déduit des valeurs calculées, sans état supplémentaire
+  const lvl = ui.entryLevel(st);
+  if (lvl == null) throw new Error('niveau d entrée introuvable');
+  if (Math.abs(lvl - i0) > i0 * 1e-9) throw new Error('niveau d entrée incohérent : ' + lvl + ' vs ' + i0);
+  // la plus-value affichée correspond au rapport à ce niveau
+  const gain = st.invested / st.basis - 1, vsEntry = st.index / lvl - 1;
+  if (Math.abs(gain - vsEntry) > 1e-9) throw new Error('plus-value et graphe divergent');
+  // l historique reste borné
+  for (let i = 0; i < 900; i++) g2.tick(0.25);
+  if (st.hist.length > 160) throw new Error('historique non borné : ' + st.hist.length);
+});
+
+await step('crypto : même graphe, cours indépendant de la position', () => {
+  const g2 = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
+  const c = g2.state.crypto;
+  for (let i = 0; i < 60; i++) g2.tick(0.25);
+  if (c.hist.length < 5) throw new Error('pas d historique du cours');
+  if (c.invested !== 0) throw new Error('position ouverte sans dépôt');
+  g2.state.money = 1e6; g2.tickCrypto(0.25);
+  g2.cryptoDeposit(1000);
+  const p0 = c.price, v0 = c.invested;
+  for (let i = 0; i < 120; i++) g2.tick(0.25);
+  if (Math.abs(c.price / p0 - c.invested / v0) > 1e-9) throw new Error('le cours ne suit pas la position');
+  if (Math.abs(ui.entryLevel(c) - p0) > p0 * 1e-9) throw new Error('niveau d entrée incohérent');
+});
+
+await step('graphe : rendu sans contexte 2D et sans données', () => {
+  // jsdom n a pas de canvas : le rendu doit rester silencieux, pas jeter
+  ui.drawMarket(ui.el.stockChart, [], null, '#fff');
+  ui.drawMarket(ui.el.stockChart, [1, 2, 3], 1.5, '#fff');
+  ui.drawMarket(null, [1, 2], null, '#fff');
+  ui.renderMarketLegend(ui.el.stockEntry, { invested: 0, basis: 0 }, null);
+  if (!ui.el.stockEntry.classList.contains('hidden')) throw new Error('le niveau d entrée doit disparaître sans position');
+});
+
 // toast + log
 await step('toast & log', () => { ui.toast('hello','good'); ui.log('test log','milestone'); });
 

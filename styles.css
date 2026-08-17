@@ -1568,3 +1568,21 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 .universe-legend .dot.raw  { background: #d8d2c4; box-shadow: 0 0 6px rgba(216,210,196,0.6); }
 .universe-legend .dot.done { background: #3ba9ff; box-shadow: 0 0 8px rgba(59,169,255,0.9); }
 .universe-legend .num { margin-left: auto; color: #7fd0ff; }
+
+/* =====================================================================
+   GRAPHES DE MARCHÉ — l'indice réellement calculé, pas une décoration.
+   La ligne pointillée marque le niveau auquel le joueur est entré : l'aire
+   entre les deux EST sa plus- ou moins-value.
+   ===================================================================== */
+.market-chart { margin-bottom: 0.55rem; }
+.market-chart canvas {
+  width: 100%; display: block; border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.15));
+  border: 1px solid var(--line);
+}
+.market-legend {
+  display: flex; align-items: center; gap: 0.45rem;
+  margin-top: 0.3rem; font-size: 0.68rem; color: var(--text-mute);
+}
+.market-legend .num { color: var(--text); }
+.market-entry { margin-left: auto; }

@@ -62,6 +62,8 @@ export class UI {
       gpuList: $('gpu-list'),
       panelStock: $('panel-stock'), stockBlock: $('stock-block'),
       stockValue: $('stock-value'), stockPl: $('stock-pl'), riskTabs: $('risk-tabs'),
+      stockChart: $('stock-chart'), stockIndex: $('stock-index'), stockEntry: $('stock-entry'),
+      cryptoChart: $('crypto-chart'), cryptoPrice: $('crypto-price'), cryptoEntry: $('crypto-entry'),
       btnStockDep10: $('btn-stock-dep10'), btnStockDepMax: $('btn-stock-depmax'), btnStockWithdraw: $('btn-stock-withdraw'),
       btnRestart: $('btn-restart'),
       restartOverlay: $('restart-overlay'), restartCancel: $('restart-cancel'), restartConfirm: $('restart-confirm'),
@@ -832,6 +834,11 @@ export class UI {
     this.el.stockBlock.classList.toggle('hidden', !this.game.state.stockUnlocked);   // la Bourse s'ouvre à 100k$
     const g = this.game, s = g.state;
     const st = s.stock;
+    const lvl = this.entryLevel(st);
+    this.drawMarket(this.el.stockChart, st.hist, lvl,
+      getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#2ee6d6');
+    if (this.el.stockIndex) this.el.stockIndex.textContent = g.decimal(st.index || 1, 3);
+    this.renderMarketLegend(this.el.stockEntry, st, lvl);
     this.el.stockValue.textContent = fmtMoney(st.invested);
     if (st.basis > 0 || st.invested > 0) {
       const pl = st.invested - st.basis;
@@ -1212,6 +1219,77 @@ export class UI {
     this.el.panelPrograms.classList.toggle('hidden', !any);
   }
 
+  // ------------------------------------------------------------------
+  //  GRAPHES DE MARCHÉ — on trace l'indice RÉELLEMENT calculé par le moteur,
+  //  celui-là même qui fait bouger la position du joueur. La ligne pointillée
+  //  marque le niveau auquel il est entré : l'aire entre la courbe et cette
+  //  ligne est exactement sa plus- ou moins-value.
+  //  Le niveau d'entrée se déduit des valeurs existantes — indice × mise /
+  //  valeur actuelle — donc il ne peut pas se désynchroniser du portefeuille.
+  // ------------------------------------------------------------------
+  entryLevel(m) {
+    if (!(m.invested > 0) || !(m.basis > 0)) return null;
+    return m.index != null ? m.index * m.basis / m.invested
+                           : m.price * m.basis / m.invested;
+  }
+  drawMarket(canvas, hist, entry, color) {
+    if (!canvas || !canvas.getContext) return;
+    const w = canvas.parentElement ? (canvas.parentElement.clientWidth || 260) : 260;
+    if (canvas.width !== w) canvas.width = w;
+    const h = canvas.height, ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, w, h);
+    if (!hist || hist.length < 2) return;
+    // échelle automatique sur la fenêtre visible, ligne d'entrée comprise
+    let lo = Infinity, hi = -Infinity;
+    for (const v of hist) { if (v < lo) lo = v; if (v > hi) hi = v; }
+    if (entry != null) { lo = Math.min(lo, entry); hi = Math.max(hi, entry); }
+    if (!isFinite(lo) || !isFinite(hi)) return;
+    const pad = (hi - lo) * 0.12 || Math.abs(hi) * 0.05 || 1;
+    lo -= pad; hi += pad;
+    const X = i => 1 + i / (hist.length - 1) * (w - 2);
+    const Y = v => h - 2 - ((v - lo) / (hi - lo)) * (h - 4);
+
+    // aire sous la courbe, teintée selon le gain ou la perte
+    const last = hist[hist.length - 1];
+    const win = entry == null || last >= entry;
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, win ? 'rgba(74,222,128,0.28)' : 'rgba(239,68,68,0.28)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.moveTo(X(0), Y(hist[0]));
+    hist.forEach((v, i) => ctx.lineTo(X(i), Y(v)));
+    ctx.lineTo(X(hist.length - 1), h); ctx.lineTo(X(0), h); ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
+
+    // niveau d'entrée : au-dessus vous gagnez, en dessous vous perdez
+    if (entry != null) {
+      ctx.beginPath();
+      ctx.setLineDash([3, 3]);
+      ctx.moveTo(0, Y(entry)); ctx.lineTo(w, Y(entry));
+      ctx.strokeStyle = 'rgba(230,235,245,0.45)'; ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // la courbe elle-même
+    ctx.beginPath();
+    hist.forEach((v, i) => (i === 0 ? ctx.moveTo(X(i), Y(v)) : ctx.lineTo(X(i), Y(v))));
+    ctx.strokeStyle = color; ctx.lineWidth = 1.6; ctx.stroke();
+    // point courant
+    ctx.beginPath();
+    ctx.arc(X(hist.length - 1), Y(last), 2.4, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+  }
+  // variation depuis l'entrée, affichée à côté du graphe
+  renderMarketLegend(el, m, level) {
+    if (!el) return;
+    if (level == null) { el.classList.add('hidden'); return; }
+    el.classList.remove('hidden');
+    const g = (m.invested / m.basis - 1) * 100;
+    el.innerHTML = `<span class="${g >= 0 ? 'text-good' : 'text-bad'}">`
+      + `${t('entrée à {0}', this.game.decimal(level, 2))} · ${g >= 0 ? '+' : ''}${g.toFixed(1)}%</span>`;
+  }
+
   renderSovereign() {
     const g = this.game, r = this.rows.sovereign && this.rows.sovereign['sovereign'];
     if (!r) return;
@@ -1293,6 +1371,10 @@ export class UI {
     const era = g.cryptoEra();
     const trend = era.drift > 0.004 ? t('envolée') : (era.drift < -0.004 ? t('effondrement') : t('marché atone'));
     this.el.cryptoTrend.innerHTML = `<span class="${era.drift > 0.004 ? 'text-good' : (era.drift < -0.004 ? 'text-bad' : 'text-muted')}">${trend}</span>`;
+    const lvlc = this.entryLevel(c);
+    this.drawMarket(this.el.cryptoChart, c.hist, lvlc, '#f7b32b');
+    if (this.el.cryptoPrice) this.el.cryptoPrice.textContent = g.decimal(c.price || 1, 3);
+    this.renderMarketLegend(this.el.cryptoEntry, c, lvlc);
     this.el.cryptoValue.textContent = fmtMoney(c.invested);
     if (c.basis > 0 || c.invested > 0) {
       const pl = c.invested - c.basis;

@@ -1800,6 +1800,8 @@ export default {
     'a investigação ainda não começou',
   'récolte ×{0}':
     'colheita ×{0}',
+  'entrée à {0}':
+    'entrada em {0}',
   'sous tutelle':
     'sob tutela',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -1916,6 +1918,8 @@ export default {
     'bloqueado',
   'Bourse':
     'Bolsa',
+  'Indice':
+    'Índice',
   'Portefeuille':
     'Carteira',
   'Plus/moins-value':
@@ -1936,6 +1940,8 @@ export default {
     'Levantar tudo',
   'Crypto':
     'Cripto',
+  'Cours':
+    'Cotação',
   'Effet sur le prix des GPU':
     'Efeito no preço das GPU',
   'Équipe':
@@ -2040,6 +2046,10 @@ export default {
     'Gravar o jogo',
   'Historique de production (tokens/s)':
     'Histórico de produção (tokens/s)',
+  'Évolution de l’indice boursier':
+    'Evolução do índice bolsista',
+  'Évolution du cours de la crypto':
+    'Evolução da cotação da cripto',
   'Carte de l’univers converti':
     'Mapa do universo convertido',
   'Passer la cinématique':

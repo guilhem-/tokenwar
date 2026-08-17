@@ -1800,6 +1800,8 @@ export default {
     '연구가 아직 시작되지 않았다',
   'récolte ×{0}':
     '수확 ×{0}',
+  'entrée à {0}':
+    '{0}에 진입',
   'sous tutelle':
     '후견 아래',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -1916,6 +1918,8 @@ export default {
     '잠김',
   'Bourse':
     '주식 시장',
+  'Indice':
+    '지수',
   'Portefeuille':
     '포트폴리오',
   'Plus/moins-value':
@@ -1936,6 +1940,8 @@ export default {
     '전부 회수',
   'Crypto':
     '크립토',
+  'Cours':
+    '시세',
   'Effet sur le prix des GPU':
     'GPU 가격에 미치는 영향',
   'Équipe':
@@ -2040,6 +2046,10 @@ export default {
     '게임 저장',
   'Historique de production (tokens/s)':
     '생산 추이 (토큰/초)',
+  'Évolution de l’indice boursier':
+    '주가지수 추이',
+  'Évolution du cours de la crypto':
+    '크립토 시세 추이',
   'Carte de l’univers converti':
     '변환된 우주 지도',
   'Passer la cinématique':

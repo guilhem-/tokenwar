@@ -54,7 +54,7 @@ export class Game {
     s.rentedDC = 0;          // datacenters loués (coût journalier)
     s.rentedSpace = 0;       // espaces de colocation loués (coût journalier)
     s.employees = { hr:0, rnd:0, marketer:0, ops:0, data:0 }; // ressources humaines
-    s.stock = { invested:0, basis:0, risk:1 };  // bourse : valeur de marché, total investi, niveau de risque
+    s.stock = { invested:0, basis:0, risk:1, index:1, hist:[] };  // position, risque, INDICE de marché et son historique
     s.stockUnlocked = false; // la bourse se débloque à 100 000$ de trésorerie
     // automatisations (auto-clickers payants, activables/désactivables)
     s.auto = { click:{ owned:false, on:true }, gpu:{ owned:false, on:true }, infra:{ owned:false, on:true }, energy:{ owned:false, on:true } };
@@ -76,7 +76,7 @@ export class Game {
     // programmes par étapes (fusion, sphère de Dyson) : id -> {stage, at, n}
     s.programs = {};
     // second marché, bien plus violent que la Bourse
-    s.crypto = { invested:0, basis:0, price:1, unlocked:false };
+    s.crypto = { invested:0, basis:0, price:1, unlocked:false, hist:[] };
     s.chronicle = {};        // id|année -> déjà publié
     s.sovereign = { status:'none', at:0 };   // rachat de dette souveraine
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
@@ -665,11 +665,29 @@ export class Game {
   stockRiskCfg() { return [{ d: 0.00035, v: 0.008 }, { d: 0.0007, v: 0.025 }, { d: 0.0025, v: 0.06 }][this.state.stock.risk] || { d: 0.0005, v: 0.02 }; }
   tickStock(dt) {
     const st = this.state.stock;
-    if (st.invested <= 0) return;
     const c = this.stockRiskCfg();
+    // UN SEUL tirage anime l'indice ET la position : la courbe affichée est
+    // exactement celle que subit le portefeuille, pas une jolie approximation.
     const change = c.d * dt + c.v * Math.sqrt(dt) * this._randn();
-    st.invested = Math.max(0, st.invested * (1 + change));
-    if (!isFinite(st.invested)) st.invested = 0;
+    st.index = Math.max(1e-6, (st.index || 1) * (1 + change));
+    if (!isFinite(st.index)) st.index = 1;
+    if (st.invested > 0) {
+      st.invested = Math.max(0, st.invested * (1 + change));
+      if (!isFinite(st.invested)) st.invested = 0;
+    }
+    this.sampleMarket(st, st.index);
+  }
+
+  // Historique commun aux deux marchés : un point toutes les demi-secondes de
+  // jeu, 160 points glissants. Conservé dans la sauvegarde pour que le graphe
+  // ne reparte pas de zéro au retour.
+  sampleMarket(obj, value) {
+    const tick = Math.floor(this.state.playSeconds * 2);
+    if (obj._t === tick) return;
+    obj._t = tick;
+    if (!Array.isArray(obj.hist)) obj.hist = [];
+    obj.hist.push(value);
+    if (obj.hist.length > 160) obj.hist.shift();
   }
   stockDeposit(amount) {
     if (!this.state.stockUnlocked) return false;   // bourse débloquée à 100 000$
@@ -945,6 +963,7 @@ export class Game {
       if (!isFinite(c.invested)) c.invested = 0;
     }
     if (!c.unlocked && this.state.money >= CRYPTO_UNLOCK) c.unlocked = true;
+    this.sampleMarket(c, c.price);
   }
   cryptoDeposit(amount) {
     const c = this.state.crypto;
