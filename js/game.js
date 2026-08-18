@@ -10,8 +10,8 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK,
          CHRONICLE, EXTRAVAGANCES, SOVEREIGN,
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
-         OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED } from './data.js';
-import { clamp, fmtPower, fmtMoney } from './util.js';
+         OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION } from './data.js';
+import { clamp, fmtPower, fmtMoney, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -46,7 +46,7 @@ export class Game {
     // score & ressources
     s.lifetimeTokens = 0;
     s.unsold = 0;
-    s.money = 30000;         // capital de départ : de quoi se raccorder, monter une baie et un serveur
+    s.money = 50000;         // capital de départ : de quoi se raccorder, monter une baie et un serveur
     s.research = 0;
     s.data = 0;
     s.reputation = 50;
@@ -92,6 +92,10 @@ export class Game {
     s.crypto = { invested:0, basis:0, price:1, unlocked:false, hist:[] };
     s.chronicle = {};        // id|année -> déjà publié
     s.sovereign = { status:'none', at:0 };   // rachat de dette souveraine
+    // dette : prêts en cours. Les montants y sont en dollars CONSTANTS, comme
+    // les prix du jeu ; l'inflation s'applique au moment du paiement.
+    s.loans = [];
+    s.loanSeq = 0;
     s.opsCheckYear = 0;      // dernier contrôle annuel du risque d'exploitation
     s.lastIncident = null;   // pour ne pas tirer deux fois le même article de suite
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
@@ -186,8 +190,10 @@ export class Game {
   // ---- calendrier de simulation ----
   simYear() { return START_YEAR + this.state.playSeconds / SECONDS_PER_YEAR; }
   simYearInt() { return Math.floor(this.simYear()); }
-  dateLabel() {                                  // date au jour près (jour mois année)
-    const y = this.simYear();
+  dateLabel() { return this.dateLabelAt(this.state.playSeconds); }
+  // même chose pour un instant quelconque : sert aux échéances à venir
+  dateLabelAt(seconds) {
+    const y = START_YEAR + seconds / SECONDS_PER_YEAR;
     const year = Math.floor(y);
     const dayOfYear = Math.min(364, Math.floor((y - year) * 365));
     const d = new Date(2001, 0, 1 + dayOfYear);  // 2001 : année non bissextile, pour jour↔mois
@@ -751,6 +757,257 @@ export class Game {
     this.queueBuild('energy', id, e, cost);      // puis raccordement / construction
     return true;
   }
+  // ==================================================================
+  //  DETTE — contracter, servir, rembourser.
+  //
+  //  Tous les montants d'un prêt sont en dollars CONSTANTS, comme les prix
+  //  du jeu, et convertis par moneyCost() au moment où l'argent bouge. Le
+  //  taux affiché est donc réel : l'inflation n'efface pas la dette, et la
+  //  banque récupère son capital en pouvoir d'achat, pas seulement en
+  //  chiffres. C'est la première moitié de « la banque ne perd jamais ».
+  //  La seconde est payLoan() : à défaut de trésorerie, on saisit.
+  // ==================================================================
+  loanPeriod(l) { return (l.every || 3) / 12; }          // durée d'une période, en années
+  loanPayments(l) { return Math.round(l.years * 12 / (l.every || 3)); }
+  loanOffer(id) { return LOANS.find(x => x.id === id); }
+  hasLoan(id) { return this.state.loans.some(l => l.id === id); }
+  debtUnlocked() { return this.phase < 2 && this.valuation() >= LOAN_MIN_VALUATION; }
+  isPublic() { return !!(this.state.fundingDone && this.state.fundingDone.ipo); }
+  // « ça va mal » : des salaires en retard, une trésorerie à sec, ou une dette
+  // qui dépasse déjà la moitié de la valorisation.
+  inDistress() {
+    const s = this.state;
+    if ((s.unpaidDays || 0) > 0) return true;
+    if (s.money < this.dailyTotal() * 10) return true;
+    return this.debtOutstanding() > this.valuation() * 0.5;
+  }
+  loanVisible(o) {
+    if (!this.debtUnlocked() || this.hasLoan(o.id)) return false;
+    if (o.postIPO && !this.isPublic()) return false;
+    if (o.distress && !this.inDistress()) return false;
+    return this.valuation() >= (o.need || 0);
+  }
+  loanOffers() { return LOANS.filter(o => this.loanVisible(o)); }
+  // Coût total du crédit, en dollars constants : la somme des intérêts et
+  // commissions qu'une offre aura coûtés si elle est menée à son terme sans
+  // remboursement anticipé. C'est le seul chiffre qui permette de comparer un
+  // taux bas amorti dès le premier trimestre à un taux élevé payé in fine.
+  loanTotalCost(o) {
+    const per = (o.every || 3) / 12, n = Math.round(o.years * 12 / (o.every || 3));
+    const g = Math.round((o.graceYears || 0) / per);
+    let reste = o.amount, cout = 0;
+    for (let k = 1; k <= n; k++) {
+      const interet = reste * o.rate * per;
+      cout += interet;
+      if (o.amort === 'pik' && k < n) reste += interet * o.pik;      // la dette enfle
+      if (o.revolving) cout += (o.amount - reste) * o.commitment * per;
+      let capital = 0;
+      if (k === n) capital = reste;
+      else if (o.amort === 'linear') capital = o.amount / n;
+      else if (o.amort === 'grace') capital = k <= g ? 0 : o.amount / Math.max(1, n - g);
+      else if (o.amort === 'rescue') capital = o.amount * (o.rescueYearly || 0) * per;
+      reste = Math.max(0, reste - capital);
+    }
+    return cout;
+  }
+
+  // ---- souscription ----
+  takeLoan(id) {
+    const o = this.loanOffer(id);
+    if (!o || !this.loanVisible(o)) return false;
+    const s = this.state;
+    // une revolving n'est pas tirée à la souscription : on ouvre la ligne.
+    const drawn = o.revolving ? 0 : o.amount;
+    const per = this.loanPeriod(o);
+    const l = {
+      n: ++s.loanSeq, id: o.id, limit: o.amount, outstanding: drawn,
+      rate: o.rate, years: o.years, every: o.every, amort: o.amort,
+      revolving: !!o.revolving, commitment: o.commitment || 0,
+      graceYears: o.graceYears || 0, pik: o.pik || 0, rescueYearly: o.rescueYearly || 0,
+      prepayFee: o.prepayFee || 0, dilution: o.dilution || 0, secured: !!o.secured,
+      principal0: drawn, k: 0,
+      takenAt: s.playSeconds,
+      dueAt: s.playSeconds + per * SECONDS_PER_YEAR,
+      endAt: s.playSeconds + o.years * SECONDS_PER_YEAR,
+      paidInterest: 0, paidPrincipal: 0, fees: 0, seized: 0,
+    };
+    s.loans.push(l);
+    if (drawn > 0) s.money += this.moneyCost(drawn);
+    this.log(o.revolving
+      ? t('Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.',
+          fmtMoney(this.moneyCost(o.amount)), td(o.lender), pct(o.rate * 100) + '%')
+      : t('{0} : {1} versés par {2}, à {3} l’an sur {4} ans.',
+          td(o.name), fmtMoney(this.moneyCost(drawn)), td(o.lender), pct(o.rate * 100) + '%', o.years),
+      'milestone');
+    return true;
+  }
+
+  // ---- tirage / remboursement d'une ligne revolving ----
+  drawLoan(n, amount) {
+    const l = this.state.loans.find(x => x.n === n);
+    if (!l || !l.revolving) return false;
+    const room = l.limit - l.outstanding;
+    const amt = Math.min(room, Math.max(0, amount || room));
+    if (amt <= 0) return false;
+    l.outstanding += amt; l.principal0 += amt;
+    this.state.money += this.moneyCost(amt);
+    return true;
+  }
+
+  // ---- échéancier ----
+  // Capital dû à l'échéance k (en dollars constants). Le reste est de l'intérêt.
+  loanPrincipalDue(l, k) {
+    const n = this.loanPayments(l), per = this.loanPeriod(l);
+    if (k >= n) return l.outstanding;                       // dernière échéance : tout le solde
+    switch (l.amort) {
+      case 'linear': return Math.min(l.outstanding, l.principal0 / n);
+      case 'grace': {
+        const g = Math.round((l.graceYears || 0) / per);
+        return k <= g ? 0 : Math.min(l.outstanding, l.principal0 / Math.max(1, n - g));
+      }
+      case 'rescue': return Math.min(l.outstanding, l.principal0 * (l.rescueYearly || 0) * per);
+      default: return 0;                                    // bullet, pik : rien avant la fin
+    }
+  }
+  // Prochaine échéance : quand, combien, et de quoi elle est faite.
+  loanNextPayment(l) {
+    const per = this.loanPeriod(l), k = l.k + 1, n = this.loanPayments(l);
+    const interest = l.outstanding * l.rate * per;
+    const cashInterest = l.amort === 'pik' && k < n ? interest * (1 - l.pik) : interest;
+    const fee = l.revolving ? (l.limit - l.outstanding) * l.commitment * per : 0;
+    const principal = this.loanPrincipalDue(l, k);
+    return { at: l.dueAt, k, last: k >= n, interest: cashInterest, fee, principal,
+             total: cashInterest + fee + principal };
+  }
+  tickDebt() {
+    const s = this.state;
+    if (!s.loans.length) return;
+    for (const l of [...s.loans]) {
+      let guard = 0;
+      while (s.playSeconds >= l.dueAt && guard++ < 200) this.payLoan(l);
+    }
+  }
+  payLoan(l) {
+    const s = this.state, p = this.loanNextPayment(l), per = this.loanPeriod(l);
+    // mezzanine : la part non payée des intérêts grossit le capital
+    if (l.amort === 'pik' && !p.last) l.outstanding += l.outstanding * l.rate * per * l.pik;
+    const dueNow = this.moneyCost(p.total);
+    let paid = Math.min(s.money, dueNow);
+    s.money -= paid;
+    if (paid < dueNow - 1e-6) paid += this.seizeAssets(dueNow - paid, l);
+    // ce qui n'a toujours pas pu être réglé s'ajoute au capital : la créance
+    // ne s'évapore pas, elle reste due et continue de porter intérêt.
+    const manque = Math.max(0, dueNow - paid) / Math.max(1e-9, this.inflIndex());
+    l.outstanding = Math.max(0, l.outstanding - p.principal + manque);
+    l.paidInterest += p.interest + p.fee; l.paidPrincipal += p.principal; l.fees += p.fee;
+    l.k = p.k;
+    l.dueAt += per * SECONDS_PER_YEAR;
+    if (manque > 1e-6) {
+      this.changeRep(-2);
+      this.log(t('Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.',
+        td(this.loanOffer(l.id).name), fmtMoney(this.moneyCost(manque))), 'bad');
+    }
+    if (p.last && l.outstanding <= 1e-6) this.closeLoan(l);
+    else if (p.last) l.dueAt = s.playSeconds + per * SECONDS_PER_YEAR;  // on reste dû tant que ce n'est pas soldé
+  }
+  closeLoan(l) {
+    const s = this.state, o = this.loanOffer(l.id);
+    s.loans = s.loans.filter(x => x.n !== l.n);
+    // la convertible peut se convertir : le fonds prend des parts plutôt que du cash
+    if (l.dilution && l.paidPrincipal > 0) {
+      s.mods.valuationMult *= (1 - l.dilution);
+      this.log(t('{0} convertie en actions : votre valorisation par action se dilue de {1}.',
+        td(o.name), pct(l.dilution * 100) + '%'), 'info');
+    } else {
+      this.log(t('{0} soldé. Intérêts versés : {1}.', td(o.name),
+        fmtMoney(this.moneyCost(l.paidInterest))), 'good');
+    }
+  }
+  // ---- remboursement anticipé ----
+  prepayCost(l) {
+    return this.moneyCost(l.outstanding * (1 + (l.prepayFee || 0)));
+  }
+  repayLoan(n, amount) {
+    const s = this.state, l = s.loans.find(x => x.n === n);
+    if (!l || l.outstanding <= 0) return false;
+    const fee = 1 + (l.revolving ? 0 : (l.prepayFee || 0));   // une revolving se rembourse librement
+    const maxConst = l.outstanding;
+    const wantConst = amount == null ? maxConst : Math.min(maxConst, amount);
+    const cost = this.moneyCost(wantConst * fee);
+    if (s.money < cost) {
+      // on rembourse ce qu'on peut plutôt que de refuser sèchement
+      const affordable = s.money / Math.max(1e-9, this.inflIndex() * fee);
+      if (affordable <= 1e-6) return false;
+      return this.repayLoan(n, affordable);
+    }
+    s.money -= cost;
+    l.outstanding -= wantConst;
+    l.paidPrincipal += wantConst;
+    l.fees += wantConst * (fee - 1);
+    if (l.outstanding <= 1e-6) {
+      if (l.revolving) { l.outstanding = 0; return true; }    // la ligne reste ouverte
+      this.log(t('{0} remboursé par anticipation.', td(this.loanOffer(l.id).name)), 'good');
+      this.closeLoan(l);
+    }
+    return true;
+  }
+  // ---- saisie : la banque récupère son capital, quoi qu'il arrive ----
+  // On vend d'abord les cartes (les plus liquides), puis l'infrastructure.
+  // Un prêt garanti mord en premier sur le matériel : c'est sa contrepartie.
+  seizeAssets(need, loan) {
+    const s = this.state;
+    let got = 0;
+    const encaisse = v => { got += v; };
+    const encore = () => need - got > 1e-6;
+    // 1. les GPU, au prix de revente
+    const cartes = GPUS.map(g => ({ g, n: Math.floor(s.gpuCounts[g.id] || 0) }))
+      .filter(x => x.n > 0).sort((a, b) => a.g.cost - b.g.cost);
+    for (const { g, n } of cartes) {
+      if (!encore()) break;
+      const unit = g.cost * 0.45 * this.inflIndex();
+      const qty = Math.min(n, Math.ceil((need - got) / Math.max(1e-9, unit)));
+      s.gpuCounts[g.id] = n - qty;
+      if (s.gpuCounts[g.id] < 1e-9) delete s.gpuCounts[g.id];
+      encaisse(qty * unit);
+    }
+    // 2. l'infrastructure, en commençant par le plus fin (serveur avant bâtiment)
+    for (const it of [...INFRA].reverse()) {
+      if (!encore()) break;
+      const n = Math.floor(this.infraCount(it.id));
+      if (n < 1) continue;
+      const unit = this.infraCost(it) * 0.4;
+      const qty = Math.min(n, Math.ceil((need - got) / Math.max(1e-9, unit)));
+      s.infraCounts[it.id] = n - qty;
+      encaisse(qty * unit);
+    }
+    if (got > 0) {
+      if (loan) loan.seized += got / Math.max(1e-9, this.inflIndex());
+      this.changeRep(-3);
+      this.log(t('Saisie : {0} d’actifs liquidés pour honorer la dette.', fmtMoney(got)), 'bad');
+    }
+    return Math.min(got, need);
+  }
+  debtOutstanding() {                            // en dollars du jour
+    return this.moneyCost(this.state.loans.reduce((a, l) => a + l.outstanding, 0));
+  }
+  debtCapacityLeft() {                           // ce qu'il reste à tirer sur les lignes
+    return this.moneyCost(this.state.loans.reduce((a, l) => a + (l.revolving ? l.limit - l.outstanding : 0), 0));
+  }
+  // À l'entrée en phase 2, l'argent cesse d'exister : on solde tout, en
+  // saisissant ce qu'il faut. Aucune dette n'est effacée en chemin.
+  settleAllDebt() {
+    for (const l of [...this.state.loans]) {
+      const due = this.moneyCost(l.outstanding);
+      if (due <= 0) { this.closeLoan(l); continue; }
+      let paid = Math.min(this.state.money, due);
+      this.state.money -= paid;
+      if (paid < due - 1e-6) paid += this.seizeAssets(due - paid, l);
+      l.paidPrincipal += l.outstanding;
+      l.outstanding = 0;
+      this.closeLoan(l);
+    }
+  }
+
   // ---- BOURSE (placer de l'argent, façon Paperclips) ----
   _randn() { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
   // dérive/volatilité par profil. La dérive LOG (d − v²/2) doit croître avec le risque,
@@ -1101,7 +1358,12 @@ export class Game {
     }
   }
   applyProgram(p) {
-    if (p.id === 'fusion') this.state.energyCap += 20000;     // 20 GW mis au réseau
+    // Le programme livre une PREMIÈRE tranche, pas un parc : 5 GW, la taille
+    // d'un réacteur. Les 20 GW d'avant revenaient à 2 $/kW installés — moins
+    // cher que le raccordement d'un pavillon. Ce qu'il débloque vraiment, c'est
+    // le droit d'en construire d'autres (needsProgram), et en phase 2 l'énergie
+    // cesse de toute façon d'être un goulot.
+    if (p.id === 'fusion') this.state.energyCap += 5000;      // 5 GW : la tranche de tête
     // la sphère de Dyson agit via dysonBoost(), calculé sur st.n
   }
   programDone(id) { return this.progState(id).n > 0; }
@@ -1210,7 +1472,10 @@ export class Game {
   enterPhase(p) {
     if (this.state.phase >= p) return;
     this.state.phase = p;
-    // au-delà de la phase 1, l'argent n'existe plus : un incident en cours n'a plus d'objet
+    // au-delà de la phase 1, l'argent n'existe plus : la dette doit donc être
+    // soldée AVANT que la trésorerie cesse d'avoir un sens — en saisissant s'il
+    // le faut. Aucun prêt ne s'évapore au passage de phase.
+    if (p >= 2 && this.state.loans && this.state.loans.length) this.settleAllDebt();
     if (p >= 2 && this.state.crisis) {
       this.state.crisis = null;
       this.ui && this.ui.onCrisisEnd && this.ui.onCrisisEnd();
@@ -1825,7 +2090,7 @@ export class Game {
     this.tickPrograms();                          // recherche → mise au point → déploiement
     this.tickAuto(dt);
     this.tickSpaceDC();
-    if (this.phase < 2) { this.tickStock(dt); this.tickCrypto(dt); this.tickCrisis(dt); } // ni bourse ni incident quand l'argent disparaît
+    if (this.phase < 2) { this.tickStock(dt); this.tickCrypto(dt); this.tickCrisis(dt); this.tickDebt(); } // ni bourse, ni incident, ni dette quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);
     this.tickChronicle();          // articles datés (climat, démographie, richesses…)

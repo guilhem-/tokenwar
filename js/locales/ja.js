@@ -220,8 +220,8 @@ export default {
     'マルチGPU筐体。メモリ高騰（2025-2026）で価格が押し上げられている。',
   'Raccordement réseau':
     '系統連系',
-  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
-    '地域の電力系統から引く。契約電力に比例した月額に、使ったkWh分が加わる。',
+  'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    '地域の電力網への10 kWの引込み。契約電力に比例した月々の基本料金に、使ったkWhが加わる。',
   'Ferme solaire + batteries':
     '太陽光発電所＋蓄電池',
   'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
@@ -582,6 +582,86 @@ export default {
     '株式公開',
   '×2 demande':
     '需要×2',
+  'Crédit corporate senior':
+    'シニア・コーポレートローン',
+  'Grande banque commerciale':
+    '大手商業銀行',
+  'Intérêts trimestriels, capital intégral à l’échéance':
+    '四半期ごとの利払い、元本は満期に一括',
+  'Simple et prévisible, mais un mur de remboursement vous attend à la fin.':
+    '単純で読みやすい。ただし最後に返済の壁が待っている。',
+  'Ligne de crédit revolving':
+    'リボルビング・クレジット枠',
+  'Consortium de banques':
+    '銀行団',
+  'Libre : tirez et remboursez à volonté':
+    '自由：好きに引き出し、好きに返す',
+  'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.':
+    '資金繰りの穴をしのぐには十分。未引出分に年0.4%の手数料——銀行は使わなかった枠にも請求する。',
+  'Prêt d’expansion':
+    '拡張ローン',
+  'Banque d’investissement':
+    '投資銀行',
+  'Capital amorti chaque trimestre':
+    '元本を四半期ごとに償還',
+  'Coût total faible, mais des sorties de trésorerie régulières et lourdes.':
+    '総コストは低い。その代わり、まとまった現金が定期的に出ていく。',
+  'Obligations institutionnelles':
+    '機関投資家向け社債',
+  'Fonds de pension et assureurs':
+    '年金基金と保険会社',
+  'Coupon semestriel, capital à maturité':
+    '半年ごとの利札、元本は満期に',
+  'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.':
+    '見通しは非常に長い。期限前返済もできるが、代償はある——返す元本の3%を、失われる利札の埋め合わせとして払う。',
+  'Dette high-yield':
+    'ハイイールド債',
+  'Fonds obligataires spéculatifs':
+    '投機的債券ファンド',
+  'Intérêts semestriels, capital à l’échéance':
+    '半年ごとの利払い、元本は満期に',
+  'Accessible même avec des comptes fragiles — et facturée en conséquence.':
+    '財務が心もとなくても借りられる——値段はそれ相応だ。',
+  'Prêt garanti par actifs':
+    '資産担保ローン',
+  'Banque spécialisée':
+    '専門銀行',
+  'Mensualités : capital et intérêts':
+    '毎月の元利均等返済',
+  'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.':
+    '市場で最も低い金利。担保はあなたの機材だからだ——債務不履行なら、まずそれが差し押さえられる。',
+  'Financement infrastructure':
+    'インフラ・ファイナンス',
+  'Consortium bancaire et fonds infra':
+    '銀行団とインフラファンド',
+  'Deux ans de grâce, puis amortissement semestriel':
+    '2年の据置き、その後は半年ごとに償還',
+  'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.':
+    '巨大な建設を賄うには十分。返済は先送りされるが、拘束は15年続く。',
+  'Prêt mezzanine':
+    'メザニンローン',
+  'Fonds de private debt':
+    'プライベート・デットファンド',
+  'Intérêts annuels, 30 % capitalisés, capital à l’échéance':
+    '年ごとの利息、30%は元本に組入れ、元本は満期に',
+  'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.':
+    'いま出ていく現金はわずかだ。その代わり、負債はひとりでに膨らむ——払わなかった分が元本に積み上がる。',
+  'Dette convertible':
+    '転換社債',
+  'Fonds technologique':
+    'テクノロジーファンド',
+  'Intérêts annuels, puis capital ou conversion en actions':
+    '年ごとの利払い、満期に元本または株式へ転換',
+  'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.':
+    '文句なしの低金利。引き換えに、あなたの資本に対するオプションを渡す——満期にファンドが転換すれば、一株あたりの評価は12%薄まる。',
+  'Crédit de sauvetage':
+    '救済融資',
+  'Fonds opportuniste':
+    'オポチュニスティック・ファンド',
+  'Intérêts trimestriels, 20 % du capital par an, solde à la fin':
+    '四半期ごとの利払い、元本は年20%、残額は最後に',
+  'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
+    '金はすぐ出る、条件も付かない。長所はそれだけだ——14%では、この融資は鎮めるはずの危機より高くつく。',
   'Directives permanentes':
     '常設ディレクティブ',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1070,8 +1150,8 @@ export default {
     'GPUはサーバーに、サーバーはラックに、ラックはデータセンターに、データセンターは不動産の上に収まらねばならない——そのどれもが電気を食う。古い機材は転売でき、1枚ずつ、10枚を超えれば10枚単位、100枚を超えれば一括で手放せる。発売から5年を超えたカードは市場から消える。データセンターやコロケーション枠を借りることもできる。',
   '⚡ Au départ :':
     '⚡ 開始時：',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    '使える電力はゼロ、ラックもサーバーもない。あるのは建物と部屋、そして3万ドルだけだ。最初の判断は系統につなぐこと、次にラックとサーバーを立てること。カード1枚を置けるのはそのあとだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が受電を増強してくれる。',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '使える電力はゼロ、ラックもサーバーもない。あるのは建物と部屋、そして5万ドルだけだ。最初の判断は系統につなぐこと、次にラックとサーバーを立てること。カード1枚を置けるのはそのあとだ。ヘッドラインに注意を：若い企業向けのエネルギー補助金が受電を増強してくれる。',
   '⚡ Coûts d’énergie :':
     '⚡ エネルギー費用：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1124,6 +1204,10 @@ export default {
     '📋 常設ディレクティブ：',
   'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
     '1回の支払いで**1つ**の判断を記憶し、以後は自動で適用される。次のディレクティブは一段高くつき、総数は選択肢を持つイベントの数が上限となる。既存のディレクティブの差し替えは枠を消費しない。',
+  '🏦 Dette :':
+    '🏦 負債：',
+  'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.':
+    '十の商品が並ぶ。ありふれた銀行融資から、14%の救済融資まで。行に出るのは名前と金額と金利だけだ——**カーソルを載せれば**、貸し手、期間、返済の仕組み、そして何より**借入の総コスト**が見える。初回四半期から償還が始まる低金利と、満期に一括で払う高金利を比べられる数字はこれしかない。上場企業でなければ受けられない提案もあり、オポチュニスティック・ファンドは雲行きが怪しいときにしか現れない。各ローンは次の期日と金額を表示し、その行から期限前返済もできる。**銀行が損をすることはない**——金額は不変価格のドル建てなので、インフレが借金を薄めることはなく、期日に手元が足りなければ資産が差し押さえられ、売られる。',
   'Bourse :':
     '株式市場：',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1588,6 +1672,20 @@ export default {
     '👋 退職：{0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     '給与の滞納を解消。チームは残ります。',
+  'Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.':
+    '枠を開設：{1} から {0} が利用可能、引き出した分に年 {2}。',
+  '{0} : {1} versés par {2}, à {3} l’an sur {4} ans.':
+    '{0}：{2} から {1} を受領、年 {3}、{4} 年間。',
+  'Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.':
+    '{0} の期日を一部しか払えず：{1} を利息付きで繰り越し。',
+  '{0} convertie en actions : votre valorisation par action se dilue de {1}.':
+    '{0} が株式に転換：一株あたりの評価が {1} 薄まる。',
+  '{0} soldé. Intérêts versés : {1}.':
+    '{0} を完済。支払った利息：{1}。',
+  '{0} remboursé par anticipation.':
+    '{0} を期限前に返済。',
+  'Saisie : {0} d’actifs liquidés pour honorer la dette.':
+    '差し押さえ：債務の履行のため {0} 相当の資産を処分。',
   'Entraînement de {0} ÉCHOUÉ : {1}':
     '{0} の学習に失敗：{1}',
   '❌ Entraînement échoué':
@@ -1918,6 +2016,50 @@ export default {
     '採取 ×{0}',
   'entrée à {0}':
     '{0} で参入',
+  'Montant':
+    '金額',
+  'Taux annuel':
+    '年利',
+  'Durée':
+    '期間',
+  'Remboursement':
+    '返済方法',
+  'Coût total du crédit':
+    '借入の総コスト',
+  '{0} ans':
+    '{0} 年',
+  'Offre indisponible':
+    'この提案は利用できない',
+  'Tirer':
+    '引き出す',
+  'Tirer le solde disponible de la ligne':
+    '枠の残りを引き出す',
+  'Rembourser':
+    '返済',
+  'Rembourser ce qui est tiré (sans pénalité)':
+    '引き出した分を返済（違約金なし）',
+  'Solder':
+    '全額返済',
+  'Rembourser par anticipation — pénalité de {0}':
+    '期限前返済——違約金 {0}',
+  'Rembourser tout le capital restant':
+    '残りの元本をすべて返済',
+  'Rembourser 50%':
+    '50% 返済',
+  'Rembourser la moitié du capital restant':
+    '残り元本の半分を返済',
+  'échéance {0}':
+    '{0} 期日',
+  'dernière':
+    '最終回',
+  'Solder ({0})':
+    '全額返済（{0}）',
+  '{0} le {1}':
+    '{1} に {0}',
+  'coté':
+    '上場企業向け',
+  'urgence':
+    '緊急',
   'sous tutelle':
     '後見下',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -2060,6 +2202,14 @@ export default {
     'レート',
   'Effet sur le prix des GPU':
     'GPU価格への影響',
+  'Dette':
+    '負債',
+  'Encours':
+    '残高',
+  'Prochaine échéance':
+    '次回返済',
+  'Offres de financement':
+    '資金調達の提案',
   'Équipe':
     'チーム',
   'Effectif':

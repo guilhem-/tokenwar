@@ -220,8 +220,8 @@ export default {
     'Chassis multi-GPU. Preço puxado para cima pela subida da memória (2025-2026).',
   'Raccordement réseau':
     'Ligação à rede',
-  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
-    'Puxas da rede local. Mensalidade proporcional à potência contratada, mais o kWh consumido.',
+  'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    'Uma ligação de 10 kW à rede local. Assinatura mensal proporcional à potência contratada, mais o kWh consumido.',
   'Ferme solaire + batteries':
     'Central solar + baterias',
   'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
@@ -582,6 +582,86 @@ export default {
     'IPO',
   '×2 demande':
     '×2 procura',
+  'Crédit corporate senior':
+    'Crédito corporativo sénior',
+  'Grande banque commerciale':
+    'Grande banco comercial',
+  'Intérêts trimestriels, capital intégral à l’échéance':
+    'Juros trimestrais, capital integral no vencimento',
+  'Simple et prévisible, mais un mur de remboursement vous attend à la fin.':
+    'Simples e previsível, mas espera-te um muro de reembolso no fim.',
+  'Ligne de crédit revolving':
+    'Linha de crédito revolving',
+  'Consortium de banques':
+    'Consórcio de bancos',
+  'Libre : tirez et remboursez à volonté':
+    'Livre: saca e reembolsa à vontade',
+  'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.':
+    'O suficiente para atravessar um buraco de tesouraria. Comissão de 0,4 % ao ano sobre a parte não sacada: o banco também cobra o que não usas.',
+  'Prêt d’expansion':
+    'Empréstimo de expansão',
+  'Banque d’investissement':
+    'Banco de investimento',
+  'Capital amorti chaque trimestre':
+    'Capital amortizado a cada trimestre',
+  'Coût total faible, mais des sorties de trésorerie régulières et lourdes.':
+    'Custo total baixo, mas saídas de caixa regulares e pesadas.',
+  'Obligations institutionnelles':
+    'Obrigações institucionais',
+  'Fonds de pension et assureurs':
+    'Fundos de pensões e seguradoras',
+  'Coupon semestriel, capital à maturité':
+    'Cupão semestral, capital na maturidade',
+  'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.':
+    'Uma visibilidade muito longa. O reembolso antecipado existe, mas paga-se: 3 % do capital devolvido, para compensar o detentor pelo cupão que perde.',
+  'Dette high-yield':
+    'Dívida high-yield',
+  'Fonds obligataires spéculatifs':
+    'Fundos obrigacionistas especulativos',
+  'Intérêts semestriels, capital à l’échéance':
+    'Juros semestrais, capital no vencimento',
+  'Accessible même avec des comptes fragiles — et facturée en conséquence.':
+    'Acessível mesmo com contas frágeis — e cobrada em conformidade.',
+  'Prêt garanti par actifs':
+    'Empréstimo garantido por ativos',
+  'Banque spécialisée':
+    'Banco especializado',
+  'Mensualités : capital et intérêts':
+    'Mensalidades: capital e juros',
+  'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.':
+    'A melhor taxa do mercado, porque as tuas máquinas são a garantia: em caso de incumprimento, são as primeiras a ser apreendidas.',
+  'Financement infrastructure':
+    'Financiamento de infraestrutura',
+  'Consortium bancaire et fonds infra':
+    'Consórcio bancário e fundos de infraestrutura',
+  'Deux ans de grâce, puis amortissement semestriel':
+    'Dois anos de carência, depois amortização semestral',
+  'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.':
+    'O suficiente para financiar uma obra enorme. O reembolso é diferido; o compromisso dura quinze anos.',
+  'Prêt mezzanine':
+    'Empréstimo mezzanine',
+  'Fonds de private debt':
+    'Fundo de dívida privada',
+  'Intérêts annuels, 30 % capitalisés, capital à l’échéance':
+    'Juros anuais, 30 % capitalizados, capital no vencimento',
+  'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.':
+    'Pouco dinheiro a sair agora. Em troca, a dívida cresce sozinha: o que não é pago junta-se ao capital.',
+  'Dette convertible':
+    'Dívida convertível',
+  'Fonds technologique':
+    'Fundo tecnológico',
+  'Intérêts annuels, puis capital ou conversion en actions':
+    'Juros anuais, depois capital ou conversão em ações',
+  'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.':
+    'Uma taxa imbatível, em troca de uma opção sobre o teu capital: na maturidade o fundo pode converter, e a tua valorização por ação dilui-se em 12 %.',
+  'Crédit de sauvetage':
+    'Crédito de resgate',
+  'Fonds opportuniste':
+    'Fundo oportunista',
+  'Intérêts trimestriels, 20 % du capital par an, solde à la fin':
+    'Juros trimestrais, 20 % do capital por ano, saldo no fim',
+  'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
+    'O dinheiro está lá de imediato, sem condições. É a sua única virtude: a 14 %, este empréstimo vai custar-te mais do que a crise que apaga.',
   'Directives permanentes':
     'Diretivas permanentes',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1070,8 +1150,8 @@ export default {
     'uma GPU tem de caber num servidor, num bastidor, num centro de dados, sobre imobiliário — que também consomem energia. O material obsoleto revende-se: à unidade, de dez em dez acima de 10 unidades, na totalidade acima de 100; uma placa com mais de 5 anos desaparece do mercado. Também podes alugar um centro de dados ou espaço em colocation.',
   '⚡ Au départ :':
     '⚡ No início:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    'não tens potência disponível, nem bastidor nem servidor — apenas um espaço, uma sala e 30 000 $. A tua primeira decisão é ligares-te à rede e depois montar um bastidor e um servidor antes de poderes alojar uma única placa. Vigia a Primeira Página: um subsídio de energia para empresas jovens reforçará a tua ligação.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'não tens potência disponível, nem bastidor nem servidor — apenas um espaço, uma sala e 50 000 $. A tua primeira decisão é ligares-te à rede e depois montar um bastidor e um servidor antes de poderes alojar uma única placa. Vigia a Primeira Página: um subsídio de energia para empresas jovens reforçará a tua ligação.',
   '⚡ Coûts d’énergie :':
     '⚡ Custos de energia:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1124,6 +1204,10 @@ export default {
     '📋 Diretivas permanentes:',
   'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
     'cada pagamento memoriza **uma** decisão, depois aplicada automaticamente. A diretiva seguinte custa um patamar acima, e o total está limitado ao número de eventos com escolhas. Substituir uma diretiva existente não ocupa lugar.',
+  '🏦 Dette :':
+    '🏦 Dívida:',
+  'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.':
+    'dez instrumentos, do empréstimo bancário corrente ao crédito de resgate a 14 %. A linha mostra apenas o nome, o montante e a taxa: **passa o rato por cima** para veres o mutuante, o prazo, a mecânica de reembolso e sobretudo o **custo total do crédito** — o único número que permite comparar uma taxa baixa amortizada desde o primeiro trimestre com uma taxa alta paga na maturidade. Algumas ofertas exigem uma empresa cotada; o fundo oportunista só aparece quando as coisas correm mal. Cada empréstimo mostra o próximo vencimento e o respetivo montante, e pode ser reembolsado antecipadamente a partir da sua linha. **O banco nunca perde**: os montantes estão em dólares constantes, por isso a inflação não apaga a dívida, e se a tesouraria não chegar na data de pagamento, os ativos são apreendidos e vendidos.',
   'Bourse :':
     'Bolsa:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1588,6 +1672,20 @@ export default {
     '👋 Saída: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     'Atrasos salariais regularizados. A equipa fica.',
+  'Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.':
+    'Linha aberta: {0} disponíveis em {1}, a {2} ao ano sobre o que for sacado.',
+  '{0} : {1} versés par {2}, à {3} l’an sur {4} ans.':
+    '{0}: {1} desembolsados por {2}, a {3} ao ano durante {4} anos.',
+  'Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.':
+    'Vencimento de {0} apenas parcialmente honrado: {1} adiados, com juros.',
+  '{0} convertie en actions : votre valorisation par action se dilue de {1}.':
+    '{0} convertida em ações: a tua valorização por ação dilui-se em {1}.',
+  '{0} soldé. Intérêts versés : {1}.':
+    '{0} liquidado. Juros pagos: {1}.',
+  '{0} remboursé par anticipation.':
+    '{0} reembolsado antecipadamente.',
+  'Saisie : {0} d’actifs liquidés pour honorer la dette.':
+    'Apreensão: {0} de ativos liquidados para servir a dívida.',
   'Entraînement de {0} ÉCHOUÉ : {1}':
     'Treino de {0} FALHOU: {1}',
   '❌ Entraînement échoué':
@@ -1918,6 +2016,50 @@ export default {
     'colheita ×{0}',
   'entrée à {0}':
     'entrada em {0}',
+  'Montant':
+    'Montante',
+  'Taux annuel':
+    'Taxa anual',
+  'Durée':
+    'Prazo',
+  'Remboursement':
+    'Reembolso',
+  'Coût total du crédit':
+    'Custo total do crédito',
+  '{0} ans':
+    '{0} anos',
+  'Offre indisponible':
+    'Oferta indisponível',
+  'Tirer':
+    'Sacar',
+  'Tirer le solde disponible de la ligne':
+    'Sacar o saldo disponível da linha',
+  'Rembourser':
+    'Reembolsar',
+  'Rembourser ce qui est tiré (sans pénalité)':
+    'Reembolsar o que foi sacado (sem penalização)',
+  'Solder':
+    'Liquidar',
+  'Rembourser par anticipation — pénalité de {0}':
+    'Reembolso antecipado — penalização de {0}',
+  'Rembourser tout le capital restant':
+    'Reembolsar todo o capital em dívida',
+  'Rembourser 50%':
+    'Reembolsar 50%',
+  'Rembourser la moitié du capital restant':
+    'Reembolsar metade do capital em dívida',
+  'échéance {0}':
+    'vence a {0}',
+  'dernière':
+    'última',
+  'Solder ({0})':
+    'Liquidar ({0})',
+  '{0} le {1}':
+    '{0} a {1}',
+  'coté':
+    'cotada',
+  'urgence':
+    'urgência',
   'sous tutelle':
     'sob tutela',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -2060,6 +2202,14 @@ export default {
     'Cotação',
   'Effet sur le prix des GPU':
     'Efeito no preço das GPU',
+  'Dette':
+    'Dívida',
+  'Encours':
+    'Saldo em dívida',
+  'Prochaine échéance':
+    'Próximo vencimento',
+  'Offres de financement':
+    'Ofertas de financiamento',
   'Équipe':
     'Equipa',
   'Effectif':

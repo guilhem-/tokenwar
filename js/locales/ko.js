@@ -220,8 +220,8 @@ export default {
     '멀티 GPU 섀시. 메모리 급등 (2025-2026)으로 가격이 밀려 올라갔다.',
   'Raccordement réseau':
     '계통 연결',
-  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
-    '지역 전력망에서 끌어온다. 계약 전력에 비례한 월정액에, 실제 사용한 kWh가 더해진다.',
+  'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    '지역 전력망에 대한 10 kW 인입선. 계약 전력에 비례하는 월 기본요금에 사용한 kWh가 더해진다.',
   'Ferme solaire + batteries':
     '태양광 발전소 + 배터리',
   'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
@@ -582,6 +582,86 @@ export default {
     '기업공개',
   '×2 demande':
     '수요 ×2',
+  'Crédit corporate senior':
+    '선순위 기업 대출',
+  'Grande banque commerciale':
+    '대형 상업은행',
+  'Intérêts trimestriels, capital intégral à l’échéance':
+    '분기 이자, 만기에 원금 일시 상환',
+  'Simple et prévisible, mais un mur de remboursement vous attend à la fin.':
+    '단순하고 예측 가능하다. 다만 끝에 상환의 벽이 기다린다.',
+  'Ligne de crédit revolving':
+    '리볼빙 신용 한도',
+  'Consortium de banques':
+    '은행 컨소시엄',
+  'Libre : tirez et remboursez à volonté':
+    '자유롭게 인출하고 상환',
+  'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.':
+    '자금 공백을 넘기기엔 충분하다. 미인출분에 연 0.4% 약정 수수료 — 은행은 쓰지 않은 한도에도 청구한다.',
+  'Prêt d’expansion':
+    '확장 대출',
+  'Banque d’investissement':
+    '투자은행',
+  'Capital amorti chaque trimestre':
+    '분기마다 원금 상환',
+  'Coût total faible, mais des sorties de trésorerie régulières et lourdes.':
+    '총비용은 낮지만, 현금이 정기적으로 크게 빠져나간다.',
+  'Obligations institutionnelles':
+    '기관 투자자 대상 채권',
+  'Fonds de pension et assureurs':
+    '연기금과 보험사',
+  'Coupon semestriel, capital à maturité':
+    '반기 이표, 만기에 원금',
+  'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.':
+    '가시성이 매우 길다. 조기 상환도 가능하지만 대가가 있다 — 돌려주는 원금의 3%를, 보유자가 잃는 이표에 대한 보상으로 낸다.',
+  'Dette high-yield':
+    '하이일드 채권',
+  'Fonds obligataires spéculatifs':
+    '투기등급 채권 펀드',
+  'Intérêts semestriels, capital à l’échéance':
+    '반기 이자, 만기에 원금',
+  'Accessible même avec des comptes fragiles — et facturée en conséquence.':
+    '재무가 부실해도 빌릴 수 있다 — 값은 그만큼 매겨진다.',
+  'Prêt garanti par actifs':
+    '자산 담보 대출',
+  'Banque spécialisée':
+    '전문 은행',
+  'Mensualités : capital et intérêts':
+    '매월 원리금 상환',
+  'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.':
+    '시장에서 가장 낮은 금리다. 담보가 당신의 장비이기 때문이다 — 채무 불이행이면 그것부터 압류된다.',
+  'Financement infrastructure':
+    '인프라 금융',
+  'Consortium bancaire et fonds infra':
+    '은행 컨소시엄과 인프라 펀드',
+  'Deux ans de grâce, puis amortissement semestriel':
+    '2년 거치 후 반기 상환',
+  'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.':
+    '거대한 공사를 감당할 만하다. 상환은 미뤄지지만, 구속은 15년간 이어진다.',
+  'Prêt mezzanine':
+    '메자닌 대출',
+  'Fonds de private debt':
+    '프라이빗 뎃 펀드',
+  'Intérêts annuels, 30 % capitalisés, capital à l’échéance':
+    '연 이자, 30%는 원금에 가산, 만기에 원금',
+  'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.':
+    '당장 나갈 현금은 적다. 대신 빚이 저절로 불어난다 — 내지 않은 몫이 원금에 붙는다.',
+  'Dette convertible':
+    '전환사채',
+  'Fonds technologique':
+    '테크 펀드',
+  'Intérêts annuels, puis capital ou conversion en actions':
+    '연 이자, 만기에 원금 또는 주식 전환',
+  'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.':
+    '따라올 수 없는 금리다. 대가는 당신 지분에 대한 옵션이다 — 만기에 펀드가 전환하면 주당 가치가 12% 희석된다.',
+  'Crédit de sauvetage':
+    '구제 금융',
+  'Fonds opportuniste':
+    '기회주의 펀드',
+  'Intérêts trimestriels, 20 % du capital par an, solde à la fin':
+    '분기 이자, 연 20% 원금 상환, 잔액은 마지막에',
+  'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
+    '돈은 즉시 나온다, 조건도 없다. 장점은 그것뿐이다 — 14%라면 이 대출은 그것이 끄는 위기보다 비싸게 먹힌다.',
   'Directives permanentes':
     '상시 지침',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1070,8 +1150,8 @@ export default {
     'GPU는 서버에, 서버는 랙에, 랙은 데이터센터에, 데이터센터는 부동산 위에 들어가야 한다 — 그 모두가 전기를 먹는다. 낡은 장비는 되팔 수 있다. 한 장씩, 10장을 넘으면 열 장 단위로, 100장을 넘으면 한 번에 전부. 출시된 지 5년이 넘은 카드는 시장에서 사라진다. 데이터센터나 코로케이션 공간을 빌릴 수도 있다.',
   '⚡ Au départ :':
     '⚡ 시작할 때:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    '쓸 수 있는 전력이 없고, 랙도 서버도 없다. 있는 것은 건물과 방, 그리고 3만 달러뿐이다. 첫 결정은 계통에 연결하는 것, 그다음이 랙과 서버를 세우는 것이다. 카드 한 장을 놓는 건 그 뒤의 이야기다. 헤드라인을 주시하라: 신생 기업 에너지 보조금이 수전 용량을 늘려 준다.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '쓸 수 있는 전력이 없고, 랙도 서버도 없다. 있는 것은 건물과 방, 그리고 5만 달러뿐이다. 첫 결정은 계통에 연결하는 것, 그다음이 랙과 서버를 세우는 것이다. 카드 한 장을 놓는 건 그 뒤의 이야기다. 헤드라인을 주시하라: 신생 기업 에너지 보조금이 수전 용량을 늘려 준다.',
   '⚡ Coûts d’énergie :':
     '⚡ 에너지 비용:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1124,6 +1204,10 @@ export default {
     '📋 상시 지침:',
   'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
     '결제 한 번에 결정 **하나**를 기억시키고, 이후엔 자동으로 적용된다. 다음 지침은 한 단계 더 비싸며, 총수는 선택지가 있는 이벤트 수를 넘지 못한다. 기존 지침을 바꾸는 것은 자리를 쓰지 않는다.',
+  '🏦 Dette :':
+    '🏦 부채:',
+  'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.':
+    '열 가지 상품이 있다. 평범한 은행 대출부터 14%짜리 구제 금융까지. 행에는 이름과 금액과 금리만 나온다 — **커서를 올리면** 대주, 기간, 상환 방식, 그리고 무엇보다 **대출 총비용**이 보인다. 첫 분기부터 상환이 시작되는 낮은 금리와 만기에 한 번에 갚는 높은 금리를 견줄 수 있는 숫자는 이것뿐이다. 어떤 제안은 상장사여야 받을 수 있고, 기회주의 펀드는 사정이 나쁠 때만 나타난다. 각 대출은 다음 만기일과 금액을 표시하며, 그 행에서 바로 조기 상환할 수 있다. **은행은 결코 손해 보지 않는다** — 금액은 불변가격 달러로 표시되므로 인플레이션이 빚을 지워 주지 않고, 만기에 현금이 모자라면 자산이 압류되어 팔린다.',
   'Bourse :':
     '주식 시장:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1588,6 +1672,20 @@ export default {
     '👋 이탈: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     '체불 급여를 정산했습니다. 팀이 남습니다.',
+  'Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.':
+    '한도 개설: {1}에서 {0} 이용 가능, 인출액에 연 {2}.',
+  '{0} : {1} versés par {2}, à {3} l’an sur {4} ans.':
+    '{0}: {2}이(가) {1} 지급, 연 {3}, {4}년간.',
+  'Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.':
+    '{0}의 만기를 일부만 이행: {1}을(를) 이자와 함께 이월.',
+  '{0} convertie en actions : votre valorisation par action se dilue de {1}.':
+    '{0}이(가) 주식으로 전환: 주당 가치가 {1} 희석됩니다.',
+  '{0} soldé. Intérêts versés : {1}.':
+    '{0} 완납. 지급한 이자: {1}.',
+  '{0} remboursé par anticipation.':
+    '{0}을(를) 조기 상환.',
+  'Saisie : {0} d’actifs liquidés pour honorer la dette.':
+    '압류: 채무 이행을 위해 {0} 상당의 자산을 처분.',
   'Entraînement de {0} ÉCHOUÉ : {1}':
     '{0} 학습 실패: {1}',
   '❌ Entraînement échoué':
@@ -1918,6 +2016,50 @@ export default {
     '수확 ×{0}',
   'entrée à {0}':
     '{0}에 진입',
+  'Montant':
+    '금액',
+  'Taux annuel':
+    '연이율',
+  'Durée':
+    '기간',
+  'Remboursement':
+    '상환 방식',
+  'Coût total du crédit':
+    '대출 총비용',
+  '{0} ans':
+    '{0}년',
+  'Offre indisponible':
+    '이용할 수 없는 제안',
+  'Tirer':
+    '인출',
+  'Tirer le solde disponible de la ligne':
+    '한도의 남은 금액을 인출',
+  'Rembourser':
+    '상환',
+  'Rembourser ce qui est tiré (sans pénalité)':
+    '인출한 만큼 상환 (위약금 없음)',
+  'Solder':
+    '완납',
+  'Rembourser par anticipation — pénalité de {0}':
+    '조기 상환 — 위약금 {0}',
+  'Rembourser tout le capital restant':
+    '남은 원금 전액 상환',
+  'Rembourser 50%':
+    '50% 상환',
+  'Rembourser la moitié du capital restant':
+    '남은 원금의 절반을 상환',
+  'échéance {0}':
+    '{0} 만기',
+  'dernière':
+    '마지막',
+  'Solder ({0})':
+    '완납 ({0})',
+  '{0} le {1}':
+    '{1}에 {0}',
+  'coté':
+    '상장사 한정',
+  'urgence':
+    '긴급',
   'sous tutelle':
     '후견 아래',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -2060,6 +2202,14 @@ export default {
     '시세',
   'Effet sur le prix des GPU':
     'GPU 가격에 미치는 영향',
+  'Dette':
+    '부채',
+  'Encours':
+    '잔액',
+  'Prochaine échéance':
+    '다음 상환',
+  'Offres de financement':
+    '자금 조달 제안',
   'Équipe':
     '팀',
   'Effectif':

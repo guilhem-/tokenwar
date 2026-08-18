@@ -220,8 +220,8 @@ export default {
     '多 GPU 机箱。价格被内存涨价推高（2025-2026）。',
   'Raccordement réseau':
     '电网接入',
-  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
-    '从本地电网取电。月租按签约功率计算，另加实际用电的度数费。',
+  'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    '接入本地电网的 10 千瓦接口。月度基本费按签约容量计算，另加实际用电量。',
   'Ferme solaire + batteries':
     '光伏电站 + 储能',
   'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
@@ -582,6 +582,86 @@ export default {
     '上市',
   '×2 demande':
     '需求 ×2',
+  'Crédit corporate senior':
+    '优先级企业贷款',
+  'Grande banque commerciale':
+    '大型商业银行',
+  'Intérêts trimestriels, capital intégral à l’échéance':
+    '按季付息，到期一次还本',
+  'Simple et prévisible, mais un mur de remboursement vous attend à la fin.':
+    '简单可预期，但到期时等着你的是一堵还款的墙。',
+  'Ligne de crédit revolving':
+    '循环信贷额度',
+  'Consortium de banques':
+    '银团',
+  'Libre : tirez et remboursez à volonté':
+    '自由支配：随借随还',
+  'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.':
+    '足以熬过一次现金缺口。未提取部分每年收 0.4% 的承诺费：银行连你没用的额度也照收。',
+  'Prêt d’expansion':
+    '扩张贷款',
+  'Banque d’investissement':
+    '投资银行',
+  'Capital amorti chaque trimestre':
+    '本金按季摊还',
+  'Coût total faible, mais des sorties de trésorerie régulières et lourdes.':
+    '总成本低，但现金流出频繁且沉重。',
+  'Obligations institutionnelles':
+    '机构债券',
+  'Fonds de pension et assureurs':
+    '养老基金与保险公司',
+  'Coupon semestriel, capital à maturité':
+    '半年付息，到期还本',
+  'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.':
+    '视野极长。可以提前偿还，但要付代价：按归还本金的 3%，补偿持有人失去的利息。',
+  'Dette high-yield':
+    '高收益债',
+  'Fonds obligataires spéculatifs':
+    '投机级债券基金',
+  'Intérêts semestriels, capital à l’échéance':
+    '半年付息，到期还本',
+  'Accessible même avec des comptes fragiles — et facturée en conséquence.':
+    '哪怕账面脆弱也借得到——价格自然也随之而来。',
+  'Prêt garanti par actifs':
+    '资产抵押贷款',
+  'Banque spécialisée':
+    '专业银行',
+  'Mensualités : capital et intérêts':
+    '按月分期：本金加利息',
+  'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.':
+    '市面上最好的利率，因为抵押品就是你的机器：一旦违约，它们最先被扣押。',
+  'Financement infrastructure':
+    '基础设施融资',
+  'Consortium bancaire et fonds infra':
+    '银团与基建基金',
+  'Deux ans de grâce, puis amortissement semestriel':
+    '两年宽限期，之后每半年摊还',
+  'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.':
+    '足以支撑一项浩大的工程。还款被推迟，承诺却长达十五年。',
+  'Prêt mezzanine':
+    '夹层贷款',
+  'Fonds de private debt':
+    '私募债基金',
+  'Intérêts annuels, 30 % capitalisés, capital à l’échéance':
+    '按年计息，30% 计入本金，到期还本',
+  'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.':
+    '眼下几乎不用出钱。代价是债务自己会长大：没付的部分加进本金。',
+  'Dette convertible':
+    '可转债',
+  'Fonds technologique':
+    '科技基金',
+  'Intérêts annuels, puis capital ou conversion en actions':
+    '按年付息，到期还本或转股',
+  'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.':
+    '无可匹敌的利率，代价是一份对你股权的期权：到期时基金可以转股，你的每股估值被摊薄 12%。',
+  'Crédit de sauvetage':
+    '救援贷款',
+  'Fonds opportuniste':
+    '机会型基金',
+  'Intérêts trimestriels, 20 % du capital par an, solde à la fin':
+    '按季付息，每年偿还 20% 本金，余额期末结清',
+  'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
+    '钱立刻到位，不问条件。这是它唯一的好处：14% 的利率下，这笔贷款会比它扑灭的那场危机更贵。',
   'Directives permanentes':
     '常设指令',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1070,8 +1150,8 @@ export default {
     '一张 GPU 必须装进服务器，服务器装进机柜，机柜放进数据中心，数据中心建在不动产上——而这些同样耗电。过时的硬件可以转卖：单张出手，超过 10 张可十张一批，超过 100 张可一次清空；上市超过 5 年的显卡会退出市场。你也可以租数据中心或租托管机位。',
   '⚡ Au départ :':
     '⚡ 开局时：',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    '你没有任何可用电力，没有机柜也没有服务器——只有一处场地、一间机房和三万美元。第一个决定是接电，然后搭起机柜和服务器，才谈得上放一张卡。留意头条：面向初创企业的能源补贴会给你增容。',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    '你没有任何可用电力，没有机柜也没有服务器——只有一处场地、一间机房和五万美元。第一个决定是接电，然后搭起机柜和服务器，才谈得上放一张卡。留意头条：面向初创企业的能源补贴会给你增容。',
   '⚡ Coûts d’énergie :':
     '⚡ 能源成本：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1124,6 +1204,10 @@ export default {
     '📋 常设指令：',
   'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
     '每次付费记住**一个**决定，此后自动执行。下一条指令贵一档，总数以带选项的事件数量为上限。替换已有指令不占名额。',
+  '🏦 Dette :':
+    '🏦 债务：',
+  'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.':
+    '十种工具，从普通银行贷款到 14% 的救援信贷。行内只显示名称、金额和利率：**把鼠标停上去**，就能看到出借方、期限、还款方式，以及最重要的**融资总成本**——只有这个数字，才能把「从第一个季度就开始摊还的低利率」和「到期一次付清的高利率」放在一起比较。有些方案要求公司已上市；机会型基金只在情况不妙时才现身。每笔贷款都标出下一次还款的日期和金额，也可以从它自己那一行提前偿还。**银行永远不亏**：金额以不变价美元计，通胀抹不掉债务；到期日现金不够，资产就会被扣押变卖。',
   'Bourse :':
     '股市：',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1588,6 +1672,20 @@ export default {
     '👋 离职：{0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     '拖欠的工资已结清。团队留下了。',
+  'Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.':
+    '额度已开立：{1} 提供 {0}，已提取部分按年 {2} 计息。',
+  '{0} : {1} versés par {2}, à {3} l’an sur {4} ans.':
+    '{0}：{2} 拨付 {1}，年利率 {3}，为期 {4} 年。',
+  'Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.':
+    '{0} 的这期还款只付了一部分：{1} 结转到后面，并继续计息。',
+  '{0} convertie en actions : votre valorisation par action se dilue de {1}.':
+    '{0} 已转为股份：你的每股估值被摊薄 {1}。',
+  '{0} soldé. Intérêts versés : {1}.':
+    '{0} 已结清。已付利息：{1}。',
+  '{0} remboursé par anticipation.':
+    '{0} 已提前偿还。',
+  'Saisie : {0} d’actifs liquidés pour honorer la dette.':
+    '资产被扣押：变卖 {0} 的资产以偿付债务。',
   'Entraînement de {0} ÉCHOUÉ : {1}':
     '{0} 的训练失败：{1}',
   '❌ Entraînement échoué':
@@ -1918,6 +2016,50 @@ export default {
     '采集 ×{0}',
   'entrée à {0}':
     '建仓于 {0}',
+  'Montant':
+    '金额',
+  'Taux annuel':
+    '年利率',
+  'Durée':
+    '期限',
+  'Remboursement':
+    '还款方式',
+  'Coût total du crédit':
+    '融资总成本',
+  '{0} ans':
+    '{0} 年',
+  'Offre indisponible':
+    '该方案不可用',
+  'Tirer':
+    '提款',
+  'Tirer le solde disponible de la ligne':
+    '提取额度中剩余可用部分',
+  'Rembourser':
+    '偿还',
+  'Rembourser ce qui est tiré (sans pénalité)':
+    '偿还已提取部分（无罚金）',
+  'Solder':
+    '一次结清',
+  'Rembourser par anticipation — pénalité de {0}':
+    '提前偿还——罚金 {0}',
+  'Rembourser tout le capital restant':
+    '偿还全部剩余本金',
+  'Rembourser 50%':
+    '偿还 50%',
+  'Rembourser la moitié du capital restant':
+    '偿还剩余本金的一半',
+  'échéance {0}':
+    '{0} 到期',
+  'dernière':
+    '末期',
+  'Solder ({0})':
+    '一次结清（{0}）',
+  '{0} le {1}':
+    '{1} 支付 {0}',
+  'coté':
+    '限上市公司',
+  'urgence':
+    '危急',
   'sous tutelle':
     '处于托管',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -2060,6 +2202,14 @@ export default {
     '行情',
   'Effet sur le prix des GPU':
     '对 GPU 价格的影响',
+  'Dette':
+    '债务',
+  'Encours':
+    '未偿余额',
+  'Prochaine échéance':
+    '下次还款',
+  'Offres de financement':
+    '融资方案',
   'Équipe':
     '团队',
   'Effectif':

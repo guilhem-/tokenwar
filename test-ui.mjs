@@ -31,7 +31,8 @@ async function step(label, fn) {
 const { Game } = await import('./js/game.js');
 const { UI } = await import('./js/ui.js');
 const { Cinematic } = await import('./js/ending.js');
-const { GPUS, INFRA, ENERGY } = await import('./js/data.js');
+const data = await import('./js/data.js');
+const { GPUS, INFRA, ENERGY } = data;
 
 const ui = new UI();
 const game = new Game(ui);
@@ -302,7 +303,7 @@ await step('chantiers : délais croissants avec la complexité', () => {
   const smr = ENERGY.find(e => e.id === 'nuclear'), sun = ENERGY.find(e => e.id === 'solar');
   if (!(game.buildSeconds('energy', smr) > game.buildSeconds('energy', sun))) throw new Error('un SMR devrait être plus long qu un panneau');
   // la capacité énergétique en chantier est comptée dans la capacité prévue
-  game.state.money = 1e7;
+  game.state.money = game.energyCost(ENERGY.find(e => e.id === 'gas')) * 2;
   const capPlanned = game.energyCapPlanned(), capReal = game.state.energyCap;
   game.buyEnergy('gas');
   if (!(game.energyCapPlanned() > capPlanned)) throw new Error('capacité énergétique prévue ignorant le chantier');
@@ -400,7 +401,7 @@ await step('énergie de départ nulle + subvention', async () => {
   const fresh = new Game({ toast(){}, log(){}, pingGenerate(){}, onPhaseChange(){}, showEvent(){}, modalOpen:false });
   if (fresh.state.energyCap !== 0) throw new Error('aucune puissance ne devrait être offerte au départ');
   if (fresh.energyThrottle() !== 0) throw new Error('sans raccordement, le calcul doit être totalement bridé');
-  if (fresh.money !== 30000) throw new Error('la trésorerie de départ devrait être de 30 000');
+  if (fresh.money !== 50000) throw new Error('la trésorerie de départ devrait être de 50 000');
   if (fresh.infraCount('rack') !== 0 || fresh.infraCount('server') !== 0)
     throw new Error('la partie doit démarrer sans baie ni serveur');
   if (fresh.freeSlots('gpu') !== 0) throw new Error('aucun emplacement GPU tant que rien n est bâti');
@@ -535,16 +536,17 @@ await step('migration : ancienne sauvegarde ramenée au nouveau raccordement', (
   window.localStorage.removeItem('tokenwar_save_v1');
 });
 
-// ---- l'embauche coûte 1000 $ ----
-await step('embauche : coût fixe de 1000 $', () => {
+// ---- l'embauche coûte des frais fixes ----
+await step('embauche : frais fixes prélevés', () => {
+  const { HIRE_COST } = data;
   game.state.playSeconds = 0;                     // indice d'inflation = 1
-  game.state.money = 2500;
+  game.state.money = HIRE_COST * 2.5;
   const before = game.money, head = game.headcount();
-  if (Math.abs(game.hireCost() - 1000) > 1e-6) throw new Error('frais d embauche ≠ 1000 $');
+  if (Math.abs(game.hireCost() - HIRE_COST) > 1e-6) throw new Error('frais d embauche ≠ ' + HIRE_COST + ' $');
   if (!game.hire('ops')) throw new Error('embauche refusée alors que finançable');
-  if (Math.abs((before - game.money) - 1000) > 1e-6) throw new Error('frais d embauche non prélevés');
+  if (Math.abs((before - game.money) - HIRE_COST) > 1e-6) throw new Error('frais d embauche non prélevés');
   if (game.headcount() !== head + 1) throw new Error('effectif inchangé');
-  game.state.money = 200;                         // plus les moyens
+  game.state.money = HIRE_COST * 0.2;             // plus les moyens
   if (game.canHire('hr')) throw new Error('embauche possible sans trésorerie');
   if (game.hire('ops')) throw new Error('embauche effectuée sans trésorerie');
   ui.render();
@@ -1380,6 +1382,176 @@ await step('en-tête : infobulle avec tous les chiffres', () => {
   const gros = chiffres(ui.el.statTokens.title);
   if (gros.length !== 61) throw new Error('1e60 devrait faire 61 chiffres, pas ' + gros.length);
   if (!/^10+$/.test(gros)) throw new Error('artefacts de flottant dans l infobulle : ' + gros.slice(0, 30));
+});
+
+// ---- DETTE ----
+await step('dette : verrouillée tant que la société est petite', () => {
+  game.state.phase = 1;
+  game.state.playSeconds = 5 * 300;
+  game.state.lifetimeTokens = 0; game.state.money = 1000; game.state.mods.valuationMult = 1;
+  game.state.loans = []; game.state.loanSeq = 0;
+  if (game.debtUnlocked()) throw new Error('une startup sans valorisation ne devrait rien pouvoir emprunter');
+  ui.render();
+  if (!ui.el.panelDebt.classList.contains('hidden')) throw new Error('le panneau dette devrait être caché');
+});
+
+await step('dette : offres selon la valorisation, l IPO et la détresse', () => {
+  game.state.lifetimeTokens = 1e14; game.state.money = 1e9; game.state.reputation = 70;
+  game.state.fundingDone = {};
+  game.state.unpaidDays = 0;
+  if (!game.debtUnlocked()) throw new Error('la dette devrait être ouverte à cette valorisation');
+  const avant = game.loanOffers().map(o => o.id);
+  if (!avant.length) throw new Error('aucune offre visible');
+  if (avant.includes('bonds')) throw new Error('les obligations institutionnelles exigent une société cotée');
+  if (avant.includes('rescue')) throw new Error('le crédit de sauvetage ne doit pas s afficher hors détresse');
+  // introduction en bourse : les instruments de marché s ouvrent
+  game.state.fundingDone = { ipo: true };
+  const apres = game.loanOffers().map(o => o.id);
+  for (const id of ['bonds', 'highyield', 'infra'])
+    if (!apres.includes(id)) throw new Error(id + ' devrait apparaître après l IPO');
+  // détresse : le fonds opportuniste sort du bois
+  game.state.unpaidDays = 5;
+  if (!game.loanOffers().some(o => o.id === 'rescue')) throw new Error('le sauvetage devrait apparaître en détresse');
+  game.state.unpaidDays = 0;
+});
+
+await step('dette : souscrire crédite la trésorerie et ouvre une ligne', () => {
+  game.state.money = 1e9;
+  const av = game.state.money;
+  if (!game.takeLoan('senior')) throw new Error('souscription refusée');
+  const o = game.loanOffer('senior');
+  const attendu = av + game.moneyCost(o.amount);
+  if (Math.abs(game.state.money - attendu) > 1) throw new Error('trésorerie non créditée : ' + game.state.money);
+  if (game.state.loans.length !== 1) throw new Error('prêt non enregistré');
+  if (game.hasLoan('senior') && game.loanOffers().some(x => x.id === 'senior'))
+    throw new Error('une offre déjà souscrite ne doit plus être proposée');
+  // la revolving n est PAS tirée à la souscription : on ouvre seulement la ligne
+  const av2 = game.state.money;
+  if (!game.takeLoan('revolver')) throw new Error('ouverture de ligne refusée');
+  if (Math.abs(game.state.money - av2) > 1) throw new Error('une ligne revolving ne doit rien verser à l ouverture');
+  const rev = game.state.loans.find(l => l.id === 'revolver');
+  if (rev.outstanding !== 0) throw new Error('ligne tirée alors qu elle ne devrait pas l être');
+  game.drawLoan(rev.n, 5e8);
+  if (Math.abs(game.state.money - (av2 + game.moneyCost(5e8))) > 1) throw new Error('tirage non versé');
+  if (Math.abs(rev.outstanding - 5e8) > 1) throw new Error('encours de la ligne faux');
+});
+
+await step('dette : l échéance et son montant sont affichés', () => {
+  ui.render();
+  if (ui.el.panelDebt.classList.contains('hidden')) throw new Error('panneau dette caché alors qu il y a des prêts');
+  if (!/\d/.test(ui.el.debtTotal.textContent)) throw new Error('encours non affiché');
+  if (ui.el.debtNextRow.classList.contains('hidden')) throw new Error('prochaine échéance masquée');
+  if (!/\d/.test(ui.el.debtNext.textContent)) throw new Error('échéance sans montant : ' + ui.el.debtNext.textContent);
+  const lignes = ui.el.debtActive.querySelectorAll('.debt-loan');
+  if (lignes.length !== game.state.loans.length) throw new Error('une ligne par prêt attendue');
+  // chaque ligne porte une date d échéance et des boutons de remboursement
+  for (const ln of lignes) {
+    if (!ln.querySelector('.item-effect').textContent.trim()) throw new Error('ligne sans échéance');
+    if (!ln.querySelectorAll('.debt-actions button').length) throw new Error('ligne sans bouton de remboursement');
+  }
+  // les offres restantes portent bien leur boîte de détail
+  const offre = [...ui.el.debtOffers.querySelectorAll('.debt-offer')].find(e => !e.classList.contains('hidden'));
+  if (!offre) throw new Error('aucune offre affichée');
+  const carte = offre.querySelector('.debt-card');
+  if (!carte) throw new Error('boîte de détail absente');
+  if (!carte.querySelector('.debt-card-lender').textContent.trim()) throw new Error('prêteur non renseigné');
+  if (!carte.querySelector('[data-v="cost"]').textContent.trim()) throw new Error('coût total du crédit non renseigné');
+});
+
+await step('dette : remboursement anticipé, avec pénalité là où elle existe', () => {
+  game.state.playSeconds = 5 * 300;
+  game.state.money = 1e12;
+  const l = game.state.loans.find(x => x.id === 'senior');
+  const du = l.outstanding;
+  const av = game.state.money;
+  game.repayLoan(l.n, du / 2);
+  if (Math.abs(l.outstanding - du / 2) > 1) throw new Error('remboursement partiel non appliqué');
+  if (Math.abs((av - game.state.money) - game.moneyCost(du / 2)) > 1) throw new Error('montant débité faux');
+  game.repayLoan(l.n);
+  if (game.state.loans.some(x => x.n === l.n)) throw new Error('le prêt soldé devrait disparaître');
+  // les obligations, elles, se remboursent avec une pénalité de 3%
+  game.state.fundingDone = { ipo: true };
+  game.takeLoan('bonds');
+  const b = game.state.loans.find(x => x.id === 'bonds');
+  const attendu = game.moneyCost(b.outstanding * 1.03);
+  if (Math.abs(game.prepayCost(b) - attendu) > 1) throw new Error('pénalité de remboursement non appliquée');
+  const av2 = game.state.money;
+  game.repayLoan(b.n);
+  if (Math.abs((av2 - game.state.money) - attendu) > 1) throw new Error('pénalité non débitée');
+});
+
+await step('dette : la banque ne perd jamais — capital et taux récupérés', () => {
+  const { LOANS } = data;
+  for (const o of LOANS) {
+    const g2 = new Game(null);
+    g2.state.playSeconds = 5 * 300;
+    g2.state.money = 1e13; g2.state.lifetimeTokens = 1e16; g2.state.reputation = 80;
+    if (o.postIPO) g2.state.fundingDone = { ipo: true };
+    if (o.distress) g2.state.unpaidDays = 5;
+    if (!g2.takeLoan(o.id)) throw new Error(o.id + ' : souscription impossible');
+    const l = g2.state.loans[0];
+    if (o.revolving) g2.drawLoan(l.n, o.amount);
+    const prete = l.principal0;
+    // on encaisse chaque échéance en dollars CONSTANTS, là où elle est calculée
+    const flux = [{ t: 0, m: -prete }];
+    const t0 = g2.state.playSeconds;
+    for (let i = 0; i < 4000 && g2.state.loans.length; i++) {
+      const p = g2.loanNextPayment(l);
+      flux.push({ t: (p.at - t0) / 300, m: p.total });
+      g2.state.playSeconds = p.at + 0.001;
+      g2.tickDebt();
+      if (g2.state.playSeconds > t0 + (o.years + 3) * 300) break;
+    }
+    if (g2.state.loans.length) throw new Error(o.id + ' : prêt jamais soldé');
+    const rendu = flux.filter(f => f.m > 0).reduce((a, f) => a + f.m, 0);
+    if (rendu < prete - 1) throw new Error(o.id + ' : capital perdu (' + rendu + ' < ' + prete + ')');
+    // taux de rendement interne : il ne doit pas tomber sous le taux affiché
+    const van = r => flux.reduce((a, f) => a + f.m / Math.pow(1 + r, f.t), 0);
+    let lo = -0.9, hi = 5;
+    for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (van(m) > 0) lo = m; else hi = m; }
+    const tri = (lo + hi) / 2;
+    if (tri < o.rate - 0.004) throw new Error(`${o.id} : rendement réel ${(tri * 100).toFixed(2)}% sous le taux affiché ${(o.rate * 100).toFixed(1)}%`);
+  }
+});
+
+await step('dette : à défaut de trésorerie, les actifs sont saisis', () => {
+  const g2 = new Game(null);
+  g2.state.playSeconds = 5 * 300;
+  g2.state.money = 1e13; g2.state.lifetimeTokens = 1e16; g2.state.reputation = 80;
+  g2.takeLoan('senior');
+  const l = g2.state.loans[0];
+  // le joueur dilapide tout et se retrouve avec des machines mais pas un dollar
+  g2.state.money = 0;
+  g2.state.gpuCounts = {}; g2.state.gpuCounts[data.GPUS[0].id] = 4e6;
+  const cartes = g2.gpuCount();
+  const rep = g2.state.reputation;
+  g2.state.playSeconds = l.dueAt + 0.001;
+  g2.tickDebt();
+  if (g2.gpuCount() >= cartes) throw new Error('rien n a été saisi alors que la trésorerie était vide');
+  if (g2.state.reputation >= rep) throw new Error('une saisie devrait coûter de la réputation');
+  // et si même la saisie ne suffit pas, la créance reste due : elle ne s évapore pas
+  const g3 = new Game(null);
+  g3.state.playSeconds = 5 * 300;
+  g3.state.money = 1e13; g3.state.lifetimeTokens = 1e16; g3.state.reputation = 80;
+  g3.takeLoan('senior');
+  const l3 = g3.state.loans[0];
+  const du = l3.outstanding;
+  g3.state.money = 0; g3.state.gpuCounts = {}; g3.state.infraCounts = {};
+  g3.state.playSeconds = l3.dueAt + 0.001;
+  g3.tickDebt();
+  if (l3.outstanding <= du) throw new Error('une échéance impayée devrait grossir la créance, pas l effacer');
+});
+
+await step('dette : soldée au passage en phase 2, rien ne s évapore', () => {
+  const g2 = new Game(null);
+  g2.state.playSeconds = 5 * 300;
+  g2.state.money = 1e13; g2.state.lifetimeTokens = 1e16; g2.state.reputation = 80;
+  g2.takeLoan('senior');
+  const du = g2.moneyCost(g2.state.loans[0].outstanding);
+  const av = g2.state.money;
+  g2.enterPhase(2);
+  if (g2.state.loans.length) throw new Error('la dette devrait être soldée en phase 2');
+  if (Math.abs((av - g2.state.money) - du) > 1) throw new Error('le capital n a pas été rendu au passage de phase');
 });
 
 // save/load

@@ -2,7 +2,7 @@
 //  TokenWar — INTERFACE
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
-         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS } from './data.js';
+         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
@@ -73,6 +73,9 @@ export class UI {
       saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
       sovereignList: $('sovereign-list'),
+      panelDebt: $('panel-debt'), debtTotal: $('debt-total'), debtNext: $('debt-next'),
+      debtNextRow: $('debt-next-row'), debtActive: $('debt-active'),
+      debtOffers: $('debt-offers'), debtOffersTitle: $('debt-offers-title'),
       universeMap: $('universe-map'), universePct: $('universe-pct'),
       langSelect: $('lang-select'),
       cine: $('cine'), cineCanvas: $('cine-canvas'), cineSkip: $('cine-skip'), cineCredit: $('cine-credit'),
@@ -617,6 +620,7 @@ export class UI {
 
   buildStaticRows() {
     // Addendum : directives permanentes + datacenter orbital
+    this.buildDebt();
     this.el.addendumList.innerHTML = ''; this.rows.addendum = {};
     {
       const r = this.makeRow(this.el.addendumList, 'directives', this.rows.addendum);
@@ -1144,6 +1148,7 @@ export class UI {
     this.renderCrypto();
     this.renderGPUs();
     this.renderEnergy();
+    this.renderDebt();
     this.renderSovereign();
     this.renderPrograms();
     this.renderOptims();
@@ -1454,6 +1459,157 @@ export class UI {
     const g = (m.invested / m.basis - 1) * 100;
     el.innerHTML = `<span class="${g >= 0 ? 'text-good' : 'text-bad'}">`
       + `${t('entrée à {0}', this.game.decimal(level, 2))} · ${g >= 0 ? '+' : ''}${g.toFixed(1)}%</span>`;
+  }
+
+  // ------------------------------------------------------------------
+  //  DETTE — l'affichage reste volontairement maigre : nom, montant, taux.
+  //  Tout le reste (prêteur, durée, mécanique de remboursement, piège) vit
+  //  dans une boîte qui n'apparaît qu'au survol. Une ligne d'offre doit se
+  //  comparer d'un coup d'œil ; le détail se demande.
+  // ------------------------------------------------------------------
+  buildDebt() {
+    this.el.debtOffers.innerHTML = ''; this.rows.debtOffer = {};
+    LOANS.forEach(o => {
+      const el = document.createElement('div');
+      el.className = 'item debt-offer hidden';
+      el.tabIndex = 0;                       // au clavier et au doigt, le focus ouvre la boîte
+      el.innerHTML = `
+        <div class="item-header">
+          <span class="item-name"></span>
+          <span class="item-cost num"></span>
+        </div>
+        <div class="item-effect"></div>
+        <div class="debt-card">
+          <div class="debt-card-lender"></div>
+          <dl class="debt-card-grid">
+            <dt data-k="amount"></dt><dd class="num" data-v="amount"></dd>
+            <dt data-k="rate"></dt><dd class="num" data-v="rate"></dd>
+            <dt data-k="term"></dt><dd class="num" data-v="term"></dd>
+            <dt data-k="repay"></dt><dd data-v="repay"></dd>
+            <dt data-k="cost"></dt><dd class="num" data-v="cost"></dd>
+          </dl>
+          <div class="debt-card-desc"></div>
+        </div>`;
+      el.querySelector('.item-name').textContent = td(o.name);
+      el.querySelector('.debt-card-lender').textContent = td(o.lender);
+      el.querySelector('.debt-card-desc').textContent = td(o.desc);
+      const lab = { amount: t('Montant'), rate: t('Taux annuel'), term: t('Durée'),
+                    repay: t('Remboursement'), cost: t('Coût total du crédit') };
+      for (const k in lab) el.querySelector(`[data-k="${k}"]`).textContent = lab[k];
+      el.querySelector('[data-v="rate"]').textContent = this.game.decimal(o.rate * 100, 1) + '%';
+      el.querySelector('[data-v="term"]').textContent = t('{0} ans', o.years);
+      el.querySelector('[data-v="repay"]').textContent = td(o.repay);
+      el.addEventListener('click', () => {
+        if (this.game.takeLoan(o.id)) { this.fullRebuildDebt(); }
+        else this.deny(el, t('Offre indisponible'));
+      });
+      this.el.debtOffers.appendChild(el);
+      this.rows.debtOffer[o.id] = { el,
+        cost: el.querySelector('.item-cost'), effect: el.querySelector('.item-effect'),
+        amount: el.querySelector('[data-v="amount"]'), cost2: el.querySelector('[data-v="cost"]') };
+    });
+  }
+  // Une souscription change la liste des offres ET celle des prêts : on relit
+  // tout plutôt que de tenir un diff à la main.
+  fullRebuildDebt() { this.rows.debtLoan = {}; this.el.debtActive.innerHTML = ''; this.renderDebt(); }
+
+  // Ligne d'un prêt en cours : encours, prochaine échéance, et les boutons qui
+  // s'appliquent vraiment à cet instrument.
+  makeLoanRow(l) {
+    const g = this.game, o = g.loanOffer(l.id);
+    const el = document.createElement('div');
+    el.className = 'item debt-loan';
+    el.innerHTML = `
+      <div class="item-header"><span class="item-name"></span><span class="item-cost num"></span></div>
+      <div class="item-effect"></div>
+      <div class="debt-actions"></div>`;
+    el.querySelector('.item-name').textContent = td(o.name);
+    const act = el.querySelector('.debt-actions');
+    const bouton = (label, title, fn) => {
+      const b = document.createElement('button');
+      b.className = 'btn-ghost rent-btn';
+      b.textContent = label; b.title = title;
+      b.addEventListener('click', ev => { ev.stopPropagation(); fn(); this.fullRebuildDebt(); });
+      act.appendChild(b);
+      return b;
+    };
+    const r = { el, cost: el.querySelector('.item-cost'), effect: el.querySelector('.item-effect') };
+    if (l.revolving) {
+      r.draw = bouton(t('Tirer'), t('Tirer le solde disponible de la ligne'), () => g.drawLoan(l.n));
+      r.repayPart = bouton(t('Rembourser'), t('Rembourser ce qui est tiré (sans pénalité)'), () => g.repayLoan(l.n));
+    } else {
+      r.repayAll = bouton(t('Solder'), o.prepayFee
+        ? t('Rembourser par anticipation — pénalité de {0}', this.game.decimal(o.prepayFee * 100, 0) + '%')
+        : t('Rembourser tout le capital restant'), () => g.repayLoan(l.n));
+      r.repayHalf = bouton(t('Rembourser 50%'), t('Rembourser la moitié du capital restant'),
+        () => g.repayLoan(l.n, l.outstanding / 2));
+    }
+    this.el.debtActive.appendChild(el);
+    return r;
+  }
+  renderDebt() {
+    const g = this.game, s = g.state;
+    const actif = g.debtUnlocked() || s.loans.length > 0;
+    this.el.panelDebt.classList.toggle('hidden', !actif);
+    if (!actif) return;
+
+    // --- prêts en cours ---
+    if (!this.rows.debtLoan) this.rows.debtLoan = {};
+    const vus = new Set();
+    for (const l of s.loans) {
+      vus.add(l.n);
+      let r = this.rows.debtLoan[l.n];
+      if (!r) r = this.rows.debtLoan[l.n] = this.makeLoanRow(l);
+      const p = g.loanNextPayment(l);
+      r.cost.textContent = fmtMoney(g.moneyCost(l.outstanding));
+      // l'échéance et son montant, c'est ce qu'on veut lire sans cliquer
+      const parts = [ `<span class="text-muted">${t('échéance {0}', g.dateLabelAt(p.at))}</span>`,
+                      `<b class="num">${fmtMoney(g.moneyCost(p.total))}</b>` ];
+      if (l.revolving) parts.push(`<span class="badge">${t('dispo {0}', fmtMoney(g.moneyCost(l.limit - l.outstanding)))}</span>`);
+      if (p.last) parts.push(`<span class="badge badge-warn">${t('dernière')}</span>`);
+      r.effect.innerHTML = parts.join(' · ');
+      if (r.draw) r.draw.classList.toggle('hidden', l.limit - l.outstanding < 1e-6);
+      if (r.repayPart) r.repayPart.classList.toggle('hidden', l.outstanding < 1e-6);
+      if (r.repayAll) {
+        const cost = g.prepayCost(l);
+        r.repayAll.classList.toggle('locked', s.money < cost);
+        r.repayAll.textContent = t('Solder ({0})', fmtMoney(cost));
+      }
+      if (r.repayHalf) r.repayHalf.classList.toggle('locked', s.money < g.prepayCost(l) / 2);
+    }
+    for (const n in this.rows.debtLoan) {
+      if (vus.has(+n)) continue;
+      this.rows.debtLoan[n].el.remove();
+      delete this.rows.debtLoan[n];
+    }
+
+    // --- bandeau : encours et prochaine échéance, toutes dettes confondues ---
+    this.el.debtTotal.textContent = fmtMoney(g.debtOutstanding());
+    const suivantes = s.loans.map(l => ({ l, p: g.loanNextPayment(l) })).sort((a, b) => a.p.at - b.p.at);
+    this.el.debtNextRow.classList.toggle('hidden', !suivantes.length);
+    if (suivantes.length) {
+      const { l, p } = suivantes[0];
+      this.el.debtNext.textContent = t('{0} le {1}', fmtMoney(g.moneyCost(p.total)), g.dateLabelAt(p.at));
+      this.el.debtNext.classList.toggle('text-bad', s.money < g.moneyCost(p.total));
+    }
+
+    // --- offres ---
+    const dispo = new Set(g.loanOffers().map(o => o.id));
+    LOANS.forEach(o => {
+      const r = this.rows.debtOffer[o.id];
+      r.el.classList.toggle('hidden', !dispo.has(o.id));
+      if (!dispo.has(o.id)) return;
+      const montant = g.moneyCost(o.amount);
+      r.cost.textContent = fmtMoney(montant);
+      r.amount.textContent = fmtMoney(montant);
+      // le coût total du crédit : ce que le prêt aura coûté en intérêts au terme
+      r.cost2.textContent = fmtMoney(g.moneyCost(this.game.loanTotalCost(o)));
+      r.effect.innerHTML = `<span class="text-muted">${this.game.decimal(o.rate * 100, 1)}% · ${t('{0} ans', o.years)}</span>`
+        + (o.postIPO ? ` <span class="badge">${t('coté')}</span>` : '')
+        + (o.distress ? ` <span class="badge badge-warn">${t('urgence')}</span>` : '');
+      this.setAfford(r.el, true);
+    });
+    this.el.debtOffersTitle.classList.toggle('hidden', dispo.size === 0);
   }
 
   renderSovereign() {

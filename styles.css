@@ -1613,7 +1613,7 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
    une fine bordure ceinture la page. Rien qui clignote — on peut rester figé
    plusieurs minutes pour comparer des prix. */
 #btn-speed.frozen {
-  color: var(--accent-cold, #7fd4ff);
+  color: var(--info);
   border-color: currentColor;
   background: rgba(127, 212, 255, 0.12);
 }
@@ -1627,4 +1627,76 @@ body.is-frozen::after {
 }
 @media (prefers-reduced-motion: reduce) {
   body.is-frozen::after { border-color: rgba(127, 212, 255, 0.5); }
+}
+
+/* ---- DETTE ---------------------------------------------------------------
+   La ligne d'offre reste maigre — nom, montant, taux — et tout le détail vit
+   dans une boîte qui n'apparaît qu'au survol. Elle s'ouvre aussi au focus :
+   sans cela, ni le clavier ni le tactile n'y accéderaient jamais. */
+.sub-title {
+  margin: 14px 0 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.debt-offer { position: relative; cursor: pointer; }
+.debt-card {
+  position: absolute;
+  left: 0; right: 0; top: calc(100% + 6px);
+  z-index: 60;
+  padding: 12px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--bg-3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s;
+  pointer-events: none;             /* la boîte ne doit jamais voler le clic d'achat */
+}
+.debt-offer:hover .debt-card,
+.debt-offer:focus .debt-card,
+.debt-offer:focus-within .debt-card {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.debt-card-lender {
+  font-size: 0.78rem;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.debt-card-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 12px;
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+}
+.debt-card-grid dt { color: var(--text-mute); }
+.debt-card-grid dd { margin: 0; text-align: right; }
+.debt-card-desc {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+.debt-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.debt-loan .item-cost { color: var(--bad); }
+
+/* Les dernières lignes de la liste ouvriraient leur boîte hors de l'écran :
+   on la fait alors remonter au-dessus de la ligne. */
+.debt-offer:nth-last-child(-n+2) .debt-card { top: auto; bottom: calc(100% + 6px); }
+
+@media (max-width: 720px) {
+  /* Sur mobile il n'y a pas de survol : la boîte se déplie dans le flux. */
+  .debt-card {
+    position: static;
+    opacity: 1; visibility: visible; transform: none;
+    margin-top: 8px; box-shadow: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .debt-card { transition: none; }
 }

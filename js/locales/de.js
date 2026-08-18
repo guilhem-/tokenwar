@@ -220,8 +220,8 @@ export default {
     'Multi-GPU-Chassis. Preis durch den Speicherboom (2025-2026) nach oben getrieben.',
   'Raccordement réseau':
     'Netzanschluss',
-  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
-    'Du ziehst aus dem lokalen Netz. Monatlicher Grundpreis nach vereinbarter Leistung, plus verbrauchte kWh.',
+  'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    'Ein 10-kW-Anschluss ans örtliche Netz. Monatliche Grundgebühr proportional zur bestellten Leistung, plus die bezogenen kWh.',
   'Ferme solaire + batteries':
     'Solarpark + Batterien',
   'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
@@ -582,6 +582,86 @@ export default {
     'Börsengang',
   '×2 demande':
     '×2 Nachfrage',
+  'Crédit corporate senior':
+    'Vorrangiger Unternehmenskredit',
+  'Grande banque commerciale':
+    'Große Geschäftsbank',
+  'Intérêts trimestriels, capital intégral à l’échéance':
+    'Vierteljährliche Zinsen, volles Kapital bei Fälligkeit',
+  'Simple et prévisible, mais un mur de remboursement vous attend à la fin.':
+    'Einfach und planbar, aber am Ende wartet eine Mauer aus Rückzahlung.',
+  'Ligne de crédit revolving':
+    'Revolvierende Kreditlinie',
+  'Consortium de banques':
+    'Bankenkonsortium',
+  'Libre : tirez et remboursez à volonté':
+    'Frei: nach Belieben ziehen und zurückzahlen',
+  'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.':
+    'Genug, um ein Liquiditätsloch zu überbrücken. 0,4 % Bereitstellungsprovision pro Jahr auf den nicht gezogenen Teil: Die Bank berechnet auch, was du nicht nutzt.',
+  'Prêt d’expansion':
+    'Expansionsdarlehen',
+  'Banque d’investissement':
+    'Investmentbank',
+  'Capital amorti chaque trimestre':
+    'Kapital vierteljährlich getilgt',
+  'Coût total faible, mais des sorties de trésorerie régulières et lourdes.':
+    'Geringe Gesamtkosten, aber regelmäßige, schwere Mittelabflüsse.',
+  'Obligations institutionnelles':
+    'Institutionelle Anleihen',
+  'Fonds de pension et assureurs':
+    'Pensionsfonds und Versicherer',
+  'Coupon semestriel, capital à maturité':
+    'Halbjährlicher Kupon, Kapital bei Endfälligkeit',
+  'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.':
+    'Sehr lange Planbarkeit. Vorzeitige Rückzahlung ist möglich, kostet aber: 3 % des zurückgezahlten Kapitals, als Ausgleich für den entgangenen Kupon.',
+  'Dette high-yield':
+    'Hochzinsanleihe',
+  'Fonds obligataires spéculatifs':
+    'Spekulative Anleihefonds',
+  'Intérêts semestriels, capital à l’échéance':
+    'Halbjährliche Zinsen, Kapital bei Fälligkeit',
+  'Accessible même avec des comptes fragiles — et facturée en conséquence.':
+    'Auch bei wackligen Zahlen zugänglich — und entsprechend bepreist.',
+  'Prêt garanti par actifs':
+    'Besichertes Darlehen',
+  'Banque spécialisée':
+    'Spezialbank',
+  'Mensualités : capital et intérêts':
+    'Monatsraten: Kapital und Zinsen',
+  'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.':
+    'Der beste Zins am Markt, weil deine Maschinen die Sicherheit sind: Bei Zahlungsausfall werden sie zuerst gepfändet.',
+  'Financement infrastructure':
+    'Infrastrukturfinanzierung',
+  'Consortium bancaire et fonds infra':
+    'Bankenkonsortium und Infrastrukturfonds',
+  'Deux ans de grâce, puis amortissement semestriel':
+    'Zwei tilgungsfreie Jahre, dann halbjährliche Tilgung',
+  'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.':
+    'Genug für ein gewaltiges Bauvorhaben. Die Rückzahlung ist aufgeschoben, die Bindung läuft fünfzehn Jahre.',
+  'Prêt mezzanine':
+    'Mezzanine-Darlehen',
+  'Fonds de private debt':
+    'Private-Debt-Fonds',
+  'Intérêts annuels, 30 % capitalisés, capital à l’échéance':
+    'Jährliche Zinsen, 30 % kapitalisiert, Kapital bei Fälligkeit',
+  'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.':
+    'Kaum Geld, das jetzt abfließt. Dafür wächst die Schuld von selbst: Was nicht gezahlt wird, schlägt sich aufs Kapital.',
+  'Dette convertible':
+    'Wandelanleihe',
+  'Fonds technologique':
+    'Technologiefonds',
+  'Intérêts annuels, puis capital ou conversion en actions':
+    'Jährliche Zinsen, dann Kapital oder Wandlung in Aktien',
+  'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.':
+    'Ein unschlagbarer Zins, im Tausch gegen eine Option auf dein Eigenkapital: Bei Fälligkeit kann der Fonds wandeln, und deine Bewertung je Aktie verwässert um 12 %.',
+  'Crédit de sauvetage':
+    'Rettungskredit',
+  'Fonds opportuniste':
+    'Opportunistischer Fonds',
+  'Intérêts trimestriels, 20 % du capital par an, solde à la fin':
+    'Vierteljährliche Zinsen, 20 % des Kapitals pro Jahr, Restbetrag am Ende',
+  'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
+    'Das Geld ist sofort da, ohne Bedingungen. Das ist sein einziger Vorzug: Zu 14 % kostet dich dieser Kredit mehr als die Krise, die er löscht.',
   'Directives permanentes':
     'Dauerhafte Direktiven',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1070,8 +1150,8 @@ export default {
     'eine GPU muss in einen Server, in ein Rack, in ein Rechenzentrum, auf Immobilien passen — die alle ebenfalls Strom ziehen. Veraltete Hardware lässt sich verkaufen — einzeln, ab 10 Stück im Zehnerpack, ab 100 komplett; eine Karte, die vor über 5 Jahren erschien, verschwindet vom Markt. Du kannst auch ein Rechenzentrum oder Colocation-Fläche mieten.',
   '⚡ Au départ :':
     '⚡ Am Anfang:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    'du hast keine Leistung, kein Rack und keinen Server — nur ein Gebäude, einen Raum und 30.000 $. Deine erste Entscheidung ist der Netzanschluss, dann ein Rack und ein Server, bevor auch nur eine Karte Platz findet. Behalte die Schlagzeilen im Auge: Ein Energiezuschuss für junge Unternehmen verstärkt deinen Anschluss.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'du hast keine Leistung, kein Rack und keinen Server — nur ein Gebäude, einen Raum und 50.000 $. Deine erste Entscheidung ist der Netzanschluss, dann ein Rack und ein Server, bevor auch nur eine Karte Platz findet. Behalte die Schlagzeilen im Auge: Ein Energiezuschuss für junge Unternehmen verstärkt deinen Anschluss.',
   '⚡ Coûts d’énergie :':
     '⚡ Energiekosten:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1124,6 +1204,10 @@ export default {
     '📋 Dauerhafte Direktiven:',
   'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
     'jede Zahlung speichert **eine** Entscheidung, die anschließend automatisch angewandt wird. Die nächste Direktive kostet eine Stufe mehr, und die Gesamtzahl ist auf die Menge der Ereignisse mit Wahlmöglichkeit begrenzt. Eine bestehende Direktive zu ersetzen belegt keinen Platz.',
+  '🏦 Dette :':
+    '🏦 Schulden:',
+  'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.':
+    'zehn Instrumente, vom schlichten Bankkredit bis zum Rettungskredit zu 14 %. Die Zeile zeigt nur Name, Betrag und Zins: **fahre darüber**, um Kreditgeber, Laufzeit, Rückzahlungsmechanik und vor allem die **Gesamtkosten des Kredits** zu sehen — die einzige Zahl, mit der sich ein niedriger, ab dem ersten Quartal getilgter Zins mit einem hohen, erst bei Fälligkeit gezahlten vergleichen lässt. Manche Angebote setzen ein börsennotiertes Unternehmen voraus; der opportunistische Fonds erscheint nur, wenn es schlecht läuft. Jeder Kredit zeigt seinen nächsten Fälligkeitstermin samt Betrag und lässt sich aus seiner Zeile heraus vorzeitig ablösen. **Die Bank verliert nie**: Die Beträge lauten auf konstante Dollar, die Inflation zehrt die Schuld also nicht auf, und reicht die Kasse am Stichtag nicht, werden Vermögenswerte gepfändet und verkauft.',
   'Bourse :':
     'Börse:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1588,6 +1672,20 @@ export default {
     '👋 Abgang: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     'Gehaltsrückstände beglichen. Das Team bleibt.',
+  'Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.':
+    'Linie eröffnet: {0} verfügbar bei {1}, zu {2} pro Jahr auf gezogene Beträge.',
+  '{0} : {1} versés par {2}, à {3} l’an sur {4} ans.':
+    '{0}: {1} ausgezahlt von {2}, zu {3} pro Jahr über {4} Jahre.',
+  'Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.':
+    'Fälligkeit bei {0} nur teilweise bedient: {1} vorgetragen, mit Zinsen.',
+  '{0} convertie en actions : votre valorisation par action se dilue de {1}.':
+    '{0} in Aktien gewandelt: Deine Bewertung je Aktie verwässert um {1}.',
+  '{0} soldé. Intérêts versés : {1}.':
+    '{0} abgelöst. Gezahlte Zinsen: {1}.',
+  '{0} remboursé par anticipation.':
+    '{0} vorzeitig abgelöst.',
+  'Saisie : {0} d’actifs liquidés pour honorer la dette.':
+    'Pfändung: Vermögenswerte im Wert von {0} verwertet, um die Schuld zu bedienen.',
   'Entraînement de {0} ÉCHOUÉ : {1}':
     'Training von {0} FEHLGESCHLAGEN: {1}',
   '❌ Entraînement échoué':
@@ -1918,6 +2016,50 @@ export default {
     'Ernte ×{0}',
   'entrée à {0}':
     'Einstieg bei {0}',
+  'Montant':
+    'Betrag',
+  'Taux annuel':
+    'Jahreszins',
+  'Durée':
+    'Laufzeit',
+  'Remboursement':
+    'Rückzahlung',
+  'Coût total du crédit':
+    'Gesamtkosten des Kredits',
+  '{0} ans':
+    '{0} Jahre',
+  'Offre indisponible':
+    'Angebot nicht verfügbar',
+  'Tirer':
+    'Ziehen',
+  'Tirer le solde disponible de la ligne':
+    'Den verbleibenden Rahmen ziehen',
+  'Rembourser':
+    'Zurückzahlen',
+  'Rembourser ce qui est tiré (sans pénalité)':
+    'Das Gezogene zurückzahlen (ohne Strafe)',
+  'Solder':
+    'Ablösen',
+  'Rembourser par anticipation — pénalité de {0}':
+    'Vorzeitig ablösen — {0} Strafe',
+  'Rembourser tout le capital restant':
+    'Das gesamte Restkapital zurückzahlen',
+  'Rembourser 50%':
+    '50% zurückzahlen',
+  'Rembourser la moitié du capital restant':
+    'Die Hälfte des Restkapitals zurückzahlen',
+  'échéance {0}':
+    'fällig {0}',
+  'dernière':
+    'letzte',
+  'Solder ({0})':
+    'Ablösen ({0})',
+  '{0} le {1}':
+    '{0} am {1}',
+  'coté':
+    'börsennotiert',
+  'urgence':
+    'Notlage',
   'sous tutelle':
     'unter Vormundschaft',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -2060,6 +2202,14 @@ export default {
     'Kurs',
   'Effet sur le prix des GPU':
     'Wirkung auf die GPU-Preise',
+  'Dette':
+    'Schulden',
+  'Encours':
+    'Ausstehend',
+  'Prochaine échéance':
+    'Nächste Fälligkeit',
+  'Offres de financement':
+    'Finanzierungsangebote',
   'Équipe':
     'Team',
   'Effectif':

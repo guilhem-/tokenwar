@@ -220,8 +220,8 @@ export default {
     'Multi-GPU chassis. Prices pushed up by the memory surge (2025-2026).',
   'Raccordement réseau':
     'Grid connection',
-  'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
-    'You draw from the local grid. Monthly standing charge scales with subscribed power, plus the kWh you use.',
+  'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.':
+    'A 10 kW hook-up to the local grid. Monthly standing charge proportional to your subscribed power, plus the kWh you draw.',
   'Ferme solaire + batteries':
     'Solar farm + batteries',
   'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.':
@@ -582,6 +582,86 @@ export default {
     'IPO',
   '×2 demande':
     '×2 demand',
+  'Crédit corporate senior':
+    'Senior corporate loan',
+  'Grande banque commerciale':
+    'Major commercial bank',
+  'Intérêts trimestriels, capital intégral à l’échéance':
+    'Quarterly interest, full principal at maturity',
+  'Simple et prévisible, mais un mur de remboursement vous attend à la fin.':
+    'Simple and predictable, but a wall of repayment waits for you at the end.',
+  'Ligne de crédit revolving':
+    'Revolving credit facility',
+  'Consortium de banques':
+    'Bank syndicate',
+  'Libre : tirez et remboursez à volonté':
+    'Free-form: draw and repay at will',
+  'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.':
+    'Enough to ride out a cash gap. A 0.4% annual fee on the undrawn portion: the bank bills you for what you do not use, too.',
+  'Prêt d’expansion':
+    'Expansion loan',
+  'Banque d’investissement':
+    'Investment bank',
+  'Capital amorti chaque trimestre':
+    'Principal amortised every quarter',
+  'Coût total faible, mais des sorties de trésorerie régulières et lourdes.':
+    'Low total cost, but heavy, regular cash outflows.',
+  'Obligations institutionnelles':
+    'Institutional bonds',
+  'Fonds de pension et assureurs':
+    'Pension funds and insurers',
+  'Coupon semestriel, capital à maturité':
+    'Semi-annual coupon, principal at maturity',
+  'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.':
+    'Very long visibility. Early repayment is possible, but it costs: 3% of the principal returned, to compensate the holder for the coupon they lose.',
+  'Dette high-yield':
+    'High-yield debt',
+  'Fonds obligataires spéculatifs':
+    'Speculative bond funds',
+  'Intérêts semestriels, capital à l’échéance':
+    'Semi-annual interest, principal at maturity',
+  'Accessible même avec des comptes fragiles — et facturée en conséquence.':
+    'Available even with shaky accounts — and priced accordingly.',
+  'Prêt garanti par actifs':
+    'Asset-backed loan',
+  'Banque spécialisée':
+    'Specialist bank',
+  'Mensualités : capital et intérêts':
+    'Monthly instalments: principal and interest',
+  'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.':
+    'The best rate on the market, because your machines are the collateral: in a default they are seized first.',
+  'Financement infrastructure':
+    'Infrastructure financing',
+  'Consortium bancaire et fonds infra':
+    'Bank syndicate and infrastructure funds',
+  'Deux ans de grâce, puis amortissement semestriel':
+    'Two grace years, then semi-annual amortisation',
+  'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.':
+    'Enough to fund a vast build. Repayment is deferred; the commitment runs fifteen years.',
+  'Prêt mezzanine':
+    'Mezzanine loan',
+  'Fonds de private debt':
+    'Private debt fund',
+  'Intérêts annuels, 30 % capitalisés, capital à l’échéance':
+    'Annual interest, 30% capitalised, principal at maturity',
+  'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.':
+    'Little cash to put out now. In exchange, the debt grows on its own: what is not paid is added to the principal.',
+  'Dette convertible':
+    'Convertible debt',
+  'Fonds technologique':
+    'Technology fund',
+  'Intérêts annuels, puis capital ou conversion en actions':
+    'Annual interest, then principal or conversion into shares',
+  'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.':
+    'An unbeatable rate, in exchange for an option on your equity: at maturity the fund may convert, and your per-share valuation dilutes by 12%.',
+  'Crédit de sauvetage':
+    'Rescue loan',
+  'Fonds opportuniste':
+    'Opportunistic fund',
+  'Intérêts trimestriels, 20 % du capital par an, solde à la fin':
+    'Quarterly interest, 20% of principal per year, balance at the end',
+  'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
+    'The money is there at once, no strings. That is its only merit: at 14%, this loan will cost you more than the crisis it puts out.',
   'Directives permanentes':
     'Standing directives',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1070,8 +1150,8 @@ export default {
     'a GPU must sit in a server, in a rack, in a datacenter, on real estate — all of which draw power too. Obsolete hardware can be resold — one at a time, by ten past 10 units, all at once past 100; a card released more than 5 years ago disappears from the market. You can also rent a datacenter or colocation space.',
   '⚡ Au départ :':
     '⚡ At the start:',
-  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
-    'you have no power available, no rack and no server — only a building, a room and $30,000. Your first decision is to get connected, then to put up a rack and a server before you can house a single card. Watch the Front Page: an energy grant for young companies will upgrade your connection.',
+  'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
+    'you have no power available, no rack and no server — only a building, a room and $50,000. Your first decision is to get connected, then to put up a rack and a server before you can house a single card. Watch the Front Page: an energy grant for young companies will upgrade your connection.',
   '⚡ Coûts d’énergie :':
     '⚡ Energy costs:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
@@ -1124,6 +1204,10 @@ export default {
     '📋 Standing directives:',
   'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
     'each payment memorises **one** decision, applied automatically thereafter. The next directive costs one notch more, and the total is capped at the number of events that carry a choice. Replacing an existing directive uses no slot.',
+  '🏦 Dette :':
+    '🏦 Debt:',
+  'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.':
+    'ten instruments, from the plain bank loan to the 14% rescue credit. The row shows only the name, the amount and the rate: **hover it** to see the lender, the term, the repayment mechanics and above all the **total cost of credit** — the one figure that lets you compare a low rate amortised from the first quarter against a high rate paid at maturity. Some offers require a listed company; the opportunistic fund only shows up when things are going badly. Every loan displays its next payment date and amount, and can be repaid early from its own row. **The bank never loses**: amounts are denominated in constant dollars, so inflation does not erode the debt, and if the treasury falls short on a due date, assets are seized and sold.',
   'Bourse :':
     'Stock market:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1588,6 +1672,20 @@ export default {
     '👋 Departure: {0}',
   'Arriérés de salaire réglés. L’équipe reste.':
     'Salary arrears cleared. The team stays.',
+  'Ligne ouverte : {0} disponibles chez {1}, à {2} l’an sur les sommes tirées.':
+    'Line opened: {0} available from {1}, at {2} a year on amounts drawn.',
+  '{0} : {1} versés par {2}, à {3} l’an sur {4} ans.':
+    '{0}: {1} paid out by {2}, at {3} a year over {4} years.',
+  'Échéance de {0} partiellement honorée : {1} reportés, avec intérêts.':
+    'Payment on {0} only partly met: {1} carried over, with interest.',
+  '{0} convertie en actions : votre valorisation par action se dilue de {1}.':
+    '{0} converted into shares: your per-share valuation dilutes by {1}.',
+  '{0} soldé. Intérêts versés : {1}.':
+    '{0} paid off. Interest paid: {1}.',
+  '{0} remboursé par anticipation.':
+    '{0} repaid early.',
+  'Saisie : {0} d’actifs liquidés pour honorer la dette.':
+    'Seizure: {0} of assets liquidated to service the debt.',
   'Entraînement de {0} ÉCHOUÉ : {1}':
     'Training of {0} FAILED: {1}',
   '❌ Entraînement échoué':
@@ -1918,6 +2016,50 @@ export default {
     'harvest ×{0}',
   'entrée à {0}':
     'entered at {0}',
+  'Montant':
+    'Amount',
+  'Taux annuel':
+    'Annual rate',
+  'Durée':
+    'Term',
+  'Remboursement':
+    'Repayment',
+  'Coût total du crédit':
+    'Total cost of credit',
+  '{0} ans':
+    '{0} years',
+  'Offre indisponible':
+    'Offer unavailable',
+  'Tirer':
+    'Draw',
+  'Tirer le solde disponible de la ligne':
+    'Draw the remaining balance of the line',
+  'Rembourser':
+    'Repay',
+  'Rembourser ce qui est tiré (sans pénalité)':
+    'Repay what is drawn (no penalty)',
+  'Solder':
+    'Pay off',
+  'Rembourser par anticipation — pénalité de {0}':
+    'Repay early — {0} penalty',
+  'Rembourser tout le capital restant':
+    'Repay all remaining principal',
+  'Rembourser 50%':
+    'Repay 50%',
+  'Rembourser la moitié du capital restant':
+    'Repay half the remaining principal',
+  'échéance {0}':
+    'due {0}',
+  'dernière':
+    'final',
+  'Solder ({0})':
+    'Pay off ({0})',
+  '{0} le {1}':
+    '{0} on {1}',
+  'coté':
+    'listed',
+  'urgence':
+    'distress',
   'sous tutelle':
     'under tutelage',
   '{0} datacenters bâtis dans le pays sous tutelle.':
@@ -2060,6 +2202,14 @@ export default {
     'Price',
   'Effet sur le prix des GPU':
     'Effect on GPU prices',
+  'Dette':
+    'Debt',
+  'Encours':
+    'Outstanding',
+  'Prochaine échéance':
+    'Next payment',
+  'Offres de financement':
+    'Financing offers',
   'Équipe':
     'Team',
   'Effectif':

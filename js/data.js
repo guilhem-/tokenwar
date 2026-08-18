@@ -93,13 +93,13 @@ export const MODELS = [
 //  Une carte sortie depuis plus de 5 ans est retirée du marché.
 // ---------------------------------------------------------------------
 export const GPUS = [
-  { id:'consumer', name:'GPU grand public (GTX)', year:2016, perf:1,    energy:0.0003, cost:300,
+  { id:'consumer', name:'GPU grand public (GTX)', year:2016, perf:1,    energy:0.0002, cost:300,
     desc:'Carte gamer détournée (~GTX 1060). ~$300 en 2016.' },
   { id:'v100',     name:'NVIDIA V100',            year:2017, perf:6,    energy:0.0003, cost:9000,
     desc:'~$9 000 à sa sortie. Le cheval de bataille de 2017.' },
   { id:'rtx3090',  name:'NVIDIA RTX 3090',        year:2020, perf:3,    energy:0.00035,cost:1500,
     desc:'MSRP $1499, 350W. La carte-pont du confinement.' },
-  { id:'a100',     name:'NVIDIA A100 80GB',       year:2020, perf:25,   energy:0.0004, cost:12000,
+  { id:'a100',     name:'NVIDIA A100 80GB',       year:2020, perf:25,   energy:0.0004, cost:15000,
     desc:'~$10-15k. La carte de l’ère GPT-3/4.' },
   { id:'rtx4090',  name:'NVIDIA RTX 4090',        year:2022, perf:6,    energy:0.00045,cost:1600,
     desc:'MSRP $1599, 450W. Le meilleur rapport perf/prix grand public.' },
@@ -107,7 +107,7 @@ export const GPUS = [
     desc:'~$25-40k, en pénurie (~1 an de délai).' },
   { id:'l40',      name:'NVIDIA L40S',            year:2023, perf:40,   energy:0.00035,cost:7500,
     desc:'~$7 500, 350W. L’inférence sans se ruiner pendant la pénurie de H100.' },
-  { id:'rtx5090',  name:'NVIDIA RTX 5090',        year:2025, perf:10,   energy:0.00065,cost:2000,
+  { id:'rtx5090',  name:'NVIDIA RTX 5090',        year:2025, perf:10,   energy:0.000575,cost:2000,
     desc:'MSRP $1999, 575W. Bon rapport perf/prix.' },
   { id:'rtx6000pro',name:'NVIDIA RTX 6000 Pro (Blackwell)', year:2025, perf:22, energy:0.0006, cost:8500,
     desc:'96 GB GDDR7, 600W. ~$8 500.' },
@@ -153,14 +153,26 @@ export const GPUS = [
 //  memoire 2025-2026) ; rentDaily = location possible au cout journalier.
 // ---------------------------------------------------------------------
 export const INFRA = [
-  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:30000, energy:0.005, family:'housing',
+  // Prix ancrés sur le réel, et cohérents entre eux. Un bâtiment accueille
+  // 4 salles × 8 baies × 12 serveurs × 8 cartes = 3 072 GPU, soit environ
+  // 1,5 MW de charge informatique : le gros œuvre d'une telle coque vaut le
+  // million, pas trente mille dollars.
+  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:1200000, energy:0.005, family:'housing',
     desc:'Du garage au campus : il faut poser les machines quelque part.' },
-  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:20000, energy:0.02, rentDaily:800, family:'housing',
+  // Une salle de 8 baies porte ~380 kW de charge : l'aménagement (froid,
+  // onduleurs, distribution) coûte environ 1 200 $/kW. La location à la
+  // journée est calée sur la colocation en gros — un peu moins cher à la baie
+  // que la colocation au détail, et l'achat s'amortit en quatre ans. Sans
+  // cela, acheter était remboursé en 25 jours et louer n'avait aucun sens.
+  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:450000, energy:0.02, rentDaily:300, family:'housing',
     desc:'Salle climatisée (le cooling consomme). Achat, ou location à la journée.' },
   { id:'rack',       name:'Baie (rack)', unit:'baie', needs:'datacenter', child:'server', capacity:12, cost:1500, energy:0.0002, family:'hardware',
     desc:'Armoire 42U (PDU, switch). Occupe une place en datacenter.' },
-  { id:'server',     name:'Serveur', unit:'serveur', needs:'rack', child:'gpu', capacity:8, cost:8000, energy:0.0004, family:'hardware',
-    eraPrice:[[0,8000],[2025,22000],[2027,15000]],
+  // Un châssis 8 GPU (carte mère bi-socket, alimentation redondée, fond de
+  // panier NVLink) vaut ~25 k$ nu. La flambée mémoire de 2025-2026 l'a
+  // effectivement porté au-delà de 40 k$ avant de redescendre.
+  { id:'server',     name:'Serveur', unit:'serveur', needs:'rack', child:'gpu', capacity:8, cost:25000, energy:0.0004, family:'hardware',
+    eraPrice:[[0,25000],[2025,45000],[2027,32000]],
     desc:'Châssis multi-GPU. Prix tiré vers le haut par la flambée mémoire (2025-2026).' },
 ];
 
@@ -177,20 +189,36 @@ export const INFRA = [
 //  build : délai de mise en service (secondes de jeu à ×1).
 // ---------------------------------------------------------------------
 export const ENERGY = [
-  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.5,  costBase:40,   costMult:1.10, rep:0,
+  // Un raccordement, c'est 10 kW — la puissance d'un branchement, pas d'une
+  // centrale. De quoi allumer le local ; pour faire tourner des cartes, il en
+  // faudra beaucoup, ou il faudra passer au solaire.
+  // Le capex est ancré sur le coût réel au kilowatt installé, et non sur un
+  // chiffre de confort. Avant cette correction, une ferme solaire de 3 MW
+  // coûtait 1 500 $ — 0,50 $/kW, deux mille fois moins que la réalité — et
+  // l'énergie ne coûtait rien : une partie entière se bouclait avec 1 500 $
+  // d'électricité pour 22 GW installés. Le multiplicateur de rareté a été
+  // abaissé en conséquence : c'est le prix de départ qui porte le poids,
+  // plus une escalade artificielle.
+  //
+  //   raccordement ~150 $/kW · solaire ~1 300 $/kW (batteries comprises)
+  //   gaz ~900 $/kW · SMR ~6 500 $/kW · fusion ~15 000 $/kW (tête de série)
+  //
+  // Les O&M suivent la même règle, en $/kW/an : solaire ~18, gaz ~25,
+  // nucléaire ~120, fusion ~100.
+  { id:'grid',    name:'Raccordement réseau',     year:2016, mw:0.01, costBase:1500, costMult:1.06, rep:0,
     fuelMWh:78, omDaily:0, subMWDay:60, build:5,
-    desc:'On tire sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.' },
-  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:1.5e3,costMult:1.11, rep:+1,
-    fuelMWh:0, omDaily:38, build:9,
+    desc:'Un branchement de 10 kW sur le réseau local. Abonnement mensuel proportionnel à la puissance souscrite, plus le kWh consommé.' },
+  { id:'solar',   name:'Ferme solaire + batteries',year:2018, mw:3,   costBase:3.9e6,costMult:1.06, rep:+1,
+    fuelMWh:0, omDaily:150, build:9,
     desc:'Capex élevé, carburant nul : seuls le nettoyage et l’onduleur coûtent. Vert et bien vu.' },
-  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:6e4,  costMult:1.10, rep:-2,
-    fuelMWh:70, omDaily:210, build:16,
+  { id:'gas',     name:'Centrale gaz dédiée',      year:2016, mw:25,  costBase:2.25e7,costMult:1.06, rep:-2,
+    fuelMWh:70, omDaily:1700, build:16,
     desc:'Turbine rapide à déployer : peu de capex, mais le gaz se paie au MWh brûlé.' },
-  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:5e6,  costMult:1.12, rep:+1,
-    fuelMWh:8, omDaily:7200, build:70,
+  { id:'nuclear', name:'SMR nucléaire',            year:2024, mw:300, costBase:1.95e9,costMult:1.07, rep:+1,
+    fuelMWh:8, omDaily:1e5, build:70,
     desc:'Petit réacteur modulaire : capex lourd, combustible négligeable, mais exploitation et sûreté à demeure.' },
-  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:1e9,  costMult:1.10, rep:+3, phase:2,
-    fuelMWh:1, omDaily:9e4, build:110, needsProgram:'fusion',
+  { id:'fusion',  name:'Réacteur à fusion',        year:2028, mw:5000,costBase:7.5e10,costMult:1.06, rep:+3, phase:2,
+    fuelMWh:1, omDaily:1.4e6, build:110, needsProgram:'fusion',
     desc:'Énergie quasi illimitée. Le rêve enfin réalisé — avec une équipe de plasma à demeure.' },
 ];
 
@@ -480,7 +508,10 @@ export const PROGRAMS = [
     phase:1, hideAfter:2,
     from:2026,                          // la recherche s’ouvre à cette date
     researchMonths:10, tuningMonths:10, deployMonths:14,
-    cost:{ money:4e7, research:5e4 },
+    // ITER coûte une vingtaine de milliards de dollars, étalés sur des décennies
+  // et partagés entre trente-cinq pays. Un programme mené par une seule
+  // entreprise ne coûte pas 40 millions.
+  cost:{ money:2.2e10, research:5e4 },
     repeat:false,
     done:'Vos réacteurs à fusion sont désormais constructibles.' },
 
@@ -881,11 +912,15 @@ export const UNIVERSE_MASS = 1.5e53; // matière baryonique observable ~ ordre d
 //  salary = cout journalier ($/jour). Embauches limitees par les RH (headcount).
 // ---------------------------------------------------------------------
 export const EMPLOYEES = [
-  { id:'hr',       name:'Responsable RH',      salary:250, desc:'Chaque RH permet d’embaucher davantage (+5 postes).' },
-  { id:'rnd',      name:'Ingénieur R&D',       salary:400, desc:'Indispensable pour entraîner les modèles avancés. Accélère la recherche.' },
-  { id:'marketer', name:'Marketeur',           salary:250, desc:'Relève le plafond du niveau de marketing (+1 par marketeur).' },
-  { id:'ops',      name:'Ingénieur SRE/Ops',   salary:350, desc:'Fiabilise le parc : +2% de débit compute par ingénieur (max +50%).' },
-  { id:'data',     name:'Data engineer',       salary:300, desc:'Multiplie la production de données d’entraînement.' },
+  // Salaires journaliers, prélevés tous les jours. Le coût annuel implicite
+  // (×365) est calé sur le coût employeur réel du secteur : un chercheur en IA
+  // ne coûte pas 146 k$ par an à son entreprise, il en coûte le double.
+  //   RH ~120 k$ · R&D ~300 k$ · marketing ~130 k$ · SRE ~200 k$ · data ~175 k$
+  { id:'hr',       name:'Responsable RH',      salary:330, desc:'Chaque RH permet d’embaucher davantage (+5 postes).' },
+  { id:'rnd',      name:'Ingénieur R&D',       salary:820, desc:'Indispensable pour entraîner les modèles avancés. Accélère la recherche.' },
+  { id:'marketer', name:'Marketeur',           salary:360, desc:'Relève le plafond du niveau de marketing (+1 par marketeur).' },
+  { id:'ops',      name:'Ingénieur SRE/Ops',   salary:550, desc:'Fiabilise le parc : +2% de débit compute par ingénieur (max +50%).' },
+  { id:'data',     name:'Data engineer',       salary:480, desc:'Multiplie la production de données d’entraînement.' },
 ];
 export const BASE_HEADCOUNT = 3;     // postes disponibles sans RH (le fondateur + amis)
 export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
@@ -919,7 +954,11 @@ export const AUTO_SPEED = { 0: 0, 1: 1, 2: 1.5, 5: 2, 10: 3 };
 // Le 0 n'y figure pas : le gel est un basculement à part (touche F), pour qu'on
 // puisse le lever et retrouver exactement la vitesse qu'on avait choisie.
 export const GAME_SPEEDS = [1, 2, 5, 10];
-export const HIRE_COST = 1000;       // frais d'embauche (annonce, entretiens, materiel, onboarding)
+// Coût par recrutement dans la tech : annonce, temps d'entretien, poste de
+// travail, intégration — sans même compter une commission de chasseur de têtes,
+// qui vaut à elle seule 20 % du salaire annuel. 1 000 $ était un ordre de
+// grandeur trop bas.
+export const HIRE_COST = 5000;
 // Salaires impayes : au bout de 30 jours d'arrieres, les salaries commencent a
 // partir — un depart tous les 2 jours supplementaires, jusqu'a l'entreprise vide.
 export const UNPAID_QUIT_DAYS = 30;
@@ -1082,6 +1121,90 @@ export const SOVEREIGN = {
 };
 
 // ---------------------------------------------------------------------
+//  DETTE — emprunter, puis rembourser. Dix instruments, du crédit bancaire
+//  ordinaire au prêt de sauvetage à 14 %.
+//
+//  RÈGLE CARDINALE : la banque ne perd jamais, et le capital revient.
+//  Comme tous les prix du jeu, les montants sont libellés en dollars CONSTANTS
+//  et convertis à l'inflation au moment où l'argent bouge. Le taux affiché est
+//  donc un taux RÉEL : sans cela, une dette à 6 % sur quinze ans face à une
+//  inflation qui atteint 8 % en 2022 aurait été de l'argent gratuit, et la
+//  banque aurait financé le joueur à fonds perdus.
+//  L'autre moitié de la règle est dans le moteur : à l'échéance, si la
+//  trésorerie ne suffit pas, les actifs sont saisis et vendus jusqu'à couvrir
+//  la somme due. On ne peut pas emprunter et disparaître.
+//
+//  Champs :
+//   · amount   montant maximal, en dollars constants
+//   · rate     taux annuel RÉEL
+//   · years    durée
+//   · every    périodicité de paiement, en mois (1, 3, 6 ou 12)
+//   · amort    'bullet'  intérêts seuls, capital intégral à l'échéance
+//              'linear'  capital amorti à chaque échéance
+//              'grace'   graceYears sans capital, puis amortissement
+//              'pik'     une part des intérêts est capitalisée (la dette enfle)
+//              'rescue'  une fraction du capital chaque année, solde à la fin
+//   · need     valorisation minimale pour que l'offre apparaisse
+//   · postIPO  offre réservée aux sociétés cotées
+//   · distress offre qui n'apparaît QUE si la situation est mauvaise
+export const LOAN_MIN_VALUATION = 5e9;   // en deçà, aucune banque ne décroche le téléphone
+export const LOANS = [
+  { id:'senior', name:'Crédit corporate senior', lender:'Grande banque commerciale',
+    amount:1.2e9, rate:0.051, years:5, every:3, amort:'bullet', need:5e9,
+    repay:'Intérêts trimestriels, capital intégral à l’échéance',
+    desc:'Simple et prévisible, mais un mur de remboursement vous attend à la fin.' },
+
+  { id:'revolver', name:'Ligne de crédit revolving', lender:'Consortium de banques',
+    amount:2.0e9, rate:0.056, years:4, every:3, amort:'bullet', revolving:true, commitment:0.004,
+    need:8e9,
+    repay:'Libre : tirez et remboursez à volonté',
+    desc:'De quoi passer un trou de trésorerie. Commission de 0,4 % par an sur la part non tirée : la banque facture aussi ce que vous n’utilisez pas.' },
+
+  { id:'expansion', name:'Prêt d’expansion', lender:'Banque d’investissement',
+    amount:2.5e9, rate:0.048, years:7, every:3, amort:'linear', need:2e10,
+    repay:'Capital amorti chaque trimestre',
+    desc:'Coût total faible, mais des sorties de trésorerie régulières et lourdes.' },
+
+  { id:'bonds', name:'Obligations institutionnelles', lender:'Fonds de pension et assureurs',
+    amount:3.0e9, rate:0.059, years:10, every:6, amort:'bullet', postIPO:true, prepayFee:0.03,
+    need:5e10,
+    repay:'Coupon semestriel, capital à maturité',
+    desc:'Une visibilité très longue. Le remboursement anticipé existe, mais se paie : 3 % du capital rendu, pour dédommager le porteur du coupon qu’il perd.' },
+
+  { id:'highyield', name:'Dette high-yield', lender:'Fonds obligataires spéculatifs',
+    amount:1.5e9, rate:0.092, years:5, every:6, amort:'bullet', postIPO:true, need:2e10,
+    repay:'Intérêts semestriels, capital à l’échéance',
+    desc:'Accessible même avec des comptes fragiles — et facturée en conséquence.' },
+
+  { id:'secured', name:'Prêt garanti par actifs', lender:'Banque spécialisée',
+    amount:1.8e9, rate:0.043, years:6, every:1, amort:'linear', secured:true, need:1e10,
+    repay:'Mensualités : capital et intérêts',
+    desc:'Le meilleur taux du marché, parce que vos machines en sont la garantie : en cas de défaut, elles sont saisies en premier.' },
+
+  { id:'infra', name:'Financement infrastructure', lender:'Consortium bancaire et fonds infra',
+    amount:5.0e9, rate:0.060, years:15, every:6, amort:'grace', graceYears:2, postIPO:true,
+    need:1e11,
+    repay:'Deux ans de grâce, puis amortissement semestriel',
+    desc:'De quoi financer un chantier considérable. Le remboursement est différé, l’engagement dure quinze ans.' },
+
+  { id:'mezzanine', name:'Prêt mezzanine', lender:'Fonds de private debt',
+    amount:1.0e9, rate:0.115, years:6, every:12, amort:'pik', pik:0.30, need:3e10,
+    repay:'Intérêts annuels, 30 % capitalisés, capital à l’échéance',
+    desc:'Peu d’argent à sortir tout de suite. En échange, la dette grossit toute seule : ce qui n’est pas payé s’ajoute au capital.' },
+
+  { id:'convertible', name:'Dette convertible', lender:'Fonds technologique',
+    amount:2.2e9, rate:0.035, years:5, every:12, amort:'bullet', dilution:0.12, need:4e10,
+    repay:'Intérêts annuels, puis capital ou conversion en actions',
+    desc:'Un taux imbattable, contre une option sur votre capital : à l’échéance le fonds peut convertir, et votre valorisation par action se dilue de 12 %.' },
+
+  { id:'rescue', name:'Crédit de sauvetage', lender:'Fonds opportuniste',
+    amount:4.0e9, rate:0.140, years:3, every:3, amort:'rescue', rescueYearly:0.20, distress:true,
+    need:1e10,
+    repay:'Intérêts trimestriels, 20 % du capital par an, solde à la fin',
+    desc:'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.' },
+];
+
+// ---------------------------------------------------------------------
 //  CALENDRIER DE SIMULATION
 //  1 année de simulation = 5 minutes de jeu au rythme normal (× la vitesse ⏩)
 // ---------------------------------------------------------------------
@@ -1104,7 +1227,7 @@ export const HELP = [
   { b:'But :', p:'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.' },
   { b:'Phase 1 — Startup :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
   { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
-  { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
+  { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
   { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
   { b:'🏗️ Délais :', p:'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.' },
   { b:'Équipe :', p:'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.' },
@@ -1118,6 +1241,7 @@ export const HELP = [
   { b:'⌨️ Raccourcis :', p:'**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.' },
   { b:'Automatisation :', p:'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.' },
   { b:'📋 Directives permanentes :', p:'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.' },
+  { b:'🏦 Dette :', p:'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.' },
   { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },
   { b:'Allocation :', p:'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.' },
   { b:'Calendrier :', p:'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.' },

@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 084 chaînes × 7 langues = 7 588 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 159 chaînes × 7 langues = 8 113 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -84,7 +84,7 @@ de son année.
   neuromorphique, supraconducteur, quantique-hybride, énergie du vide).
 - **Chaîne d'hébergement** : un GPU tient dans un *serveur* → *baie* → *datacenter* →
   *immobilier*. Achat, **location de datacenter** ou **colocation** au coût journalier.
-- **Flambée mémoire 2025-2026** : le prix des serveurs bondit de $8k à $22k.
+- **Flambée mémoire 2025-2026** : le prix des serveurs bondit de $25k à $45k.
 - **Délais de mise en service** : rien n'est instantané. Toute commande part en **chantier**
   pour une durée croissant avec sa **complexité** (`base + k·log₁₀(prix)`) — quelques secondes
   pour une carte gamer, un mois de simulation pour un datacenter, plusieurs pour un SMR.
@@ -92,8 +92,9 @@ de son année.
   place a disparu entre-temps (datacenter loué rendu, colocation résiliée), la mise en service
   est **refusée et la commande remboursée au centime payé**, inflation comprise. Le parc ne
   peut donc jamais dépasser sa capacité d'hébergement : plus de cartes logées nulle part.
-- **Énergie — trois natures de coût bien séparées** : le **capex** (unique, à la commande),
-  l'**exploitation O&M** (fixe, journalier, dû même à l'arrêt : $7 200/j pour un SMR),
+- **Énergie — trois natures de coût bien séparées** : le **capex** (unique, à la commande,
+  ancré sur le $/kW réel — voir plus bas), l'**exploitation O&M** (fixe, journalier, dû même à
+  l'arrêt : $100 000/j pour un SMR de 300 MW, soit $122/kW/an),
   le **combustible** (variable, au MWh soutiré : gaz $70/MWh, réseau $78, solaire $0) et
   l'**abonnement réseau** proportionnel à la **puissance souscrite** ($60/MW/jour).
   Le mix est servi en **ordre de mérite** (le moins cher d'abord).
@@ -103,13 +104,16 @@ de son année.
 - **Équipe** : les RH ouvrent des postes, les ingénieurs R&D débloquent l'entraînement des
   modèles, les marketeurs relèvent le plafond marketing, Ops et Data boostent le parc.
   Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant.
-  Chaque **embauche coûte $1 000** (annonce, entretiens, poste de travail, intégration).
+  Chaque **embauche coûte $5 000** (annonce, entretiens, poste de travail, intégration).
 - **Salaires impayés** : trésorerie à zéro = salaires non versés. Un compteur d'arriérés
   s'affiche, et au bout de **30 jours** quelqu'un **démissionne** — puis un départ tous les
   2 jours, jusqu'à l'entreprise vide. Repayez avant, et l'équipe reste.
-- **On part de rien** : **$30 000** de capital, **aucun serveur, aucune baie**, et surtout
+- **On part de rien** : **$50 000** de capital, **aucun serveur, aucune baie**, et surtout
   **0 kW** — pas le moindre raccordement électrique. Le premier geste n'est pas d'acheter un
-  GPU, c'est d'aller chercher du courant, puis de quoi le loger. Une actualité — la
+  GPU, c'est d'aller chercher du courant, puis de quoi le loger. Un raccordement réseau, c'est
+  **10 kW** : la puissance d'un branchement, pas d'une centrale. Le bâtiment et sa salle en
+  consomment déjà 25 — il en faut trois avant même d'avoir allumé une carte, et il faudra
+  passer au solaire pour aller plus loin. Une actualité — la
   *subvention énergie pour les jeunes pousses* — donne un vrai coup de pouce (les titres de
   presse ne font pas que commenter : certains débloquent quelque chose).
 - **Sous-effectif = incidents** : une équipe déséquilibrée se paie. Moins de **10 % d'Ops/SRE**
@@ -121,6 +125,10 @@ de son année.
   deux fois le même tant qu'il reste des inédits.
 - **Charges journalières** affichées et prélevées en continu, ventilées par nature.
 - **Tokens invendus = perdus** : la production doit suivre la demande, pas l'inverse.
+- **Dette** : dix instruments réels, du crédit corporate senior à 5,1 % au prêt de sauvetage à
+  14 %, en passant par la ligne revolving, les obligations institutionnelles, la mezzanine à
+  intérêts capitalisés et la convertible qui dilue. Chacun a sa mécanique — *bullet*,
+  amortissement linéaire, deux ans de grâce, 20 % du capital par an — et son piège.
 - **Bourse** (débloquée à $100k) : trois profils de risque, mouvement brownien géométrique.
   Un **indice de marché** vit indépendamment de vos positions et alimente un **graphe** —
   le même tirage aléatoire anime l'indice tracé et votre portefeuille, si bien que la courbe
@@ -148,6 +156,100 @@ une décision — et un paiement.
   jusqu'à ×3. C'est enfin un objectif, plus un décor : l'ancien « Collecteur Dyson » libellé
   en dollars, dans une phase où l'argent est masqué et où l'énergie n'est plus une contrainte,
   ne servait à rien.
+
+## 💵 Les prix sont ceux du monde réel
+
+Chaque valeur chiffrée du jeu est ancrée sur une référence publique, et un audit complet a
+corrigé celles qui ne l'étaient pas.
+
+**L'énergie était offerte.** Une ferme solaire de 3 MW coûtait $1 500 — soit **$0,50 par kW
+installé**, deux mille fois moins que la réalité. Conséquence mesurée sur une partie complète :
+le joueur dépensait **$1 500 d'électricité en toute la phase 1** et terminait avec 22 GW.
+Le capex est désormais calé sur le coût réel au kilowatt, et le multiplicateur de rareté
+abaissé en conséquence — c'est le prix de départ qui porte le poids, plus une escalade
+artificielle.
+
+| Source | Puissance | Capex | $/kW | Référence réelle |
+|---|---:|---:|---:|---:|
+| Raccordement réseau | 10 kW | $1 500 | 150 | branchement industriel |
+| Ferme solaire + batteries | 3 MW | $3,9 M | 1 300 | ~$1 000/kW + stockage |
+| Centrale gaz dédiée | 25 MW | $22,5 M | 900 | turbine à cycle ouvert |
+| SMR nucléaire | 300 MW | $1,95 Md | 6 500 | petit réacteur modulaire |
+| Réacteur à fusion | 5 GW | $75 Md | 15 000 | tête de série |
+
+Les coûts d'exploitation suivent la même règle, en $/kW/an : solaire 18, gaz 25, nucléaire 122,
+fusion 102. Le **programme de fusion** livrait 20 GW pour $40 M — $2 le kW installé, moins cher
+que le raccordement d'un pavillon. Il coûte maintenant **$22 milliards**, l'ordre de grandeur
+d'ITER, et livre **une tranche de tête de 5 GW** : ce qu'il débloque vraiment, c'est le droit
+d'en construire d'autres.
+
+**L'hébergement se contredisait.** Un datacenter s'achetait $20 000 et se louait $800/jour :
+l'achat était remboursé en **25 jours**, ce qui rendait la location absurde. Et louer une salle
+entière coûtait $100 par baie et par jour quand la colocation au détail en demandait $40 — le
+gros était plus cher que le détail. Désormais une salle de 8 baies (~380 kW de charge) coûte
+$450 000 à l'aménagement, se loue $300/jour, et l'achat s'amortit en **quatre ans**. Le bâtiment
+qui accueille 4 salles — 3 072 cartes, ~1,5 MW — passe de $30 000 à $1,2 M. Un châssis 8 GPU
+passe de $8 000 à $25 000, son vrai prix nu.
+
+**Les salaires étaient sous-évalués de moitié.** Un chercheur en IA coûtait $146 k par an à son
+employeur ; il en coûte le double. Les cinq métiers sont recalés sur le coût employeur réel :
+RH $120 k, R&D $299 k, marketing $131 k, SRE $201 k, data engineer $175 k. Le coût par
+recrutement passe de $1 000 à $5 000 — annonce, entretiens, poste de travail, intégration.
+
+**Les caractéristiques matérielles** ont été revérifiées une à une : RTX 5090 à 575 W (et non
+650), GTX grand public à 200 W, A100 80 Go à $15 000. Prix de catalogue et TDP constructeur.
+
+**Ce qui n'a délibérément pas été touché** : le coût d'entraînement des modèles. GPT-3 a
+réellement coûté ~$4,6 M et le jeu en demande $300. L'écart est assumé — vous n'êtes pas
+OpenAI mais un laboratoire qui démarre dans un garage avec $50 000, et aucune courbe d'argent
+ne peut faire tenir un budget d'entraînement réel dans les dix premières minutes. Ce sont vos
+modèles, à votre échelle, pas les leurs.
+
+Tout cela a été vérifié en rejouant une partie complète après chaque correction : **83,8 min,
+super-intelligence atteinte, transitions de phase inchangées**.
+
+## 🏦 La dette — et pourquoi la banque ne perd jamais
+
+Dix instruments, tirés de ce qui existe vraiment : crédit corporate senior, ligne revolving,
+prêt d'expansion amorti au trimestre, obligations institutionnelles à dix ans, dette
+high-yield, prêt garanti par actifs, financement infrastructure sur quinze ans avec deux ans
+de grâce, mezzanine à intérêts capitalisés, convertible, et le crédit de sauvetage à 14 % qui
+n'apparaît **que lorsque ça va mal**. Trois d'entre eux exigent une **société cotée**.
+
+L'affichage est volontairement maigre — nom, montant, taux. **Le détail vit dans une boîte qui
+s'ouvre au survol** : prêteur, durée, mécanique de remboursement, et surtout le **coût total du
+crédit**, le seul chiffre qui permette de comparer un 4,8 % amorti dès le premier trimestre à
+un 5,9 % payé in fine. Chaque prêt en cours affiche **sa prochaine échéance et son montant**,
+et porte ses propres boutons : tirer, rembourser la moitié, solder.
+
+La règle qui gouverne tout le système : **la banque ne perd jamais, et le capital revient.**
+Elle tient en deux moitiés. D'abord, les montants sont libellés en **dollars constants**, comme
+tous les prix du jeu — le taux affiché est donc un taux *réel*. Sans cela, une dette à 6 % sur
+quinze ans face à une inflation qui atteint 8 % en 2022 aurait été de l'argent gratuit, et
+emprunter au maximum aurait été la stratégie dominante. Ensuite, à l'échéance, **si la
+trésorerie ne suffit pas, les actifs sont saisis** : les cartes d'abord, puis l'infrastructure.
+Ce qui reste dû après la saisie ne s'efface pas — il s'ajoute au capital et continue de porter
+intérêt. Au passage en phase 2, où l'argent cesse d'exister, tout est soldé avant.
+
+C'est vérifié, pas espéré : un test rejoue chacun des dix prêts sur toute sa durée et calcule
+le **taux de rendement interne** des flux vus par le prêteur. Aucun ne descend sous son taux
+affiché.
+
+| Instrument | Taux | Durée | TRI réel mesuré |
+|---|---:|---:|---:|
+| Prêt garanti par actifs | 4,3 % | 6 ans | 4,39 % |
+| Prêt d'expansion | 4,8 % | 7 ans | 4,89 % |
+| Crédit corporate senior | 5,1 % | 5 ans | 5,20 % |
+| Ligne revolving | 5,6 % | 4 ans | 5,72 % |
+| Obligations institutionnelles | 5,9 % | 10 ans | 5,99 % |
+| Financement infrastructure | 6,0 % | 15 ans | 6,09 % |
+| Dette high-yield | 9,2 % | 5 ans | 9,41 % |
+| Prêt mezzanine | 11,5 % | 6 ans | 11,50 % |
+| Crédit de sauvetage | 14,0 % | 3 ans | 14,75 % |
+| Dette convertible | 3,5 % | 5 ans | 3,50 % + dilution |
+
+L'écart au-dessus du taux affiché n'est pas une erreur : c'est la capitalisation périodique.
+Un 5,1 % payé chaque trimestre rend 5,20 % sur l'année.
 
 ## ₿ Crypto — un marché qui vous prend vos cartes
 
