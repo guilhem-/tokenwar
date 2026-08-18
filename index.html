@@ -57,7 +57,6 @@
   <!-- ============ GAME GRID ============ -->
   <main class="game-grid">
 
-    <!-- ---------- LEFT : PRODUCTION ---------- -->
     <section class="col col-left">
 
       <div class="panel" id="panel-produce">
@@ -83,13 +82,6 @@
             <canvas id="spark" height="46" data-i18n-aria="Historique de production (tokens/s)" aria-label="Historique de production (tokens/s)"></canvas>
             <div class="spark-legend"><span class="spark-dot tok"></span> tokens/s <span class="spark-dot cash"></span> $/s</div>
           </div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-auto">
-        <div class="panel-title" data-i18n="Automatisation">Automatisation</div>
-        <div class="panel-body">
-          <div class="item-list" id="auto-list"></div>
         </div>
       </div>
 
@@ -122,6 +114,13 @@
         </div>
       </div>
 
+      <div class="panel" id="panel-auto">
+        <div class="panel-title" data-i18n="Automatisation">Automatisation</div>
+        <div class="panel-body">
+          <div class="item-list" id="auto-list"></div>
+        </div>
+      </div>
+
       <div class="panel" id="panel-funding">
         <div class="panel-title" data-i18n="Financement">Financement</div>
         <div class="panel-body">
@@ -136,6 +135,141 @@
           <div class="item-list" id="funding-list"></div>
         </div>
       </div>
+
+      <div class="panel" id="panel-team">
+        <div class="panel-title" data-i18n="Équipe">Équipe</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Effectif">Effectif</span>
+            <span class="num" id="headcount">0 / 3</span>
+          </div>
+          <div class="item-list" id="team-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-charges">
+        <div class="panel-title" data-i18n="Charges journalières">Charges journalières</div>
+        <div class="panel-body">
+          <div class="meter-row"><span class="text-muted">⚡ <span data-i18n="Énergie consommée">Énergie consommée</span> <i class="hint" data-i18n="variable">variable</i></span><span class="num" id="charge-elec-var">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🔧 <span data-i18n="Exploitation &amp; O&amp;M">Exploitation &amp; O&amp;M</span> <i class="hint" data-i18n="fixe">fixe</i></span><span class="num" id="charge-elec-fix">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🔌 <span data-i18n="Abonnement réseau">Abonnement réseau</span> <i class="hint" data-i18n="puissance souscrite">puissance souscrite</i></span><span class="num" id="charge-elec-sub">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">👥 <span data-i18n="Salaires">Salaires</span></span><span class="num" id="charge-salary">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted">🏢 <span data-i18n="Loyers">Loyers</span></span><span class="num" id="charge-rent">$0 /j</span></div>
+          <div class="meter-row charge-total"><span class="text-muted" data-i18n="Total">Total</span><span class="num" id="charge-total">$0 /j</span></div>
+          <div class="meter-row"><span class="text-muted" data-i18n="soit">soit</span><span class="num" id="charge-sec">$0 /s</span></div>
+          <div class="meter-row arrears-row hidden" id="charge-arrears" data-i18n-title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir." title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir.">
+            <span class="text-muted">💸 <span data-i18n="Salaires impayés">Salaires impayés</span></span><span class="num" id="charge-arrears-value">—</span>
+          </div>
+          <div class="meter-row infl-row" data-i18n-title="L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie." title="L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.">
+            <span class="text-muted">📈 <span data-i18n="Inflation">Inflation</span></span><span class="num" id="charge-infl">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-alloc">
+        <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
+        <div class="panel-body" id="alloc-body"></div>
+      </div>
+
+      <div class="panel" id="panel-addendum">
+        <div class="panel-title" data-i18n="Addendum">Addendum</div>
+        <div class="panel-body">
+          <div class="item-list" id="addendum-list"></div>
+          <div class="item-list" id="sovereign-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-projects">
+        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
+        <div class="panel-body">
+          <div class="item-list" id="optim-list"></div>
+          <div class="item-list" id="project-list"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="col col-center">
+
+      <div class="panel" id="panel-hosting">
+        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
+        <div class="panel-body">
+          <div class="item-list" id="infra-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-compute">
+        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
+        <div class="panel-body">
+          <div class="meter-row" id="gpu-cap-row">
+            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
+            <span class="num" id="gpu-cap">0 / 0</span>
+          </div>
+          <div class="item-list" id="gpu-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-energy">
+        <div class="panel-title" data-i18n="Énergie">Énergie</div>
+        <div class="panel-body">
+          <div class="meter-row energy-meter">
+            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
+            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
+            <span class="num" id="energy-load-value">0 / 0 MW</span>
+          </div>
+          <div class="item-list" id="energy-list"></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-programs">
+        <div class="panel-title" data-i18n="Grands programmes">Grands programmes</div>
+        <div class="panel-body">
+          <div class="item-list" id="program-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-training">
+        <div class="panel-title" data-i18n="R&amp;D — Entraînement de modèles">R&amp;D — Entraînement de modèles</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Recherche">Recherche</span>
+            <span class="num" id="research-value">0</span>
+            <span class="text-muted">·</span>
+            <span class="num" id="research-rate">0 /s</span>
+          </div>
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Données">Données</span>
+            <span class="num" id="data-value">0</span>
+          </div>
+          <div class="item-list" id="train-list"></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-cosmos">
+        <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
+        <div class="panel-body">
+          <div class="universe-wrap">
+            <canvas id="universe-map" height="150" data-i18n-aria="Carte de l’univers converti" aria-label="Carte de l’univers converti"></canvas>
+            <div class="universe-legend">
+              <span><i class="dot raw"></i> <span data-i18n="matière brute">matière brute</span></span>
+              <span><i class="dot done"></i> <span data-i18n="convertie en énergie">convertie en énergie</span></span>
+              <span class="num" id="universe-pct">0,000 %</span>
+            </div>
+          </div>
+          <div id="cosmos-body"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-press">
+        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
+        <div class="panel-body">
+          <div class="headlines" id="headlines"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="col col-right">
 
       <div class="panel" id="panel-stock">
         <div class="panel-title" data-i18n="Bourse">Bourse</div>
@@ -221,145 +355,6 @@
         </div>
       </div>
 
-      <div class="panel" id="panel-team">
-        <div class="panel-title" data-i18n="Équipe">Équipe</div>
-        <div class="panel-body">
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Effectif">Effectif</span>
-            <span class="num" id="headcount">0 / 3</span>
-          </div>
-          <div class="item-list" id="team-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-charges">
-        <div class="panel-title" data-i18n="Charges journalières">Charges journalières</div>
-        <div class="panel-body">
-          <div class="meter-row"><span class="text-muted">⚡ <span data-i18n="Énergie consommée">Énergie consommée</span> <i class="hint" data-i18n="variable">variable</i></span><span class="num" id="charge-elec-var">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">🔧 <span data-i18n="Exploitation &amp; O&amp;M">Exploitation &amp; O&amp;M</span> <i class="hint" data-i18n="fixe">fixe</i></span><span class="num" id="charge-elec-fix">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">🔌 <span data-i18n="Abonnement réseau">Abonnement réseau</span> <i class="hint" data-i18n="puissance souscrite">puissance souscrite</i></span><span class="num" id="charge-elec-sub">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">👥 <span data-i18n="Salaires">Salaires</span></span><span class="num" id="charge-salary">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted">🏢 <span data-i18n="Loyers">Loyers</span></span><span class="num" id="charge-rent">$0 /j</span></div>
-          <div class="meter-row charge-total"><span class="text-muted" data-i18n="Total">Total</span><span class="num" id="charge-total">$0 /j</span></div>
-          <div class="meter-row"><span class="text-muted" data-i18n="soit">soit</span><span class="num" id="charge-sec">$0 /s</span></div>
-          <div class="meter-row arrears-row hidden" id="charge-arrears" data-i18n-title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir." title="Sans trésorerie, les salaires ne sont plus versés. Au bout de 30 jours d’arriérés, l’équipe commence à partir.">
-            <span class="text-muted">💸 <span data-i18n="Salaires impayés">Salaires impayés</span></span><span class="num" id="charge-arrears-value">—</span>
-          </div>
-          <div class="meter-row infl-row" data-i18n-title="L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie." title="L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.">
-            <span class="text-muted">📈 <span data-i18n="Inflation">Inflation</span></span><span class="num" id="charge-infl">—</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- PHASE 2+ : allocation -->
-      <div class="panel hidden" id="panel-alloc">
-        <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
-        <div class="panel-body" id="alloc-body"></div>
-      </div>
-
-    </section>
-
-    <!-- ---------- CENTER : INFRASTRUCTURE ---------- -->
-    <section class="col col-center">
-
-      <div class="panel" id="panel-hosting">
-        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
-        <div class="panel-body">
-          <div class="item-list" id="infra-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-compute">
-        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
-        <div class="panel-body">
-          <div class="meter-row" id="gpu-cap-row">
-            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
-            <span class="num" id="gpu-cap">0 / 0</span>
-          </div>
-          <div class="item-list" id="gpu-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-energy">
-        <div class="panel-title" data-i18n="Énergie">Énergie</div>
-        <div class="panel-body">
-          <div class="meter-row energy-meter">
-            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
-            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
-            <span class="num" id="energy-load-value">0 / 0 MW</span>
-          </div>
-          <div class="item-list" id="energy-list"></div>
-        </div>
-      </div>
-
-      <div class="panel hidden" id="panel-programs">
-        <div class="panel-title" data-i18n="Grands programmes">Grands programmes</div>
-        <div class="panel-body">
-          <div class="item-list" id="program-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-training">
-        <div class="panel-title" data-i18n="R&amp;D — Entraînement de modèles">R&amp;D — Entraînement de modèles</div>
-        <div class="panel-body">
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Recherche">Recherche</span>
-            <span class="num" id="research-value">0</span>
-            <span class="text-muted">·</span>
-            <span class="num" id="research-rate">0 /s</span>
-          </div>
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Données">Données</span>
-            <span class="num" id="data-value">0</span>
-          </div>
-          <div class="item-list" id="train-list"></div>
-        </div>
-      </div>
-
-      <!-- PHASE 3+ : cosmos -->
-      <div class="panel hidden" id="panel-cosmos">
-        <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
-        <div class="panel-body">
-          <div class="universe-wrap">
-            <canvas id="universe-map" height="150" data-i18n-aria="Carte de l’univers converti" aria-label="Carte de l’univers converti"></canvas>
-            <div class="universe-legend">
-              <span><i class="dot raw"></i> <span data-i18n="matière brute">matière brute</span></span>
-              <span><i class="dot done"></i> <span data-i18n="convertie en énergie">convertie en énergie</span></span>
-              <span class="num" id="universe-pct">0,000 %</span>
-            </div>
-          </div>
-          <div id="cosmos-body"></div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ---------- RIGHT : PROJECTS & LOG ---------- -->
-    <section class="col col-right">
-
-      <div class="panel" id="panel-addendum">
-        <div class="panel-title" data-i18n="Addendum">Addendum</div>
-        <div class="panel-body">
-          <div class="item-list" id="addendum-list"></div>
-          <div class="item-list" id="sovereign-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-projects">
-        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
-        <div class="panel-body">
-          <div class="item-list" id="optim-list"></div>
-          <div class="item-list" id="project-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-press">
-        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
-        <div class="panel-body">
-          <div class="headlines" id="headlines"></div>
-        </div>
-      </div>
-
       <div class="panel" id="panel-log">
         <div class="panel-title" data-i18n="Journal">Journal</div>
         <div class="panel-body">
@@ -368,6 +363,7 @@
       </div>
 
     </section>
+
   </main>
 
   <!-- ============ EVENT MODAL ============ -->

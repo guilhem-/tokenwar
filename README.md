@@ -368,14 +368,18 @@ toujours la même carte.
   l'enjeu est d'y penser. **Une seule est proposée à la fois**, comme les percées.
 - **Raccourcis clavier.** **Espace** passe à la vitesse suivante ; **F** gèle la partie et la
   relâche exactement à la vitesse qu'elle avait — geler ne coûte pas le réglage qu'on avait
-  choisi. Gelé, le temps s'arrête net mais l'interface reste vivante : on lit, on compare, on
-  achète, une fine bordure froide rappelle l'état. Côté achats : **G** commande la meilleure
+  choisi. Gelé, **plus rien n'avance** : ni les tokens, ni le calendrier, ni la recherche, ni
+  les entraînements en cours. L'interface, elle, reste vivante : on lit, on compare, on achète,
+  et une fine bordure froide rappelle l'état. Côté achats : **G** commande la meilleure
   carte qu'on puisse à la fois s'offrir *et* loger, **H** le niveau d'hébergement qui manque
   réellement (en remontant serveur → baie → datacenter → immobilier), **B** la percée proposée,
   **M** un cran de marketing. La ligne achetée clignote : un raccourci n'est jamais une action
   invisible. Rien n'est intercepté dans un champ de saisie ni sous Ctrl.
 - **Chiffres exacts au survol** : l'en-tête abrège (`12,4 Md`) parce que ça se lit vite, mais
-  survoler un chiffre en donne **toutes les décimales**, groupées selon la langue. Au-delà de
+  survoler un chiffre en donne **toutes les décimales**, groupées selon la langue. L'infobulle
+  n'est réécrite qu'une fois toutes les **3 secondes** : écrire `title` referme le tooltip
+  natif, et à 10 images par seconde sur des chiffres qui bougent en continu, il était détruit
+  avant d'avoir pu s'afficher — on ne le voyait jamais. Au-delà de
   quinze chiffres significatifs les zéros sont explicites plutôt que menteurs — un `double` ne
   code pas au-delà, et `1e60` ne s'affiche pas en `999 999 …949 387`.
 - **Graphe de production** (tokens/s et $/s, échelle log).
@@ -430,6 +434,25 @@ RVB, vague de particules, onde de choc, inversion brève, pluie de tokens, tunne
 grille synthwave. Chacune dure **moins de 5 secondes**, n'intercepte jamais un clic, et le
 tirage est **sans remise** : les douze passent avant qu'une seule revienne. La presse s'en
 mêle aussi. `prefers-reduced-motion` désactive les animations au profit des seuls titres.
+
+## 🧱 Trois colonnes de hauteur comparable
+
+L'écran de jeu est une grille de trois colonnes, et leur contenu ne se répartit pas tout seul :
+chaque panneau vit dans celle où il a été écrit. À force d'ajouts, la première avait dérivé —
+elle mesurait **2 850 px quand la troisième en faisait 578**, un facteur cinq.
+
+La répartition a été refaite sur une mesure, pas à vue d'œil : un script rend l'interface sous
+jsdom en milieu de partie, puis estime la hauteur de chaque panneau en respectant les
+**plafonds CSS** — une liste qui déborde ne grandit pas, elle défile. C'est ce qui distingue un
+panneau de 14 lignes d'un panneau de 4 : le premier est plafonné, pas trois fois plus haut.
+
+- **Gauche — piloter l'entreprise** : production, marché, automatisation, financement, équipe,
+  charges, allocation, addendum, percées.
+- **Centre — l'infrastructure et la recherche** : hébergement, calcul, énergie, grands
+  programmes, entraînement, cosmos, et La Une.
+- **Droite — les marchés et le journal** : bourse, crypto, dette, journal de bord.
+
+Résultat mesuré : **1 910 / 2 042 / 1 862 px**, soit un écart de 1,10 au lieu de 4,93.
 
 ## Tech
 

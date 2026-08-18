@@ -3,6 +3,7 @@
 // =====================================================================
 import { Game } from './game.js';
 import { UI } from './ui.js';
+import { simSpeed } from './util.js';
 import { init as initI18n, t } from './i18n.js';
 
 // la langue doit être choisie AVANT toute construction d'interface :
@@ -30,7 +31,7 @@ function loop(now) {
   let dt = (now - last) / 1000;
   last = now;
   if (dt > 0.5) dt = 0.5;            // évite les sauts après un onglet en arrière-plan
-  const steps = window.__speed || 1;
+  const steps = simSpeed(window.__speed);   // 0 = gelé (voir simSpeed : `|| 1` trahissait le gel)
   // on subdivise pour rester stable à haute vitesse
   const simDt = dt * steps;
   let remaining = simDt;

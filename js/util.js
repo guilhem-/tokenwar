@@ -105,6 +105,17 @@ export function fmtDigits(n) {
   return (neg ? '-' : '') + grouped;
 }
 
+// Combien de temps SIMULÉ pour une seconde réelle, à partir de la vitesse
+// choisie. Zéro veut dire zéro : la partie est gelée.
+//
+// Ce garde-fou n'est pas décoratif. La boucle écrivait `window.__speed || 1`,
+// et en JavaScript 0 est falsy : à vitesse zéro l'expression rendait 1, si
+// bien que le jeu tournait à vitesse normale pendant qu'il affichait « figé ».
+// Les tokens continuaient de tomber et les entraînements d'avancer.
+export function simSpeed(speed) {
+  return typeof speed === 'number' && isFinite(speed) && speed >= 0 ? speed : 1;
+}
+
 export function clamp(x, lo, hi) {
   return Math.max(lo, Math.min(hi, x));
 }

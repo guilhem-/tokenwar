@@ -11,6 +11,8 @@ import { t, td, LANGS, lang, setLang, needsPicker, onChange } from './i18n.js';
 
 const $ = id => document.getElementById(id);
 const AUTO_MIN_OWNED = 20;   // seuil d'apparition du bouton ⟳ auto (même palier que ×10)
+// Rafraîchissement des infobulles de l'en-tête, en secondes. Voir tip().
+const TIP_REFRESH = 3;
 const FUNDING_VISIBLE = 2;   // levées affichées à la fois : la prochaine, et celle d'après
 
 export class UI {
@@ -289,7 +291,17 @@ export class UI {
   // survolé referme le tooltip natif à chaque écriture, et le rendu tourne à
   // 10 images par seconde.
   tip(el, txt) {
-    if (el && el.title !== txt) el.title = txt;
+    if (!el) return;
+    // Réécrire `title` referme le tooltip natif en cours d'affichage. Le rendu
+    // tourne à 10 images par seconde et ces chiffres changent en continu :
+    // l'infobulle était donc détruite avant d'avoir eu le temps d'apparaître,
+    // et on ne la voyait jamais. On ne la rafraîchit qu'une fois toutes les
+    // TIP_REFRESH secondes — assez pour rester juste, assez peu pour laisser
+    // le navigateur l'afficher.
+    const now = Date.now();
+    if (el._tipAt && now - el._tipAt < TIP_REFRESH * 1000) return;
+    el._tipAt = now;
+    if (el.title !== txt) el.title = txt;
   }
   flashRow(row) {
     if (!row || !row.el) return;

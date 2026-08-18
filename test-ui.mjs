@@ -1303,6 +1303,42 @@ await step('F : gèle, puis rend la vitesse d avant', () => {
   ui.setSpeed(1);
 });
 
+await step('gel : la boucle ne fait plus avancer la partie', async () => {
+  // Le bug que ce test aurait dû attraper : la boucle écrivait
+  // `window.__speed || 1`, et 0 est falsy en JavaScript. À vitesse zéro
+  // l'expression rendait 1 et le jeu tournait à vitesse normale en affichant
+  // « figé » : les tokens tombaient, les entraînements avançaient.
+  const { simSpeed } = await import('./js/util.js');
+  if (simSpeed(0) !== 0) throw new Error('vitesse zéro doit valoir zéro, pas ' + simSpeed(0));
+  for (const [v, att] of [[1,1],[2,2],[5,5],[10,10],[undefined,1],[null,1],[NaN,1],[-3,1]])
+    if (simSpeed(v) !== att) throw new Error(`simSpeed(${v}) = ${simSpeed(v)}, attendu ${att}`);
+
+  // et de bout en bout : on rejoue ce que fait la boucle principale
+  const g2 = new Game(null);
+  g2.state.phase = 1;
+  g2.state.gpuCounts = { [GPUS[0].id]: 500 };
+  g2.state.energyCap = 1e6;
+  g2.state.money = 1e9;
+  const boucle = (vitesse, secondes) => {
+    g2.speed = vitesse;
+    const pas = simSpeed(vitesse);
+    let reste = secondes * pas;
+    while (reste > 0) { const d = Math.min(0.25, reste); g2.tick(d); reste -= d; }
+  };
+  // gelé : rien ne doit bouger, ni les tokens, ni le calendrier, ni la recherche
+  const av = { tok: g2.state.lifetimeTokens, t: g2.state.playSeconds,
+               rech: g2.state.research, argent: g2.state.money };
+  boucle(0, 30);
+  if (g2.state.lifetimeTokens !== av.tok) throw new Error('les tokens ont bougé pendant le gel');
+  if (g2.state.playSeconds !== av.t) throw new Error('le calendrier a avancé pendant le gel');
+  if (g2.state.research !== av.rech) throw new Error('la recherche a progressé pendant le gel');
+  if (g2.state.money !== av.argent) throw new Error('la trésorerie a bougé pendant le gel');
+  // dégelé : tout repart
+  boucle(1, 5);
+  if (!(g2.state.lifetimeTokens > av.tok)) throw new Error('rien ne repart après le dégel');
+  if (!(g2.state.playSeconds > av.t)) throw new Error('le calendrier ne repart pas');
+});
+
 await step('raccourcis ignorés dans un champ de saisie et sous Ctrl', () => {
   ui.setSpeed(2);
   const input = dom.window.document.createElement('input');
@@ -1365,23 +1401,47 @@ await step('raccourcis d achat inertes pendant une décision', () => {
   ui.closeModal();
 });
 
-// ---- infobulles : le chiffre exact derrière l abrégé ----
+// ---- infobulles : le chiffre exact, mais pas réécrit dix fois par seconde ----
 await step('en-tête : infobulle avec tous les chiffres', () => {
   game.state.lifetimeTokens = 1234567890;
   game.state.money = 9876543;
+  // on force le rafraîchissement : sinon la limitation à 3 s laisse la valeur
+  // précédente, ce qui est exactement le comportement voulu en jeu.
+  for (const el of [ui.el.statTokens, ui.el.statMoney, ui.el.statCompute, ui.el.statEnergy]) el._tipAt = 0;
   ui.render();
-  const tok = ui.el.statTokens.title, mon = ui.el.statMoney.title;
   const chiffres = x => (x || '').replace(/[^0-9]/g, '');
-  if (chiffres(tok) !== '1234567890') throw new Error('infobulle tokens : ' + tok);
-  if (chiffres(mon) !== '9876543') throw new Error('infobulle trésorerie : ' + mon);
+  if (chiffres(ui.el.statTokens.title) !== '1234567890') throw new Error('infobulle tokens : ' + ui.el.statTokens.title);
+  if (chiffres(ui.el.statMoney.title) !== '9876543') throw new Error('infobulle trésorerie : ' + ui.el.statMoney.title);
   if (!ui.el.statCompute.title) throw new Error('infobulle compute absente');
   if (!ui.el.statEnergy.title) throw new Error('infobulle énergie absente');
   // très grands nombres : tous les chiffres, sans bruit binaire
   game.state.lifetimeTokens = 1e60;
+  ui.el.statTokens._tipAt = 0;
   ui.render();
   const gros = chiffres(ui.el.statTokens.title);
   if (gros.length !== 61) throw new Error('1e60 devrait faire 61 chiffres, pas ' + gros.length);
   if (!/^10+$/.test(gros)) throw new Error('artefacts de flottant dans l infobulle : ' + gros.slice(0, 30));
+});
+
+await step('en-tête : l infobulle n est pas réécrite plus d une fois toutes les 3 s', () => {
+  // Réécrire `title` referme le tooltip natif. Le rendu tourne à 10 images par
+  // seconde et ces chiffres bougent en continu : sans limitation, l infobulle
+  // était détruite avant d avoir pu s afficher, et on ne la voyait jamais.
+  const el = ui.el.statTokens;
+  el._tipAt = 0;
+  game.state.lifetimeTokens = 1000;
+  ui.render();
+  const t0 = el.title, stamp = el._tipAt;
+  if (!stamp) throw new Error('aucun horodatage de rafraîchissement');
+  // vingt rendus d affilée avec une valeur qui change à chaque fois
+  for (let i = 1; i <= 20; i++) { game.state.lifetimeTokens = 1000 + i; ui.render(); }
+  if (el.title !== t0) throw new Error('infobulle réécrite pendant la fenêtre de 3 s');
+  if (el._tipAt !== stamp) throw new Error('horodatage déplacé pendant la fenêtre de 3 s');
+  // une fois la fenêtre passée, elle se met à jour
+  el._tipAt = Date.now() - 3100;
+  game.state.lifetimeTokens = 424242;
+  ui.render();
+  if (!el.title.includes('424')) throw new Error('infobulle jamais rafraîchie après 3 s : ' + el.title);
 });
 
 // ---- DETTE ----
