@@ -1714,6 +1714,24 @@ export default {
     '利用可能',
   'Opérationnel':
     '稼働開始',
+  'Nouvel univers':
+    '新しい宇宙',
+  'Vers l’autonomie':
+    '自律へ',
+  'modèle {0}/{1}':
+    'モデル {0}/{1}',
+  'Vers le cosmos':
+    '宇宙へ',
+  'Terre {0} / {1}':
+    '地球 {0} / {1}',
+  'Vers le Big Bang':
+    'ビッグバンへ',
+  'univers {0} / {1}':
+    '宇宙 {0} / {1}',
+  'intégration {0}':
+    '統合中 {0}',
+  'percée disponible':
+    'ブレイクスルー可能',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     'シンギュラリティ。システムが自己改善を始めた。物質の変換が始まる。',
   'Phase 2 — Autonomie':
@@ -2154,8 +2172,6 @@ export default {
     '推論を実行',
   'Tokens perdus (invendus)':
     '失われたトークン（未販売）',
-  'Automatisation':
-    '自動化',
   'Marché & tarification':
     '市場と価格',
   'Prix':
@@ -2168,12 +2184,72 @@ export default {
     'マーケティング — Lv.',
   'Réputation':
     '評判',
+  'Automatisation':
+    '自動化',
   'Financement':
     '資金調達',
   'Valorisation':
     '評価額',
   'verrouillé':
     'ロック中',
+  'Équipe':
+    'チーム',
+  'Effectif':
+    '人員',
+  'Charges journalières':
+    '日次費用',
+  'Énergie consommée':
+    '消費電力',
+  'variable':
+    '変動',
+  'Exploitation & O&M':
+    '運転保守・O&M',
+  'fixe':
+    '固定',
+  'Abonnement réseau':
+    '系統基本料金',
+  'puissance souscrite':
+    '契約電力',
+  'Salaires':
+    '給与',
+  'Loyers':
+    '賃料',
+  'Total':
+    '合計',
+  'soit':
+    'つまり',
+  'Salaires impayés':
+    '給与未払い',
+  'Inflation':
+    'インフレ',
+  'Allocation du compute':
+    '演算の配分',
+  'Addendum':
+    '付録',
+  'Projets & percées':
+    'プロジェクトと突破',
+  'Hébergement':
+    'ホスティング',
+  'Infrastructure de calcul':
+    '演算インフラ',
+  'Emplacements GPU':
+    'GPUの枠',
+  'Charge réseau':
+    '系統負荷',
+  'Grands programmes':
+    '大型プログラム',
+  'R&D — Entraînement de modèles':
+    '研究開発 — モデル学習',
+  'Données':
+    'データ',
+  'Expansion cosmique':
+    '宇宙への拡張',
+  'matière brute':
+    '未変換の物質',
+  'convertie en énergie':
+    'エネルギーに変換済み',
+  'La Une':
+    'ヘッドライン',
   'Bourse':
     '株式市場',
   'Indice':
@@ -2210,64 +2286,6 @@ export default {
     '次回返済',
   'Offres de financement':
     '資金調達の提案',
-  'Équipe':
-    'チーム',
-  'Effectif':
-    '人員',
-  'Charges journalières':
-    '日次費用',
-  'Énergie consommée':
-    '消費電力',
-  'variable':
-    '変動',
-  'Exploitation & O&M':
-    '運転保守・O&M',
-  'fixe':
-    '固定',
-  'Abonnement réseau':
-    '系統基本料金',
-  'puissance souscrite':
-    '契約電力',
-  'Salaires':
-    '給与',
-  'Loyers':
-    '賃料',
-  'Total':
-    '合計',
-  'soit':
-    'つまり',
-  'Salaires impayés':
-    '給与未払い',
-  'Inflation':
-    'インフレ',
-  'Allocation du compute':
-    '演算の配分',
-  'Hébergement':
-    'ホスティング',
-  'Infrastructure de calcul':
-    '演算インフラ',
-  'Emplacements GPU':
-    'GPUの枠',
-  'Charge réseau':
-    '系統負荷',
-  'Grands programmes':
-    '大型プログラム',
-  'R&D — Entraînement de modèles':
-    '研究開発 — モデル学習',
-  'Données':
-    'データ',
-  'Expansion cosmique':
-    '宇宙への拡張',
-  'matière brute':
-    '未変換の物質',
-  'convertie en énergie':
-    'エネルギーに変換済み',
-  'Addendum':
-    '付録',
-  'Projets & percées':
-    'プロジェクトと突破',
-  'La Une':
-    'ヘッドライン',
   'Journal':
     'ログ',
   'Événement':
@@ -2314,12 +2332,12 @@ export default {
     'ゲームを保存',
   'Historique de production (tokens/s)':
     '産出の推移（トークン/秒）',
+  'Carte de l’univers converti':
+    '変換済み宇宙の地図',
   'Évolution de l’indice boursier':
     '株価指数の推移',
   'Évolution du cours de la crypto':
     'クリプト相場の推移',
-  'Carte de l’univers converti':
-    '変換済み宇宙の地図',
   'Passer la cinématique':
     'ムービーをスキップ',
 };

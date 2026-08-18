@@ -1714,6 +1714,24 @@ export default {
     '可用',
   'Opérationnel':
     '已投入运行',
+  'Nouvel univers':
+    '新的宇宙',
+  'Vers l’autonomie':
+    '迈向自主',
+  'modèle {0}/{1}':
+    '模型 {0}/{1}',
+  'Vers le cosmos':
+    '迈向宇宙',
+  'Terre {0} / {1}':
+    '地球 {0} / {1}',
+  'Vers le Big Bang':
+    '迈向大爆炸',
+  'univers {0} / {1}':
+    '宇宙 {0} / {1}',
+  'intégration {0}':
+    '整合中 {0}',
+  'percée disponible':
+    '突破已就绪',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     '奇点。系统开始自我改进。物质转化就此开始。',
   'Phase 2 — Autonomie':
@@ -2154,8 +2172,6 @@ export default {
     '发起一次推理',
   'Tokens perdus (invendus)':
     '损失的 token（未售出）',
-  'Automatisation':
-    '自动化',
   'Marché & tarification':
     '市场与定价',
   'Prix':
@@ -2168,12 +2184,72 @@ export default {
     '营销 — 等级',
   'Réputation':
     '声誉',
+  'Automatisation':
+    '自动化',
   'Financement':
     '融资',
   'Valorisation':
     '估值',
   'verrouillé':
     '未解锁',
+  'Équipe':
+    '团队',
+  'Effectif':
+    '在编人数',
+  'Charges journalières':
+    '每日开支',
+  'Énergie consommée':
+    '能源消耗',
+  'variable':
+    '可变',
+  'Exploitation & O&M':
+    '运维与 O&M',
+  'fixe':
+    '固定',
+  'Abonnement réseau':
+    '电网月租',
+  'puissance souscrite':
+    '签约功率',
+  'Salaires':
+    '工资',
+  'Loyers':
+    '租金',
+  'Total':
+    '合计',
+  'soit':
+    '即',
+  'Salaires impayés':
+    '拖欠工资',
+  'Inflation':
+    '通胀',
+  'Allocation du compute':
+    '算力分配',
+  'Addendum':
+    '附录',
+  'Projets & percées':
+    '项目与突破',
+  'Hébergement':
+    '托管',
+  'Infrastructure de calcul':
+    '算力基础设施',
+  'Emplacements GPU':
+    'GPU 机位',
+  'Charge réseau':
+    '电网负荷',
+  'Grands programmes':
+    '重大计划',
+  'R&D — Entraînement de modèles':
+    '研发 — 模型训练',
+  'Données':
+    '数据',
+  'Expansion cosmique':
+    '宇宙扩张',
+  'matière brute':
+    '原始物质',
+  'convertie en énergie':
+    '已转化为能量',
+  'La Une':
+    '头条',
   'Bourse':
     '股市',
   'Indice':
@@ -2210,64 +2286,6 @@ export default {
     '下次还款',
   'Offres de financement':
     '融资方案',
-  'Équipe':
-    '团队',
-  'Effectif':
-    '在编人数',
-  'Charges journalières':
-    '每日开支',
-  'Énergie consommée':
-    '能源消耗',
-  'variable':
-    '可变',
-  'Exploitation & O&M':
-    '运维与 O&M',
-  'fixe':
-    '固定',
-  'Abonnement réseau':
-    '电网月租',
-  'puissance souscrite':
-    '签约功率',
-  'Salaires':
-    '工资',
-  'Loyers':
-    '租金',
-  'Total':
-    '合计',
-  'soit':
-    '即',
-  'Salaires impayés':
-    '拖欠工资',
-  'Inflation':
-    '通胀',
-  'Allocation du compute':
-    '算力分配',
-  'Hébergement':
-    '托管',
-  'Infrastructure de calcul':
-    '算力基础设施',
-  'Emplacements GPU':
-    'GPU 机位',
-  'Charge réseau':
-    '电网负荷',
-  'Grands programmes':
-    '重大计划',
-  'R&D — Entraînement de modèles':
-    '研发 — 模型训练',
-  'Données':
-    '数据',
-  'Expansion cosmique':
-    '宇宙扩张',
-  'matière brute':
-    '原始物质',
-  'convertie en énergie':
-    '已转化为能量',
-  'Addendum':
-    '附录',
-  'Projets & percées':
-    '项目与突破',
-  'La Une':
-    '头条',
   'Journal':
     '日志',
   'Événement':
@@ -2314,12 +2332,12 @@ export default {
     '保存游戏',
   'Historique de production (tokens/s)':
     '产出曲线（token/秒）',
+  'Carte de l’univers converti':
+    '已转化宇宙地图',
   'Évolution de l’indice boursier':
     '股票指数走势',
   'Évolution du cours de la crypto':
     '加密资产行情走势',
-  'Carte de l’univers converti':
-    '已转化宇宙地图',
   'Passer la cinématique':
     '跳过过场动画',
 };

@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 159 chaînes × 7 langues = 8 113 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 168 chaînes × 7 langues = 8 176 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -434,6 +434,29 @@ RVB, vague de particules, onde de choc, inversion brève, pluie de tokens, tunne
 grille synthwave. Chacune dure **moins de 5 secondes**, n'intercepte jamais un clic, et le
 tirage est **sans remise** : les douze passent avant qu'une seule revienne. La presse s'en
 mêle aussi. `prefers-reduced-motion` désactive les animations au profit des seuls titres.
+
+## 📊 Où en est la phase courante
+
+Une barre pleine largeur, au bas de l'en-tête, répond à la seule question que les compteurs ne
+traitaient pas : **combien reste-t-il avant la bascule ?** Chaque phase a un seuil unique, et
+c'est lui que la barre mesure.
+
+| Phase | Ce que la barre suit | Seuil |
+|---|---|---|
+| 1 — Startup | le palier de modèle atteint | le dernier des 12 (super-intelligence) |
+| 2 — Autonomie | la Terre convertie | 85 % |
+| 3 — Cosmos | l'univers consommé | 99,9 % |
+
+Ces seuils ne sont pas recopiés dans la barre : ils sont **exportés une seule fois**
+(`PHASE3_EARTH`, `ENDING_UNIVERSE`) et lus à la fois par la barre et par les percées de
+bascule. Deux copies du même seuil finissent toujours par diverger, et la barre annoncerait
+alors un objectif que le jeu n'applique pas — un test vérifie que les deux lisent bien la même
+valeur.
+
+Atteindre 100 % ne fait pas basculer : il faut encore **acheter la percée**, puis attendre son
+**intégration** (1 à 4 semaines). La barre distingue donc les trois états qui se ressemblent à
+100 % — *percée disponible* (elle pulse, en couleur d'accent), *intégration 60 %*, ou l'attente
+d'autre chose. Sans cela, un joueur à 100 % croirait le jeu bloqué.
 
 ## 🧱 Trois colonnes de hauteur comparable
 

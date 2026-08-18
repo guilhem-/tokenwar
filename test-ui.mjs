@@ -1667,6 +1667,67 @@ await step('impasse : un joueur qui perd tout son parc peut repartir', () => {
   if (!(g3.state.lifetimeTokens > av)) throw new Error('cliquer sans carte devrait tout de même produire');
 });
 
+// ---- barre de progression de phase ----
+await step('barre de phase : suit le seuil de bascule de chaque phase', () => {
+  const bar = ui.el.phaseBar, fill = ui.el.phaseBarFill, val = ui.el.phaseBarValue;
+  if (!bar || !fill) throw new Error('barre de phase absente de l en-tête');
+  const largeur = () => parseFloat(fill.style.width) || 0;
+
+  // phase 1 : la progression suit le palier de modèle atteint
+  game.state.phase = 1; game.state.modelTier = 0; ui.render();
+  if (largeur() !== 0) throw new Error('phase 1 au départ devrait être à 0 %, pas ' + largeur());
+  game.state.modelTier = 6; ui.render();
+  const mid = largeur();
+  if (!(mid > 40 && mid < 70)) throw new Error('à mi-parcours la barre devrait être vers 55 %, pas ' + mid);
+  if (!/7/.test(val.textContent)) throw new Error('le palier atteint n est pas affiché : ' + val.textContent);
+  game.state.modelTier = data.MODELS.length - 1; ui.render();
+  if (largeur() !== 100) throw new Error('dernier modèle → la barre devrait être pleine');
+
+  // phase 2 : la Terre convertie, rapportée au seuil des sondes
+  game.state.phase = 2; game.state.earthConsumed = data.PHASE3_EARTH / 2; ui.render();
+  if (Math.abs(largeur() - 50) > 1) throw new Error('moitié du seuil → 50 % attendu, obtenu ' + largeur());
+  game.state.earthConsumed = data.PHASE3_EARTH; ui.render();
+  if (largeur() !== 100) throw new Error('seuil de la Terre atteint → barre pleine');
+
+  // phase 3 : l univers consommé
+  game.state.phase = 3; game.state.universeConsumed = data.ENDING_UNIVERSE / 4; ui.render();
+  if (Math.abs(largeur() - 25) > 1) throw new Error('quart du seuil → 25 % attendu, obtenu ' + largeur());
+
+  // phase 4 : terminé
+  game.state.phase = 4; ui.render();
+  if (largeur() !== 100 || !bar.classList.contains('is-done')) throw new Error('phase 4 devrait être marquée terminée');
+  game.state.phase = 1; game.state.modelTier = 0; game.state.earthConsumed = 0; game.state.universeConsumed = 0;
+});
+
+await step('barre de phase : la barre et les percées lisent le même seuil', () => {
+  // Deux copies d un seuil finissent toujours par diverger : la barre
+  // annoncerait alors un objectif que le jeu n applique pas.
+  const p3 = data.PROJECTS.find(p => p.effect === 'unlock:phase3');
+  const fin = data.PROJECTS.find(p => p.effect === 'unlock:ending');
+  const juste = { phase: 2, earthConsumed: data.PHASE3_EARTH, universeConsumed: 0 };
+  const juste2 = { phase: 3, universeConsumed: data.ENDING_UNIVERSE, earthConsumed: 1 };
+  if (!p3.req(juste)) throw new Error('au seuil exporté, la percée phase 3 devrait être proposable');
+  if (p3.req({ ...juste, earthConsumed: data.PHASE3_EARTH - 1e-6 })) throw new Error('juste sous le seuil, elle ne devrait pas l être');
+  if (!fin.req(juste2)) throw new Error('au seuil exporté, la singularité devrait être proposable');
+});
+
+await step('barre de phase : à 100 % elle dit ce qu on attend', () => {
+  const bar = ui.el.phaseBar, val = ui.el.phaseBarValue;
+  const g2 = new Game(null);
+  g2.state.phase = 2;
+  g2.state.earthConsumed = 1;
+  // percée en cours d intégration → l état doit être distinct de « disponible »
+  g2.startIntegration('project', 'von_neumann');
+  const r = g2.phaseProgress();
+  if (r.state !== 'integrating') throw new Error('intégration non reconnue : ' + r.state);
+  if (!/\d/.test(r.value)) throw new Error('la progression d intégration n est pas chiffrée : ' + r.value);
+  // une fois intégrée, on ne reste pas coincé sur « intégration »
+  g2.state.integrations = [];
+  if (g2.phaseProgress().state === 'integrating') throw new Error('état figé sur intégration');
+  bar.classList.remove('is-integrating');
+  if (!val) throw new Error('valeur absente');
+});
+
 // save/load
 await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 

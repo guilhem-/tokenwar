@@ -10,7 +10,8 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK,
          CHRONICLE, EXTRAVAGANCES, SOVEREIGN,
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
-         OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION } from './data.js';
+         OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION,
+         PHASE3_EARTH, ENDING_UNIVERSE } from './data.js';
 import { clamp, fmtPower, fmtMoney, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
@@ -1483,6 +1484,57 @@ export class Game {
   // =================================================================
   //  TRANSITIONS DE PHASE
   // =================================================================
+  // ==================================================================
+  //  PROGRESSION DE LA PHASE COURANTE — ce que mesure la barre de l'en-tête.
+  //
+  //  Chaque phase a un seuil unique, celui qui débloque la percée de bascule
+  //  (voir PROJECTS, catégorie « Singularité »). La barre lit les MÊMES
+  //  constantes que ces percées : elle ne peut donc pas annoncer un objectif
+  //  que le jeu n'appliquerait pas.
+  //
+  //  Atteindre 100 % ne fait pas basculer : il faut encore acheter la percée,
+  //  puis attendre son intégration. La barre distingue ces trois états, sinon
+  //  un joueur à 100 % croirait le jeu bloqué.
+  // ==================================================================
+  phaseProgress() {
+    const s = this.state, p = this.phase;
+    if (p >= 4) return { frac: 1, state: 'done', label: t('Nouvel univers'), value: '' };
+
+    let frac, label, value;
+    if (p === 1) {
+      const dernier = MODELS.length - 1;
+      frac = dernier > 0 ? s.modelTier / dernier : 1;
+      label = t('Vers l’autonomie');
+      value = t('modèle {0}/{1}', s.modelTier + 1, MODELS.length);
+    } else if (p === 2) {
+      frac = s.earthConsumed / PHASE3_EARTH;
+      label = t('Vers le cosmos');
+      value = t('Terre {0} / {1}', this.decimal(pct(s.earthConsumed), 1) + '%',
+                this.decimal(pct(PHASE3_EARTH), 1) + '%');
+    } else {
+      frac = s.universeConsumed / ENDING_UNIVERSE;
+      label = t('Vers le Big Bang');
+      value = t('univers {0} / {1}', this.decimal(pct(s.universeConsumed), 1) + '%',
+                this.decimal(pct(ENDING_UNIVERSE), 1) + '%');
+    }
+    frac = clamp(frac, 0, 1);
+
+    // la percée de bascule est-elle en cours d'intégration ?
+    const inte = this.integrationOf('project');
+    const bascule = { 1: 'recursive', 2: 'von_neumann', 3: 'recompression' }[p];
+    if (inte && inte.id === bascule) {
+      return { frac: 1, state: 'integrating', label,
+               value: t('intégration {0}', Math.round(pct(this.integrationProgress('project'))) + '%') };
+    }
+    // seuil atteint : la percée est à portée, il reste à la prendre
+    if (frac >= 1) {
+      const suivante = this.nextProject();
+      if (suivante && suivante.id === bascule) return { frac: 1, state: 'ready', label, value: t('percée disponible') };
+      return { frac: 1, state: 'waiting', label, value };
+    }
+    return { frac, state: 'running', label, value };
+  }
+
   enterPhase(p) {
     if (this.state.phase >= p) return;
     this.state.phase = p;

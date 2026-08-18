@@ -32,6 +32,9 @@ export class UI {
     this.el = {
       body: document.body,
       brandPhase: $('brand-phase'),
+      phaseBar: $('phase-bar'), phaseBarLabel: $('phase-bar-label'),
+      phaseBarTrack: $('phase-bar-track'), phaseBarFill: $('phase-bar-fill'),
+      phaseBarValue: $('phase-bar-value'),
       simDate: $('sim-date'),
       headlines: $('headlines'),
       statTokens: $('stat-tokens'), statTokensRate: $('stat-tokens-rate'),
@@ -287,6 +290,24 @@ export class UI {
   }
   // Retour visuel commun : on fait clignoter la ligne réellement achetée, pour
   // qu'un raccourci ne soit jamais une action invisible.
+  // Barre de progression de la phase courante, sous les compteurs. Elle lit
+  // les mêmes seuils que les percées de bascule, et distingue les trois états
+  // qui se ressemblent à 100 % : il reste à prendre la percée, elle s'intègre,
+  // ou l'on attend autre chose.
+  renderPhaseBar() {
+    const el = this.el.phaseBar;
+    if (!el) return;
+    const p = this.game.phaseProgress();
+    const w = Math.round(p.frac * 1000) / 10;
+    if (this.el.phaseBarFill.style.width !== w + '%') this.el.phaseBarFill.style.width = w + '%';
+    if (this.el.phaseBarLabel.textContent !== p.label) this.el.phaseBarLabel.textContent = p.label;
+    if (this.el.phaseBarValue.textContent !== p.value) this.el.phaseBarValue.textContent = p.value;
+    el.classList.toggle('is-ready', p.state === 'ready');
+    el.classList.toggle('is-integrating', p.state === 'integrating');
+    el.classList.toggle('is-done', p.state === 'done');
+    this.el.phaseBarTrack.setAttribute('aria-valuenow', String(Math.round(p.frac * 100)));
+    this.tip(el, p.label + ' — ' + p.value);
+  }
   // Une infobulle n'est réécrite que si elle change : `title` sur un élément
   // survolé referme le tooltip natif à chaque écriture, et le rendu tourne à
   // 10 images par seconde.
@@ -1095,6 +1116,7 @@ export class UI {
     this.tip(this.el.statEnergy, t('{0} W', fmtDigits(s.energyCap * 1e6)));
     const use = g.energyUse();
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + t('% utilisé');
+    this.renderPhaseBar();   // sous les compteurs : où en est la phase courante
 
     // bouton générer : tokens + valeur de la vente directe
     const cv = g.clickValue();

@@ -1714,6 +1714,24 @@ export default {
     'Available',
   'Opérationnel':
     'Operational',
+  'Nouvel univers':
+    'New universe',
+  'Vers l’autonomie':
+    'Toward autonomy',
+  'modèle {0}/{1}':
+    'model {0}/{1}',
+  'Vers le cosmos':
+    'Toward the cosmos',
+  'Terre {0} / {1}':
+    'Earth {0} / {1}',
+  'Vers le Big Bang':
+    'Toward the Big Bang',
+  'univers {0} / {1}':
+    'universe {0} / {1}',
+  'intégration {0}':
+    'integrating {0}',
+  'percée disponible':
+    'breakthrough ready',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     'SINGULARITY. The system is improving itself. Matter conversion begins.',
   'Phase 2 — Autonomie':
@@ -2154,8 +2172,6 @@ export default {
     'Run an inference',
   'Tokens perdus (invendus)':
     'Tokens lost (unsold)',
-  'Automatisation':
-    'Automation',
   'Marché & tarification':
     'Market & pricing',
   'Prix':
@@ -2168,12 +2184,72 @@ export default {
     'Marketing — lvl',
   'Réputation':
     'Reputation',
+  'Automatisation':
+    'Automation',
   'Financement':
     'Funding',
   'Valorisation':
     'Valuation',
   'verrouillé':
     'locked',
+  'Équipe':
+    'Team',
+  'Effectif':
+    'Headcount',
+  'Charges journalières':
+    'Daily charges',
+  'Énergie consommée':
+    'Energy consumed',
+  'variable':
+    'variable',
+  'Exploitation & O&M':
+    'Operations & O&M',
+  'fixe':
+    'fixed',
+  'Abonnement réseau':
+    'Grid standing charge',
+  'puissance souscrite':
+    'subscribed power',
+  'Salaires':
+    'Salaries',
+  'Loyers':
+    'Rents',
+  'Total':
+    'Total',
+  'soit':
+    'i.e.',
+  'Salaires impayés':
+    'Unpaid salaries',
+  'Inflation':
+    'Inflation',
+  'Allocation du compute':
+    'Compute allocation',
+  'Addendum':
+    'Addendum',
+  'Projets & percées':
+    'Projects & breakthroughs',
+  'Hébergement':
+    'Hosting',
+  'Infrastructure de calcul':
+    'Compute infrastructure',
+  'Emplacements GPU':
+    'GPU slots',
+  'Charge réseau':
+    'Grid load',
+  'Grands programmes':
+    'Major programmes',
+  'R&D — Entraînement de modèles':
+    'R&D — Model training',
+  'Données':
+    'Data',
+  'Expansion cosmique':
+    'Cosmic expansion',
+  'matière brute':
+    'raw matter',
+  'convertie en énergie':
+    'converted to energy',
+  'La Une':
+    'The Front Page',
   'Bourse':
     'Stock market',
   'Indice':
@@ -2210,64 +2286,6 @@ export default {
     'Next payment',
   'Offres de financement':
     'Financing offers',
-  'Équipe':
-    'Team',
-  'Effectif':
-    'Headcount',
-  'Charges journalières':
-    'Daily charges',
-  'Énergie consommée':
-    'Energy consumed',
-  'variable':
-    'variable',
-  'Exploitation & O&M':
-    'Operations & O&M',
-  'fixe':
-    'fixed',
-  'Abonnement réseau':
-    'Grid standing charge',
-  'puissance souscrite':
-    'subscribed power',
-  'Salaires':
-    'Salaries',
-  'Loyers':
-    'Rents',
-  'Total':
-    'Total',
-  'soit':
-    'i.e.',
-  'Salaires impayés':
-    'Unpaid salaries',
-  'Inflation':
-    'Inflation',
-  'Allocation du compute':
-    'Compute allocation',
-  'Hébergement':
-    'Hosting',
-  'Infrastructure de calcul':
-    'Compute infrastructure',
-  'Emplacements GPU':
-    'GPU slots',
-  'Charge réseau':
-    'Grid load',
-  'Grands programmes':
-    'Major programmes',
-  'R&D — Entraînement de modèles':
-    'R&D — Model training',
-  'Données':
-    'Data',
-  'Expansion cosmique':
-    'Cosmic expansion',
-  'matière brute':
-    'raw matter',
-  'convertie en énergie':
-    'converted to energy',
-  'Addendum':
-    'Addendum',
-  'Projets & percées':
-    'Projects & breakthroughs',
-  'La Une':
-    'The Front Page',
   'Journal':
     'Log',
   'Événement':
@@ -2314,12 +2332,12 @@ export default {
     'Save the game',
   'Historique de production (tokens/s)':
     'Production history (tokens/s)',
+  'Carte de l’univers converti':
+    'Map of the converted universe',
   'Évolution de l’indice boursier':
     'Stock index over time',
   'Évolution du cours de la crypto':
     'Crypto price over time',
-  'Carte de l’univers converti':
-    'Map of the converted universe',
   'Passer la cinématique':
     'Skip the cinematic',
 };

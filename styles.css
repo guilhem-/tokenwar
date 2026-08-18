@@ -1700,3 +1700,47 @@ body.is-frozen::after {
 @media (prefers-reduced-motion: reduce) {
   .debt-card { transition: none; }
 }
+
+/* ---- barre de progression de phase (bas de l'en-tête) --------------------
+   Une seule ligne, pleine largeur, sous les compteurs : où en est la phase
+   courante, et ce qu'il reste à faire pour basculer. */
+.phase-bar {
+  /* l'en-tête est un flex avec retour à la ligne : c'est flex-basis qui pousse
+     la barre sur sa propre ligne, pas grid-column. */
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.74rem;
+}
+.phase-bar-label {
+  color: var(--text-dim);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.phase-bar .progress { flex: 1; height: 6px; }
+.phase-bar-value {
+  color: var(--text-dim);
+  white-space: nowrap;
+  min-width: 11ch;
+  text-align: right;
+}
+/* Seuil atteint : la percée attend d'être prise. On le montre, sinon un
+   joueur à 100 % croirait le jeu bloqué. */
+.phase-bar.is-ready .phase-bar-value { color: var(--accent); }
+.phase-bar.is-ready .progress { border-color: var(--accent); }
+.phase-bar.is-ready .progress-fill { animation: phase-ready 1.6s ease-in-out infinite; }
+@keyframes phase-ready { 50% { filter: brightness(1.6); } }
+.phase-bar.is-integrating .phase-bar-value { color: var(--warn); }
+.phase-bar.is-done .phase-bar-value { color: var(--good); }
+@media (prefers-reduced-motion: reduce) {
+  .phase-bar.is-ready .progress-fill { animation: none; }
+}
+@media (max-width: 720px) {
+  .phase-bar { font-size: 0.68rem; gap: 0.5rem; }
+  .phase-bar-label { display: none; }   /* le titre de phase est déjà dans la marque */
+}

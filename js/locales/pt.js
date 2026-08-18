@@ -1714,6 +1714,24 @@ export default {
     'Disponível',
   'Opérationnel':
     'Operacional',
+  'Nouvel univers':
+    'Novo universo',
+  'Vers l’autonomie':
+    'Rumo à autonomia',
+  'modèle {0}/{1}':
+    'modelo {0}/{1}',
+  'Vers le cosmos':
+    'Rumo ao cosmos',
+  'Terre {0} / {1}':
+    'Terra {0} / {1}',
+  'Vers le Big Bang':
+    'Rumo ao Big Bang',
+  'univers {0} / {1}':
+    'universo {0} / {1}',
+  'intégration {0}':
+    'a integrar {0}',
+  'percée disponible':
+    'avanço disponível',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     'SINGULARIDADE. O sistema automelhora-se. Começa a conversão da matéria.',
   'Phase 2 — Autonomie':
@@ -2154,8 +2172,6 @@ export default {
     'Lançar uma inferência',
   'Tokens perdus (invendus)':
     'Tokens perdidos (não vendidos)',
-  'Automatisation':
-    'Automatização',
   'Marché & tarification':
     'Mercado e tarifas',
   'Prix':
@@ -2168,12 +2184,72 @@ export default {
     'Marketing — nív.',
   'Réputation':
     'Reputação',
+  'Automatisation':
+    'Automatização',
   'Financement':
     'Financiamento',
   'Valorisation':
     'Avaliação',
   'verrouillé':
     'bloqueado',
+  'Équipe':
+    'Equipa',
+  'Effectif':
+    'Efetivo',
+  'Charges journalières':
+    'Encargos diários',
+  'Énergie consommée':
+    'Energia consumida',
+  'variable':
+    'variável',
+  'Exploitation & O&M':
+    'Operação e O&M',
+  'fixe':
+    'fixo',
+  'Abonnement réseau':
+    'Mensalidade de rede',
+  'puissance souscrite':
+    'potência contratada',
+  'Salaires':
+    'Salários',
+  'Loyers':
+    'Rendas',
+  'Total':
+    'Total',
+  'soit':
+    'ou seja',
+  'Salaires impayés':
+    'Salários em atraso',
+  'Inflation':
+    'Inflação',
+  'Allocation du compute':
+    'Alocação da computação',
+  'Addendum':
+    'Adendo',
+  'Projets & percées':
+    'Projetos e avanços',
+  'Hébergement':
+    'Alojamento',
+  'Infrastructure de calcul':
+    'Infraestrutura de computação',
+  'Emplacements GPU':
+    'Lugares de GPU',
+  'Charge réseau':
+    'Carga de rede',
+  'Grands programmes':
+    'Grandes programas',
+  'R&D — Entraînement de modèles':
+    'I&D — Treino de modelos',
+  'Données':
+    'Dados',
+  'Expansion cosmique':
+    'Expansão cósmica',
+  'matière brute':
+    'matéria bruta',
+  'convertie en énergie':
+    'convertida em energia',
+  'La Une':
+    'A Primeira Página',
   'Bourse':
     'Bolsa',
   'Indice':
@@ -2210,64 +2286,6 @@ export default {
     'Próximo vencimento',
   'Offres de financement':
     'Ofertas de financiamento',
-  'Équipe':
-    'Equipa',
-  'Effectif':
-    'Efetivo',
-  'Charges journalières':
-    'Encargos diários',
-  'Énergie consommée':
-    'Energia consumida',
-  'variable':
-    'variável',
-  'Exploitation & O&M':
-    'Operação e O&M',
-  'fixe':
-    'fixo',
-  'Abonnement réseau':
-    'Mensalidade de rede',
-  'puissance souscrite':
-    'potência contratada',
-  'Salaires':
-    'Salários',
-  'Loyers':
-    'Rendas',
-  'Total':
-    'Total',
-  'soit':
-    'ou seja',
-  'Salaires impayés':
-    'Salários em atraso',
-  'Inflation':
-    'Inflação',
-  'Allocation du compute':
-    'Alocação da computação',
-  'Hébergement':
-    'Alojamento',
-  'Infrastructure de calcul':
-    'Infraestrutura de computação',
-  'Emplacements GPU':
-    'Lugares de GPU',
-  'Charge réseau':
-    'Carga de rede',
-  'Grands programmes':
-    'Grandes programas',
-  'R&D — Entraînement de modèles':
-    'I&D — Treino de modelos',
-  'Données':
-    'Dados',
-  'Expansion cosmique':
-    'Expansão cósmica',
-  'matière brute':
-    'matéria bruta',
-  'convertie en énergie':
-    'convertida em energia',
-  'Addendum':
-    'Adendo',
-  'Projets & percées':
-    'Projetos e avanços',
-  'La Une':
-    'A Primeira Página',
   'Journal':
     'Registo',
   'Événement':
@@ -2314,12 +2332,12 @@ export default {
     'Gravar o jogo',
   'Historique de production (tokens/s)':
     'Histórico de produção (tokens/s)',
+  'Carte de l’univers converti':
+    'Mapa do universo convertido',
   'Évolution de l’indice boursier':
     'Evolução do índice bolsista',
   'Évolution du cours de la crypto':
     'Evolução da cotação da cripto',
-  'Carte de l’univers converti':
-    'Mapa do universo convertido',
   'Passer la cinématique':
     'Saltar a cinemática',
 };

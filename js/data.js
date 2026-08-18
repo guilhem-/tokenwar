@@ -469,12 +469,12 @@ export const PROJECTS = [
   { id:'von_neumann', name:'Sondes de von Neumann', cat:'Singularité',
     cost:{ matter:1e12, research:1e10 }, effect:'unlock:phase3',
     desc:'Des sondes auto-réplicantes essaiment dans l’espace. Déverrouille l’expansion cosmique.',
-    req:g=>g.phase>=2 && g.earthConsumed>=0.85 },
+    req:g=>g.phase>=2 && g.earthConsumed>=PHASE3_EARTH },
 
   { id:'recompression', name:'Singularité de recompression', cat:'Singularité',
     cost:{ matter:9e52, tokens:1e60 }, effect:'unlock:ending',
     desc:'Concentrer toute la matière-énergie de l’univers en un point. Provoquer le prochain Big Bang.',
-    req:g=>g.phase>=3 && g.universeConsumed>=0.999 },
+    req:g=>g.phase>=3 && g.universeConsumed>=ENDING_UNIVERSE },
 ];
 
 // ---------------------------------------------------------------------
@@ -947,6 +947,12 @@ export const AUTO_CLICKS_REQUIRED = 50;
 // integration terminee) pour que la suivante apparaisse. On choisit une piste,
 // on la mene, puis on regarde la suivante.
 export const PROJECT_GAP_MONTHS = 2;
+// Seuils de bascule de phase. Nommés ici plutôt qu'écrits en dur dans les
+// `req` des percées, parce que la barre de progression de l'en-tête doit lire
+// EXACTEMENT la même valeur : deux copies du même seuil finissent toujours par
+// diverger, et la barre annoncerait alors un objectif que le jeu n'applique pas.
+export const PHASE3_EARTH = 0.85;      // part de la Terre convertie avant les sondes
+export const ENDING_UNIVERSE = 0.999;  // part de l'univers consommé avant la recompression
 // Meme regle pour les optimisations recurrentes : une seule proposee a la fois,
 // et deux mois de calme entre celle qui disparait et celle qui arrive. Leur
 // periodicite propre (months) continue de courir en parallele : elle dit quand

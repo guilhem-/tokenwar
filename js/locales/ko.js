@@ -1714,6 +1714,24 @@ export default {
     '사용 가능',
   'Opérationnel':
     '가동 시작',
+  'Nouvel univers':
+    '새로운 우주',
+  'Vers l’autonomie':
+    '자율을 향해',
+  'modèle {0}/{1}':
+    '모델 {0}/{1}',
+  'Vers le cosmos':
+    '우주를 향해',
+  'Terre {0} / {1}':
+    '지구 {0} / {1}',
+  'Vers le Big Bang':
+    '빅뱅을 향해',
+  'univers {0} / {1}':
+    '우주 {0} / {1}',
+  'intégration {0}':
+    '통합 중 {0}',
+  'percée disponible':
+    '돌파구 준비됨',
   'SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.':
     '특이점. 시스템이 스스로를 개선하기 시작했습니다. 물질 전환이 시작됩니다.',
   'Phase 2 — Autonomie':
@@ -2154,8 +2172,6 @@ export default {
     '추론 실행',
   'Tokens perdus (invendus)':
     '잃은 토큰 (미판매)',
-  'Automatisation':
-    '자동화',
   'Marché & tarification':
     '시장과 가격',
   'Prix':
@@ -2168,12 +2184,72 @@ export default {
     '마케팅 — Lv',
   'Réputation':
     '평판',
+  'Automatisation':
+    '자동화',
   'Financement':
     '자금 조달',
   'Valorisation':
     '기업가치',
   'verrouillé':
     '잠김',
+  'Équipe':
+    '팀',
+  'Effectif':
+    '인원',
+  'Charges journalières':
+    '일일 비용',
+  'Énergie consommée':
+    '소비 전력',
+  'variable':
+    '변동',
+  'Exploitation & O&M':
+    '운영 및 O&M',
+  'fixe':
+    '고정',
+  'Abonnement réseau':
+    '계통 기본요금',
+  'puissance souscrite':
+    '계약 전력',
+  'Salaires':
+    '급여',
+  'Loyers':
+    '임대료',
+  'Total':
+    '합계',
+  'soit':
+    '즉',
+  'Salaires impayés':
+    '급여 체불',
+  'Inflation':
+    '인플레이션',
+  'Allocation du compute':
+    '연산 배분',
+  'Addendum':
+    '부록',
+  'Projets & percées':
+    '프로젝트와 돌파',
+  'Hébergement':
+    '호스팅',
+  'Infrastructure de calcul':
+    '연산 인프라',
+  'Emplacements GPU':
+    'GPU 자리',
+  'Charge réseau':
+    '계통 부하',
+  'Grands programmes':
+    '대형 프로그램',
+  'R&D — Entraînement de modèles':
+    '연구개발 — 모델 학습',
+  'Données':
+    '데이터',
+  'Expansion cosmique':
+    '우주 확장',
+  'matière brute':
+    '미변환 물질',
+  'convertie en énergie':
+    '에너지로 변환됨',
+  'La Une':
+    '헤드라인',
   'Bourse':
     '주식 시장',
   'Indice':
@@ -2210,64 +2286,6 @@ export default {
     '다음 상환',
   'Offres de financement':
     '자금 조달 제안',
-  'Équipe':
-    '팀',
-  'Effectif':
-    '인원',
-  'Charges journalières':
-    '일일 비용',
-  'Énergie consommée':
-    '소비 전력',
-  'variable':
-    '변동',
-  'Exploitation & O&M':
-    '운영 및 O&M',
-  'fixe':
-    '고정',
-  'Abonnement réseau':
-    '계통 기본요금',
-  'puissance souscrite':
-    '계약 전력',
-  'Salaires':
-    '급여',
-  'Loyers':
-    '임대료',
-  'Total':
-    '합계',
-  'soit':
-    '즉',
-  'Salaires impayés':
-    '급여 체불',
-  'Inflation':
-    '인플레이션',
-  'Allocation du compute':
-    '연산 배분',
-  'Hébergement':
-    '호스팅',
-  'Infrastructure de calcul':
-    '연산 인프라',
-  'Emplacements GPU':
-    'GPU 자리',
-  'Charge réseau':
-    '계통 부하',
-  'Grands programmes':
-    '대형 프로그램',
-  'R&D — Entraînement de modèles':
-    '연구개발 — 모델 학습',
-  'Données':
-    '데이터',
-  'Expansion cosmique':
-    '우주 확장',
-  'matière brute':
-    '미변환 물질',
-  'convertie en énergie':
-    '에너지로 변환됨',
-  'Addendum':
-    '부록',
-  'Projets & percées':
-    '프로젝트와 돌파',
-  'La Une':
-    '헤드라인',
   'Journal':
     '로그',
   'Événement':
@@ -2314,12 +2332,12 @@ export default {
     '게임 저장',
   'Historique de production (tokens/s)':
     '생산 추이 (토큰/초)',
+  'Carte de l’univers converti':
+    '변환된 우주 지도',
   'Évolution de l’indice boursier':
     '주가지수 추이',
   'Évolution du cours de la crypto':
     '크립토 시세 추이',
-  'Carte de l’univers converti':
-    '변환된 우주 지도',
   'Passer la cinématique':
     '컷신 건너뛰기',
 };

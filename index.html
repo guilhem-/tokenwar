@@ -52,6 +52,13 @@
       <button class="btn-ghost" id="btn-restart" data-i18n-title="Recommencer depuis le début" data-i18n-aria="Recommencer depuis le début" title="Recommencer depuis le début" aria-label="Recommencer depuis le début">🔄</button>
       <button class="btn-ghost" id="btn-help" data-i18n-title="Aide" data-i18n-aria="Aide" title="Aide" aria-label="Aide">?</button>
     </div>
+    <div class="phase-bar" id="phase-bar">
+      <span class="phase-bar-label" id="phase-bar-label">Vers l’autonomie</span>
+      <div class="progress" id="phase-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-fill" id="phase-bar-fill" style="width:0%"></div>
+      </div>
+      <span class="phase-bar-value num" id="phase-bar-value">modèle 1/12</span>
+    </div>
   </header>
 
   <!-- ============ GAME GRID ============ -->
