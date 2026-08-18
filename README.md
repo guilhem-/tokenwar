@@ -7,7 +7,7 @@ De votre première inférence sur un GPU de gamer jusqu'à la **conversion de l'
 en calcul** — et le **nouveau Big Bang** qui s'ensuit — vous pilotez un laboratoire d'IA à
 travers toute l'histoire (réelle puis spéculative) des grands modèles de langage.
 
-> 🎮 **Jouer :** https://tokenwar.bonnafous.org
+> 🎮 **Jouer :** https://guilhem-.github.io/tokenwar/
 > ⏱️ Terminable en moins de 4 h. Sauvegarde automatique locale + export/import.
 > 🌍 **8 langues** — français, English, 中文, 日本語, 한국어, Deutsch, Español, Português.
 
@@ -432,19 +432,15 @@ node test-i18n.mjs   # couverture des 7 langues, substitutions, écritures
 
 ### Déploiement
 
-**Le dépôt ne déploie rien.** Pousser sur git ne met pas le jeu en ligne — la mise en ligne
-est un geste manuel, depuis le poste de l'auteur :
+Le site est publié sur **GitHub Pages** à chaque poussée, par
+`.github/workflows/pages.yml` — mais le job `deploy` **dépend** du job `test` : si l'une des
+trois suites échoue, rien ne part et la version en ligne reste celle d'avant. Une pull request
+passe les tests sans publier. Le job n'expédie qu'une **liste explicite** de fichiers
+(`index.html`, `styles.css`, `js/`), jamais les tests ni les outils.
 
-```bash
-tools/deploy.sh              # tests complets, puis rsync vers le serveur
-tools/deploy.sh --dry-run    # montre ce qui changerait, ne transfère rien
-```
+Détails, bascule vers un domaine personnalisé et déploiement manuel vers un serveur à soi :
+[`DEPLOIEMENT.md`](DEPLOIEMENT.md).
 
-Le script refuse d'envoyer quoi que ce soit si un test échoue, et n'expédie qu'une **liste
-explicite** de fichiers (`index.html`, `styles.css`, `js/`) — jamais les tests, les outils ou
-`node_modules`. La destination vit dans `tools/deploy.conf`, ignoré par git. Détails,
-prérequis serveur et la question des sauvegardes `localStorage` qui **ne suivent pas** un
-changement de domaine : [`DEPLOIEMENT.md`](DEPLOIEMENT.md).
 
 ---
 

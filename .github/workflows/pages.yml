@@ -1,0 +1,92 @@
+name: Deploy to GitHub Pages
+
+# Le site est publié par GitHub Pages à chaque poussée, mais SEULEMENT si les
+# trois suites passent : un commit qui casse la partie ne part pas en
+# production. Le job `deploy` dépend de `test`, c'est ce qui fait la barrière.
+
+on:
+  push:
+    branches:
+      - claude/token-production-game-ci5u4l
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une seule exécution de déploiement à la fois ; on annule la précédente si
+# elle tourne encore, pour ne pas publier une version dépassée après une plus
+# récente.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Vérifier la syntaxe JS
+        run: |
+          for f in js/*.js; do node --check "$f"; done
+
+      - name: Test des traductions (couverture)
+        run: node test-i18n.mjs
+
+      - name: Test UI (jsdom)
+        run: |
+          npm install jsdom --no-save --no-audit --no-fund
+          node test-ui.mjs
+
+      - name: Test simulation (partie complète)
+        timeout-minutes: 15
+        # pas de pipe direct : il masquerait le code de sortie du simulateur
+        run: |
+          node test-sim.mjs > sim.log
+          tail -8 sim.log
+
+  deploy:
+    needs: test
+    # une pull request ne publie pas : elle se contente de passer les tests
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Préparer le site
+        # On n'expédie que le jeu : ni les tests, ni les outils, ni le README.
+        # .nojekyll évite que Pages ignore un fichier commençant par un souligné.
+        run: |
+          mkdir -p _site
+          cp index.html styles.css _site/
+          cp -R js _site/js
+          touch _site/.nojekyll
+          echo "Fichiers publiés : $(find _site -type f | wc -l)"
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
