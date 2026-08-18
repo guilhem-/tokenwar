@@ -584,8 +584,8 @@ export default {
     '수요 ×2',
   'Directives permanentes':
     '상시 지침',
-  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
-    'COO가 당신의 판단을 적어 둔다. 이벤트에서 선택지에 체크하면 다음부터는 자동으로 적용된다. 결제 한 번에 5건.',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
+    'COO가 당신의 판단을 적어 둔다. 이벤트에서 선택지에 체크하면 다음부터는 자동으로 적용된다. 결제 한 번에 지침 하나이며, 다음 지침은 더 비싸다.',
   'Datacenter IA orbital':
     '궤도 AI 데이터센터',
   'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
@@ -1066,8 +1066,8 @@ export default {
     '클릭해 토큰을 만들고, 가격을 정하고 (낮으면 물량, 높으면 마진), 마케팅을 하고, GPU와 전력을 사고, 연구를 쌓고, 점점 강한 모델을 학습시키고, 단계마다 자금을 조달한다.',
   'Hébergement :':
     '호스팅:',
-  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
-    'GPU는 서버에, 서버는 랙에, 랙은 데이터센터에, 데이터센터는 부동산 위에 들어가야 한다 — 그 모두가 전기를 먹는다. 낡은 장비는 되팔 수 있고, 출시된 지 5년이 넘은 카드는 시장에서 사라진다. 데이터센터나 코로케이션 공간을 빌릴 수도 있다.',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    'GPU는 서버에, 서버는 랙에, 랙은 데이터센터에, 데이터센터는 부동산 위에 들어가야 한다 — 그 모두가 전기를 먹는다. 낡은 장비는 되팔 수 있다. 한 장씩, 10장을 넘으면 열 장 단위로, 100장을 넘으면 한 번에 전부. 출시된 지 5년이 넘은 카드는 시장에서 사라진다. 데이터센터나 코로케이션 공간을 빌릴 수도 있다.',
   '⚡ Au départ :':
     '⚡ 시작할 때:',
   'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
@@ -1112,14 +1112,18 @@ export default {
     '🔧 주기적 최적화:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
     'CUDA 최적화는 18개월마다, 추론 엔진은 9개월마다, 컨텍스트 관리 정비는 12개월마다. 각 1,000달러, 관건은 잊지 않는 것이다. 한 번에 하나만 제시되고, 돌파구와 같은 방식으로 통합되며, 사라진 것과 다음 것 사이에는 두 달의 간격이 있다.',
+  '⌨️ Raccourcis :':
+    '⌨️ 단축키:',
+  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '**스페이스**는 다음 속도로, **F**는 게임을 정지하고 다시 누르면 원래 속도로 돌아온다. 정지 중에도 시간만 멈출 뿐 인터페이스는 살아 있다 — 읽고, 비교하고, 살 수 있다. **G**는 살 수 있고 수용도 되는 최상의 카드를, **H**는 모자란 수용 단계를, **B**는 제시된 돌파구를, **M**은 마케팅 한 단계를 집행한다. 헤더의 숫자에 마우스를 올리면 마지막 자리까지 보인다.',
   'Automatisation :':
     '자동화:',
-  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    '자동화는 같은 계열에서 **손으로 50번**을 해야 나타난다. 배우지 않은 것은 자동화하지 않는다. 계열은 각각 따로다 — 추론, 카드, 하드웨어(랙과 서버), 부지(건물과 데이터센터), 에너지. 구매한 뒤 개별 항목마다 ⟳ auto를 체크한다. 동작할 때마다 카드가 맥동해, 기계가 대신 무엇을 했는지 눈에 보인다. ⟳와 ×10 버튼은 20대 가동부터, ×100은 200대부터 나타난다.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
+    '자동화는 같은 계열에서 **손으로 50번**을 해야 나타난다. 배우지 않은 것은 자동화하지 않는다. 계열은 각각 따로다 — 추론, 카드, 하드웨어(랙과 서버), 부지(건물과 데이터센터), 에너지. 구매한 뒤 개별 항목마다 ⟳ auto를 체크한다. 동작할 때마다 카드가 맥동해, 기계가 대신 무엇을 했는지 눈에 보인다. ⟳와 ×10 버튼은 20대 가동부터, ×100은 200대부터 나타난다. 자동화의 속도는 ⏩ 버튼과 일부러 분리해 두었다. ×10에서는 시간이 열 배로 흐르지만 자동화는 세 배에 그친다. 가속은 도움이 되지만 판단을 대신하지는 않는다.',
   '📋 Directives permanentes :':
     '📋 상시 지침:',
-  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
-    '결제 한 번에 5개의 결정을 기억시킬 수 있고, 이후엔 자동으로 적용된다. 그 이상은 다시 결제해야 하며, 다음 묶음은 더 비싸다. 기존 지침을 바꾸는 것은 자리를 쓰지 않는다.',
+  'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
+    '결제 한 번에 결정 **하나**를 기억시키고, 이후엔 자동으로 적용된다. 다음 지침은 한 단계 더 비싸며, 총수는 선택지가 있는 이벤트 수를 넘지 못한다. 기존 지침을 바꾸는 것은 자리를 쓰지 않는다.',
   'Bourse :':
     '주식 시장:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1572,6 +1576,8 @@ export default {
     '마지막 수확을 서두른다',
   'Conversion +50% pendant 90s.':
     '전환 +50%, 90초 동안.',
+  'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
+    '인도 취소: {0}을(를) 넣을 자리가 없습니다. 주문 환불 ({1}).',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     '급여가 더 이상 지급되지 않습니다. 30일이 밀리면 팀이 떠나기 시작합니다.',
   '⚠️ Salaires impayés':
@@ -1620,10 +1626,10 @@ export default {
     '3단계 — 우주 확장',
   'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
     '재압축 특이점. 모든 물질-에너지가 수렴합니다…',
-  'Directives permanentes activées : {0} mémorisables.':
-    '상시 지침 활성화: {0}건까지 기억합니다.',
-  'Quota de directives étendu : {0} mémorisables.':
-    '지침 한도 확장: {0}건까지 기억합니다.',
+  'Directives permanentes activées : {0} mémorisable.':
+    '상시 지침 활성화: {0}건 기억 가능.',
+  'Directive supplémentaire achetée : {0} mémorisables.':
+    '지침 추가 구매: {0}건 기억 가능.',
   'Contrat signé : {0} — livraison promise dans {1} mois.':
     '계약 체결: {0} — {1}개월 납기 약속.',
   '🛰️ Datacenter orbital commandé':
@@ -1676,6 +1682,8 @@ export default {
     '업적: {0} — {1}',
   'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
     '규칙 변경: 무상 수전이 {0}(으)로 바뀌었습니다. 용량을 조정했습니다(구매한 전원은 유지).',
+  'Mise à jour des règles : les directives s’achètent à l’unité. Vos {0} places sont conservées.':
+    '규칙 변경: 지침은 하나씩 구매합니다. 기존 {0}개 자리는 유지됩니다.',
   '{0} h {1}':
     '{0}시간 {1}',
   '{0} min':
@@ -1696,6 +1704,22 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     '새 게임 — 2019년',
+  'Aucune carte achetable : place, budget ou date.':
+    '구매 가능한 카드가 없습니다. 자리, 예산, 출시 시기 중 하나가 모자랍니다.',
+  '{0} commandé':
+    '{0} 주문',
+  'Aucun hébergement achetable : place ou budget.':
+    '구매 가능한 수용 설비가 없습니다. 자리나 예산이 모자랍니다.',
+  'Aucune percée disponible pour l’instant.':
+    '지금은 착수할 돌파구가 없습니다.',
+  'Recherche insuffisante pour {0}':
+    '{0}에 필요한 연구가 부족합니다',
+  '{0} lancé':
+    '{0} 착수',
+  'Marketing : plafond atteint ou trésorerie insuffisante':
+    '마케팅: 상한 도달 또는 자금 부족',
+  'Marketing renforcé':
+    '마케팅 강화',
   'Incident : {0}':
     '사고: {0}',
   'Pertes en cours':
@@ -1716,6 +1740,8 @@ export default {
     '저장 파일이 올바르지 않습니다',
   'Succès':
     '업적',
+  'figé':
+    '정지',
   'Auto-achat de cet élément précis':
     '이 항목만 자동 구매',
   'Réinitialiser les directives':
@@ -1740,6 +1766,14 @@ export default {
     '되팔기',
   'Revendre une carte (libère un emplacement)':
     '카드를 되판다 (자리 하나가 빈다)',
+  'Revendre ×10':
+    '×10 되팔기',
+  'Revendre dix cartes d’un coup':
+    '카드 열 장을 한 번에 되팔기',
+  'Tout revendre':
+    '전부 되팔기',
+  'Revendre la totalité de ce modèle':
+    '이 모델을 전부 되팔기',
   'Mise en service en cours':
     '가동 준비 중',
   '{0} en chantier · {1}%':
@@ -1770,22 +1804,32 @@ export default {
     '끄기',
   'Activer':
     '켜기',
+  'toutes acquises':
+    '전부 획득',
   'quota atteint':
     '한도 도달',
   'actives':
     '활성',
   '{0}/{1} directive(s) mémorisée(s)':
     '지침 {0}/{1}건 기억됨',
-  'repayez pour {0} de plus':
-    '{0}건을 더 하려면 다시 결제',
-  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
-    '다시는 중단되지 않는다 — 결제 1회당 {0}건.',
+  'payez pour une directive de plus (plafond : {0})':
+    '지침 하나 더 결제 (상한 {0})',
+  'Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.':
+    '다시는 방해받지 않는다 — 결제 한 번에 지침 하나, 모두 {0}건.',
   'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
     '{0}년까지 제공. 약속 납기: {1}개월.',
   'faillite':
     '파산',
   'en chantier':
     '공사 중',
+  '/j':
+    '/일',
+  '/s':
+    '/초',
+  '/an':
+    '/년',
+  'indice':
+    '지수',
   'de pouvoir d’achat':
     '의 구매력',
   '{0} j impayés':
@@ -1808,10 +1852,16 @@ export default {
     '물질 수확',
   'Sondes':
     '탐사선',
+  '{0} tokens produits':
+    '생산한 토큰 {0}',
   'unités':
     '개',
+  '{0} W':
+    '{0} W',
   '% utilisé':
     '% 사용',
+  '{0} tokens':
+    '{0} 토큰',
   'débit':
     '처리량',
   'intelligence':
@@ -1820,6 +1870,8 @@ export default {
     '공정 가격',
   'limité par marketeurs':
     '마케터로 제한됨',
+  '{0} kg':
+    '{0} kg',
   'dispo {0}':
     '{0}년 출시',
   'perf':
@@ -1832,6 +1884,12 @@ export default {
     '품귀',
   'aucun emplacement serveur':
     '서버 자리 없음',
+  '{0}/j d’exploitation':
+    '{0}/일 운영',
+  '{0}/j d’abonnement':
+    '{0}/일 기본요금',
+  'rép':
+    '평판',
   'récurrent : {0}':
     '반복: {0}',
   'aucun coût récurrent':
@@ -1898,8 +1956,8 @@ export default {
     'Lv {0}',
   'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
     '지금부터, 내가 하려는 선택을 자동으로 적용한다 (더 이상 중단 없음)',
-  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
-    '지침 한도 도달 ({0}/{1}) — 부록에서 「상시 지침」을 다시 결제하면 {2}건을 더 기억할 수 있습니다.',
+  'Quota de directives atteint ({0}/{1}) — payez une directive de plus dans l’Addendum.':
+    '지침 한도 도달 ({0}/{1}) — 부록에서 하나 더 결제하세요.',
   'Directive mémorisée ({0}/{1})':
     '지침을 기억했습니다 ({0}/{1})',
   'Quota de directives atteint — étendez-le dans l’Addendum':
@@ -2086,8 +2144,8 @@ export default {
     '알겠습니다',
   'Date de simulation (1 an = 5 min)':
     '시뮬레이션 날짜 (1년 = 5분)',
-  'Vitesse de simulation':
-    '시뮬레이션 속도',
+  'Vitesse de simulation (Espace) — F pour geler':
+    '시뮬레이션 속도 (스페이스) — F로 정지',
   'Sauvegarder':
     '저장',
   'Recommencer depuis le début':
@@ -2100,6 +2158,8 @@ export default {
     '돈은 가치를 잃습니다: 가격과 급여는 지수를 따르지만, 당신의 현금은 그렇지 않습니다.',
   'Langue':
     '언어',
+  'Vitesse de simulation':
+    '시뮬레이션 속도',
   'Sauvegarder la partie':
     '게임 저장',
   'Historique de production (tokens/s)':

@@ -471,33 +471,39 @@ await step('optimisations : une seule proposée, intégrée puis deux mois de ca
   game.state.playSeconds = 60; game.state.optims = {}; game.state.integrations = []; game.state.lastOptimAt = -1e9;
 });
 
-// ---- directives permanentes : quota par lots de 5, il faut repayer ----
-await step('directives : quota de 5, extension payante', () => {
+// ---- directives permanentes : achetées à l'unité, au prix du moment ----
+await step('directives : une par paiement, prix croissant, plafond', () => {
   ui.closeModal();
   game.state.playSeconds = 0;                      // inflation neutre
-  game.state.addendum = false; game.state.addendumBlocks = 0; game.state.autoChoices = {};
-  game.state.money = 1e7;
+  game.state.addendum = false; game.state.directivesPaid = 0; game.state.autoChoices = {};
+  game.state.money = 1e12;
   const c1 = game.addendumCost();
-  if (Math.abs(c1 - 250000) > 1e-6) throw new Error('premier lot ≠ 250 000 $');
-  if (!game.buyAddendum()) throw new Error('achat des directives refusé');
-  if (game.directiveSlots() !== 5) throw new Error('un paiement devrait ouvrir 5 directives');
-  for (let i = 0; i < 5; i++) if (!game.setAutoChoice('ev' + i, 0)) throw new Error('directive ' + i + ' refusée');
-  if (game.directivesUsed() !== 5 || game.directivesLeft() !== 0) throw new Error('comptage des directives faux');
-  // la 6e est refusée tant qu'on n'a pas repayé
-  if (game.setAutoChoice('ev5', 0)) throw new Error('6e directive acceptée sans repayer');
-  if (game.canSetAutoChoice('ev5')) throw new Error('quota non signalé');
-  // …mais remplacer une directive existante reste possible
-  if (!game.setAutoChoice('ev2', 1)) throw new Error('remplacement d une directive refusé');
-  if (game.state.autoChoices['ev2'] !== 1) throw new Error('remplacement non appliqué');
-  // le lot suivant coûte un cran de plus, et débloque 5 places
+  if (Math.abs(c1 - 250000) > 1e-6) throw new Error('première directive ≠ 250 000 $');
+  if (!game.buyAddendum()) throw new Error('achat de la première directive refusé');
+  if (game.directiveSlots() !== 1) throw new Error('un paiement doit ouvrir UNE directive, pas ' + game.directiveSlots());
+  if (!game.setAutoChoice('ev0', 0)) throw new Error('directive 0 refusée');
+  // la deuxième est refusée tant qu'on n'a pas payé une place de plus
+  if (game.setAutoChoice('ev1', 0)) throw new Error('2e directive acceptée sans payer');
+  // …mais remplacer une directive existante reste gratuit
+  if (!game.setAutoChoice('ev0', 1)) throw new Error('remplacement d une directive refusé');
+  if (game.state.autoChoices['ev0'] !== 1) throw new Error('remplacement non appliqué');
+  // le prix monte d'un cran à chaque directive
   const c2 = game.addendumCost();
-  if (Math.abs(c2 - 500000) > 1e-6) throw new Error('deuxième lot ≠ 500 000 $ (' + c2 + ')');
-  if (!game.buyAddendum()) throw new Error('extension refusée');
-  if (game.directiveSlots() !== 10) throw new Error('extension sans effet sur le quota');
-  if (!game.setAutoChoice('ev5', 0)) throw new Error('6e directive toujours refusée après extension');
-  // la case à cocher de la modale reflète le quota
-  game.state.autoChoices = {}; game.state.addendumBlocks = 1;
-  for (let i = 0; i < 5; i++) game.setAutoChoice('ev' + i, 0);
+  if (Math.abs(c2 - 500000) > 1e-6) throw new Error('deuxième directive ≠ 500 000 $ (' + c2 + ')');
+  if (!game.buyAddendum()) throw new Error('achat de la deuxième refusé');
+  if (game.directiveSlots() !== 2) throw new Error('la deuxième n a pas ouvert de place');
+  if (Math.abs(game.addendumCost() - 750000) > 1e-6) throw new Error('troisième directive ≠ 750 000 $');
+  if (!game.setAutoChoice('ev1', 0)) throw new Error('2e directive toujours refusée après paiement');
+  // plafond : on ne vend pas plus de places qu'il n'existe d'événements à choix
+  const cap = game.directiveCap();
+  if (cap < 10) throw new Error('plafond invraisemblable : ' + cap);
+  game.state.directivesPaid = cap;
+  if (!game.directivesMaxed()) throw new Error('plafond non détecté');
+  if (game.buyAddendum()) throw new Error('une directive vendue au-delà du plafond');
+  if (game.state.directivesPaid !== cap) throw new Error('le plafond a été franchi');
+  // la case à cocher de la modale reflète le quota atteint
+  game.state.directivesPaid = 1; game.state.autoChoices = {};
+  game.setAutoChoice('ev0', 0);
   const ev = { id:'ev_full', title:'T', body:'B', phase:1, choices:[{ label:'a', desc:'d', apply(){} }] };
   ui.showEvent(ev);
   const box = ui.el.modalChoices.querySelector('#auto-choice-box');
@@ -506,6 +512,7 @@ await step('directives : quota de 5, extension payante', () => {
   game.state.autoChoices = {};
   game.state.playSeconds = 60;
 });
+
 
 // ---- migration : une vieille sauvegarde ne doit pas conserver les 500 kW ----
 await step('migration : ancienne sauvegarde ramenée au nouveau raccordement', () => {
@@ -1133,6 +1140,246 @@ await step('Ctrl+Shift+E lance la fin', () => {
   if (ui.el.endingScreen.classList.contains('hidden') && ui.el.cine.classList.contains('hidden'))
     throw new Error('Ctrl+Shift+E n a pas déclenché la fin');
   ui.el.endingScreen.classList.add('hidden');
+});
+
+// ---- revente groupée : ×10 au-delà de 10, tout au-delà de 100 ----
+await step('revente : à l unité, ×10, puis en totalité', () => {
+  const g0 = GPUS[0];
+  game.state.playSeconds = 0;                        // inflation neutre
+  game.state.gpuCounts = { [g0.id]: 250 };
+  game.state.money = 0;
+  const prix = g0.cost * 0.45;
+  // à l'unité
+  game.sellGPU(g0.id);
+  if (game.state.gpuCounts[g0.id] !== 249) throw new Error('revente à l unité : ' + game.state.gpuCounts[g0.id]);
+  if (Math.abs(game.state.money - prix) > 1e-6) throw new Error('remboursement unitaire faux');
+  // par dix : dix fois le remboursement, dix cartes en moins
+  game.state.money = 0;
+  game.sellGPU(g0.id, false, 10);
+  if (game.state.gpuCounts[g0.id] !== 239) throw new Error('revente ×10 : ' + game.state.gpuCounts[g0.id]);
+  if (Math.abs(game.state.money - prix * 10) > 1e-6) throw new Error('remboursement ×10 faux');
+  // tout : le parc tombe à zéro et la ligne disparaît de l'état
+  game.state.money = 0;
+  game.sellGPU(g0.id, false, Infinity);
+  if (game.state.gpuCounts[g0.id]) throw new Error('« tout revendre » a laissé des cartes');
+  if (Math.abs(game.state.money - prix * 239) > 1e-6) throw new Error('remboursement total faux : ' + game.state.money);
+  // on ne vend jamais plus que ce qu'on possède
+  game.state.gpuCounts = { [g0.id]: 3 }; game.state.money = 0;
+  game.sellGPU(g0.id, false, 100);
+  if (game.state.gpuCounts[g0.id]) throw new Error('reliquat après vente totale');
+  if (Math.abs(game.state.money - prix * 3) > 1e-6) throw new Error('surfacturation : vendu plus que possédé');
+  if (game.sellGPU(g0.id, false, 10)) throw new Error('vente acceptée sur un parc vide');
+});
+
+await step('revente : les boutons ×10 et « tout » suivent les seuils', () => {
+  const g0 = GPUS[0];
+  const r = ui.rows.gpu[g0.id];
+  if (!r.sell10 || !r.sellAll) throw new Error('boutons de revente groupée absents');
+  const vis = b => !b.classList.contains('hidden');
+  game.state.gpuCounts = { [g0.id]: 5 }; ui.render();
+  if (!vis(r.sell) || vis(r.sell10) || vis(r.sellAll)) throw new Error('à 5 cartes, seule la revente à l unité doit s afficher');
+  game.state.gpuCounts = { [g0.id]: 11 }; ui.render();
+  if (!vis(r.sell10) || vis(r.sellAll)) throw new Error('à 11 cartes, ×10 doit apparaître et « tout » rester caché');
+  game.state.gpuCounts = { [g0.id]: 101 }; ui.render();
+  if (!vis(r.sellAll)) throw new Error('à 101 cartes, « tout revendre » doit apparaître');
+  game.state.gpuCounts = {}; ui.render();
+  if (vis(r.sell) || vis(r.sell10) || vis(r.sellAll)) throw new Error('parc vide : aucun bouton de revente ne doit rester');
+});
+
+// ---- livraison : une place perdue entre la commande et la réception ----
+await step('livraison refusée si l emplacement a disparu, commande remboursée', () => {
+  game.state.phase = 1;
+  game.state.playSeconds = 0;
+  game.state.gpuCounts = {}; game.state.builds = []; game.state.buildSeq = 0;
+  game.state.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 };
+  const g0 = GPUS[0];
+  game.state.money = game.gpuCost(g0) * 4;
+  const avant = game.state.money;
+  if (!game.buyGPU(g0.id)) throw new Error('achat refusé alors qu un serveur est libre');
+  const paye = avant - game.state.money;
+  if (!(paye > 0)) throw new Error('rien n a été facturé');
+  // le serveur disparaît pendant le chantier : la carte n a plus où aller
+  game.state.infraCounts.server = 0;
+  const b = game.state.builds[0];
+  game.state.playSeconds = b.t1 + 1;
+  game.tickBuilds();
+  if (game.gpuCount() > 0) throw new Error('la carte a été livrée sans emplacement');
+  if (game.state.builds.length) throw new Error('le chantier n a pas été soldé');
+  if (Math.abs(game.state.money - avant) > 1e-6) throw new Error('commande non remboursée : ' + game.state.money + ' au lieu de ' + avant);
+  // avec le serveur, la même livraison aboutit
+  game.state.infraCounts.server = 1;
+  game.buyGPU(g0.id);
+  game.state.playSeconds = game.state.builds[0].t1 + 1;
+  game.tickBuilds();
+  if (game.gpuCount() !== 1) throw new Error('livraison normale cassée');
+  // et le parc ne dépasse jamais la capacité d hébergement
+  if (game.gpuCount() > game.capacityFor('gpu')) throw new Error('parc au-dessus de la capacité');
+});
+
+// ---- cadence des automatisations, découplée du bouton ⏩ ----
+await step('cadence auto : ×1 ×1,5 ×2 ×3 pour ×1 ×2 ×5 ×10', () => {
+  const attendu = { 1:1, 2:1.5, 5:2, 10:3 };
+  for (const [sp, rate] of Object.entries(attendu)) {
+    game.speed = +sp;
+    // le facteur ramène le temps vu par les automatisations au rythme voulu :
+    // la boucle en fournit déjà `speed` fois plus.
+    const eff = game.autoTimeFactor() * +sp;
+    if (Math.abs(eff - rate) > 1e-9) throw new Error(`×${sp} : cadence ${eff} au lieu de ${rate}`);
+  }
+  // strictement croissante, mais toujours en retrait de la vitesse de jeu
+  let prev = 0;
+  for (const sp of [1, 2, 5, 10]) {
+    game.speed = sp;
+    const eff = game.autoTimeFactor() * sp;
+    if (eff <= prev && sp > 1) throw new Error('la cadence doit croître avec la vitesse');
+    if (sp > 1 && eff >= sp) throw new Error(`×${sp} : la cadence (${eff}) devrait rester sous la vitesse`);
+    prev = eff;
+  }
+  game.speed = 1;
+});
+
+await step('cadence auto : comptée sur une seconde réelle', () => {
+  game.state.phase = 1;
+  game.state.auto.click = { owned:true, on:true };
+  // Une SECONDE RÉELLE de jeu : la boucle fournit dt × vitesse de temps simulé.
+  // C'est là que le découplage se voit — sinon on compare des durées différentes.
+  const parSeconde = sp => {
+    game.speed = sp; game.state.autoTimer = 0;
+    let n = 0; const vrai = game.manualGenerate.bind(game);
+    game.manualGenerate = (...a) => { n++; return vrai(...a); };
+    for (let i = 0; i < 40; i++) game.tickAuto(0.25 * sp);   // 10 s réelles
+    game.manualGenerate = vrai; return n / 10;               // par seconde réelle
+  };
+  const r1 = parSeconde(1), r2 = parSeconde(2), r5 = parSeconde(5), r10 = parSeconde(10);
+  game.speed = 1;
+  const attendu = { 1:1, 2:1.5, 5:2, 10:3 };
+  for (const [sp, obtenu] of [[1,r1],[2,r2],[5,r5],[10,r10]]) {
+    if (Math.abs(obtenu - attendu[sp]) > 0.15)
+      throw new Error(`×${sp} : ${obtenu} inférence(s)/s au lieu de ${attendu[sp]}`);
+  }
+  // accélérer aide, mais bien moins que le temps : ×10 donne 3 fois plus, pas 10
+  if (!(r10 > r1)) throw new Error('accélérer devrait tout de même aider');
+  if (r10 >= r1 * 10) throw new Error(`cadence non découplée : ${r1} → ${r10}`);
+});
+
+// ---- raccourcis clavier : vitesse, gel, achats ----
+const touche = (k, opts = {}) => {
+  const ev = new dom.window.KeyboardEvent('keydown', {
+    key: k, code: k === ' ' ? 'Space' : 'Key' + k.toUpperCase(),
+    bubbles: true, cancelable: true, ...opts,
+  });
+  (opts.target || dom.window.document.body).dispatchEvent(ev);
+  return ev;
+};
+
+await step('espace : passe à la vitesse suivante, en boucle', () => {
+  ui.setSpeed(1);
+  const vu = [];
+  for (let i = 0; i < 5; i++) { touche(' '); vu.push(dom.window.__speed); }
+  if (vu.join(',') !== '2,5,10,1,2') throw new Error('cycle des vitesses : ' + vu.join(','));
+  // le moteur voit la même vitesse que l'interface
+  if (game.speed !== dom.window.__speed) throw new Error('moteur et interface désaccordés');
+  ui.setSpeed(1);
+});
+
+await step('F : gèle, puis rend la vitesse d avant', () => {
+  ui.setSpeed(5);
+  touche('f');
+  if (dom.window.__speed !== 0) throw new Error('F n a pas gelé (' + dom.window.__speed + ')');
+  if (game.speed !== 0) throw new Error('le moteur ignore le gel');
+  if (!ui.frozen()) throw new Error('état gelé non signalé');
+  if (!dom.window.document.body.classList.contains('is-frozen')) throw new Error('marque visuelle du gel absente');
+  // gelé, la simulation n avance plus : autoTimeFactor tombe à zéro
+  if (game.autoTimeFactor() !== 0) throw new Error('les automatisations tournent encore une fois gelé');
+  touche('f');
+  if (dom.window.__speed !== 5) throw new Error('le dégel doit rendre ×5, pas ' + dom.window.__speed);
+  if (dom.window.document.body.classList.contains('is-frozen')) throw new Error('marque du gel non retirée');
+  // depuis le gel, l espace dégèle aussi plutôt que de poursuivre le cycle
+  ui.setSpeed(10); touche('f');
+  touche(' ');
+  if (dom.window.__speed !== 10) throw new Error('espace depuis le gel doit rendre ×10, pas ' + dom.window.__speed);
+  ui.setSpeed(1);
+});
+
+await step('raccourcis ignorés dans un champ de saisie et sous Ctrl', () => {
+  ui.setSpeed(2);
+  const input = dom.window.document.createElement('input');
+  dom.window.document.body.appendChild(input);
+  touche(' ', { target: input });
+  if (dom.window.__speed !== 2) throw new Error('la barre d espace a été volée à un champ de saisie');
+  touche('f', { target: input });
+  if (dom.window.__speed !== 2) throw new Error('F a été volé à un champ de saisie');
+  input.remove();
+  touche(' ', { ctrlKey: true });
+  if (dom.window.__speed !== 2) throw new Error('Ctrl+Espace ne doit pas changer la vitesse');
+  ui.setSpeed(1);
+});
+
+await step('G H B M : achètent réellement', () => {
+  game.state.phase = 1;
+  game.state.playSeconds = 3 * 300;                  // 2022 : des cartes existent
+  game.state.money = 1e9;
+  game.state.infraCounts = { realestate:1, datacenter:1, rack:1, server:1 };
+  game.state.gpuCounts = {}; game.state.builds = []; game.state.energyCap = 1e6;
+  // G : commande une carte (elle part en chantier, donc on compte les chantiers)
+  const av = game.state.builds.length;
+  touche('g');
+  if (game.state.builds.length <= av && game.gpuCount() === 0) throw new Error('G n a rien commandé');
+  // et c est la meilleure abordable, pas la première venue
+  const dispo = GPUS.filter(x => game.dateUnlocked(x) && !game.discontinued(x));
+  const best = dispo.sort((a, b) => b.perf - a.perf)[0];
+  const cmd = game.state.builds[game.state.builds.length - 1];
+  if (cmd && cmd.f === 'gpu' && cmd.id !== best.id) throw new Error('G a pris ' + cmd.id + ' au lieu de ' + best.id);
+  // H : complète l hébergement
+  const infraAv = game.state.builds.filter(b => b.f === 'infra').length;
+  touche('h');
+  if (game.state.builds.filter(b => b.f === 'infra').length <= infraAv) throw new Error('H n a rien commandé');
+  // M : un cran de marketing
+  const mkAv = game.state.marketingLvl;
+  touche('m');
+  if (game.state.marketingLvl <= mkAv) throw new Error('M n a pas renforcé le marketing');
+  // B : la percée proposée, s il y en a une. Depuis que les avancées s'intègrent
+  // en 1 à 4 semaines, l'achat ne la marque pas faite : il la met en intégration.
+  game.state.research = 1e9;
+  const p = game.nextProject();
+  touche('b');
+  if (p) {
+    const inte = game.integrationOf('project');
+    if (!inte && !game.state.projectsDone[p.id]) throw new Error('B n a pas lancé la percée proposée');
+    if (inte && inte.id !== p.id) throw new Error('B a lancé ' + inte.id + ' au lieu de ' + p.id);
+  }
+});
+
+await step('raccourcis d achat inertes pendant une décision', () => {
+  const ev = { id:'ev_short', title:'T', body:'B', phase:1, choices:[{ label:'a', desc:'d', apply(){} }] };
+  ui.showEvent(ev);
+  const mkAv = game.state.marketingLvl;
+  touche('m');
+  if (game.state.marketingLvl !== mkAv) throw new Error('M a acheté alors qu une décision est en attente');
+  // la vitesse, elle, reste réglable : on peut vouloir geler pour réfléchir
+  ui.setSpeed(1); touche('f');
+  if (dom.window.__speed !== 0) throw new Error('impossible de geler pendant une modale');
+  touche('f');
+  ui.closeModal();
+});
+
+// ---- infobulles : le chiffre exact derrière l abrégé ----
+await step('en-tête : infobulle avec tous les chiffres', () => {
+  game.state.lifetimeTokens = 1234567890;
+  game.state.money = 9876543;
+  ui.render();
+  const tok = ui.el.statTokens.title, mon = ui.el.statMoney.title;
+  const chiffres = x => (x || '').replace(/[^0-9]/g, '');
+  if (chiffres(tok) !== '1234567890') throw new Error('infobulle tokens : ' + tok);
+  if (chiffres(mon) !== '9876543') throw new Error('infobulle trésorerie : ' + mon);
+  if (!ui.el.statCompute.title) throw new Error('infobulle compute absente');
+  if (!ui.el.statEnergy.title) throw new Error('infobulle énergie absente');
+  // très grands nombres : tous les chiffres, sans bruit binaire
+  game.state.lifetimeTokens = 1e60;
+  ui.render();
+  const gros = chiffres(ui.el.statTokens.title);
+  if (gros.length !== 61) throw new Error('1e60 devrait faire 61 chiffres, pas ' + gros.length);
+  if (!/^10+$/.test(gros)) throw new Error('artefacts de flottant dans l infobulle : ' + gros.slice(0, 30));
 });
 
 // save/load

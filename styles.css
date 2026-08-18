@@ -1607,3 +1607,24 @@ body.fx-invert .game-grid, body.fx-invert .topbar { filter: invert(1) hue-rotate
 @media (prefers-reduced-motion: reduce) {
   .item.fired, .item.auto-hit { animation: none; }
 }
+
+/* ---- partie gelée (touche F) -------------------------------------------
+   Le gel doit se voir sans être pénible : le bouton passe en teinte froide et
+   une fine bordure ceinture la page. Rien qui clignote — on peut rester figé
+   plusieurs minutes pour comparer des prix. */
+#btn-speed.frozen {
+  color: var(--accent-cold, #7fd4ff);
+  border-color: currentColor;
+  background: rgba(127, 212, 255, 0.12);
+}
+body.is-frozen::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  border: 2px solid rgba(127, 212, 255, 0.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  body.is-frozen::after { border-color: rgba(127, 212, 255, 0.5); }
+}

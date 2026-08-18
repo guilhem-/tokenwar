@@ -10,8 +10,8 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          PROGRAMS, DYSON_BOOST, DYSON_BOOST_MAX, CRYPTO_CYCLE, CRYPTO_UNLOCK,
          CHRONICLE, EXTRAVAGANCES, SOVEREIGN,
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
-         OPS_INCIDENTS, TRAINING_FAILURES } from './data.js';
-import { clamp, fmtPower } from './util.js';
+         OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED } from './data.js';
+import { clamp, fmtPower, fmtMoney } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -34,6 +34,10 @@ export const FUNDING = [
 export class Game {
   constructor(ui) {
     this.ui = ui;
+    // Vitesse de jeu courante (⏩). Portée par le moteur et non par `window`,
+    // pour que la simulation headless en dispose aussi. Hors sauvegarde : une
+    // partie rechargée repart en ×1.
+    this.speed = 1;
     this.reset();
   }
 
@@ -80,7 +84,7 @@ export class Game {
     s.crisisLost = 0;        // total perdu en incidents (statistique de fin)
     s.achievements = {};     // succès débloqués (id -> true)
     s.addendum = false;      // « Directives permanentes » achetées
-    s.addendumBlocks = 0;    // lots de 5 directives payés (il faut repayer pour étendre)
+    s.directivesPaid = 0;    // directives achetées à l'unité (chacune au prix du moment)
     s.optims = {};           // optimisations récurrentes : id -> {n, nextAt}
     // programmes par étapes (fusion, sphère de Dyson) : id -> {stage, at, n}
     s.programs = {};
@@ -230,10 +234,13 @@ export class Game {
     const price = Math.max(0, (item && item.cost) || (item && item.costBase) || 0);
     return Math.min(cfg.cap, cfg.base + cfg.k * Math.log10(1 + price / 1000));
   }
-  queueBuild(family, id, item) {
+  // `paid` mémorise ce que la commande a réellement coûté : si la livraison est
+  // refusée faute de place, on rend exactement cette somme. Rembourser au prix
+  // du jour ferait de l'inflation un petit arbitrage.
+  queueBuild(family, id, item, paid = 0) {
     const sec = this.buildSeconds(family === 'infra' ? id : family, item);
-    if (sec <= 0) return this.finishBuild({ f: family, id });   // instantané
-    this.state.builds.push({ n: ++this.state.buildSeq, f: family, id,
+    if (sec <= 0) return this.finishBuild({ f: family, id, paid });   // instantané
+    this.state.builds.push({ n: ++this.state.buildSeq, f: family, id, paid,
       t0: this.state.playSeconds, t1: this.state.playSeconds + sec });
     return true;
   }
@@ -251,8 +258,36 @@ export class Game {
     }
     return best === null ? null : clamp(best, 0, 1);
   }
+  // Une place réservée à la commande peut avoir disparu avant la livraison : un
+  // datacenter loué rendu, une baie perdue, une colocation résiliée. Sans ce
+  // contrôle, la livraison entrait quand même et le parc dépassait sa capacité
+  // — des cartes hébergées nulle part. On refuse alors la mise en service et on
+  // rembourse : la commande n'a jamais abouti, elle ne doit rien coûter.
+  deliverable(b) {
+    if (!this.hostingActive()) return true;         // en phase ≥ 2 l'ASI s'auto-héberge
+    if (b.f === 'gpu') return this.freeSlots('gpu') >= 1;
+    if (b.f === 'infra') {
+      const parent = INFRA.find(x => x.child === b.id);
+      return !parent || this.freeSlots(b.id) >= 1;  // l'immobilier n'a pas de parent
+    }
+    return true;                                    // l'énergie n'occupe aucun emplacement
+  }
+  cancelBuild(b) {
+    const s = this.state;
+    const item = b.f === 'gpu' ? GPUS.find(x => x.id === b.id) : INFRA.find(x => x.id === b.id);
+    const name = item ? td(item.name) : b.id;
+    // vieilles sauvegardes : le montant payé n'y figure pas, on retombe sur le prix courant
+    const refund = b.paid != null ? b.paid
+      : b.f === 'gpu' ? (item ? this.gpuCost(item) : 0)
+      : b.f === 'infra' ? (item ? this.infraCost(item) : 0) : 0;
+    s.money += refund;
+    this.log(t('Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).',
+      name, fmtMoney(refund)), 'bad');
+    return false;
+  }
   finishBuild(b) {
     const s = this.state;
+    if (!this.deliverable(b)) return this.cancelBuild(b);
     if (b.f === 'gpu') s.gpuCounts[b.id] = (s.gpuCounts[b.id] || 0) + 1;
     else if (b.f === 'infra') s.infraCounts[b.id] = (s.infraCounts[b.id] || 0) + 1;
     else if (b.f === 'energy') {
@@ -439,7 +474,7 @@ export class Game {
     const cost = this.infraCost(item);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
-    this.queueBuild('infra', id, item);          // mise en service différée (chantier)
+    this.queueBuild('infra', id, item, cost);    // mise en service différée (chantier)
     return true;
   }
   canBuyInfra(id) {
@@ -568,7 +603,18 @@ export class Game {
   // 4 datacenters — exiger 4 places libres revenait à en racheter en permanence.
   autoBuffer(it) { return it.child === 'gpu' ? 4 : 1; }
 
-  tickAuto(dt) {
+  // Facteur à appliquer au temps vu par les automatisations. La boucle appelle
+  // déjà tick() `speed` fois plus longtemps ; on ramène ce facteur à la valeur
+  // voulue (×1 ×1,5 ×2 ×3 pour ×1 ×2 ×5 ×10). Rapport < 1 dès ×2 : accélérer le
+  // jeu accélère les automatisations, mais nettement moins que le reste.
+  autoTimeFactor() {
+    const sp = this.speed == null ? 1 : this.speed;
+    if (sp <= 0) return 0;                       // partie gelée : plus rien ne tourne
+    const rate = AUTO_SPEED[sp] != null ? AUTO_SPEED[sp] : Math.sqrt(sp);
+    return rate / sp;
+  }
+  tickAuto(dtRaw) {
+    const dt = dtRaw * this.autoTimeFactor();
     const s = this.state, au = s.auto;
     // inférence + achat des GPU sélectionnés : « par seconde »
     s.autoTimer += dt;
@@ -671,7 +717,7 @@ export class Game {
     const cost = this.gpuCost(g);
     if (this.state.money < cost) return false;
     this.state.money -= cost;
-    this.queueBuild('gpu', id, g);               // réception, rackage, burn-in
+    this.queueBuild('gpu', id, g, cost);         // réception, rackage, burn-in
     return true;
   }
   canBuyGPU(id) {
@@ -682,12 +728,16 @@ export class Game {
   }
   // revente du matériel obsolète : rembourse une fraction, libère un emplacement.
   // `stolen` = disparition sèche (vol), sans le moindre remboursement.
-  sellGPU(id, stolen) {
+  // Revente. `n` peut valoir 10, 100 ou Infinity (« tout revendre ») : on ne
+  // vend jamais plus que ce qui est en service, et on ne facture rien au joueur
+  // dont le parc a fondu entre le clic et l'exécution.
+  sellGPU(id, stolen, n = 1) {
     const owned = this.state.gpuCounts[id] || 0;
     if (owned < 1) return false;
+    const qty = Math.min(Math.floor(owned), Math.max(1, n));
     const g = GPUS.find(x => x.id === id);
-    const refund = stolen ? 0 : g.cost * 0.45 * this.inflIndex(); // 45% du prix réel du jour
-    this.state.gpuCounts[id] = owned - 1;
+    const refund = stolen ? 0 : g.cost * 0.45 * this.inflIndex() * qty; // 45% du prix réel du jour
+    this.state.gpuCounts[id] = owned - qty;
     if (this.state.gpuCounts[id] < 1e-9) delete this.state.gpuCounts[id];
     this.state.money += refund;
     return true;
@@ -698,7 +748,7 @@ export class Game {
     const cost = this.energyCost(e);
     if (this.state.money < cost) return false;
     this.state.money -= cost;                    // CAPEX : coût unique, payé à la commande
-    this.queueBuild('energy', id, e);            // puis raccordement / construction
+    this.queueBuild('energy', id, e, cost);      // puis raccordement / construction
     return true;
   }
   // ---- BOURSE (placer de l'argent, façon Paperclips) ----
@@ -1212,21 +1262,29 @@ export class Game {
   }
 
   // ---- Directives permanentes (addendum) : résolution automatique des événements ----
-  // Chaque paiement ouvre 5 directives mémorisables ; le lot suivant coûte un
-  // cran de plus (250k, 500k, 750k…). Au-delà du quota, il faut repayer.
-  addendumCost() { return this.moneyCost(ADDENDUM.cost * ((this.state.addendumBlocks || 0) + 1)); }
-  directiveSlots() { return (this.state.addendumBlocks || 0) * ADDENDUM.slotsPerBlock; }
+  // Une directive s'achète à l'UNITÉ, au prix du moment : la suivante coûte un
+  // cran de plus (250k, 500k, 750k…), inflation comprise. Le total est plafonné
+  // au nombre d'événements réellement porteurs de choix : au-delà, il n'y aurait
+  // plus rien à mémoriser — on ne vend pas une place qui ne servira jamais.
+  directiveCap() {
+    if (this._dirCap == null) this._dirCap = EVENTS.filter(e => e.choices && e.choices.length).length;
+    return this._dirCap;
+  }
+  addendumCost() { return this.moneyCost(ADDENDUM.cost * ((this.state.directivesPaid || 0) + 1)); }
+  directiveSlots() { return this.state.directivesPaid || 0; }
   directivesUsed() { return Object.keys(this.state.autoChoices).length; }
   directivesLeft() { return this.directiveSlots() - this.directivesUsed(); }
-  buyAddendum() {                                 // premier achat OU extension de quota
+  directivesMaxed() { return this.directiveSlots() >= this.directiveCap(); }
+  buyAddendum() {                                 // achat d'UNE directive de plus
+    if (this.directivesMaxed()) return false;
     const cost = this.addendumCost();
     if (this.state.money < cost) return false;
     this.state.money -= cost;
-    this.state.addendumBlocks = (this.state.addendumBlocks || 0) + 1;
+    this.state.directivesPaid = (this.state.directivesPaid || 0) + 1;
     this.state.addendum = true;
-    this.log(this.state.addendumBlocks === 1
-      ? t('Directives permanentes activées : {0} mémorisables.', this.directiveSlots())
-      : t('Quota de directives étendu : {0} mémorisables.', this.directiveSlots()), 'milestone');
+    this.log(this.state.directivesPaid === 1
+      ? t('Directives permanentes activées : {0} mémorisable.', this.directiveSlots())
+      : t('Directive supplémentaire achetée : {0} mémorisables.', this.directiveSlots()), 'milestone');
     return true;
   }
   // remplacer une directive existante ne consomme pas de place supplémentaire
@@ -1860,9 +1918,17 @@ export class Game {
       this.log(t('Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).',
         fmtPower(BASE_GRID_MW)), 'info');
     }
-    // Les directives permanentes se comptent désormais en lots de 5 : une partie
-    // qui les avait déjà payées conserve son premier lot.
-    if (s.addendum && !s.addendumBlocks) s.addendumBlocks = 1;
+    // Les directives se paient désormais à l'unité et non plus par lots de 5.
+    // Une partie en cours conserve la contenance qu'elle avait payée : chaque
+    // ancien lot vaut ses 5 directives, sans jamais dépasser le plafond.
+    if (raw.addendumBlocks != null || s.directivesPaid == null) {
+      const fromBlocks = (raw.addendumBlocks || (s.addendum ? 1 : 0)) * 5;
+      s.directivesPaid = Math.min(this.directiveCap(), Math.max(s.directivesPaid || 0, fromBlocks));
+      delete s.addendumBlocks;
+      if (s.directivesPaid > 0)
+        this.log(t('Mise à jour des règles : les directives s’achètent à l’unité. Vos {0} places sont conservées.',
+          s.directivesPaid), 'info');
+    }
     // L'auto-hébergement s'est scindé en « matériel » et « immobilier ».
     // On reporte l'ancien achat sur les deux, et les éléments cochés sur la
     // bonne famille — le joueur ne perd pas ce qu'il avait payé.

@@ -26,12 +26,21 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 053 chaînes × 7 langues = 7 371 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 084 chaînes × 7 langues = 7 588 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
 de jeu, appels `t()`, attributs `data-i18n`) — ajouter une chaîne la rend automatiquement
 obligatoire partout. Une langue n'est proposée que lorsque son fichier est complet.
+
+Un test attrape la fuite la plus sournoise : la chaîne **assemblée en dur dans le code**, qui
+n'entre jamais dans l'inventaire et s'affiche donc en français dans *toutes* les langues.
+C'est ainsi qu'un « /j d'abonnement » se lisait en anglais. Le critère n'est pas « cette
+chaîne est française » — les données de jeu le sont toutes, et c'est normal — mais « elle est
+française **et** absente de l'inventaire », donc rien ne la traduira jamais. Deux filets : les
+caractères accentués, et une liste de mots que ni l'anglais, ni l'espagnol, ni le portugais ne
+partagent (pour attraper « par seconde », qui ne porte aucun accent). Les suffixes d'unités y
+sont passés : `/j` devient `/d`, `/T`, `/日`, `/일` selon la langue.
 
 ## Le concept
 
@@ -79,7 +88,10 @@ de son année.
 - **Délais de mise en service** : rien n'est instantané. Toute commande part en **chantier**
   pour une durée croissant avec sa **complexité** (`base + k·log₁₀(prix)`) — quelques secondes
   pour une carte gamer, un mois de simulation pour un datacenter, plusieurs pour un SMR.
-  L'emplacement parent est réservé dès la commande.
+  L'emplacement parent est réservé dès la commande — **et revérifié à la livraison**. Si la
+  place a disparu entre-temps (datacenter loué rendu, colocation résiliée), la mise en service
+  est **refusée et la commande remboursée au centime payé**, inflation comprise. Le parc ne
+  peut donc jamais dépasser sa capacité d'hébergement : plus de cartes logées nulle part.
 - **Énergie — trois natures de coût bien séparées** : le **capex** (unique, à la commande),
   l'**exploitation O&M** (fixe, journalier, dû même à l'arrêt : $7 200/j pour un SMR),
   le **combustible** (variable, au MWh soutiré : gaz $70/MWh, réseau $78, solaire $0) et
@@ -203,7 +215,13 @@ toujours la même carte.
 - **Une carte d'automatisation n'apparaît qu'après 50 clics** sur ce qu'elle automatise. On
   n'automatise que ce qu'on a réellement fait à la main — et l'interface reste vide de boutons
   dont on ne comprend pas encore l'usage.
-- **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200.
+- **Achats groupés** : ×10 dès 20 exemplaires en service, ×100 dès 200. La **revente** suit
+  les mêmes paliers : à l'unité, **×10 au-delà de 10 cartes**, **tout revendre au-delà de 100**.
+  Liquider un parc de 300 RTX obsolètes ne demande plus trois cents clics.
+- **La cadence des automatisations est découplée du bouton ⏩.** En ×10 le temps va dix fois
+  plus vite, les automatisations seulement **trois** fois : ×1 ×2 ×5 ×10 de vitesse donnent
+  ×1 ×1,5 ×2 ×3 d'automatisation. Accélérer aide toujours, mais ne transforme plus la vitesse
+  en multiplicateur gratuit — et les cartes cessent de clignoter en stroboscope.
 - **Un chantier de recherche à la fois** : projets et percées se présentent **un par un**, et
   il s'écoule **au moins 2 mois de jeu** entre la disparition de l'un et l'apparition du
   suivant. Le panneau cesse d'être une liste de courses ; chaque décision a le temps de compter.
@@ -215,12 +233,25 @@ toujours la même carte.
   tous les 9 mois** (+6% compute, −2% énergie), une passe sur la **gestion du contexte
   tous les 12 mois** (+5% prix accepté). $1 000 pièce : le montant est négligeable,
   l'enjeu est d'y penser. **Une seule est proposée à la fois**, comme les percées.
+- **Raccourcis clavier.** **Espace** passe à la vitesse suivante ; **F** gèle la partie et la
+  relâche exactement à la vitesse qu'elle avait — geler ne coûte pas le réglage qu'on avait
+  choisi. Gelé, le temps s'arrête net mais l'interface reste vivante : on lit, on compare, on
+  achète, une fine bordure froide rappelle l'état. Côté achats : **G** commande la meilleure
+  carte qu'on puisse à la fois s'offrir *et* loger, **H** le niveau d'hébergement qui manque
+  réellement (en remontant serveur → baie → datacenter → immobilier), **B** la percée proposée,
+  **M** un cran de marketing. La ligne achetée clignote : un raccourci n'est jamais une action
+  invisible. Rien n'est intercepté dans un champ de saisie ni sous Ctrl.
+- **Chiffres exacts au survol** : l'en-tête abrège (`12,4 Md`) parce que ça se lit vite, mais
+  survoler un chiffre en donne **toutes les décimales**, groupées selon la langue. Au-delà de
+  quinze chiffres significatifs les zéros sont explicites plutôt que menteurs — un `double` ne
+  code pas au-delà, et `1e60` ne s'affiche pas en `999 999 …949 387`.
 - **Graphe de production** (tokens/s et $/s, échelle log).
 - **17 succès** à débloquer, écran de fin avec bilan moral (le sanctuaire de la biosphère…).
 - **Addendum — Directives permanentes** : cochez un choix d’événement pour qu’il s’applique
-  automatiquement les fois suivantes (plus d’interruption). Chaque paiement couvre
-  **5 directives** ; au-delà il faut **repayer**, et le lot suivant coûte un cran de plus
-  ($250k, $500k, $750k…). Remplacer une directive existante ne consomme pas de place.
+  automatiquement les fois suivantes (plus d’interruption). Elles s’achètent **une par une, au
+  prix du moment** — $250k, puis $500k, puis $750k… — et le total est **plafonné au nombre
+  d’événements qui portent réellement un choix** : au-delà il n’y aurait plus rien à mémoriser,
+  la ligne cesse de se vendre. Remplacer une directive existante ne consomme pas de place.
 - **Addendum — datacenter IA orbital** (2030-2040), l’offre piège : 18 mois de chantier,
   6 mois de retard… puis la faillite du consortium, et six mois plus tard l’affaire est
   classée — la ligne disparaît.

@@ -79,6 +79,32 @@ export function fmtFull(n) {
   return fmt(n);
 }
 
+// TOUS les chiffres, groupés selon la langue. Sert aux infobulles de l'en-tête :
+// « 12,4 Md » se lit vite, mais on veut parfois voir le nombre exact. Au-delà de
+// 1e21 JavaScript passe en notation exponentielle dans toLocaleString ; on
+// reconstruit alors les chiffres à la main depuis la mantisse et l'exposant.
+export function fmtDigits(n) {
+  if (n == null || isNaN(n)) return '0';
+  if (!isFinite(n)) return '∞';
+  const neg = n < 0; n = Math.abs(n);
+  let brut;
+  if (n < 1e21) {
+    brut = Math.floor(n).toString();
+  } else {
+    // 15 chiffres significatifs : au-delà, un double ne code plus que du bruit
+    // binaire (1e60 sortirait « 999 999 …949 387 »). On complète par des zéros,
+    // qui disent honnêtement « on ne sait pas au-delà ».
+    const [mant, exp] = n.toExponential(14).split('e');
+    const chiffres = mant.replace('.', '').replace(/^-/, '');
+    const zeros = Number(exp) + 1 - chiffres.length;
+    brut = zeros >= 0 ? chiffres + '0'.repeat(zeros) : chiffres.slice(0, Number(exp) + 1);
+  }
+  // groupement par milliers avec le séparateur de la langue
+  const sep = decimalSep() === ',' ? '\u202f' : ',';
+  const grouped = brut.replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+  return (neg ? '-' : '') + grouped;
+}
+
 export function clamp(x, lo, hi) {
   return Math.max(lo, Math.min(hi, x));
 }

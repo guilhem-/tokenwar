@@ -584,8 +584,8 @@ export default {
     '需要×2',
   'Directives permanentes':
     '常設ディレクティブ',
-  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
-    'COOがあなたの判断を記録する。イベントで選択肢にチェックを入れれば、次回からは自動で適用される。1回の支払いで5件ぶん。',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
+    'COOがあなたの判断を記録する。イベントで選択肢にチェックを入れれば、次回からは自動で適用される。支払い1回につき1件、次の1件はさらに高くつく。',
   'Datacenter IA orbital':
     '軌道AIデータセンター',
   'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
@@ -1066,8 +1066,8 @@ export default {
     'クリックしてトークンを生み、価格を決め（安く広く、高く厚く）、マーケティングを打ち、GPUと電力を買い、研究を溜め、より強力なモデルを学習させ、節目ごとに資金を調達する。',
   'Hébergement :':
     'ホスティング：',
-  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
-    'GPUはサーバーに、サーバーはラックに、ラックはデータセンターに、データセンターは不動産の上に収まらねばならない——そのどれもが電気を食う。古い機材は転売でき、発売から5年を超えたカードは市場から消える。データセンターやコロケーション枠を借りることもできる。',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    'GPUはサーバーに、サーバーはラックに、ラックはデータセンターに、データセンターは不動産の上に収まらねばならない——そのどれもが電気を食う。古い機材は転売でき、1枚ずつ、10枚を超えれば10枚単位、100枚を超えれば一括で手放せる。発売から5年を超えたカードは市場から消える。データセンターやコロケーション枠を借りることもできる。',
   '⚡ Au départ :':
     '⚡ 開始時：',
   'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
@@ -1112,14 +1112,18 @@ export default {
     '🔧 定期的な最適化：',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
     'CUDA最適化は18か月ごと、推論エンジンは9か月ごと、コンテキスト管理の見直しは12か月ごと。1件1,000ドル、問題は忘れないことだ。提示されるのは一度に一つだけで、ブレークスルーと同じように統合され、消えたものと次のものの間には2か月の間が空く。',
+  '⌨️ Raccourcis :':
+    '⌨️ ショートカット：',
+  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '**スペース**で次の速度へ、**F** で停止し、もう一度押せば元の速度で再開する。停止中は時間が止まるが画面は生きている——読む、比べる、買う、いずれもできる。**G** は買えて収容できる最良のカードを発注し、**H** は足りていない収容段を、**B** は提示中のブレイクスルーを、**M** はマーケティングを一段。ヘッダーの数字にカーソルを合わせると、最後の桁まで見える。',
   'Automatisation :':
     '自動化：',
-  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    '自動化は、その系統で**手作業を50回**こなすまで現れない。学んでいないものは自動化しない。系統は別々だ——推論、カード、ハードウェア（ラックとサーバー）、施設（建物とデータセンター）、エネルギー。買ったうえで、個々の項目に ⟳ auto を付ける。動作のたびにカードが脈打つので、機械が代わりに何をしたのか目で追える。⟳ と ×10 のボタンは稼働20台から、×100 は200台から現れる。',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
+    '自動化は、その系統で**手作業を50回**こなすまで現れない。学んでいないものは自動化しない。系統は別々だ——推論、カード、ハードウェア（ラックとサーバー）、施設（建物とデータセンター）、エネルギー。買ったうえで、個々の項目に ⟳ auto を付ける。動作のたびにカードが脈打つので、機械が代わりに何をしたのか目で追える。⟳ と ×10 のボタンは稼働20台から、×100 は200台から現れる。自動化の速さは ⏩ ボタンからあえて切り離してある。×10 では時間が10倍で進むが、自動化は3倍にしかならない。加速は助けになるが、判断の代わりにはならない。',
   '📋 Directives permanentes :':
     '📋 常設ディレクティブ：',
-  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
-    '1回の支払いで5つの判断を記憶でき、以後は自動で適用される。それを超えるには再度の支払いが必要で、次の枠はより高くつく。既存のディレクティブの差し替えは枠を消費しない。',
+  'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
+    '1回の支払いで**1つ**の判断を記憶し、以後は自動で適用される。次のディレクティブは一段高くつき、総数は選択肢を持つイベントの数が上限となる。既存のディレクティブの差し替えは枠を消費しない。',
   'Bourse :':
     '株式市場：',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1572,6 +1576,8 @@ export default {
     '最後の採取を加速する',
   'Conversion +50% pendant 90s.':
     '変換+50%を90秒。',
+  'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
+    '納入中止：{0} を収める空きがない。注文は返金（{1}）。',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     '給与が支払われなくなりました。滞納30日を過ぎると、チームは去りはじめます。',
   '⚠️ Salaires impayés':
@@ -1620,10 +1626,10 @@ export default {
     '第3段階 — 宇宙への拡張',
   'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
     '再圧縮特異点。すべての物質エネルギーが収束していく…',
-  'Directives permanentes activées : {0} mémorisables.':
-    '常設ディレクティブを有効化：{0}件まで記憶できます。',
-  'Quota de directives étendu : {0} mémorisables.':
-    'ディレクティブの上限を拡張：{0}件まで記憶できます。',
+  'Directives permanentes activées : {0} mémorisable.':
+    '常設ディレクティブ有効：{0} 件まで記憶。',
+  'Directive supplémentaire achetée : {0} mémorisables.':
+    'ディレクティブを追加購入：{0} 件まで記憶。',
   'Contrat signé : {0} — livraison promise dans {1} mois.':
     '契約成立：{0} — 納期は{1}か月の約束。',
   '🛰️ Datacenter orbital commandé':
@@ -1676,6 +1682,8 @@ export default {
     '実績：{0} — {1}',
   'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
     'ルール変更：無償の受電は {0} になりました。容量を調整しました（購入済みの電源は保持されます）。',
+  'Mise à jour des règles : les directives s’achètent à l’unité. Vos {0} places sont conservées.':
+    'ルール変更：ディレクティブは1件ずつ購入する方式になった。既存の {0} 枠は維持される。',
   '{0} h {1}':
     '{0}時間{1}',
   '{0} min':
@@ -1696,6 +1704,22 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     '新しいゲーム — 2019年',
+  'Aucune carte achetable : place, budget ou date.':
+    '購入できるカードがない。空き、予算、発売時期のいずれかが足りない。',
+  '{0} commandé':
+    '{0} を発注',
+  'Aucun hébergement achetable : place ou budget.':
+    '購入できる収容設備がない。空きか予算が足りない。',
+  'Aucune percée disponible pour l’instant.':
+    'いまは着手できるブレイクスルーがない。',
+  'Recherche insuffisante pour {0}':
+    '{0} には研究が足りない',
+  '{0} lancé':
+    '{0} に着手',
+  'Marketing : plafond atteint ou trésorerie insuffisante':
+    'マーケティング：上限に達したか資金が足りない',
+  'Marketing renforcé':
+    'マーケティングを強化',
   'Incident : {0}':
     'インシデント：{0}',
   'Pertes en cours':
@@ -1716,6 +1740,8 @@ export default {
     'セーブファイルが不正です',
   'Succès':
     '実績',
+  'figé':
+    '停止中',
   'Auto-achat de cet élément précis':
     'この項目だけを自動購入',
   'Réinitialiser les directives':
@@ -1740,6 +1766,14 @@ export default {
     '転売',
   'Revendre une carte (libère un emplacement)':
     'カードを転売する（枠が1つ空く）',
+  'Revendre ×10':
+    '×10 転売',
+  'Revendre dix cartes d’un coup':
+    'カード10枚をまとめて転売',
+  'Tout revendre':
+    'すべて転売',
+  'Revendre la totalité de ce modèle':
+    'この機種をすべて転売',
   'Mise en service en cours':
     '稼働開始の準備中',
   '{0} en chantier · {1}%':
@@ -1770,22 +1804,32 @@ export default {
     '無効にする',
   'Activer':
     '有効にする',
+  'toutes acquises':
+    'すべて取得済み',
   'quota atteint':
     '上限に到達',
   'actives':
     '有効',
   '{0}/{1} directive(s) mémorisée(s)':
     '{0}/{1}件のディレクティブを記憶',
-  'repayez pour {0} de plus':
-    'あと{0}件は再度の支払いで',
-  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
-    'もう二度と中断されない — 1回の支払いで{0}件。',
+  'payez pour une directive de plus (plafond : {0})':
+    'もう1件ぶん支払う（上限 {0}）',
+  'Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.':
+    'もう中断されない——支払い1回につき指令1件、全部で {0} 件。',
   'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
     '{0}年まで提供。納期の約束：{1}か月。',
   'faillite':
     '破綻',
   'en chantier':
     '工事中',
+  '/j':
+    '/日',
+  '/s':
+    '/秒',
+  '/an':
+    '/年',
+  'indice':
+    '指数',
   'de pouvoir d’achat':
     'の購買力',
   '{0} j impayés':
@@ -1808,10 +1852,16 @@ export default {
     '物質採取',
   'Sondes':
     '探査機',
+  '{0} tokens produits':
+    'トークン生産数 {0}',
   'unités':
     'ユニット',
+  '{0} W':
+    '{0} W',
   '% utilisé':
     '% 使用',
+  '{0} tokens':
+    '{0} トークン',
   'débit':
     'スループット',
   'intelligence':
@@ -1820,6 +1870,8 @@ export default {
     '公正価格',
   'limité par marketeurs':
     'マーケターで頭打ち',
+  '{0} kg':
+    '{0} kg',
   'dispo {0}':
     '{0}年から',
   'perf':
@@ -1832,6 +1884,12 @@ export default {
     '品薄',
   'aucun emplacement serveur':
     'サーバーの空き枠なし',
+  '{0}/j d’exploitation':
+    '{0}/日 運用',
+  '{0}/j d’abonnement':
+    '{0}/日 基本料金',
+  'rép':
+    '評判',
   'récurrent : {0}':
     '経常：{0}',
   'aucun coût récurrent':
@@ -1898,8 +1956,8 @@ export default {
     'Lv.{0}',
   'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
     '今後は、これから選ぶ選択肢を自動で適用する（もう中断しない）',
-  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
-    'ディレクティブが上限（{0}/{1}）— 付録で「常設ディレクティブ」を再度購入すれば、あと{2}件記憶できます。',
+  'Quota de directives atteint ({0}/{1}) — payez une directive de plus dans l’Addendum.':
+    '指令の枠が上限（{0}/{1}）——アデンダムでもう1件ぶん支払う。',
   'Directive mémorisée ({0}/{1})':
     'ディレクティブを記憶（{0}/{1}）',
   'Quota de directives atteint — étendez-le dans l’Addendum':
@@ -2086,8 +2144,8 @@ export default {
     '了解',
   'Date de simulation (1 an = 5 min)':
     'シミュレーション日付（1年 = 5分）',
-  'Vitesse de simulation':
-    'シミュレーション速度',
+  'Vitesse de simulation (Espace) — F pour geler':
+    'シミュレーション速度（スペース）——F で停止',
   'Sauvegarder':
     '保存',
   'Recommencer depuis le début':
@@ -2100,6 +2158,8 @@ export default {
     'お金は価値を失います：価格と給与は指数に追随しますが、あなたの現金は追随しません。',
   'Langue':
     '言語',
+  'Vitesse de simulation':
+    'シミュレーション速度',
   'Sauvegarder la partie':
     'ゲームを保存',
   'Historique de production (tokens/s)':

@@ -85,6 +85,41 @@ await step('aucune contamination d écriture entre langues', async () => {
   }
 });
 
+// Le piège le plus insidieux : une chaîne construite en dur dans le code, qui
+// n'entre jamais dans l'inventaire et s'affiche donc en français dans TOUTES
+// les langues (c'est ainsi qu'un « /j d'abonnement » s'était glissé en anglais).
+//
+// Le critère n'est pas « cette chaîne est française » — les données de jeu le
+// sont toutes, et c'est normal : elles passent par td() au rendu. C'est
+// « cette chaîne est française ET absente de l'inventaire », donc rien ne la
+// traduira jamais.
+await step('aucun texte français en dur hors de l inventaire', async () => {
+  const { readFileSync } = await import('fs');
+  const FILES = ['js/ui.js', 'js/game.js', 'js/fx.js', 'js/ending.js', 'js/main.js'];
+  const connu = new Set(strings);
+  const ACCENT = /[àâçèéêëîïôûùüœ]/i;
+  const MOTS = /\b(?:le|la|les|des|du|une|dans|avec|pour|par|est|sont|aucun|aucune|tous|toutes|chaque|vous|votre|jour|jours|mois|annee|annees|seconde|secondes|minute|minutes|heure|heures|semaine|semaines|cout|couts|achat|vente|revendre|puissance|energie|reseau|abonnement|exploitation|recurrent|niveau|nouveau|nouvelle|deja|selon|entre|sans|sous|depuis|avant|apres|pendant|libre|place|places|reste|pret|termine|indice|autre|autres|meme|encore|toujours|jamais|moins|trop|prochaine|suivant|suivante)\b/i;
+  const plat = x => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const francais = x => ACCENT.test(x) || MOTS.test(plat(x));
+  const bad = [];
+  for (const f of FILES) {
+    // un appel t('…') est légitime : on efface son contenu avant d'analyser
+    const src = readFileSync(f, 'utf8').replace(/\bt?d?\(\s*(['"`])(?:\\.|(?!\1)[\s\S])*?\1/g,
+      m => /^t\(|^td\(/.test(m) ? ' '.repeat(m.length) : m);
+    src.split('\n').forEach((line, i) => {
+      // commentaires : sans effet à l'écran, en tête de ligne comme en fin
+      const code = line.replace(/^\s*(\/\/|\*|\/\*).*$/, '').replace(/\s\/\/\s.*$/, '');
+      for (const raw of code.match(/(['"`])(?:\\.|(?!\1)[\s\S])*?\1/g) || []) {
+        const brut = raw.slice(1, -1);
+        if (connu.has(brut)) continue;                       // déjà traduisible
+        const txt = brut.replace(/\$\{[^{}]*\}/g, ' ').replace(/<[^>]+>/g, ' ');
+        if (francais(txt)) bad.push(`${f}:${i + 1} ${JSON.stringify(txt.trim().slice(0, 60))}`);
+      }
+    });
+  }
+  if (bad.length) throw new Error(`${bad.length} chaîne(s) française(s) que rien ne traduira — ${bad.join(' | ')}`);
+});
+
 if (errors.length) { console.log(`\n=== ${errors.length} ERREUR(S) ===`); errors.forEach(e => console.log(' - ' + e)); process.exit(1); }
 console.log('=== i18n OK — couverture complète ===');
 

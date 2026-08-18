@@ -2,11 +2,11 @@
 //  TokenWar — INTERFACE
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
-         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS } from './data.js';
+         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
-import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, pct, clamp } from './util.js';
+import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, fmtDigits, pct, clamp } from './util.js';
 import { t, td, LANGS, lang, setLang, needsPicker, onChange } from './i18n.js';
 
 const $ = id => document.getElementById(id);
@@ -248,14 +248,87 @@ export class UI {
         this.closeModal();
         this.el.endingScreen.classList.add('hidden');
         this.showEnding();
+        return;
       }
+      this.handleShortcut(e);
     });
     this.syncRiskTabs();
   }
 
-  resetSpeed() {
-    window.__speed = 1;
-    this.el.btnSpeed.textContent = '⏩ x1';
+  resetSpeed() { this.setSpeed(1); }
+
+  // ------------------------------------------------------------------
+  //  RACCOURCIS CLAVIER
+  //  Espace : vitesse suivante · F : geler / dégeler
+  //  G : une carte · H : le niveau d'hébergement qui manque · B : la percée
+  //  proposée · M : un cran de marketing.
+  //  On ne les intercepte jamais quand l'utilisateur écrit quelque part, ni
+  //  sous modificateur : Ctrl+S doit rester Ctrl+S.
+  // ------------------------------------------------------------------
+  handleShortcut(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+    const tag = (e.target && e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'select' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+    // la cinématique et l'écran final ont leurs propres règles
+    if (this.cinematic && !this.cinematic.done) return;
+    const k = e.key.toLowerCase();
+    if (k === ' ' || e.code === 'Space') { e.preventDefault(); this.cycleSpeed(); return; }
+    if (k === 'f') { e.preventDefault(); this.toggleFreeze(); return; }
+    // les achats restent bloqués tant qu'une décision est à prendre
+    if (this.modalOpen) return;
+    const actions = { g: () => this.quickBuyGPU(), h: () => this.quickBuyHosting(),
+                      b: () => this.quickBuyProject(), m: () => this.quickBuyMarketing() };
+    if (actions[k]) { e.preventDefault(); actions[k](); }
+  }
+  // Retour visuel commun : on fait clignoter la ligne réellement achetée, pour
+  // qu'un raccourci ne soit jamais une action invisible.
+  // Une infobulle n'est réécrite que si elle change : `title` sur un élément
+  // survolé referme le tooltip natif à chaque écriture, et le rendu tourne à
+  // 10 images par seconde.
+  tip(el, txt) {
+    if (el && el.title !== txt) el.title = txt;
+  }
+  flashRow(row) {
+    if (!row || !row.el) return;
+    row.el.classList.remove('auto-fire');
+    void row.el.offsetWidth;                    // force le redémarrage de l'animation
+    row.el.classList.add('auto-fire');
+    setTimeout(() => row.el && row.el.classList.remove('auto-fire'), 600);
+  }
+  // La meilleure carte qu'on puisse s'offrir ET loger : on ne descend en gamme
+  // que si la gamme au-dessus est hors de portée.
+  quickBuyGPU() {
+    const g = this.game;
+    const dispo = GPUS.filter(x => g.canBuyGPU(x.id)).sort((a, b) => b.perf - a.perf);
+    if (!dispo.length) return this.toast(t('Aucune carte achetable : place, budget ou date.'), 'warn');
+    if (!g.buyGPU(dispo[0].id)) return;
+    g.countClick('gpu');
+    this.flashRow(this.rows.gpu[dispo[0].id]);
+    this.toast(t('{0} commandé', td(dispo[0].name)), 'info');
+  }
+  // Le niveau qui manque, pas le plus cher : on remonte la chaîne serveur →
+  // baie → datacenter → immobilier et on achète le premier qui sature.
+  quickBuyHosting() {
+    const g = this.game;
+    const manquant = [...INFRA].reverse().find(it => g.plannedFreeSlots(it.child) < 1 && g.canBuyInfra(it.id))
+      || [...INFRA].reverse().find(it => g.canBuyInfra(it.id));
+    if (!manquant) return this.toast(t('Aucun hébergement achetable : place ou budget.'), 'warn');
+    if (!g.buyInfra(manquant.id)) return;
+    g.countClick(manquant.family);
+    this.flashRow(this.rows.infra && this.rows.infra[manquant.id]);
+    this.toast(t('{0} commandé', td(manquant.name)), 'info');
+  }
+  quickBuyProject() {
+    const g = this.game;
+    const p = g.nextProject && g.nextProject();
+    if (!p) return this.toast(t('Aucune percée disponible pour l’instant.'), 'warn');
+    if (!g.buyProject(p.id)) return this.toast(t('Recherche insuffisante pour {0}', td(p.name)), 'warn');
+    this.flashRow(this.rows.project && this.rows.project[p.id]);
+    this.toast(t('{0} lancé', td(p.name)), 'info');
+  }
+  quickBuyMarketing() {
+    if (!this.game.buyMarketing()) return this.deny(this.el.btnMarketing, t('Marketing : plafond atteint ou trésorerie insuffisante'));
+    this.toast(t('Marketing renforcé'), 'info');
   }
 
   // ------------------------------------------------------------------
@@ -442,12 +515,30 @@ export class UI {
     this.render(true);
   }
 
+  // Barre d'espace et bouton ⏩ font la même chose : passer à la vitesse
+  // suivante. Depuis l'état gelé, on ne poursuit pas le cycle — on dégèle.
   cycleSpeed() {
-    const speeds = [1, 2, 5, 10];
+    if (!(window.__speed > 0)) return this.setSpeed(this._speedBeforeFreeze || 1);
     const cur = window.__speed || 1;
-    const next = speeds[(speeds.indexOf(cur) + 1) % speeds.length];
-    window.__speed = next;
-    this.el.btnSpeed.textContent = '⏩ x' + next;
+    this.setSpeed(GAME_SPEEDS[(GAME_SPEEDS.indexOf(cur) + 1) % GAME_SPEEDS.length]);
+  }
+  // Gel : la simulation s'arrête net, l'interface reste vivante (on peut lire,
+  // comparer, acheter). On mémorise la vitesse d'avant pour la rendre telle
+  // quelle au dégel — sinon figer coûterait le réglage qu'on avait choisi.
+  toggleFreeze() {
+    if (window.__speed > 0) { this._speedBeforeFreeze = window.__speed; this.setSpeed(0); }
+    else this.setSpeed(this._speedBeforeFreeze || 1);
+  }
+  frozen() { return !(window.__speed > 0); }
+  // La vitesse est aussi portée par le moteur : les automatisations en ont
+  // besoin pour ralentir leur cadence, et le moteur tourne sans `window`
+  // (simulation headless).
+  setSpeed(n) {
+    window.__speed = n;
+    if (this.game) this.game.speed = n;
+    this.el.btnSpeed.textContent = n > 0 ? '⏩ x' + n : '⏸ ' + t('figé');
+    this.el.btnSpeed.classList.toggle('frozen', n <= 0);
+    document.body.classList.toggle('is-frozen', n <= 0);
   }
 
   // ------------------------------------------------------------------
@@ -635,13 +726,20 @@ export class UI {
       const r = this.makeRow(this.el.gpuList, g.id, this.rows.gpu);
       r.name.textContent = td(g.name);
       r.desc.textContent = td(g.desc);
-      const sell = document.createElement('button');
-      sell.className = 'sell-btn hidden';
-      sell.textContent = t('Revendre');
-      sell.title = t('Revendre une carte (libère un emplacement)');
-      sell.addEventListener('click', ev => { ev.stopPropagation(); this.game.sellGPU(g.id); });
-      r.effect.parentElement.appendChild(sell);
-      r.sell = sell;
+      // Revente : à l'unité, puis par paquets quand le parc le justifie. Les
+      // seuils suivent ceux de l'achat groupé — on ne propose de vendre en gros
+      // que ce qu'on possède déjà en gros.
+      const mkSell = (label, title, qty) => {
+        const b = document.createElement('button');
+        b.className = 'sell-btn hidden';
+        b.textContent = label; b.title = title;
+        b.addEventListener('click', ev => { ev.stopPropagation(); this.game.sellGPU(g.id, false, qty); });
+        r.effect.parentElement.appendChild(b);
+        return b;
+      };
+      r.sell    = mkSell(t('Revendre'),     t('Revendre une carte (libère un emplacement)'), 1);
+      r.sell10  = mkSell(t('Revendre ×10'), t('Revendre dix cartes d’un coup'), 10);
+      r.sellAll = mkSell(t('Tout revendre'), t('Revendre la totalité de ce modèle'), Infinity);
       r.el.addEventListener('click', () => {
         if (!this.game.dateUnlocked(g)) return;   // verrouillé par date → silencieux (grisé/label)
         if (this.game.buyGPU(g.id)) this.game.countClick('gpu');   // non achetable → no-op (grisé)
@@ -801,20 +899,25 @@ export class UI {
     const rd = this.rows.addendum['directives'];
     const cost = g.addendumCost();
     if (s.addendum) {
-      const used = g.directivesUsed(), slots = g.directiveSlots(), full = used >= slots;
-      // le quota atteint, la ligne redevient un achat : il faut repayer pour 5 de plus
-      rd.cost.innerHTML = full
-        ? `<span class="badge badge-warn">${t('quota atteint')}</span> <span class="num">${fmtMoney(cost)}</span>`
-        : `<span class="badge badge-new">${t('actives')}</span> <span class="num">${fmtMoney(cost)}</span>`;
+      const used = g.directivesUsed(), slots = g.directiveSlots();
+      const full = used >= slots, maxed = g.directivesMaxed();
+      // chaque clic achète UNE directive de plus, au prix du moment ; une fois
+      // le plafond atteint il n'y a plus d'événement à mémoriser, la ligne ne
+      // se vend plus.
+      rd.cost.innerHTML = maxed
+        ? `<span class="badge badge-new">${t('toutes acquises')}</span>`
+        : full
+          ? `<span class="badge badge-warn">${t('quota atteint')}</span> <span class="num">${fmtMoney(cost)}</span>`
+          : `<span class="badge badge-new">${t('actives')}</span> <span class="num">${fmtMoney(cost)}</span>`;
       rd.effect.innerHTML =
-        `<span class="${full ? 'text-bad' : 'text-muted'}">${t('{0}/{1} directive(s) mémorisée(s)', used, slots)}</span>` +
-        ` <span class="text-muted">· ${t('repayez pour {0} de plus', ADDENDUM.slotsPerBlock)}</span>`;
-      rd.el.classList.remove('owned');
-      this.setAfford(rd.el, s.money >= cost);
+        `<span class="${full && !maxed ? 'text-bad' : 'text-muted'}">${t('{0}/{1} directive(s) mémorisée(s)', used, slots)}</span>` +
+        (maxed ? '' : ` <span class="text-muted">· ${t('payez pour une directive de plus (plafond : {0})', g.directiveCap())}</span>`);
+      rd.el.classList.toggle('owned', maxed);
+      this.setAfford(rd.el, !maxed && s.money >= cost);
       rd.resetBtn.classList.toggle('hidden', used === 0);
     } else {
       rd.cost.textContent = fmtMoney(cost);
-      rd.effect.innerHTML = `<span class="text-muted">${t('Ne soyez plus jamais interrompu — {0} directives par paiement.', ADDENDUM.slotsPerBlock)}</span>`;
+      rd.effect.innerHTML = `<span class="text-muted">${t('Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.', g.directiveCap())}</span>`;
       this.setAfford(rd.el, s.money >= cost);
       rd.resetBtn.classList.add('hidden');
     }
@@ -844,16 +947,16 @@ export class UI {
   renderCharges() {
     const g = this.game;
     const c = g.dailyCharges();
-    this.el.chargeElecVar.textContent = fmtMoney(c.elecVar) + ' /j';
-    this.el.chargeElecFix.textContent = fmtMoney(c.elecFix) + ' /j';
-    this.el.chargeElecSub.textContent = fmtMoney(c.elecSub) + ' /j';
-    this.el.chargeSalary.textContent = fmtMoney(c.salary) + ' /j';
-    this.el.chargeRent.textContent = fmtMoney(c.rent) + ' /j';
-    this.el.chargeTotal.textContent = fmtMoney(c.elec + c.salary + c.rent) + ' /j';
-    this.el.chargeSec.textContent = '−' + fmtMoney(g.chargesPerSec()) + ' /s';
+    this.el.chargeElecVar.textContent = fmtMoney(c.elecVar) + ' ' + t('/j');
+    this.el.chargeElecFix.textContent = fmtMoney(c.elecFix) + ' ' + t('/j');
+    this.el.chargeElecSub.textContent = fmtMoney(c.elecSub) + ' ' + t('/j');
+    this.el.chargeSalary.textContent = fmtMoney(c.salary) + ' ' + t('/j');
+    this.el.chargeRent.textContent = fmtMoney(c.rent) + ' ' + t('/j');
+    this.el.chargeTotal.textContent = fmtMoney(c.elec + c.salary + c.rent) + ' ' + t('/j');
+    this.el.chargeSec.textContent = '−' + fmtMoney(g.chargesPerSec()) + ' ' + t('/s');
     // inflation : indice depuis 2019 et pouvoir d'achat perdu sur la trésorerie dormante
     const idx = g.inflIndex();
-    this.el.chargeInfl.innerHTML = `${(g.inflRate(g.simYearInt()) * 100).toFixed(1)}% /an · indice `
+    this.el.chargeInfl.innerHTML = `${(g.inflRate(g.simYearInt()) * 100).toFixed(1)}% ${t('/an')} · ${t('indice')} `
       + `<b>×${idx.toFixed(2)}</b> · <span class="text-bad">−${(g.purchasingLoss() * 100).toFixed(0)}%</span> ${t('de pouvoir d’achat')}`;
     // arriérés de salaire : compte à rebours avant les premières démissions
     const days = g.state.unpaidDays || 0;
@@ -962,20 +1065,26 @@ export class UI {
     this.el.simDate.textContent = g.dateLabel();
     // stats — le compteur de tokens produits est affiché avec TOUS ses chiffres
     this.el.statTokens.textContent = fmtFull(s.lifetimeTokens);
-    this.el.statTokensRate.textContent = fmt(s.rates.tokens) + ' /s';
+    // infobulles de l'en-tête : le chiffre abrégé se lit vite, mais on veut
+    // parfois voir la valeur exacte, jusqu'au dernier chiffre.
+    this.tip(this.el.statTokens, t('{0} tokens produits', fmtDigits(s.lifetimeTokens)));
+    this.el.statTokensRate.textContent = fmt(s.rates.tokens) + ' ' + t('/s');
     this.el.statMoney.textContent = fmtMoney(s.money);
-    this.el.statMoneyRate.textContent = fmtMoney(s.rates.money) + ' /s';
+    this.tip(this.el.statMoney, '$' + fmtDigits(s.money));
+    this.el.statMoneyRate.textContent = fmtMoney(s.rates.money) + ' ' + t('/s');
     this.el.statCompute.textContent = fmt(g.computeRaw());
+    this.tip(this.el.statCompute, fmtDigits(g.computeRaw()));
     this.el.statComputeSub.textContent = fmt(g.gpuCount()) + ' ' + t('unités');
     this.el.statEnergy.textContent = fmtPower(s.energyCap);
+    this.tip(this.el.statEnergy, t('{0} W', fmtDigits(s.energyCap * 1e6)));
     const use = g.energyUse();
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + t('% utilisé');
 
     // bouton générer : tokens + valeur de la vente directe
     const cv = g.clickValue();
-    this.el.btnGenerateSub.textContent = '+' + fmt(cv.amt) + ' tokens' + (g.phase < 2 ? ' · +' + fmtMoney(cv.revenue) : '');
+    this.el.btnGenerateSub.textContent = '+' + t('{0} tokens', fmt(cv.amt)) + (g.phase < 2 ? ' · +' + fmtMoney(cv.revenue) : '');
     // les tokens non vendus sont perdus : on affiche le débit perdu plutôt qu'un stock
-    this.el.invTokens.textContent = fmt(s.rates.lost || 0) + ' /s';
+    this.el.invTokens.textContent = fmt(s.rates.lost || 0) + ' ' + t('/s');
     this.sampleSpark();
 
     // modèle
@@ -993,8 +1102,8 @@ export class UI {
     const demand = s.lastDemand || 0, sell = s.lastSell || 0;
     this.maxDemand = Math.max(this.maxDemand * 0.995, demand, 1);
     this.el.demandFill.style.width = pct(demand / this.maxDemand) + '%';
-    this.el.demandValue.textContent = fmt(demand) + ' /s';
-    this.el.salesValue.textContent = fmt(sell) + ' /s';
+    this.el.demandValue.textContent = fmt(demand) + ' ' + t('/s');
+    this.el.salesValue.textContent = fmt(sell) + ' ' + t('/s');
     this.el.marketingLvl.textContent = s.marketingLvl;
     const mktCapped = s.marketingLvl >= g.marketingCap();
     this.el.marketingCost.textContent = mktCapped ? t('limité par marketeurs') : fmtMoney(g.marketingCost());
@@ -1021,7 +1130,7 @@ export class UI {
 
     // R&D
     this.el.researchValue.textContent = fmt(s.research);
-    this.el.researchRate.textContent = fmt(s.rates.research) + ' /s';
+    this.el.researchRate.textContent = fmt(s.rates.research) + ' ' + t('/s');
     this.el.dataValue.textContent = fmt(s.data);
     this.renderTrain();
 
@@ -1045,6 +1154,7 @@ export class UI {
     // matière (phase 2+)
     if (g.phase >= 2) {
       this.el.statMatter.textContent = fmtMass(s.matter);
+      this.tip(this.el.statMatter, t('{0} kg', fmtDigits(s.matter)));
       const consumed = g.phase >= 3 ? s.universeConsumed : s.earthConsumed;
       this.el.statMatterSub.textContent = (g.phase >= 3 ? 'univers ' : 'Terre ') + (consumed * 100).toFixed(consumed < 0.01 ? 4 : 2) + '%';
       this.refreshAllocLabels();
@@ -1123,7 +1233,11 @@ export class UI {
       const owned = s.gpuCounts[gpu.id] || 0;
       // carte sortie depuis +5 ans et non possédée → retirée du marché (supprimée de la liste)
       if (g.discontinued(gpu) && owned < 1) { r.el.classList.add('hidden'); return; }
-      if (r.sell) r.sell.classList.toggle('hidden', owned < 1);
+      // seuils de revente : l'unité dès qu'on en a une, ×10 au-delà de 10,
+      // « tout » au-delà de 100 — symétriques des paliers d'achat groupé.
+      if (r.sell)    r.sell.classList.toggle('hidden', owned < 1);
+      if (r.sell10)  r.sell10.classList.toggle('hidden', owned <= 10);
+      if (r.sellAll) r.sellAll.classList.toggle('hidden', owned <= 100);
       const unlocked = g.dateUnlocked(gpu);
       if (!unlocked) {
         // pas encore sorti : on l'annonce s'il arrive bientôt (≤ 2 ans)
@@ -1174,9 +1288,9 @@ export class UI {
       // on distingue explicitement le coût UNIQUE (affiché en tête) des coûts RÉCURRENTS
       const recur = [];
       if (e.fuelMWh) recur.push(`${fmtMoney(e.fuelMWh * g.inflIndex())}/MWh`);
-      if (e.omDaily) recur.push(`${fmtMoney(e.omDaily * g.inflIndex())}/j d’exploitation`);
-      if (e.subMWDay) recur.push(`${fmtMoney(e.subMWDay * e.mw * g.inflIndex())}/j d’abonnement`);
-      r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">rép ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`
+      if (e.omDaily) recur.push(t('{0}/j d’exploitation', fmtMoney(e.omDaily * g.inflIndex())));
+      if (e.subMWDay) recur.push(t('{0}/j d’abonnement', fmtMoney(e.subMWDay * e.mw * g.inflIndex())));
+      r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">${t('rép')} ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`
         + (recur.length ? ` <span class="text-muted">${t('récurrent : {0}', recur.join(' + '))}</span>` : ` <span class="text-muted">${t('aucun coût récurrent')}</span>`)
         + this.buildBadge('energy', e.id);
       this.setAfford(r.el, s.money >= cost);
@@ -1577,8 +1691,8 @@ export class UI {
         (ok
           ? t('Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)')
             + ` <b class="num">${g.directivesUsed()}/${g.directiveSlots()}</b>`
-          : t('Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.',
-              g.directivesUsed(), g.directiveSlots(), ADDENDUM.slotsPerBlock))
+          : t('Quota de directives atteint ({0}/{1}) — payez une directive de plus dans l’Addendum.',
+              g.directivesUsed(), g.directiveSlots()))
         + `</span>`;
       autoCheck = ok ? lab.querySelector('input') : null;
       this.el.modalChoices.appendChild(lab);

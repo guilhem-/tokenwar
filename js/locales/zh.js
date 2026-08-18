@@ -584,8 +584,8 @@ export default {
     '需求 ×2',
   'Directives permanentes':
     '常设指令',
-  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
-    '你的 COO 会记下你的决定：在某个事件里勾选一个选项，以后就会自动照办。每次付费涵盖 5 条指令。',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
+    '你的 COO 会记下你的决定：在某个事件里勾选一个选项，以后就会自动照办。每次付费涵盖一条指令，下一条更贵。',
   'Datacenter IA orbital':
     '轨道 AI 数据中心',
   'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
@@ -1066,8 +1066,8 @@ export default {
     '点击生成 token，定好价格（低价走量、高价走利），做市场推广，购买 GPU 和能源，积累研究，训练越来越强的模型，并在各个门槛处融资。',
   'Hébergement :':
     '托管：',
-  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
-    '一张 GPU 必须装进服务器，服务器装进机柜，机柜放进数据中心，数据中心建在不动产上——而这些同样耗电。过时的硬件可以转卖；上市超过 5 年的显卡会退出市场。你也可以租数据中心或租托管机位。',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    '一张 GPU 必须装进服务器，服务器装进机柜，机柜放进数据中心，数据中心建在不动产上——而这些同样耗电。过时的硬件可以转卖：单张出手，超过 10 张可十张一批，超过 100 张可一次清空；上市超过 5 年的显卡会退出市场。你也可以租数据中心或租托管机位。',
   '⚡ Au départ :':
     '⚡ 开局时：',
   'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
@@ -1112,14 +1112,18 @@ export default {
     '🔧 周期性优化：',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
     'CUDA 优化每 18 个月一次，推理引擎每 9 个月一次，上下文管理每 12 个月梳理一次。每项 1 000 美元，难的是记得去做。一次只提供一个，整合方式与突破相同，消失的那个与下一个之间相隔两个月。',
+  '⌨️ Raccourcis :':
+    '⌨️ 快捷键：',
+  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '**空格**切到下一档速度，**F** 冻结游戏，再按一次以原速恢复。冻结时时间停住，界面照常可用：可以读、可以比、可以买。**G** 订购你买得起也放得下的最好显卡，**H** 补上缺的那一层托管，**B** 启动当前提供的突破，**M** 加一档市场投入。把鼠标停在顶栏的数字上，就能看到它的每一位。',
   'Automatisation :':
     '自动化：',
-  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    '一项自动化要在同一类别里**手动操作 50 次**之后才出现：没学会的事不自动化。它们互相独立——推理、显卡、硬件（机柜与服务器）、场地（建筑与数据中心）、能源。买下之后，在每个具体条目上勾选 ⟳ auto。每次动作卡片都会脉动一下，让你看见机器替你做了什么。⟳ 和 ×10 按钮要在该项投入使用 20 个之后才出现，×100 则要 200 个。',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
+    '一项自动化要在同一类别里**手动操作 50 次**之后才出现：没学会的事不自动化。它们互相独立——推理、显卡、硬件（机柜与服务器）、场地（建筑与数据中心）、能源。买下之后，在每个具体条目上勾选 ⟳ auto。每次动作卡片都会脉动一下，让你看见机器替你做了什么。⟳ 和 ×10 按钮要在该项投入使用 20 个之后才出现，×100 则要 200 个。自动化的节奏刻意与 ⏩ 按钮脱钩：×10 时时间快十倍，自动化只快三倍。加速有帮助，但代替不了决策。',
   '📋 Directives permanentes :':
     '📋 常设指令：',
-  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
-    '每次付费可以记住 5 个决定，此后自动执行。超出就要再次付费，而且下一批更贵。替换已有指令不占名额。',
+  'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
+    '每次付费记住**一个**决定，此后自动执行。下一条指令贵一档，总数以带选项的事件数量为上限。替换已有指令不占名额。',
   'Bourse :':
     '股市：',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1572,6 +1576,8 @@ export default {
     '加速最后的采集',
   'Conversion +50% pendant 90s.':
     '转化 +50% 持续 90 秒。',
+  'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
+    '交付取消：已无空位安置 {0}。订单已退款（{1}）。',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     '工资已经发不出去了。拖欠满 30 天后，团队会开始离开。',
   '⚠️ Salaires impayés':
@@ -1620,10 +1626,10 @@ export default {
     '第三阶段 — 宇宙扩张',
   'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
     '再压缩奇点。全部物质与能量正在汇聚…',
-  'Directives permanentes activées : {0} mémorisables.':
+  'Directives permanentes activées : {0} mémorisable.':
     '常设指令已启用：可记住 {0} 条。',
-  'Quota de directives étendu : {0} mémorisables.':
-    '指令配额已扩容：可记住 {0} 条。',
+  'Directive supplémentaire achetée : {0} mémorisables.':
+    '已再购一条指令：可记住 {0} 条。',
   'Contrat signé : {0} — livraison promise dans {1} mois.':
     '合同已签：{0} — 承诺 {1} 个月内交付。',
   '🛰️ Datacenter orbital commandé':
@@ -1676,6 +1682,8 @@ export default {
     '成就：{0} — {1}',
   'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
     '规则更新：赠送的接电容量变为 {0}。你的容量已相应调整（已购买的能源保留）。',
+  'Mise à jour des règles : les directives s’achètent à l’unité. Vos {0} places sont conservées.':
+    '规则更新：指令改为逐条购买。你的 {0} 个名额予以保留。',
   '{0} h {1}':
     '{0} 小时 {1}',
   '{0} min':
@@ -1696,6 +1704,22 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     '新游戏 — 2019 年',
+  'Aucune carte achetable : place, budget ou date.':
+    '买不了显卡：没有空位、预算不足，或尚未上市。',
+  '{0} commandé':
+    '已订购 {0}',
+  'Aucun hébergement achetable : place ou budget.':
+    '买不了托管层级：没有空位或预算不足。',
+  'Aucune percée disponible pour l’instant.':
+    '目前没有可选的突破。',
+  'Recherche insuffisante pour {0}':
+    '研究不足，无法进行 {0}',
+  '{0} lancé':
+    '已启动 {0}',
+  'Marketing : plafond atteint ou trésorerie insuffisante':
+    '市场：已达上限或资金不足',
+  'Marketing renforcé':
+    '市场投入加码',
   'Incident : {0}':
     '事故：{0}',
   'Pertes en cours':
@@ -1716,6 +1740,8 @@ export default {
     '存档文件无效',
   'Succès':
     '成就',
+  'figé':
+    '已冻结',
   'Auto-achat de cet élément précis':
     '自动采购这一具体条目',
   'Réinitialiser les directives':
@@ -1740,6 +1766,14 @@ export default {
     '转卖',
   'Revendre une carte (libère un emplacement)':
     '转卖一张显卡（腾出一个机位）',
+  'Revendre ×10':
+    '转卖 ×10',
+  'Revendre dix cartes d’un coup':
+    '一次转卖十张显卡',
+  'Tout revendre':
+    '全部转卖',
+  'Revendre la totalité de ce modèle':
+    '转卖该型号的全部显卡',
   'Mise en service en cours':
     '正在投入使用',
   '{0} en chantier · {1}%':
@@ -1770,22 +1804,32 @@ export default {
     '停用',
   'Activer':
     '启用',
+  'toutes acquises':
+    '已全部购得',
   'quota atteint':
     '配额已满',
   'actives':
     '生效中',
   '{0}/{1} directive(s) mémorisée(s)':
     '已记住 {0}/{1} 条指令',
-  'repayez pour {0} de plus':
-    '再付费可多记 {0} 条',
-  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
-    '从此不再被打断 — 每次付费 {0} 条指令。',
+  'payez pour une directive de plus (plafond : {0})':
+    '再付费增加一条指令（上限：{0}）',
+  'Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.':
+    '再也不被打断——每次付费一条指令，共 {0} 条。',
   'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
     '供应至 {0} 年。承诺交付：{1} 个月。',
   'faillite':
     '破产',
   'en chantier':
     '在建',
+  '/j':
+    '/日',
+  '/s':
+    '/秒',
+  '/an':
+    '/年',
+  'indice':
+    '指数',
   'de pouvoir d’achat':
     '的购买力',
   '{0} j impayés':
@@ -1808,10 +1852,16 @@ export default {
     '物质采集',
   'Sondes':
     '探针',
+  '{0} tokens produits':
+    '已产出 {0} 个 token',
   'unités':
     '个单元',
+  '{0} W':
+    '{0} 瓦',
   '% utilisé':
     '% 已用',
+  '{0} tokens':
+    '{0} 个 token',
   'débit':
     '吞吐',
   'intelligence':
@@ -1820,6 +1870,8 @@ export default {
     '公允价格',
   'limité par marketeurs':
     '受市场专员限制',
+  '{0} kg':
+    '{0} 公斤',
   'dispo {0}':
     '{0} 年推出',
   'perf':
@@ -1832,6 +1884,12 @@ export default {
     '短缺',
   'aucun emplacement serveur':
     '没有服务器机位',
+  '{0}/j d’exploitation':
+    '{0}/日 运维',
+  '{0}/j d’abonnement':
+    '{0}/日 基本电费',
+  'rép':
+    '声誉',
   'récurrent : {0}':
     '经常性：{0}',
   'aucun coût récurrent':
@@ -1898,8 +1956,8 @@ export default {
     '等级 {0}',
   'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
     '从现在起，自动执行我即将做出的选择（不再打断）',
-  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
-    '指令配额已满（{0}/{1}）— 请在附录中再次购买「常设指令」以多记 {2} 条。',
+  'Quota de directives atteint ({0}/{1}) — payez une directive de plus dans l’Addendum.':
+    '指令名额已满（{0}/{1}）——在附录中再付费增加一条。',
   'Directive mémorisée ({0}/{1})':
     '已记住指令（{0}/{1}）',
   'Quota de directives atteint — étendez-le dans l’Addendum':
@@ -2086,8 +2144,8 @@ export default {
     '明白了',
   'Date de simulation (1 an = 5 min)':
     '模拟日期（1 年 = 5 分钟）',
-  'Vitesse de simulation':
-    '模拟速度',
+  'Vitesse de simulation (Espace) — F pour geler':
+    '模拟速度（空格）——F 冻结',
   'Sauvegarder':
     '保存',
   'Recommencer depuis le début':
@@ -2100,6 +2158,8 @@ export default {
     '钱会贬值：价格和工资跟随指数，你的现金不会。',
   'Langue':
     '语言',
+  'Vitesse de simulation':
+    '模拟速度',
   'Sauvegarder la partie':
     '保存游戏',
   'Historique de production (tokens/s)':

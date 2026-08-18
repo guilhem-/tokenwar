@@ -584,8 +584,8 @@ export default {
     '×2 demand',
   'Directives permanentes':
     'Standing directives',
-  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
-    'Your COO writes your decisions down: tick a choice in an event and it will be applied automatically next time. Each payment covers 5 directives.',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
+    'Your COO writes your decisions down: tick a choice in an event and it will be applied automatically next time. Each payment covers one directive, and the next one costs more.',
   'Datacenter IA orbital':
     'Orbital AI datacenter',
   'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
@@ -1066,8 +1066,8 @@ export default {
     'click to generate tokens, set your price (low = volume, high = margin), do marketing, buy GPUs and energy, accumulate research, train ever more powerful models and raise funding at each tier.',
   'Hébergement :':
     'Hosting:',
-  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
-    'a GPU must sit in a server, in a rack, in a datacenter, on real estate — all of which draw power too. Obsolete hardware can be resold; a card released more than 5 years ago disappears from the market. You can also rent a datacenter or colocation space.',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    'a GPU must sit in a server, in a rack, in a datacenter, on real estate — all of which draw power too. Obsolete hardware can be resold — one at a time, by ten past 10 units, all at once past 100; a card released more than 5 years ago disappears from the market. You can also rent a datacenter or colocation space.',
   '⚡ Au départ :':
     '⚡ At the start:',
   'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
@@ -1112,14 +1112,18 @@ export default {
     '🔧 Recurring optimisations:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
     'a CUDA optimisation every 18 months, an inference-engine one every 9 months, a context-management pass every 12 months. $1,000 each: the point is remembering them. Only one is offered at a time, it integrates like a breakthrough, and two quiet months separate the one that disappears from the next.',
+  '⌨️ Raccourcis :':
+    '⌨️ Shortcuts:',
+  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '**Space** steps to the next speed, **F** freezes the game and releases it at the speed it had. Frozen, time stops but the interface stays alive: you can read, compare, buy. **G** orders the best card you can afford and house, **H** the hosting tier that is missing, **B** the breakthrough on offer, **M** one notch of marketing. Hover a figure in the header to see it down to the last digit.',
   'Automatisation :':
     'Automation:',
-  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    'an automation only appears after **50 actions done by hand** in its family: you do not automate what you have not learned. They are separate — inference, cards, hardware (racks and servers), housing (buildings and datacenters), energy. Buy them, then tick ⟳ auto on each specific item to re-buy. The card pulses on every action, so you can see what the machine does in your place. The ⟳ and ×10 buttons only appear from 20 units in service; ×100 from 200.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
+    'an automation only appears after **50 actions done by hand** in its family: you do not automate what you have not learned. They are separate — inference, cards, hardware (racks and servers), housing (buildings and datacenters), energy. Buy them, then tick ⟳ auto on each specific item to re-buy. The card pulses on every action, so you can see what the machine does in your place. The ⟳ and ×10 buttons only appear from 20 units in service; ×100 from 200. The pace of automation is deliberately decoupled from the ⏩ button: at ×10 time runs ten times faster, automation only three times. Speeding up helps, but it does not replace deciding.',
   '📋 Directives permanentes :':
     '📋 Standing directives:',
-  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
-    'each payment lets you memorise 5 decisions, applied automatically thereafter. Beyond that you must pay again, and the next block costs more. Replacing an existing directive uses no slot.',
+  'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
+    'each payment memorises **one** decision, applied automatically thereafter. The next directive costs one notch more, and the total is capped at the number of events that carry a choice. Replacing an existing directive uses no slot.',
   'Bourse :':
     'Stock market:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1572,6 +1576,8 @@ export default {
     'Accelerate the final harvest',
   'Conversion +50% pendant 90s.':
     'Conversion +50% for 90s.',
+  'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
+    'Delivery cancelled: no free slot left for {0}. Order refunded ({1}).',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     'Salaries are no longer being paid. After 30 days of arrears the team will start leaving.',
   '⚠️ Salaires impayés':
@@ -1620,10 +1626,10 @@ export default {
     'Phase 3 — Cosmic expansion',
   'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
     'RECOMPRESSION SINGULARITY. All matter-energy is converging…',
-  'Directives permanentes activées : {0} mémorisables.':
-    'Standing directives activated: {0} can be memorised.',
-  'Quota de directives étendu : {0} mémorisables.':
-    'Directive quota extended: {0} can be memorised.',
+  'Directives permanentes activées : {0} mémorisable.':
+    'Standing directives enabled: {0} can be memorised.',
+  'Directive supplémentaire achetée : {0} mémorisables.':
+    'One more directive bought: {0} can be memorised.',
   'Contrat signé : {0} — livraison promise dans {1} mois.':
     'Contract signed: {0} — delivery promised in {1} months.',
   '🛰️ Datacenter orbital commandé':
@@ -1676,6 +1682,8 @@ export default {
     'Achievement: {0} — {1}',
   'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
     'Rules update: the free connection is now {0}. Your capacity has been adjusted (purchased sources are kept).',
+  'Mise à jour des règles : les directives s’achètent à l’unité. Vos {0} places sont conservées.':
+    'Rule update: directives are now bought one at a time. Your {0} slots are kept.',
   '{0} h {1}':
     '{0}h {1}',
   '{0} min':
@@ -1696,6 +1704,22 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     'New game — year 2019',
+  'Aucune carte achetable : place, budget ou date.':
+    'No card can be bought: no slot, no budget, or not released yet.',
+  '{0} commandé':
+    '{0} ordered',
+  'Aucun hébergement achetable : place ou budget.':
+    'No hosting can be bought: no slot or no budget.',
+  'Aucune percée disponible pour l’instant.':
+    'No breakthrough available right now.',
+  'Recherche insuffisante pour {0}':
+    'Not enough research for {0}',
+  '{0} lancé':
+    '{0} started',
+  'Marketing : plafond atteint ou trésorerie insuffisante':
+    'Marketing: cap reached or not enough cash',
+  'Marketing renforcé':
+    'Marketing stepped up',
   'Incident : {0}':
     'Incident: {0}',
   'Pertes en cours':
@@ -1716,6 +1740,8 @@ export default {
     'Invalid save file',
   'Succès':
     'Achievements',
+  'figé':
+    'frozen',
   'Auto-achat de cet élément précis':
     'Auto-buy this specific item',
   'Réinitialiser les directives':
@@ -1740,6 +1766,14 @@ export default {
     'Resell',
   'Revendre une carte (libère un emplacement)':
     'Resell a card (frees a slot)',
+  'Revendre ×10':
+    'Resell ×10',
+  'Revendre dix cartes d’un coup':
+    'Resell ten cards at once',
+  'Tout revendre':
+    'Resell all',
+  'Revendre la totalité de ce modèle':
+    'Resell every card of this model',
   'Mise en service en cours':
     'Commissioning in progress',
   '{0} en chantier · {1}%':
@@ -1770,22 +1804,32 @@ export default {
     'Disable',
   'Activer':
     'Enable',
+  'toutes acquises':
+    'all acquired',
   'quota atteint':
     'quota reached',
   'actives':
     'active',
   '{0}/{1} directive(s) mémorisée(s)':
     '{0}/{1} directive(s) memorised',
-  'repayez pour {0} de plus':
-    'pay again for {0} more',
-  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
-    'Never be interrupted again — {0} directives per payment.',
+  'payez pour une directive de plus (plafond : {0})':
+    'pay for one more directive (cap: {0})',
+  'Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.':
+    'Never be interrupted again — one directive per payment, {0} in all.',
   'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
     'Offered until {0}. Delivery promised in {1} months.',
   'faillite':
     'bankrupt',
   'en chantier':
     'being built',
+  '/j':
+    '/d',
+  '/s':
+    '/s',
+  '/an':
+    '/yr',
+  'indice':
+    'index',
   'de pouvoir d’achat':
     'of purchasing power',
   '{0} j impayés':
@@ -1808,10 +1852,16 @@ export default {
     'Matter harvesting',
   'Sondes':
     'Probes',
+  '{0} tokens produits':
+    '{0} tokens produced',
   'unités':
     'units',
+  '{0} W':
+    '{0} W',
   '% utilisé':
     '% used',
+  '{0} tokens':
+    '{0} tokens',
   'débit':
     'throughput',
   'intelligence':
@@ -1820,6 +1870,8 @@ export default {
     'fair price',
   'limité par marketeurs':
     'limited by marketers',
+  '{0} kg':
+    '{0} kg',
   'dispo {0}':
     'avail. {0}',
   'perf':
@@ -1832,6 +1884,12 @@ export default {
     'shortage',
   'aucun emplacement serveur':
     'no server slot',
+  '{0}/j d’exploitation':
+    '{0}/d O&M',
+  '{0}/j d’abonnement':
+    '{0}/d standing charge',
+  'rép':
+    'rep',
   'récurrent : {0}':
     'recurring: {0}',
   'aucun coût récurrent':
@@ -1898,8 +1956,8 @@ export default {
     'lvl {0}',
   'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
     'From now on, apply automatically the choice I am about to make (no more interruptions)',
-  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
-    'Directive quota reached ({0}/{1}) — pay for Standing directives again in the Addendum to memorise {2} more.',
+  'Quota de directives atteint ({0}/{1}) — payez une directive de plus dans l’Addendum.':
+    'Directive quota reached ({0}/{1}) — pay for one more in the Addendum.',
   'Directive mémorisée ({0}/{1})':
     'Directive memorised ({0}/{1})',
   'Quota de directives atteint — étendez-le dans l’Addendum':
@@ -2086,8 +2144,8 @@ export default {
     'Got it',
   'Date de simulation (1 an = 5 min)':
     'Simulation date (1 year = 5 min)',
-  'Vitesse de simulation':
-    'Simulation speed',
+  'Vitesse de simulation (Espace) — F pour geler':
+    'Simulation speed (Space) — F to freeze',
   'Sauvegarder':
     'Save',
   'Recommencer depuis le début':
@@ -2100,6 +2158,8 @@ export default {
     'Money loses value: prices and salaries follow the index, your cash does not.',
   'Langue':
     'Language',
+  'Vitesse de simulation':
+    'Simulation speed',
   'Sauvegarder la partie':
     'Save the game',
   'Historique de production (tokens/s)':

@@ -909,6 +909,16 @@ export const OPTIM_GAP_MONTHS = 2;
 // duree est tiree au hasard dans cette fourchette (en semaines) et une barre de
 // progression l'affiche. L'effet ne tombe qu'a la fin.
 export const INTEGRATION_WEEKS = [1, 4];
+// Cadence des automatisations, DÉCOUPLÉE de la vitesse de jeu. En ×10, tout le
+// reste va dix fois plus vite ; laisser les acheteurs automatiques suivre le
+// même facteur rendait l'accélération purement gratuite — et faisait clignoter
+// les cartes en stroboscope. La progression est donc volontairement molle :
+// accélérer le temps aide, mais n'automatise pas dix fois plus.
+export const AUTO_SPEED = { 0: 0, 1: 1, 2: 1.5, 5: 2, 10: 3 };
+// Vitesses proposées par le bouton ⏩ et par la barre d'espace (ordre du cycle).
+// Le 0 n'y figure pas : le gel est un basculement à part (touche F), pour qu'on
+// puisse le lever et retrouver exactement la vitesse qu'on avait choisie.
+export const GAME_SPEEDS = [1, 2, 5, 10];
 export const HIRE_COST = 1000;       // frais d'embauche (annonce, entretiens, materiel, onboarding)
 // Salaires impayes : au bout de 30 jours d'arrieres, les salaries commencent a
 // partir — un depart tous les 2 jours supplementaires, jusqu'a l'entreprise vide.
@@ -946,12 +956,14 @@ export const ACHIEVEMENTS = [
 //  dans chaque boîte de dialogue, de cocher « appliquer ce choix désormais » :
 //  l'événement sera résolu automatiquement les fois suivantes (plus d'interruption).
 // ---------------------------------------------------------------------
-//  Chaque paiement ouvre un LOT de 5 directives mémorisables. Au-delà, il faut
-//  repayer pour étendre la capacité — et le lot suivant coûte un cran de plus
-//  (250k, 500k, 750k…) : un COO ne retient pas indéfiniment vos consignes.
+//  Une directive s'achète à l'UNITÉ, au prix du moment : la première coûte
+//  250k, la deuxième 500k, la troisième 750k… un COO ne retient pas
+//  indéfiniment vos consignes, et chaque consigne de plus lui coûte plus cher.
+//  Le total est plafonné au nombre d'événements réellement porteurs de choix :
+//  au-delà il n'y aurait plus rien à mémoriser.
 export const ADDENDUM = {
-  id:'directives', name:'Directives permanentes', cost:250000, slotsPerBlock:5,
-  desc:'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.',
+  id:'directives', name:'Directives permanentes', cost:250000,
+  desc:'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.',
 };
 
 // Datacenter IA orbital : proposé entre 2030 et 2040. Livraison promise en 18 mois…
@@ -1091,7 +1103,7 @@ export const AUTOMATIONS = [
 export const HELP = [
   { b:'But :', p:'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.' },
   { b:'Phase 1 — Startup :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
-  { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
+  { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
   { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
   { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
   { b:'🏗️ Délais :', p:'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.' },
@@ -1103,8 +1115,9 @@ export const HELP = [
   { b:'₿ Crypto :', p:'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.' },
   { b:'Percées :', p:'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.' },
   { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.' },
-  { b:'Automatisation :', p:'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.' },
-  { b:'📋 Directives permanentes :', p:'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.' },
+  { b:'⌨️ Raccourcis :', p:'**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.' },
+  { b:'Automatisation :', p:'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.' },
+  { b:'📋 Directives permanentes :', p:'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.' },
   { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },
   { b:'Allocation :', p:'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.' },
   { b:'Calendrier :', p:'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.' },

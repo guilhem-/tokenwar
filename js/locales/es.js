@@ -584,8 +584,8 @@ export default {
     '×2 demanda',
   'Directives permanentes':
     'Directivas permanentes',
-  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre 5 directives.':
-    'Tu COO anota tus decisiones: marca una opción en un evento y se aplicará automáticamente las próximas veces. Cada pago cubre 5 directivas.',
+  'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
+    'Tu COO anota tus decisiones: marca una opción en un evento y se aplicará automáticamente las próximas veces. Cada pago cubre una directiva, y la siguiente cuesta más.',
   'Datacenter IA orbital':
     'Centro de datos de IA orbital',
   'Un consortium promet un datacenter IA en orbite : solaire 24/7, refroidissement radiatif, zéro voisinage. Livraison en 18 mois.':
@@ -1066,8 +1066,8 @@ export default {
     'haz clic para generar tokens, fija el precio (bajo = volumen, alto = margen), haz marketing, compra GPU y energía, acumula investigación, entrena modelos cada vez más potentes y levanta fondos en cada hito.',
   'Hébergement :':
     'Alojamiento:',
-  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
-    'una GPU debe caber en un servidor, en un rack, en un centro de datos, sobre inmuebles, y todos consumen energía. El material obsoleto se revende; una tarjeta con más de 5 años desaparece del mercado. También puedes alquilar un centro de datos o espacio en colocation.',
+  'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.':
+    'una GPU debe caber en un servidor, en un rack, en un centro de datos, sobre inmuebles, y todos consumen energía. El material obsoleto se revende: de una en una, de diez en diez pasadas 10 unidades, entero pasadas 100; una tarjeta con más de 5 años desaparece del mercado. También puedes alquilar un centro de datos o espacio en colocation.',
   '⚡ Au départ :':
     '⚡ Al principio:',
   'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $30 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.':
@@ -1112,14 +1112,18 @@ export default {
     '🔧 Optimizaciones recurrentes:',
   'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.':
     'una optimización CUDA cada 18 meses, una del motor de inferencia cada 9 meses, una pasada de gestión del contexto cada 12 meses. $1 000 cada una: lo que cuesta es acordarse. Solo se ofrece una a la vez, se integra como un avance, y dos meses de calma separan la que desaparece de la siguiente.',
+  '⌨️ Raccourcis :':
+    '⌨️ Atajos:',
+  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '**Espacio** pasa a la siguiente velocidad, **F** congela la partida y la suelta a la velocidad que tenía. Congelado, el tiempo se detiene pero la interfaz sigue viva: puedes leer, comparar, comprar. **G** encarga la mejor tarjeta que puedas pagar y alojar, **H** el nivel de alojamiento que falta, **B** el avance propuesto, **M** un escalón de marketing. Pasa el ratón por una cifra de la cabecera para verla hasta el último dígito.',
   'Automatisation :':
     'Automatización:',
-  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200.':
-    'una automatización solo aparece tras **50 gestos hechos a mano** en su familia: no se automatiza lo que no se ha aprendido. Son distintas: inferencia, tarjetas, material (racks y servidores), inmobiliario (edificios y centros de datos), energía. Cómpralas y luego marca ⟳ auto en cada elemento concreto a recomprar. La tarjeta late en cada acción, para que veas lo que la máquina hace en tu lugar. Los botones ⟳ y ×10 solo aparecen a partir de 20 unidades en servicio; ×100 desde 200.',
+  'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
+    'una automatización solo aparece tras **50 gestos hechos a mano** en su familia: no se automatiza lo que no se ha aprendido. Son distintas: inferencia, tarjetas, material (racks y servidores), inmobiliario (edificios y centros de datos), energía. Cómpralas y luego marca ⟳ auto en cada elemento concreto a recomprar. La tarjeta late en cada acción, para que veas lo que la máquina hace en tu lugar. Los botones ⟳ y ×10 solo aparecen a partir de 20 unidades en servicio; ×100 desde 200. El ritmo de las automatizaciones está deliberadamente desacoplado del botón ⏩: en ×10 el tiempo corre diez veces más rápido, las automatizaciones solo tres. Acelerar ayuda, pero no sustituye a decidir.',
   '📋 Directives permanentes :':
     '📋 Directivas permanentes:',
-  'chaque paiement permet de mémoriser 5 décisions, ensuite appliquées automatiquement. Au-delà il faut repayer, et le lot suivant coûte plus cher. Remplacer une directive existante ne consomme pas de place.':
-    'cada pago permite memorizar 5 decisiones, que después se aplican solas. Más allá hay que volver a pagar, y el siguiente lote cuesta más. Sustituir una directiva existente no ocupa plaza.',
+  'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.':
+    'cada pago memoriza **una** decisión, que después se aplica sola. La siguiente directiva cuesta un escalón más, y el total está limitado al número de eventos con opciones. Sustituir una directiva existente no ocupa plaza.',
   'Bourse :':
     'Bolsa:',
   'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.':
@@ -1572,6 +1576,8 @@ export default {
     'Acelerar la cosecha final',
   'Conversion +50% pendant 90s.':
     'Conversión +50% durante 90 s.',
+  'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
+    'Entrega cancelada: ya no queda hueco para {0}. Pedido reembolsado ({1}).',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     'Los salarios ya no se pagan. Pasados 30 días de atrasos, el equipo empezará a marcharse.',
   '⚠️ Salaires impayés':
@@ -1620,10 +1626,10 @@ export default {
     'Fase 3 — Expansión cósmica',
   'SINGULARITÉ DE RECOMPRESSION. Toute la matière-énergie converge…':
     'SINGULARIDAD DE RECOMPRESIÓN. Toda la materia-energía converge…',
-  'Directives permanentes activées : {0} mémorisables.':
-    'Directivas permanentes activadas: {0} memorizables.',
-  'Quota de directives étendu : {0} mémorisables.':
-    'Cuota de directivas ampliada: {0} memorizables.',
+  'Directives permanentes activées : {0} mémorisable.':
+    'Directivas permanentes activadas: {0} memorizable.',
+  'Directive supplémentaire achetée : {0} mémorisables.':
+    'Directiva adicional comprada: {0} memorizables.',
   'Contrat signé : {0} — livraison promise dans {1} mois.':
     'Contrato firmado: {0} — entrega prometida en {1} meses.',
   '🛰️ Datacenter orbital commandé':
@@ -1676,6 +1682,8 @@ export default {
     'Logro: {0} — {1}',
   'Mise à jour des règles : le raccordement offert passe à {0}. Votre capacité a été ajustée (les sources achetées sont conservées).':
     'Actualización de las reglas: la acometida gratuita pasa a {0}. Tu capacidad se ha ajustado (las fuentes compradas se conservan).',
+  'Mise à jour des règles : les directives s’achètent à l’unité. Vos {0} places sont conservées.':
+    'Actualización de reglas: las directivas se compran de una en una. Se conservan tus {0} plazas.',
   '{0} h {1}':
     '{0} h {1}',
   '{0} min':
@@ -1696,6 +1704,22 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     'Nueva partida — año 2019',
+  'Aucune carte achetable : place, budget ou date.':
+    'Ninguna tarjeta comprable: sin hueco, sin presupuesto o aún sin salir.',
+  '{0} commandé':
+    '{0} encargado',
+  'Aucun hébergement achetable : place ou budget.':
+    'Ningún alojamiento comprable: sin hueco o sin presupuesto.',
+  'Aucune percée disponible pour l’instant.':
+    'Ningún avance disponible por ahora.',
+  'Recherche insuffisante pour {0}':
+    'Investigación insuficiente para {0}',
+  '{0} lancé':
+    '{0} iniciado',
+  'Marketing : plafond atteint ou trésorerie insuffisante':
+    'Marketing: tope alcanzado o tesorería insuficiente',
+  'Marketing renforcé':
+    'Marketing reforzado',
   'Incident : {0}':
     'Incidente: {0}',
   'Pertes en cours':
@@ -1716,6 +1740,8 @@ export default {
     'Archivo de partida no válido',
   'Succès':
     'Logros',
+  'figé':
+    'congelado',
   'Auto-achat de cet élément précis':
     'Autocompra de este elemento concreto',
   'Réinitialiser les directives':
@@ -1740,6 +1766,14 @@ export default {
     'Revender',
   'Revendre une carte (libère un emplacement)':
     'Revender una tarjeta (libera una plaza)',
+  'Revendre ×10':
+    'Revender ×10',
+  'Revendre dix cartes d’un coup':
+    'Revender diez tarjetas de una vez',
+  'Tout revendre':
+    'Revender todo',
+  'Revendre la totalité de ce modèle':
+    'Revender todas las tarjetas de este modelo',
   'Mise en service en cours':
     'Puesta en servicio en curso',
   '{0} en chantier · {1}%':
@@ -1770,22 +1804,32 @@ export default {
     'Desactivar',
   'Activer':
     'Activar',
+  'toutes acquises':
+    'todas adquiridas',
   'quota atteint':
     'cuota alcanzada',
   'actives':
     'activas',
   '{0}/{1} directive(s) mémorisée(s)':
     '{0}/{1} directiva(s) memorizada(s)',
-  'repayez pour {0} de plus':
-    'vuelve a pagar por {0} más',
-  'Ne soyez plus jamais interrompu — {0} directives par paiement.':
-    'Que no te interrumpan nunca más — {0} directivas por pago.',
+  'payez pour une directive de plus (plafond : {0})':
+    'paga por una directiva más (tope: {0})',
+  'Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.':
+    'No vuelvas a ser interrumpido: una directiva por pago, {0} en total.',
   'Proposé jusqu’en {0}. Livraison promise : {1} mois.':
     'Ofrecido hasta {0}. Entrega prometida: {1} meses.',
   'faillite':
     'quiebra',
   'en chantier':
     'en obra',
+  '/j':
+    '/d',
+  '/s':
+    '/s',
+  '/an':
+    '/año',
+  'indice':
+    'índice',
   'de pouvoir d’achat':
     'de poder adquisitivo',
   '{0} j impayés':
@@ -1808,10 +1852,16 @@ export default {
     'Cosecha de materia',
   'Sondes':
     'Sondas',
+  '{0} tokens produits':
+    '{0} tokens producidos',
   'unités':
     'unidades',
+  '{0} W':
+    '{0} W',
   '% utilisé':
     '% usado',
+  '{0} tokens':
+    '{0} tokens',
   'débit':
     'rendimiento',
   'intelligence':
@@ -1820,6 +1870,8 @@ export default {
     'precio justo',
   'limité par marketeurs':
     'limitado por marketing',
+  '{0} kg':
+    '{0} kg',
   'dispo {0}':
     'disp. {0}',
   'perf':
@@ -1832,6 +1884,12 @@ export default {
     'escasez',
   'aucun emplacement serveur':
     'sin plaza de servidor',
+  '{0}/j d’exploitation':
+    '{0}/d de explotación',
+  '{0}/j d’abonnement':
+    '{0}/d de abono',
+  'rép':
+    'rep',
   'récurrent : {0}':
     'recurrente: {0}',
   'aucun coût récurrent':
@@ -1898,8 +1956,8 @@ export default {
     'niv. {0}',
   'Désormais, appliquer automatiquement le choix que je vais faire (plus d’interruption)':
     'A partir de ahora, aplicar automáticamente la opción que voy a elegir (sin más interrupciones)',
-  'Quota de directives atteint ({0}/{1}) — repayez les Directives permanentes dans l’Addendum pour en mémoriser {2} de plus.':
-    'Cuota de directivas alcanzada ({0}/{1}) — vuelve a pagar las Directivas permanentes en el Apéndice para memorizar {2} más.',
+  'Quota de directives atteint ({0}/{1}) — payez une directive de plus dans l’Addendum.':
+    'Cupo de directivas alcanzado ({0}/{1}): paga una más en el Addendum.',
   'Directive mémorisée ({0}/{1})':
     'Directiva memorizada ({0}/{1})',
   'Quota de directives atteint — étendez-le dans l’Addendum':
@@ -2086,8 +2144,8 @@ export default {
     'Entendido',
   'Date de simulation (1 an = 5 min)':
     'Fecha de simulación (1 año = 5 min)',
-  'Vitesse de simulation':
-    'Velocidad de simulación',
+  'Vitesse de simulation (Espace) — F pour geler':
+    'Velocidad de simulación (Espacio) — F para congelar',
   'Sauvegarder':
     'Guardar',
   'Recommencer depuis le début':
@@ -2100,6 +2158,8 @@ export default {
     'El dinero pierde valor: los precios y los salarios siguen el índice, tu caja no.',
   'Langue':
     'Idioma',
+  'Vitesse de simulation':
+    'Velocidad de simulación',
   'Sauvegarder la partie':
     'Guardar la partida',
   'Historique de production (tokens/s)':

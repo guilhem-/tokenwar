@@ -18,7 +18,7 @@ if (game.load()) {
 }
 ui.init(game);
 
-window.__speed = 1;
+ui.setSpeed(1);                 // vitesse initiale, portée par l'UI ET le moteur
 window.game = game; // accès console (debug)
 
 // ---- boucle principale ----
