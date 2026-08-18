@@ -1714,6 +1714,34 @@ export default {
     '利用可能',
   'Opérationnel':
     '稼働開始',
+  'jamais à ce rythme':
+    'この調子では永遠に届かない',
+  '~{0} s':
+    '約 {0} 秒',
+  '~{0} min':
+    '約 {0} 分',
+  '~{0} h':
+    '約 {0} 時間',
+  'percée dans {0}':
+    'ブレイクスルーまで {0}',
+  'd’abord : {0} (+{1})':
+    '先に：{0}（他 {1} 件）',
+  'd’abord : {0}':
+    '先に：{0}',
+  'recherche':
+    '研究',
+  'compute':
+    '演算',
+  'données':
+    'データ',
+  'matière':
+    '物質',
+  'trésorerie':
+    '資金',
+  'tokens':
+    'トークン',
+  'il manque : {0}':
+    '不足：{0}',
   'Nouvel univers':
     '新しい宇宙',
   'Vers l’autonomie':
@@ -2018,8 +2046,6 @@ export default {
     '{0}か月ごとに再登場',
   'à l’étude':
     '検討中',
-  'recherche':
-    '研究',
   'mise au point':
     '作り込み',
   'déploiement':
@@ -2104,10 +2130,6 @@ export default {
     '研究中… {0}年に突破の見込み',
   'Entraîner : {0}':
     '学習：{0}',
-  'compute':
-    '演算',
-  'données':
-    'データ',
   'ing. R&D':
     '研究開発',
   'limité par ing. R&D':

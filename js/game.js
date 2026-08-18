@@ -1496,9 +1496,98 @@ export class Game {
   //  puis attendre son intégration. La barre distingue ces trois états, sinon
   //  un joueur à 100 % croirait le jeu bloqué.
   // ==================================================================
+  // Temps restant avant le seuil de la phase, en SECONDES DE JEU.
+  //
+  // Une simple règle de trois sur le débit courant serait très fausse : la
+  // boucle matière↔compute est exponentielle. Chaque kilogramme récolté
+  // fabrique du wafer, qui récolte davantage. Sur une sauvegarde réelle, la
+  // règle de trois annonçait 4,5 millions d'années là où il en fallait huit.
+  //
+  //   d(compute)/dt = compute · k     avec  k = récolte · 1,33 · dyson · sondes · 1,66e-9 · perf_wafer
+  //   matière cumulée = (débit/k)·(e^{kt} − 1)  ⇒  t = ln(1 + reste·k/débit) / k
+  //
+  // C'est le même k que celui du tick : il se déduit des mêmes facteurs, et
+  // le curseur « Récolte » le pilote directement. À 13 % la constante de temps
+  // vaut 176 s, à 50 % elle tombe à 45 s — d'où des ETA très différents.
+  // Durée lisible : on ne dit pas « 2 736 s », et au-delà de quelques jours on
+  // dit simplement que ça ne finira pas — c'est l'information utile.
+  durationLabel(sec) {
+    if (!isFinite(sec)) return t('jamais à ce rythme');
+    if (sec < 90) return t('~{0} s', Math.round(sec));
+    if (sec < 5400) return t('~{0} min', Math.round(sec / 60));
+    if (sec < 172800) return t('~{0} h', Math.round(sec / 3600));
+    return t('jamais à ce rythme');
+  }
+  phaseLoopRate() {
+    const a = this.state.alloc;
+    const wafer = GPUS.find(g => g.id === 'wafer');
+    if (!wafer) return 0;
+    let probeSpeed = 1;
+    if (this.phase >= 3) {
+      const ps = this.state.probeSpecs;
+      probeSpeed = Math.min(8, Math.pow(1.25, ps.harvest + ps.speed) * (1 + Math.log10(this.state.probes + 1) * 0.15));
+    }
+    return a.harvest * 1.33 * this.dysonBoost() * probeSpeed * 1.66e-9 * wafer.perf;
+  }
+  phaseEtaSeconds() {
+    const s = this.state, p = this.phase;
+    if (p < 2 || p > 3) return null;
+    const masse = p === 2 ? EARTH_MASS : UNIVERSE_MASS;
+    const cible = (p === 2 ? PHASE3_EARTH : ENDING_UNIVERSE) * masse;
+    const fait = (p === 2 ? s.earthConsumed : s.universeConsumed) * masse;
+    const reste = cible - fait;
+    if (reste <= 0) return 0;
+    const debit = s.rates.matter || 0;
+    if (debit <= 0) return Infinity;
+    const k = this.phaseLoopRate();
+    if (!(k > 0)) return reste / debit;            // récolte à zéro : plus aucune croissance
+    return Math.log(1 + reste * k / debit) / k;
+  }
+
+  // Pourquoi le seuil est atteint sans que la phase bascule.
+  //
+  // Trois choses s'intercalent, et rien ne les disait : la percée de bascule
+  // peut ne pas être encore proposée (une autre passe d'abord, ou les deux
+  // mois de calme courent toujours), et une fois proposée elle doit encore
+  // être payable. Un joueur à 12/12 qui ne voit rien venir croit à un bug.
+  phaseGateReason() {
+    const bascule = { 1: 'recursive', 2: 'von_neumann', 3: 'recompression' }[this.phase];
+    if (!bascule) return null;
+    const p = PROJECTS.find(x => x.id === bascule);
+    if (!p || this.state.projectsDone[bascule]) return null;
+
+    const attente = this.projectGapLeft();
+    if (attente > 0) return t('percée dans {0}', this.durationLabel(attente / Math.max(1e-9, this.speed || 1)));
+
+    const suivante = this.nextProject();
+    if (suivante && suivante.id !== bascule) {
+      // Combien de percées passent encore avant la bascule ? À 12/12 il peut en
+      // rester onze, soit près de deux ans de jeu avec les deux mois de calme
+      // entre chacune. Annoncer seulement la prochaine laisserait croire qu'on
+      // y est presque.
+      const i = PROJECTS.findIndex(x => x.id === bascule);
+      const reste = PROJECTS.slice(0, i).filter(x => !this.state.projectsDone[x.id] && x.req(this)).length;
+      return reste > 1 ? t('d’abord : {0} (+{1})', td(suivante.name), reste - 1)
+                       : t('d’abord : {0}', td(suivante.name));
+    }
+    if (!suivante) return null;
+
+    // proposée : reste-t-il quelque chose à réunir ?
+    const c = p.cost || {};
+    const manque = [];
+    if ((c.research || 0) > this.state.research) manque.push(t('recherche'));
+    if ((c.compute || 0) > this.computeRaw()) manque.push(t('compute'));
+    if ((c.data || 0) > this.state.data) manque.push(t('données'));
+    if ((c.matter || 0) > this.state.matter) manque.push(t('matière'));
+    if ((c.money || 0) > 0 && this.moneyCost(c.money) > this.state.money) manque.push(t('trésorerie'));
+    if ((c.tokens || 0) > this.state.lifetimeTokens) manque.push(t('tokens'));
+    if (manque.length) return t('il manque : {0}', manque.join(', '));
+    return null;   // tout est réuni : la percée est réellement disponible
+  }
+
   phaseProgress() {
     const s = this.state, p = this.phase;
-    if (p >= 4) return { frac: 1, state: 'done', label: t('Nouvel univers'), value: '' };
+    if (p >= 4) return { frac: 1, state: 'done', label: t('Nouvel univers'), value: '', eta: '' };
 
     let frac, label, value;
     if (p === 1) {
@@ -1518,21 +1607,31 @@ export class Game {
                 this.decimal(pct(ENDING_UNIVERSE), 1) + '%');
     }
     frac = clamp(frac, 0, 1);
+    // Combien de temps RÉEL au rythme actuel : c'est l'information qui
+    // manquait. Un joueur voyant « 0,002 % » croit le jeu bloqué ; voyant
+    // « ~46 min », il comprend que son curseur Récolte est trop bas.
+    const eta = this.phaseEtaSeconds();
+    const etaTxt = eta == null ? '' : this.durationLabel(eta / Math.max(1e-9, this.speed || 1));
+    // « lent » couvre aussi l'infini : récolte à zéro, la boucle ne croît plus
+    // du tout et le seuil n'arrivera jamais. C'est le cas qu'il faut le plus
+    // signaler, pas celui qu'il faut laisser passer pour un rythme normal.
+    const lent = eta != null && eta / Math.max(1e-9, this.speed || 1) > 3600;
 
     // la percée de bascule est-elle en cours d'intégration ?
     const inte = this.integrationOf('project');
     const bascule = { 1: 'recursive', 2: 'von_neumann', 3: 'recompression' }[p];
     if (inte && inte.id === bascule) {
       return { frac: 1, state: 'integrating', label,
-               value: t('intégration {0}', Math.round(pct(this.integrationProgress('project'))) + '%') };
+               value: t('intégration {0}', Math.round(pct(this.integrationProgress('project'))) + '%'), eta: '' };
     }
     // seuil atteint : la percée est à portée, il reste à la prendre
     if (frac >= 1) {
       const suivante = this.nextProject();
-      if (suivante && suivante.id === bascule) return { frac: 1, state: 'ready', label, value: t('percée disponible') };
-      return { frac: 1, state: 'waiting', label, value };
+      const raison = this.phaseGateReason();
+      if (!raison) return { frac: 1, state: 'ready', label, value: t('percée disponible'), eta: '' };
+      return { frac: 1, state: 'waiting', label, value, eta: raison };
     }
-    return { frac, state: 'running', label, value };
+    return { frac, state: lent ? 'slow' : 'running', label, value, eta: etaTxt };
   }
 
   enterPhase(p) {

@@ -1714,6 +1714,34 @@ export default {
     'Available',
   'Opérationnel':
     'Operational',
+  'jamais à ce rythme':
+    'never at this rate',
+  '~{0} s':
+    '~{0} s',
+  '~{0} min':
+    '~{0} min',
+  '~{0} h':
+    '~{0} h',
+  'percée dans {0}':
+    'breakthrough in {0}',
+  'd’abord : {0} (+{1})':
+    'first: {0} (+{1})',
+  'd’abord : {0}':
+    'first: {0}',
+  'recherche':
+    'research',
+  'compute':
+    'compute',
+  'données':
+    'data',
+  'matière':
+    'matter',
+  'trésorerie':
+    'cash',
+  'tokens':
+    'tokens',
+  'il manque : {0}':
+    'missing: {0}',
   'Nouvel univers':
     'New universe',
   'Vers l’autonomie':
@@ -2018,8 +2046,6 @@ export default {
     'returns every {0} months',
   'à l’étude':
     'under study',
-  'recherche':
-    'research',
   'mise au point':
     'development',
   'déploiement':
@@ -2104,10 +2130,6 @@ export default {
     'research under way… breakthrough expected in {0}',
   'Entraîner : {0}':
     'Train: {0}',
-  'compute':
-    'compute',
-  'données':
-    'data',
   'ing. R&D':
     'R&D eng.',
   'limité par ing. R&D':

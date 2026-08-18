@@ -1714,6 +1714,34 @@ export default {
     '사용 가능',
   'Opérationnel':
     '가동 시작',
+  'jamais à ce rythme':
+    '이 속도로는 영원히',
+  '~{0} s':
+    '약 {0}초',
+  '~{0} min':
+    '약 {0}분',
+  '~{0} h':
+    '약 {0}시간',
+  'percée dans {0}':
+    '돌파구까지 {0}',
+  'd’abord : {0} (+{1})':
+    '먼저: {0} (외 {1}건)',
+  'd’abord : {0}':
+    '먼저: {0}',
+  'recherche':
+    '연구',
+  'compute':
+    '연산',
+  'données':
+    '데이터',
+  'matière':
+    '물질',
+  'trésorerie':
+    '현금',
+  'tokens':
+    '토큰',
+  'il manque : {0}':
+    '부족: {0}',
   'Nouvel univers':
     '새로운 우주',
   'Vers l’autonomie':
@@ -2018,8 +2046,6 @@ export default {
     '{0}개월마다 다시 나타남',
   'à l’étude':
     '검토 중',
-  'recherche':
-    '연구',
   'mise au point':
     '개발',
   'déploiement':
@@ -2104,10 +2130,6 @@ export default {
     '연구 진행 중… {0}년 돌파 예상',
   'Entraîner : {0}':
     '학습: {0}',
-  'compute':
-    '연산',
-  'données':
-    '데이터',
   'ing. R&D':
     '연구개발',
   'limité par ing. R&D':

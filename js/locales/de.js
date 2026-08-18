@@ -1714,6 +1714,34 @@ export default {
     'Verfügbar',
   'Opérationnel':
     'In Betrieb',
+  'jamais à ce rythme':
+    'nie in diesem Tempo',
+  '~{0} s':
+    '~{0} s',
+  '~{0} min':
+    '~{0} Min',
+  '~{0} h':
+    '~{0} Std',
+  'percée dans {0}':
+    'Durchbruch in {0}',
+  'd’abord : {0} (+{1})':
+    'zuerst: {0} (+{1})',
+  'd’abord : {0}':
+    'zuerst: {0}',
+  'recherche':
+    'Forschung',
+  'compute':
+    'Rechenleistung',
+  'données':
+    'Daten',
+  'matière':
+    'Materie',
+  'trésorerie':
+    'Barmittel',
+  'tokens':
+    'Tokens',
+  'il manque : {0}':
+    'es fehlt: {0}',
   'Nouvel univers':
     'Neues Universum',
   'Vers l’autonomie':
@@ -2018,8 +2046,6 @@ export default {
     'kehrt alle {0} Monate wieder',
   'à l’étude':
     'in Prüfung',
-  'recherche':
-    'Forschung',
   'mise au point':
     'Entwicklung',
   'déploiement':
@@ -2104,10 +2130,6 @@ export default {
     'Forschung läuft… Durchbruch erwartet {0}',
   'Entraîner : {0}':
     'Trainieren: {0}',
-  'compute':
-    'Rechenleistung',
-  'données':
-    'Daten',
   'ing. R&D':
     'F&E-Ing.',
   'limité par ing. R&D':

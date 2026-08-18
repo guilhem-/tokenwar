@@ -1699,6 +1699,49 @@ await step('barre de phase : suit le seuil de bascule de chaque phase', () => {
   game.state.phase = 1; game.state.modelTier = 0; game.state.earthConsumed = 0; game.state.universeConsumed = 0;
 });
 
+await step('barre de phase : le temps restant tient compte de la boucle exponentielle', () => {
+  // Sur une partie réelle, la règle de trois sur le débit courant annonçait
+  // 4,5 millions d années là où il en fallait douze minutes : la boucle
+  // matière↔compute est exponentielle, chaque kilogramme récolté fabriquant
+  // du wafer qui récolte davantage.
+  const faire = h => {
+    const g2 = new Game(null);
+    g2.state.phase = 2;
+    g2.state.modelTier = data.MODELS.length - 1;
+    g2.state.gpuCounts = { wafer: 1.8e8 };
+    g2.state.matter = 1.1e20;
+    g2.state.earthConsumed = g2.state.matter / data.EARTH_MASS;
+    g2.state.intelligence = 1e9;
+    g2.state.energyCap = 1e12;
+    g2.state.alloc = { serve: (1 - h) * 0.7, research: (1 - h) * 0.2, improve: (1 - h) * 0.1, harvest: h };
+    g2.tick(0.25);
+    return g2;
+  };
+  // l ETA annoncé doit correspondre au temps réellement mis pour atteindre 85 %
+  for (const h of [0.5, 0.3]) {
+    const g2 = faire(h);
+    const annonce = g2.phaseEtaSeconds();
+    if (!isFinite(annonce) || annonce <= 0) throw new Error('ETA non calculé pour récolte ' + h);
+    let t = 0;
+    while (g2.state.earthConsumed < data.PHASE3_EARTH && t < 7200) { g2.tick(0.25); t += 0.25; }
+    if (t >= 7200) throw new Error('le seuil n est pas atteint en 2 h de jeu à récolte ' + h);
+    const ecart = Math.abs(t - annonce) / annonce;
+    if (ecart > 0.15) throw new Error(`récolte ${h} : annoncé ${(annonce/60).toFixed(1)} min, réel ${(t/60).toFixed(1)} min (${Math.round(ecart*100)}% d écart)`);
+  }
+  // plus on récolte, plus c est court — la relation doit être monotone
+  const t50 = faire(0.5).phaseEtaSeconds(), t30 = faire(0.3).phaseEtaSeconds(), t13 = faire(0.13).phaseEtaSeconds();
+  if (!(t50 < t30 && t30 < t13)) throw new Error(`ETA non monotone : ${t50} / ${t30} / ${t13}`);
+  // récolte nulle : la boucle ne croît plus, le seuil n arrivera jamais
+  const g0 = faire(0);
+  const p0 = g0.phaseProgress();
+  if (p0.state !== 'slow') throw new Error('récolte nulle devrait être signalée comme intenable, état : ' + p0.state);
+  if (!/jamais/.test(p0.eta)) throw new Error('récolte nulle devrait annoncer « jamais », pas : ' + p0.eta);
+  // et la vitesse de jeu raccourcit le temps réel annoncé
+  const g1 = faire(0.13); g1.speed = 1; const a1 = g1.phaseProgress().eta;
+  g1.speed = 10; const a10 = g1.phaseProgress().eta;
+  if (a1 === a10) throw new Error('le temps annoncé devrait suivre la vitesse de jeu');
+});
+
 await step('barre de phase : la barre et les percées lisent le même seuil', () => {
   // Deux copies d un seuil finissent toujours par diverger : la barre
   // annoncerait alors un objectif que le jeu n applique pas.
@@ -1709,6 +1752,49 @@ await step('barre de phase : la barre et les percées lisent le même seuil', ()
   if (!p3.req(juste)) throw new Error('au seuil exporté, la percée phase 3 devrait être proposable');
   if (p3.req({ ...juste, earthConsumed: data.PHASE3_EARTH - 1e-6 })) throw new Error('juste sous le seuil, elle ne devrait pas l être');
   if (!fin.req(juste2)) throw new Error('au seuil exporté, la singularité devrait être proposable');
+});
+
+await step('barre de phase : à 100 % elle explique ce qui bloque encore', () => {
+  // Atteindre 12/12 ne rapproche pas de la bascule autant qu on le croit : la
+  // percée de phase est la 15e du catalogue, et onze autres peuvent encore
+  // passer avant elle, chacune séparée de deux mois. Sans explication, le
+  // joueur à 12/12 croit à un blocage.
+  const plein = () => {
+    const g2 = new Game(null);
+    g2.state.phase = 1;
+    g2.state.modelTier = data.MODELS.length - 1;
+    g2.state.money = 1e12; g2.state.research = 1e9; g2.state.data = 1e12;
+    g2.state.gpuCounts = { wafer: 1e6 };
+    g2.state.lastProjectAt = -1e9;
+    return g2;
+  };
+  // 1. le délai de deux mois court encore
+  const g1 = plein();
+  g1.state.lastProjectAt = g1.state.playSeconds;
+  const r1 = g1.phaseProgress();
+  if (r1.frac !== 1) throw new Error('12/12 devrait remplir la barre');
+  if (r1.state !== 'waiting') throw new Error('état attendu waiting, obtenu ' + r1.state);
+  if (!r1.eta) throw new Error('aucune explication pendant le délai entre percées');
+
+  // 2. d autres percées passent avant, et on dit combien
+  const g2 = plein();
+  const r2 = g2.phaseProgress();
+  if (r2.state !== 'waiting') throw new Error('état attendu waiting, obtenu ' + r2.state);
+  if (!/\+\d/.test(r2.eta)) throw new Error('le nombre de percées restantes n est pas annoncé : ' + r2.eta);
+
+  // 3. une fois les autres prises, la bascule est vraiment disponible
+  const g3 = plein();
+  const i = data.PROJECTS.findIndex(x => x.id === 'recursive');
+  for (const x of data.PROJECTS.slice(0, i)) g3.state.projectsDone[x.id] = true;
+  const r3 = g3.phaseProgress();
+  if (r3.state !== 'ready') throw new Error('la percée devrait être annoncée disponible, état ' + r3.state);
+
+  // 4. ressources manquantes : on nomme ce qui manque
+  const g4 = plein();
+  for (const x of data.PROJECTS.slice(0, i)) g4.state.projectsDone[x.id] = true;
+  g4.state.research = 0;
+  const r4 = g4.phaseProgress();
+  if (r4.state !== 'waiting' || !/manque/.test(r4.eta)) throw new Error('la ressource manquante n est pas signalée : ' + r4.eta);
 });
 
 await step('barre de phase : à 100 % elle dit ce qu on attend', () => {

@@ -1714,6 +1714,34 @@ export default {
     'Disponible',
   'Opérationnel':
     'Operativo',
+  'jamais à ce rythme':
+    'nunca a este ritmo',
+  '~{0} s':
+    '~{0} s',
+  '~{0} min':
+    '~{0} min',
+  '~{0} h':
+    '~{0} h',
+  'percée dans {0}':
+    'avance en {0}',
+  'd’abord : {0} (+{1})':
+    'primero: {0} (+{1})',
+  'd’abord : {0}':
+    'primero: {0}',
+  'recherche':
+    'investigación',
+  'compute':
+    'cómputo',
+  'données':
+    'datos',
+  'matière':
+    'materia',
+  'trésorerie':
+    'tesorería',
+  'tokens':
+    'tokens',
+  'il manque : {0}':
+    'falta: {0}',
   'Nouvel univers':
     'Nuevo universo',
   'Vers l’autonomie':
@@ -2018,8 +2046,6 @@ export default {
     'vuelve cada {0} meses',
   'à l’étude':
     'en estudio',
-  'recherche':
-    'investigación',
   'mise au point':
     'puesta a punto',
   'déploiement':
@@ -2104,10 +2130,6 @@ export default {
     'investigación en curso… avance previsto en {0}',
   'Entraîner : {0}':
     'Entrenar: {0}',
-  'compute':
-    'cómputo',
-  'données':
-    'datos',
   'ing. R&D':
     'ing. I+D',
   'limité par ing. R&D':

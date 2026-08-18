@@ -34,7 +34,7 @@ export class UI {
       brandPhase: $('brand-phase'),
       phaseBar: $('phase-bar'), phaseBarLabel: $('phase-bar-label'),
       phaseBarTrack: $('phase-bar-track'), phaseBarFill: $('phase-bar-fill'),
-      phaseBarValue: $('phase-bar-value'),
+      phaseBarValue: $('phase-bar-value'), phaseBarEta: $('phase-bar-eta'),
       simDate: $('sim-date'),
       headlines: $('headlines'),
       statTokens: $('stat-tokens'), statTokensRate: $('stat-tokens-rate'),
@@ -302,11 +302,14 @@ export class UI {
     if (this.el.phaseBarFill.style.width !== w + '%') this.el.phaseBarFill.style.width = w + '%';
     if (this.el.phaseBarLabel.textContent !== p.label) this.el.phaseBarLabel.textContent = p.label;
     if (this.el.phaseBarValue.textContent !== p.value) this.el.phaseBarValue.textContent = p.value;
+    const eta = p.eta || '';
+    if (this.el.phaseBarEta.textContent !== eta) this.el.phaseBarEta.textContent = eta;
     el.classList.toggle('is-ready', p.state === 'ready');
+    el.classList.toggle('is-slow', p.state === 'slow');
     el.classList.toggle('is-integrating', p.state === 'integrating');
     el.classList.toggle('is-done', p.state === 'done');
     this.el.phaseBarTrack.setAttribute('aria-valuenow', String(Math.round(p.frac * 100)));
-    this.tip(el, p.label + ' — ' + p.value);
+    this.tip(el, p.label + ' — ' + p.value + (eta ? ' · ' + eta : ''));
   }
   // Une infobulle n'est réécrite que si elle change : `title` sur un élément
   // survolé referme le tooltip natif à chaque écriture, et le rendu tourne à

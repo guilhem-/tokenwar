@@ -1714,6 +1714,34 @@ export default {
     '可用',
   'Opérationnel':
     '已投入运行',
+  'jamais à ce rythme':
+    '照此速度永远不会',
+  '~{0} s':
+    '约 {0} 秒',
+  '~{0} min':
+    '约 {0} 分钟',
+  '~{0} h':
+    '约 {0} 小时',
+  'percée dans {0}':
+    '{0} 后可突破',
+  'd’abord : {0} (+{1})':
+    '先要：{0}（还有 {1} 项）',
+  'd’abord : {0}':
+    '先要：{0}',
+  'recherche':
+    '研究',
+  'compute':
+    '算力',
+  'données':
+    '数据',
+  'matière':
+    '物质',
+  'trésorerie':
+    '现金',
+  'tokens':
+    'token',
+  'il manque : {0}':
+    '尚缺：{0}',
   'Nouvel univers':
     '新的宇宙',
   'Vers l’autonomie':
@@ -2018,8 +2046,6 @@ export default {
     '每 {0} 个月回归一次',
   'à l’étude':
     '研究中',
-  'recherche':
-    '研究',
   'mise au point':
     '调试',
   'déploiement':
@@ -2104,10 +2130,6 @@ export default {
     '研究进行中…预计 {0} 年取得突破',
   'Entraîner : {0}':
     '训练：{0}',
-  'compute':
-    '算力',
-  'données':
-    '数据',
   'ing. R&D':
     '研发工程师',
   'limité par ing. R&D':

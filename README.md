@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 168 chaînes × 7 langues = 8 176 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 179 chaînes × 7 langues = 8 253 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -453,10 +453,51 @@ bascule. Deux copies du même seuil finissent toujours par diverger, et la barre
 alors un objectif que le jeu n'applique pas — un test vérifie que les deux lisent bien la même
 valeur.
 
-Atteindre 100 % ne fait pas basculer : il faut encore **acheter la percée**, puis attendre son
-**intégration** (1 à 4 semaines). La barre distingue donc les trois états qui se ressemblent à
-100 % — *percée disponible* (elle pulse, en couleur d'accent), *intégration 60 %*, ou l'attente
-d'autre chose. Sans cela, un joueur à 100 % croirait le jeu bloqué.
+### À 100 %, la barre dit ce qui bloque encore
+
+Atteindre le seuil ne fait pas basculer, et l'écart est plus grand qu'on ne l'imagine.
+**À `modèle 12/12`, onze autres percées peuvent encore passer avant celle de bascule** — elle
+est la 15ᵉ du catalogue, et il s'écoule deux mois de jeu entre chacune, plus une intégration de
+1 à 4 semaines. Soit près de deux années de jeu pendant lesquelles la barre reste pleine et
+immobile.
+
+La barre nomme donc ce qu'elle attend, au lieu de se taire :
+
+| Ce qui bloque | Ce qu'elle affiche |
+|---|---|
+| D'autres percées passent d'abord | `d'abord : Quantization 8-bit (+10)` |
+| Les deux mois de calme courent | `percée dans ~50 s` |
+| Il manque une ressource | `il manque : recherche, compute` |
+| La percée s'intègre | `intégration 60 %` |
+| Tout est réuni | `percée disponible` — la barre pulse |
+
+Le `(+10)` compte : n'annoncer que la percée suivante laisserait croire qu'on y est presque.
+
+### Le temps restant, honnêtement calculé
+
+En phases 2 et 3, la barre annonce aussi **combien de temps il reste** au rythme courant. Ce
+n'est pas une règle de trois : la boucle matière↔compute est **exponentielle** — chaque
+kilogramme récolté fabrique du wafer, qui récolte davantage. Sur une partie réelle, la règle de
+trois annonçait *4,5 millions d'années* là où douze minutes suffisaient.
+
+Le calcul suit donc le même modèle que le moteur :
+`t = ln(1 + reste·k/débit) / k`, où `k` est le taux de croissance de la boucle. Vérifié en
+rejouant : à 50 % de récolte l'estimation annonce 12,0 min et le seuil tombe à 12,0 min ; à
+30 %, 20,0 contre 20,0.
+
+Ce chiffre révèle une chose que rien ne disait avant : **c'est le curseur « Récolte » qui pilote
+la durée de la phase**, et l'effet est violent parce qu'il agit sur l'exposant.
+
+| Récolte | Constante de temps | Depuis une partie mi-phase 2 |
+|---:|---:|---:|
+| 13 % | 176 s | ~46 min |
+| 30 % | 75 s | ~20 min |
+| 50 % | 45 s | ~12 min |
+| 100 % | 23 s | ~6 min |
+
+Quand le seuil n'arrive pas dans l'heure, la barre passe en **orange** et affiche
+*« jamais à ce rythme »* si la récolte est à zéro. C'est le signal qui manquait : un joueur
+voyant `0,002 %` croit le jeu figé, alors qu'il lui suffit de pousser un curseur.
 
 ## 🧱 Trois colonnes de hauteur comparable
 

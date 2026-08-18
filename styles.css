@@ -1735,6 +1735,17 @@ body.is-frozen::after {
 .phase-bar.is-ready .progress { border-color: var(--accent); }
 .phase-bar.is-ready .progress-fill { animation: phase-ready 1.6s ease-in-out infinite; }
 @keyframes phase-ready { 50% { filter: brightness(1.6); } }
+.phase-bar-eta {
+  color: var(--text-mute);
+  white-space: nowrap;
+  min-width: 8ch;
+  text-align: right;
+}
+/* Rythme intenable : le seuil n'arrivera pas dans un temps raisonnable. C'est
+   presque toujours le curseur « Récolte » qui est trop bas — on le signale au
+   lieu de laisser croire à un jeu figé. */
+.phase-bar.is-slow .phase-bar-eta { color: var(--warn); }
+.phase-bar.is-slow .progress-fill { background: linear-gradient(90deg, var(--warn), var(--accent-2)); }
 .phase-bar.is-integrating .phase-bar-value { color: var(--warn); }
 .phase-bar.is-done .phase-bar-value { color: var(--good); }
 @media (prefers-reduced-motion: reduce) {
@@ -1743,4 +1754,5 @@ body.is-frozen::after {
 @media (max-width: 720px) {
   .phase-bar { font-size: 0.68rem; gap: 0.5rem; }
   .phase-bar-label { display: none; }   /* le titre de phase est déjà dans la marque */
+  .phase-bar-eta { min-width: 0; }
 }
