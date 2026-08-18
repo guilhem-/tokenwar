@@ -186,10 +186,16 @@ d'en construire d'autres.
 **L'hébergement se contredisait.** Un datacenter s'achetait $20 000 et se louait $800/jour :
 l'achat était remboursé en **25 jours**, ce qui rendait la location absurde. Et louer une salle
 entière coûtait $100 par baie et par jour quand la colocation au détail en demandait $40 — le
-gros était plus cher que le détail. Désormais une salle de 8 baies (~380 kW de charge) coûte
-$450 000 à l'aménagement, se loue $300/jour, et l'achat s'amortit en **quatre ans**. Le bâtiment
-qui accueille 4 salles — 3 072 cartes, ~1,5 MW — passe de $30 000 à $1,2 M. Un châssis 8 GPU
-passe de $8 000 à $25 000, son vrai prix nu.
+gros était plus cher que le détail.
+
+La référence du métier est le coût **au mégawatt informatique** : $7 à 12 M/MW tout compris pour
+un datacenter neuf. Le bâtiment du jeu accueille 4 salles × 8 baies × 12 serveurs × 8 cartes =
+**3 072 GPU, soit ~1,5 MW**. Il coûte donc $4,5 M de gros œuvre et de terrain, chaque salle
+$2,6 M d'aménagement (froid, onduleurs, distribution, sécurité) — **$9,9 M/MW tout compris**,
+au milieu de la fourchette. La location d'une salle suit le tarif de colocation réel
+(~$175/kW/mois) avec la remise de gros qui va avec : **$213 la baie et par jour contre $233 au
+détail**, et l'achat s'amortit en **4,2 ans**. Un châssis 8 GPU passe de $8 000 à $25 000, son
+vrai prix nu.
 
 **Les salaires étaient sous-évalués de moitié.** Un chercheur en IA coûtait $146 k par an à son
 employeur ; il en coûte le double. Les cinq métiers sont recalés sur le coût employeur réel :
@@ -199,11 +205,29 @@ recrutement passe de $1 000 à $5 000 — annonce, entretiens, poste de travail,
 **Les caractéristiques matérielles** ont été revérifiées une à une : RTX 5090 à 575 W (et non
 650), GTX grand public à 200 W, A100 80 Go à $15 000. Prix de catalogue et TDP constructeur.
 
-**Ce qui n'a délibérément pas été touché** : le coût d'entraînement des modèles. GPT-3 a
-réellement coûté ~$4,6 M et le jeu en demande $300. L'écart est assumé — vous n'êtes pas
-OpenAI mais un laboratoire qui démarre dans un garage avec $50 000, et aucune courbe d'argent
-ne peut faire tenir un budget d'entraînement réel dans les dix premières minutes. Ce sont vos
-modèles, à votre échelle, pas les leurs.
+**Les entraînements ne coûtaient rien non plus.** GPT-4 se formait pour $200 000 quand le vrai
+a dépassé les $100 M. Les douze paliers suivent désormais les ordres de grandeur publiés, et
+surtout ils **mordent** : à la sortie de GPT-4, une partie type a $45,9 M en caisse et
+l'entraînement en demande $40 M. C'est une décision, plus une ligne qu'on coche.
+
+| Palier | Année | Avant | Après | Trésorerie à cette date |
+|---|---:|---:|---:|---:|
+| GPT-3 | 2020 | $300 | $25 k | $68 k déjà dépensés |
+| GPT-3.5 / ChatGPT | 2022 | $6 k | $2 M | $6,7 M |
+| GPT-4 | 2023 | $200 k | $40 M | $45,9 M |
+| GPT-4o | 2024 | $8 M | $120 M | $2,2 Md |
+| o1 — raisonnement | 2024 | $200 M | $400 M | $2,2 Md |
+| Frontière 2025 | 2025 | $3 Md | $4 Md | $25,3 Md |
+| Frontière 2026 | 2026 | $8 Md | $12 Md | $280,8 Md |
+| Mémoire persistante | 2027 | $14 Md | $25 Md | $10,3 B |
+| Modèle du monde | 2028 | $20 Md | $45 Md | $73,7 B |
+| Essaim d'agents | 2029 | $28 Md | $90 Md | $329,7 B |
+| Super-intelligence | 2030 | $40 Md | $200 Md | $830,4 B |
+
+**Les deux premiers paliers restent volontairement sous le réel.** GPT-3 a coûté ~$4,6 M à
+OpenAI ; en 2020 vous avez quelques milliers de dollars en caisse. Ce sont *vos* modèles, à
+votre échelle, pas les leurs — la courbe rejoint le réel dès que l'entreprise en a les moyens,
+c'est-à-dire dès GPT-3.5.
 
 Tout cela a été vérifié en rejouant une partie complète après chaque correction : **83,8 min,
 super-intelligence atteinte, transitions de phase inchangées**.

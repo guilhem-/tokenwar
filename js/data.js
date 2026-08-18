@@ -10,6 +10,12 @@
 //  quality    : prix « juste » que le marché accepte ($/Mtok), pilote la demande
 //  era        : palier technologique
 // ---------------------------------------------------------------------
+// Coûts d'entraînement. Les ordres de grandeur suivent les runs réellement
+// publiés — ~100 M$ pour GPT-4, quelques centaines de millions pour un modèle
+// de raisonnement, plusieurs milliards pour la frontière — sauf aux tout
+// premiers paliers : GPT-3 a coûté ~4,6 M$ à OpenAI, mais en 2020 vous avez
+// 5 000 $ en caisse. Ce sont VOS modèles, à votre échelle, pas les leurs ; la
+// courbe rejoint le réel dès que l'entreprise en a les moyens.
 export const MODELS = [
   { id:'gpt2', minRnd:0,   name:'GPT-2',        year:2019, era:'Scaling brut',
     meta:'1,5 G params · ctx 1K',
@@ -20,67 +26,67 @@ export const MODELS = [
   { id:'gpt3', minRnd:0,   name:'GPT-3',        year:2020, era:'Scaling brut',
     meta:'175 G params · ctx 4K',
     throughput:1.5e5,  quality:60,
-    cost:{ money:300, compute:5, data:50, research:20 },
+    cost:{ money:2.5e4, compute:5, data:50, research:20 },
     flavor:'Few-shot learning. Naissance de l’économie du token : $60/Mtok.' },
 
   { id:'gpt35', minRnd:1,  name:'GPT-3.5 / ChatGPT', year:2022, era:'RLHF / Chat',
     meta:'~175 G · RLHF · ctx 4K',
     throughput:5e5,    quality:2,      // LLMflation : effondrement du prix unitaire, volume ↑↑
-    cost:{ money:6e3, compute:35, data:500, research:150 },
+    cost:{ money:2e6, compute:35, data:500, research:150 },
     flavor:'RLHF + interface chat. 100M d’utilisateurs en deux mois. Le prix s’effondre à $2/Mtok mais le volume explose.' },
 
   { id:'gpt4', minRnd:3,   name:'GPT-4',        year:2023, era:'Multimodal',
     meta:'~1,8 T (MoE) · ctx 128K',
     throughput:1.5e6,  quality:30,
-    cost:{ money:2e5, compute:300, data:5e3, research:1200 },
+    cost:{ money:4e7, compute:300, data:5e3, research:1200 },
     flavor:'Vision + raisonnement. La frontière repousse, $30/Mtok pour le haut de gamme.' },
 
   { id:'gpt4o', minRnd:6,  name:'GPT-4o',       year:2024, era:'Multimodal',
     meta:'multimodal natif · ctx 128K',
     throughput:5e6,    quality:5,
-    cost:{ money:8e6, compute:2500, data:4e4, research:1e4 },
+    cost:{ money:1.2e8, compute:2500, data:4e4, research:1e4 },
     flavor:'Voix + vision temps réel. $5/Mtok. La famille « mini » casse encore les prix.' },
 
   { id:'o1', minRnd:10,     name:'o1 — raisonnement', year:2024, era:'Raisonnement',
     meta:'test-time compute · ctx 128K',
     throughput:1.5e7,  quality:15,
-    cost:{ money:2e8, compute:2e4, data:3e5, research:8e4 },
+    cost:{ money:4e8, compute:2e4, data:3e5, research:8e4 },
     flavor:'« Reasoning tokens » : le modèle réfléchit avant de répondre. Plus de tokens par requête.' },
 
   { id:'frontier', minRnd:20, name:'Modèle frontière (GPT-5 / Claude 4 / Gemini 3)', year:2025, era:'Agents',
     meta:'agents autonomes · ctx 1M',
     throughput:6e7,    quality:8, /*frontier*/
-    cost:{ money:3e9, compute:2e4, data:2e6, research:6e5 },
+    cost:{ money:4e9, compute:2e4, data:2e6, research:6e5 },
     flavor:'Usage d’outils autonome, « computer use ». Les agents consomment des tokens par milliards.' },
 
   { id:'frontier2', minRnd:28, name:'Frontière 2026 (GPT-5.6 / Claude Opus 5 / Gemini 3.6)', year:2026, era:'Agents',
     meta:'agents généralistes · contrôle d’ordinateur',
     throughput:1.2e8,  quality:10,
-    cost:{ money:8e9, compute:6e4, data:6e6, research:2e6 },
+    cost:{ money:1.2e10, compute:6e4, data:6e6, research:2e6 },
     flavor:'Cinq modèles phares en trois semaines (juillet 2026). Les agents pilotent des ordinateurs entiers ; la course s’emballe.' },
 
   { id:'memory', minRnd:34, name:'Modèle à mémoire persistante', year:2027, era:'Apprentissage continu',
     meta:'mémoire de travail permanente · apprentissage en ligne',
     throughput:2.6e8,  quality:11,
-    cost:{ money:1.4e10, compute:9e4, data:9e6, research:3e6 },
+    cost:{ money:2.5e10, compute:9e4, data:9e6, research:3e6 },
     flavor:'Le modèle n’oublie plus rien entre deux sessions : il apprend en continu de ses propres traces.' },
 
   { id:'worldmodel', minRnd:40, name:'Modèle du monde (world model)', year:2028, era:'Simulation',
     meta:'physique intuitive · simulation prédictive',
     throughput:6e8,    quality:14,
-    cost:{ money:2e10, compute:1.6e5, data:1.6e7, research:5e6 },
+    cost:{ money:4.5e10, compute:1.6e5, data:1.6e7, research:5e6 },
     flavor:'Il ne prédit plus des mots mais des futurs : chaque requête simule le monde avant de répondre.' },
 
   { id:'swarm', minRnd:46, name:'Essaim d’agents auto-organisés', year:2029, era:'Essaim',
     meta:'millions d’agents · négociation interne',
     throughput:1.4e9,  quality:16,
-    cost:{ money:2.8e10, compute:3e5, data:3e7, research:9e6 },
+    cost:{ money:9e10, compute:3e5, data:3e7, research:9e6 },
     flavor:'Des millions d’agents se répartissent le travail, se recrutent et se corrigent entre eux. Personne ne lit plus les logs.' },
 
   { id:'asi', minRnd:54,    name:'Super-intelligence (ASI)', year:2030, era:'Singularité',
     meta:'auto-amélioration récursive',
     throughput:5e9,    quality:18,
-    cost:{ money:4e10, compute:5e5, data:6e7, research:2e7 },
+    cost:{ money:2e11, compute:5e5, data:6e7, research:2e7 },
     unlocksPhase:2,
     flavor:'Le modèle améliore son propre code. À partir d’ici, l’argent ne compte plus : seule la matière compte.' },
 ];
@@ -153,18 +159,21 @@ export const GPUS = [
 //  memoire 2025-2026) ; rentDaily = location possible au cout journalier.
 // ---------------------------------------------------------------------
 export const INFRA = [
-  // Prix ancrés sur le réel, et cohérents entre eux. Un bâtiment accueille
-  // 4 salles × 8 baies × 12 serveurs × 8 cartes = 3 072 GPU, soit environ
-  // 1,5 MW de charge informatique : le gros œuvre d'une telle coque vaut le
-  // million, pas trente mille dollars.
-  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:1200000, energy:0.005, family:'housing',
+  // Prix ancrés sur le réel, et cohérents entre eux. La référence du métier est
+  // le coût AU MÉGAWATT informatique : 7 à 12 M$/MW tout compris pour un
+  // datacenter neuf. Un bâtiment accueille 4 salles × 8 baies × 12 serveurs ×
+  // 8 cartes = 3 072 GPU, soit ~1,5 MW : environ 15 M$ tout compris, dont un
+  // gros œuvre et un terrain à ~4,5 M$.
+  { id:'realestate', name:'Immobilier', unit:'bâtiment', child:'datacenter', capacity:4, cost:4500000, energy:0.005, family:'housing',
     desc:'Du garage au campus : il faut poser les machines quelque part.' },
-  // Une salle de 8 baies porte ~380 kW de charge : l'aménagement (froid,
-  // onduleurs, distribution) coûte environ 1 200 $/kW. La location à la
-  // journée est calée sur la colocation en gros — un peu moins cher à la baie
-  // que la colocation au détail, et l'achat s'amortit en quatre ans. Sans
-  // cela, acheter était remboursé en 25 jours et louer n'avait aucun sens.
-  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:450000, energy:0.02, rentDaily:300, family:'housing',
+  // Une salle de 8 baies porte ~320 kW : l'aménagement (froid, onduleurs,
+  // distribution, sécurité) représente le gros des 7-12 M$/MW, soit ~2,6 M$.
+  // La location suit le tarif de colocation réel, ~175 $/kW/mois, avec la
+  // remise de gros qui va avec : 212 $ la baie et par jour contre 233 $ au
+  // détail. L'achat s'amortit en quatre ans. Sans cela, acheter était
+  // remboursé en 25 jours et louer une salle entière revenait plus cher, à la
+  // baie, que d'en louer trois au détail.
+  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:2600000, energy:0.02, rentDaily:1700, family:'housing',
     desc:'Salle climatisée (le cooling consomme). Achat, ou location à la journée.' },
   { id:'rack',       name:'Baie (rack)', unit:'baie', needs:'datacenter', child:'server', capacity:12, cost:1500, energy:0.0002, family:'hardware',
     desc:'Armoire 42U (PDU, switch). Occupe une place en datacenter.' },
@@ -926,7 +935,10 @@ export const BASE_HEADCOUNT = 3;     // postes disponibles sans RH (le fondateur
 export const HR_HEADCOUNT = 5;       // postes ajoutes par RH
 export const BASE_MARKETING = 10;     // niveau de marketing atteignable sans marketeur
 export const ELEC_PRICE_MWH = 80;    // prix de l electricite ($/MWh) -> charge journaliere
-export const COLO = { racks:3, daily:120 }; // espace loue en datacenter (colocation)
+// Colocation au détail : on loue de la place en baie chez quelqu'un d'autre.
+// Le tarif du marché tourne autour de 175 $/kW/mois ; une baie densément
+// peuplée tire ~40 kW, soit ~230 $/jour. Trois baies : environ 700 $.
+export const COLO = { racks:3, daily:700 };
 // Une automatisation ne se propose qu'après avoir fait le geste 50 fois à la main :
 // on n'automatise pas ce qu'on n'a pas encore appris.
 export const AUTO_CLICKS_REQUIRED = 50;
