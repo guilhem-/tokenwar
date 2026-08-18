@@ -714,8 +714,22 @@ export class Game {
     return (this.state.rentedDC || 0) * this.dcRentDaily() / (SECONDS_PER_YEAR / 365);
   }
 
-  // une carte sortie depuis plus de 5 ans n'est plus commercialisée (retirée du marché)
-  discontinued(g) { return this.simYear() > g.year + 5; }
+  // Une carte sortie depuis plus de 5 ans n'est plus commercialisée — MAIS on
+  // ne retire jamais la dernière du marché. Le catalogue spéculatif s'espace
+  // avec le temps (13 ans entre le processeur de Planck et le cœur à énergie
+  // du vide) : appliquer la règle des 5 ans sans garde-fou laissait 25 années
+  // entières, à partir de 2049, où plus RIEN n'était achetable. Un joueur qui
+  // y perdait son parc — saisie pour dette, incendie, vol de GPU — se
+  // retrouvait avec un compute nul, aucune carte à acheter même avec de
+  // l'argent illimité, et aucun moyen de repartir. Une impasse sèche.
+  // Une carte ne sort donc du marché que lorsqu'une plus récente a pris sa
+  // place ; sinon l'occasion continue de la vendre.
+  discontinued(g) {
+    if (this.simYear() <= g.year + 5) return false;
+    // il faut qu'une carte PLUS RÉCENTE soit déjà sortie pour retirer celle-ci :
+    // la dernière du catalogue reste donc toujours achetable, même vieillie.
+    return GPUS.some(x => x.year > g.year && x.year <= this.simYear());
+  }
   buyGPU(id) {
     const g = GPUS.find(x => x.id === id);
     if (!this.dateUnlocked(g) || this.discontinued(g)) return false;

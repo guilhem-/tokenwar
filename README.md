@@ -84,6 +84,13 @@ de son année.
   neuromorphique, supraconducteur, quantique-hybride, énergie du vide).
 - **Chaîne d'hébergement** : un GPU tient dans un *serveur* → *baie* → *datacenter* →
   *immobilier*. Achat, **location de datacenter** ou **colocation** au coût journalier.
+- **Jamais d'impasse** : une carte sortie depuis plus de 5 ans quitte le marché, **sauf si
+  aucune plus récente n'est encore sortie**. Sans ce garde-fou, le catalogue spéculatif —
+  qui s'espace jusqu'à 13 ans entre deux générations — laissait **25 années entières, à partir
+  de 2049, où plus rien n'était achetable**. Un joueur qui y perdait son parc (saisie pour
+  dette, incendie, vol de GPU) se retrouvait avec un compute nul, aucune carte à acheter même
+  avec une trésorerie illimitée, et aucun moyen de repartir. Un test balaie 2019-2100 et exige
+  qu'il reste toujours au moins une carte au catalogue.
 - **Flambée mémoire 2025-2026** : le prix des serveurs bondit de $25k à $45k.
 - **Délais de mise en service** : rien n'est instantané. Toute commande part en **chantier**
   pour une durée croissant avec sa **complexité** (`base + k·log₁₀(prix)`) — quelques secondes

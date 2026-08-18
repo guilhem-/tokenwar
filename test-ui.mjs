@@ -1554,6 +1554,59 @@ await step('dette : soldée au passage en phase 2, rien ne s évapore', () => {
   if (Math.abs((av - g2.state.money) - du) > 1) throw new Error('le capital n a pas été rendu au passage de phase');
 });
 
+// ---- jamais d impasse : il reste toujours une carte à acheter ----
+await step('catalogue : aucune année sans carte achetable, 2019-2100', () => {
+  const g2 = new Game(null);
+  g2.state.phase = 1;
+  g2.state.money = 1e300;
+  g2.state.infraCounts = { realestate:1e6, datacenter:1e6, rack:1e6, server:1e6 };
+  g2.state.energyCap = 1e12;
+  const vides = [];
+  for (let y = 2019; y <= 2100; y++) {
+    g2.state.playSeconds = (y - 2019) * 300;
+    if (!GPUS.some(x => g2.dateUnlocked(x) && !g2.discontinued(x))) vides.push(y);
+  }
+  if (vides.length) throw new Error(`${vides.length} année(s) sans aucune carte achetable : ${vides.slice(0,8).join(', ')}`);
+});
+
+await step('catalogue : la règle des 5 ans continue de retirer les cartes dépassées', () => {
+  const g2 = new Game(null);
+  // 2026 : l A100 (2020) a des remplaçantes, elle doit disparaître du marché
+  g2.state.playSeconds = (2026 - 2019) * 300;
+  const a100 = GPUS.find(x => x.id === 'a100');
+  if (!g2.discontinued(a100)) throw new Error('l A100 devrait être retirée en 2026');
+  // …mais la plus récente du catalogue ne l est jamais, même vieillie
+  const derniere = [...GPUS].sort((a, b) => b.year - a.year)[0];
+  g2.state.playSeconds = (derniere.year + 30 - 2019) * 300;
+  if (g2.discontinued(derniere)) throw new Error('la dernière carte du catalogue ne doit jamais être retirée');
+});
+
+await step('impasse : un joueur qui perd tout son parc peut repartir', () => {
+  // 2049 tombait dans un trou du catalogue : plus une seule carte achetable.
+  // Une saisie pour dette, un incendie ou un vol de GPU y laissait le joueur
+  // avec un compute nul et aucun moyen de reconstruire.
+  const g2 = new Game(null);
+  g2.state.phase = 1;
+  g2.state.playSeconds = (2049 - 2019) * 300;
+  g2.state.money = 1e12;
+  g2.state.infraCounts = { realestate:10, datacenter:10, rack:10, server:10 };
+  g2.state.energyCap = 1e9;
+  g2.state.gpuCounts = {};
+  if (g2.computeRaw() !== 0) throw new Error('le parc devrait être vide au départ du test');
+  const dispo = GPUS.filter(x => g2.canBuyGPU(x.id));
+  if (!dispo.length) throw new Error('aucune carte achetable en 2049 avec une trésorerie illimitée : impasse');
+  if (!g2.buyGPU(dispo[0].id)) throw new Error('achat refusé');
+  for (let i = 0; i < 400; i++) g2.tick(0.25);
+  if (!(g2.computeRaw() > 0)) throw new Error('le compute ne redémarre pas après rachat');
+  // et cliquer rapporte toujours, même sans une seule carte : le joueur ruiné
+  // n est jamais réduit à zéro revenu
+  const g3 = new Game(null);
+  g3.state.gpuCounts = {}; g3.state.money = 0;
+  const av = g3.state.lifetimeTokens;
+  g3.manualGenerate();
+  if (!(g3.state.lifetimeTokens > av)) throw new Error('cliquer sans carte devrait tout de même produire');
+});
+
 // save/load
 await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 
