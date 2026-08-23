@@ -742,6 +742,18 @@ export default {
     'Vazio profundo',
   'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
     'Quase nada para levar, quase nada a temer. Um alívio, não uma estratégia.',
+  'Programme de fusion':
+    'Programa de fusão',
+  'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.':
+    'Confinamento inercial e depois tokamak compacto: produzir enfim mais energia do que se injeta. Sem este programa, nenhum reator de fusão é comprável.',
+  'Vos réacteurs à fusion sont désormais constructibles.':
+    'Os teus reatores de fusão já podem ser construídos.',
+  'Sphère de Dyson':
+    'Esfera de Dyson',
+  'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.':
+    'Um enxame auto-montado de coletores envolve uma estrela inteira. Pago em matéria, acelera a colheita de forma duradoura.',
+  'La sphère est refermée. L’étoile entière travaille pour vous.':
+    'A esfera está fechada. Uma estrela inteira trabalha para ti.',
   'Croûte accessible':
     'Crosta acessível',
   'Manteau supérieur':
@@ -2194,6 +2206,12 @@ export default {
     'Encomendar',
   'la recherche n’a pas encore commencé':
     'a investigação ainda não começou',
+  'recherche en cours':
+    'investigação em curso',
+  'mise au point en cours':
+    'afinação em curso',
+  'déploiement en cours':
+    'implantação em curso',
   'entrée à {0}':
     'entrada em {0}',
   'Montant':

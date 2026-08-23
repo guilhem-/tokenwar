@@ -742,6 +742,18 @@ export default {
     '깊은 공허',
   'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
     '가져갈 것도 거의 없고, 두려워할 것도 거의 없다. 숨 돌리기이지 전략은 아니다.',
+  'Programme de fusion':
+    '핵융합 계획',
+  'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.':
+    '관성 밀폐, 이어서 소형 토카막 — 넣은 것보다 많은 에너지를 마침내 얻는다. 이 계획 없이는 핵융합로를 살 수 없다.',
+  'Vos réacteurs à fusion sont désormais constructibles.':
+    '이제 핵융합로를 건설할 수 있습니다.',
+  'Sphère de Dyson':
+    '다이슨 구',
+  'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.':
+    '자가 조립되는 수집기 무리가 항성 하나를 통째로 감싼다. 물질로 지불하며, 채취를 지속적으로 가속한다.',
+  'La sphère est refermée. L’étoile entière travaille pour vous.':
+    '구가 닫혔다. 항성 하나가 통째로 당신을 위해 일한다.',
   'Croûte accessible':
     '접근 가능한 지각',
   'Manteau supérieur':
@@ -2194,6 +2206,12 @@ export default {
     '발주',
   'la recherche n’a pas encore commencé':
     '연구가 아직 시작되지 않았다',
+  'recherche en cours':
+    '연구 진행 중',
+  'mise au point en cours':
+    '조정 진행 중',
+  'déploiement en cours':
+    '배치 진행 중',
   'entrée à {0}':
     '{0}에 진입',
   'Montant':

@@ -742,6 +742,18 @@ export default {
     '深空虚空',
   'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
     '几乎没什么可拿，也几乎没什么可怕。这是喘息，不是策略。',
+  'Programme de fusion':
+    '聚变计划',
+  'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.':
+    '先是惯性约束，再是紧凑型托卡马克：终于产出多于投入的能量。没有这项计划，就买不到聚变反应堆。',
+  'Vos réacteurs à fusion sont désormais constructibles.':
+    '你的聚变反应堆现在可以建造了。',
+  'Sphère de Dyson':
+    '戴森球',
+  'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.':
+    '一群自组装的采集器把整颗恒星包裹起来。以物质支付，持久地加快采集。',
+  'La sphère est refermée. L’étoile entière travaille pour vous.':
+    '球体已合拢。整颗恒星都在为你工作。',
   'Croûte accessible':
     '可及地壳',
   'Manteau supérieur':
@@ -2194,6 +2206,12 @@ export default {
     '下单',
   'la recherche n’a pas encore commencé':
     '研究尚未开始',
+  'recherche en cours':
+    '研究进行中',
+  'mise au point en cours':
+    '调试进行中',
+  'déploiement en cours':
+    '部署进行中',
   'entrée à {0}':
     '建仓于 {0}',
   'Montant':

@@ -742,6 +742,18 @@ export default {
     '深い虚空',
   'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
     '取るものもほとんどなく、恐れるものもほとんどない。息継ぎであって、戦略ではない。',
+  'Programme de fusion':
+    '核融合計画',
+  'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.':
+    '慣性閉じ込め、次いで小型トカマク——投入した以上のエネルギーをついに取り出す。この計画なしに核融合炉は買えない。',
+  'Vos réacteurs à fusion sont désormais constructibles.':
+    '核融合炉が建設可能になった。',
+  'Sphère de Dyson':
+    'ダイソン球',
+  'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.':
+    '自己組み立て型の集光体の群れが、恒星を丸ごと包み込む。物質で支払えば、採取は恒久的に加速する。',
+  'La sphère est refermée. L’étoile entière travaille pour vous.':
+    '球は閉じた。恒星まるごとが、あなたのために働く。',
   'Croûte accessible':
     '到達可能な地殻',
   'Manteau supérieur':
@@ -2194,6 +2206,12 @@ export default {
     '発注する',
   'la recherche n’a pas encore commencé':
     '研究はまだ始まっていない',
+  'recherche en cours':
+    '研究中',
+  'mise au point en cours':
+    '調整中',
+  'déploiement en cours':
+    '配備中',
   'entrée à {0}':
     '{0} で参入',
   'Montant':

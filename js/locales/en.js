@@ -742,6 +742,18 @@ export default {
     'Deep void',
   'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
     'Almost nothing to take, almost nothing to fear. A respite, not a strategy.',
+  'Programme de fusion':
+    'Fusion programme',
+  'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.':
+    'Inertial confinement, then a compact tokamak: producing more energy than you put in, at last. Without this programme, no fusion reactor can be bought.',
+  'Vos réacteurs à fusion sont désormais constructibles.':
+    'Your fusion reactors can now be built.',
+  'Sphère de Dyson':
+    'Dyson sphere',
+  'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.':
+    'A self-assembling swarm of collectors wraps an entire star. Paid in matter, it speeds up harvesting for good.',
+  'La sphère est refermée. L’étoile entière travaille pour vous.':
+    'The sphere is closed. An entire star now works for you.',
   'Croûte accessible':
     'Accessible crust',
   'Manteau supérieur':
@@ -2194,6 +2206,12 @@ export default {
     'Order',
   'la recherche n’a pas encore commencé':
     'research has not started yet',
+  'recherche en cours':
+    'research under way',
+  'mise au point en cours':
+    'tuning under way',
+  'déploiement en cours':
+    'deployment under way',
   'entrée à {0}':
     'entered at {0}',
   'Montant':

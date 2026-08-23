@@ -14,7 +14,7 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          PHASE3_EARTH, ENDING_UNIVERSE, WATCHDOGS, WATCHDOG_AFTER, WATCHDOG_SHARE,
          HAZARD_RATE, HAZARD_SHIELD, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE,
          DESTINATIONS, DEST_DURATION, DEST_CHOICES } from './data.js';
-import { clamp, fmtPower, fmtMoney, pct } from './util.js';
+import { clamp, fmtPower, fmtMoney, fmtMass, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
@@ -2233,7 +2233,9 @@ export class Game {
     const c = this.crisisDef();
     const lost = s.crisis.lost;
     s.crisisLost = (s.crisisLost || 0) + lost;
-    const money = v => '$' + Math.round(v).toLocaleString(intlLocale());
+    // le journal doit parler dans la monnaie de l'incident, pas toujours en dollars
+    const money = v => this.crisisPool() === 'matter'
+      ? fmtMass(v) : '$' + Math.round(v).toLocaleString(intlLocale());
     if (fixed && c) {
       const cost = this.crisisCost(c);
       const paid = this.crisisPay(cost);

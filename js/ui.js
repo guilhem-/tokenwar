@@ -453,7 +453,7 @@ export class UI {
       `<div class="crisis-inner">` +
         `<div class="crisis-head"><span class="crisis-icon">${c.icon}</span><span class="crisis-title">${td(c.title)}</span></div>` +
         `<div class="crisis-body">${td(c.body)}</div>` +
-        `<div class="crisis-meter"><span class="text-muted">${t('Pertes en cours')}</span><span class="num crisis-lost">$0</span></div>` +
+        `<div class="crisis-meter"><span class="text-muted">${t('Pertes en cours')}</span><span class="num crisis-lost"></span></div>` +
         `<button class="btn btn-primary crisis-fix"><span class="choice-label">${td(c.fix)}</span>` +
         `<span class="choice-desc">${td(c.fixDesc)}</span><span class="crisis-cost num"></span></button>`;
     box.querySelector('.crisis-fix').addEventListener('click', () => this.game.resolveCrisis(true));
@@ -512,11 +512,14 @@ export class UI {
     this.crisisBox.style.setProperty('--k', k.toFixed(3));
     this.crisisBox.style.setProperty('--pulse', (1.5 - k).toFixed(2) + 's');
     this.el.crisisVignette.style.opacity = (0.06 + k * 0.34).toFixed(3);
+    // En phase 2+ l'incident ponctionne la MATIÈRE : afficher « $3,60 DDc »
+    // sur des kilogrammes était un reste de la phase 1.
+    const chiffre = v => (g.crisisPool() === 'matter' ? fmtMass(v) : fmtMoney(v));
     const lost = this.crisisBox.querySelector('.crisis-lost');
-    if (lost) lost.textContent = '−' + fmtMoney(s.crisis.lost) + ' (' + Math.round(k * CRISIS_DURATION) + ' s)';
+    if (lost) lost.textContent = '−' + chiffre(s.crisis.lost) + ' (' + Math.round(k * CRISIS_DURATION) + ' s)';
     const c = g.crisisDef();
     const cost = this.crisisBox.querySelector('.crisis-cost');
-    if (cost && c) cost.textContent = fmtMoney(g.crisisCost(c));
+    if (cost && c) cost.textContent = chiffre(g.crisisCost(c));
   }
   onCrisisEnd() {
     this.disarmWatchdog();
@@ -1542,9 +1545,16 @@ export class UI {
       } else {
         r.el.classList.remove('locked', 'affordable');
         r.cost.innerHTML = `<span class="badge ${badge}">${labels[st.stage] || ''}</span>${count}`;
-        r.effect.innerHTML = st.stage === 'none'
-          ? `<span class="text-muted">${t('la recherche n’a pas encore commencé')}</span>`
-          : `<span class="text-muted">${td(p.desc)}</span>`;
+        // La description est déjà écrite dans .item-desc à la construction :
+        // la répéter ici l'affichait deux fois de suite. On dit plutôt où en
+        // est le programme, ce que la barre seule ne raconte pas.
+        const oustage = {
+          none:    t('la recherche n’a pas encore commencé'),
+          research:t('recherche en cours'),
+          tuning:  t('mise au point en cours'),
+          ordered: t('déploiement en cours'),
+        };
+        r.effect.innerHTML = `<span class="text-muted">${oustage[st.stage] || ''}</span>`;
         r.bar.classList.toggle('hidden', prog == null);
         if (prog != null) r.barFill.style.width = (prog * 100).toFixed(1) + '%';
       }

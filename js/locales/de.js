@@ -742,6 +742,18 @@ export default {
     'Tiefe Leere',
   'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
     'Fast nichts zu holen, fast nichts zu fürchten. Eine Verschnaufpause, keine Strategie.',
+  'Programme de fusion':
+    'Fusionsprogramm',
+  'Confinement inertiel puis tokamak compact : produire enfin plus d’énergie qu’on n’en injecte. Sans ce programme, aucun réacteur à fusion n’est achetable.':
+    'Trägheitseinschluss, dann kompakter Tokamak: endlich mehr Energie erzeugen als hineingesteckt wird. Ohne dieses Programm ist kein Fusionsreaktor käuflich.',
+  'Vos réacteurs à fusion sont désormais constructibles.':
+    'Deine Fusionsreaktoren lassen sich nun bauen.',
+  'Sphère de Dyson':
+    'Dyson-Sphäre',
+  'Un essaim auto-assemblé de collecteurs enveloppe une étoile entière. Payé en matière, il accélère durablement la récolte.':
+    'Ein selbstmontierender Schwarm von Kollektoren umhüllt einen ganzen Stern. In Materie bezahlt, beschleunigt er die Ernte dauerhaft.',
+  'La sphère est refermée. L’étoile entière travaille pour vous.':
+    'Die Sphäre ist geschlossen. Ein ganzer Stern arbeitet nun für dich.',
   'Croûte accessible':
     'Zugängliche Kruste',
   'Manteau supérieur':
@@ -2194,6 +2206,12 @@ export default {
     'Bestellen',
   'la recherche n’a pas encore commencé':
     'die Forschung hat noch nicht begonnen',
+  'recherche en cours':
+    'Forschung läuft',
+  'mise au point en cours':
+    'Erprobung läuft',
+  'déploiement en cours':
+    'Ausbringung läuft',
   'entrée à {0}':
     'Einstieg bei {0}',
   'Montant':

@@ -10,7 +10,7 @@ import { readFileSync, readdirSync } from 'fs';
 import { MODELS, GPUS, INFRA, ENERGY, PROJECTS, OPTIMS, EMPLOYEES, ACHIEVEMENTS,
          CRISES, HEADLINES, EVENTS, PROBE_SPECS, AUTOMATIONS, ADDENDUM, SPACE_DC, HELP,
          CHRONICLE, EXTRAVAGANCES, OPS_INCIDENTS, TRAINING_FAILURES, LOANS, WATCHDOGS,
-         DESTINATIONS, EXTRACTION } from '../js/data.js';
+         DESTINATIONS, EXTRACTION, PROGRAMS } from '../js/data.js';
 import { FUNDING } from '../js/game.js';
 
 const push = (out, v) => { if (typeof v === 'string' && v.trim()) out.add(v); };
@@ -34,6 +34,7 @@ export function dataStrings() {
   take(LOANS, ['name', 'lender', 'repay', 'desc']);
   take(WATCHDOGS, ['name', 'desc']);
   take(DESTINATIONS, ['name', 'desc']);
+  take(PROGRAMS, ['name', 'desc', 'done']);
   for (const liste of Object.values(EXTRACTION)) take(liste, ['name']);
   take([ADDENDUM, SPACE_DC], ['name', 'desc']);
   HEADLINES.forEach(h => push(out, h.t));
