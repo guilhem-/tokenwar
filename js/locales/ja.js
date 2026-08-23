@@ -718,6 +718,50 @@ export default {
     '群れの自律監視',
   'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
     '同じ発想を、自律機群の規模で。基盤の一部が、ただ自分自身を見張ることだけに費やされる。物質の60%と引き換えだ——しかも買い直しが要る。最初のものは、この規模では何も見えない。',
+  'Cœur galactique':
+    '銀河中心',
+  'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.':
+    '類を見ない密度、それを上回る放射。プローブは刈り取るのと同じ速さで溶けていく。',
+  'Amas dense':
+    '高密度の星団',
+  'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.':
+    '数千の系がひしめき合う。衝突は頻繁で、損耗もまた然り。',
+  'Pouponnière stellaire':
+    '星のゆりかご',
+  'Du gaz partout, des étoiles en formation. Instable, mais généreux.':
+    'そこかしこにガス、生まれかけの星々。不安定だが、気前はいい。',
+  'Vestiges':
+    '遺構',
+  'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.':
+    '誰かが先に通っていった。残されたものは造作なく収穫できる——説明もないままに。',
+  'Bras externe':
+    '外側の腕',
+  'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.':
+    '物質も乏しく、危険も乏しい。壊滅した群れを立て直すための領域だ。',
+  'Vide profond':
+    '深い虚空',
+  'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
+    '取るものもほとんどなく、恐れるものもほとんどない。息継ぎであって、戦略ではない。',
+  'Croûte accessible':
+    '到達可能な地殻',
+  'Manteau supérieur':
+    '上部マントル',
+  'Manteau profond':
+    '深部マントル',
+  'Noyau externe':
+    '外核',
+  'Noyau interne':
+    '内核',
+  'Système local':
+    '近傍系',
+  'Bras galactique':
+    '銀河の腕',
+  'Galaxies voisines':
+    '近隣の銀河',
+  'Amas locaux':
+    '近傍の銀河団',
+  'Univers profond':
+    '深宇宙',
   'Directives permanentes':
     '常設ディレクティブ',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1780,6 +1824,10 @@ export default {
     '約 {0} 分',
   '~{0} h':
     '約 {0} 時間',
+  'Essaim redirigé : {0}.':
+    '群れを転進：{0}。',
+  'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
+    '採掘の段を開いた：{0}。歩留まりが元に戻る。',
   'percée dans {0}':
     'ブレイクスルーまで {0}',
   'd’abord : {0} (+{1})':
@@ -1900,6 +1948,10 @@ export default {
     'セーブを読み込みました',
   'TokenWar — Le Jeu du Token':
     'TokenWar — トークンの戦い',
+  'Palier d’extraction ouvert':
+    '採掘の段を開いた',
+  'Recherche insuffisante':
+    '研究が足りない',
   'Trésorerie insuffisante':
     '現金が足りません',
   'Partie sauvegardée':
@@ -1908,6 +1960,18 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     '新しいゲーム — 2019年',
+  '{0} ({1}/{2})':
+    '{0}（{1}/{2}）',
+  'Ouvrir : {0}':
+    '開く：{0}',
+  '{0} recherche':
+    '研究 {0}',
+  'épuisée dans {0} s':
+    '{0} 秒で枯渇',
+  'récolte ×{0}':
+    '採取 ×{0}',
+  'danger ×{0}':
+    '危険度 ×{0}',
   'Aucune carte achetable : place, budget ou date.':
     '購入できるカードがない。空き、予算、発売時期のいずれかが足りない。',
   '{0} commandé':
@@ -2130,8 +2194,6 @@ export default {
     '発注する',
   'la recherche n’a pas encore commencé':
     '研究はまだ始まっていない',
-  'récolte ×{0}':
-    '採取 ×{0}',
   'entrée à {0}':
     '{0} で参入',
   'Montant':
@@ -2318,6 +2380,10 @@ export default {
     'インフレ',
   'Allocation du compute':
     '演算の配分',
+  'Palier d’extraction':
+    '採掘の段',
+  'Rendement':
+    '歩留まり',
   'Addendum':
     '付録',
   'Projets & percées':
@@ -2342,6 +2408,8 @@ export default {
     '未変換の物質',
   'convertie en énergie':
     'エネルギーに変換済み',
+  'Où envoyer l’essaim':
+    '群れをどこへ送るか',
   'La Une':
     'ヘッドライン',
   'Bourse':

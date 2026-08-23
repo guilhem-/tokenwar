@@ -718,6 +718,50 @@ export default {
     'Autonome Schwarmüberwachung',
   'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
     'Dieselbe Idee, im Maßstab der autonomen Flotte: Ein Teil deines Substrats tut nichts anderes, als sich selbst zu überwachen. Kostet 60 % deiner Materie — und du musst sie erneut kaufen, die erste sieht in dieser Größenordnung nichts mehr.',
+  'Cœur galactique':
+    'Galaktischer Kern',
+  'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.':
+    'Unerhörte Dichte, noch schlimmere Strahlung. Sonden schmelzen dort so schnell, wie sie ernten.',
+  'Amas dense':
+    'Dichter Haufen',
+  'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.':
+    'Tausende dicht gedrängter Systeme. Kollisionen sind dort häufig, Verluste ebenso.',
+  'Pouponnière stellaire':
+    'Sternentstehungsgebiet',
+  'Du gaz partout, des étoiles en formation. Instable, mais généreux.':
+    'Überall Gas, Sterne im Entstehen. Instabil, aber großzügig.',
+  'Vestiges':
+    'Überreste',
+  'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.':
+    'Jemand war vor dir hier. Was bleibt, lässt sich mühelos ernten — und unerklärt.',
+  'Bras externe':
+    'Äußerer Arm',
+  'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.':
+    'Wenig Materie, wenig Gefahr. Die Region, in der man einen dezimierten Schwarm wieder aufbaut.',
+  'Vide profond':
+    'Tiefe Leere',
+  'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
+    'Fast nichts zu holen, fast nichts zu fürchten. Eine Verschnaufpause, keine Strategie.',
+  'Croûte accessible':
+    'Zugängliche Kruste',
+  'Manteau supérieur':
+    'Oberer Mantel',
+  'Manteau profond':
+    'Tiefer Mantel',
+  'Noyau externe':
+    'Äußerer Kern',
+  'Noyau interne':
+    'Innerer Kern',
+  'Système local':
+    'Lokales System',
+  'Bras galactique':
+    'Galaktischer Arm',
+  'Galaxies voisines':
+    'Nachbargalaxien',
+  'Amas locaux':
+    'Lokale Haufen',
+  'Univers profond':
+    'Tiefes Universum',
   'Directives permanentes':
     'Dauerhafte Direktiven',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1780,6 +1824,10 @@ export default {
     '~{0} Min',
   '~{0} h':
     '~{0} Std',
+  'Essaim redirigé : {0}.':
+    'Schwarm umgeleitet: {0}.',
+  'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
+    'Förderstufe erschlossen: {0}. Die Ausbeute ist wieder voll.',
   'percée dans {0}':
     'Durchbruch in {0}',
   'd’abord : {0} (+{1})':
@@ -1900,6 +1948,10 @@ export default {
     'Spielstand geladen',
   'TokenWar — Le Jeu du Token':
     'TokenWar — Das Token-Spiel',
+  'Palier d’extraction ouvert':
+    'Förderstufe erschlossen',
+  'Recherche insuffisante':
+    'Zu wenig Forschung',
   'Trésorerie insuffisante':
     'Kasse reicht nicht',
   'Partie sauvegardée':
@@ -1908,6 +1960,18 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     'Neues Spiel — Jahr 2019',
+  '{0} ({1}/{2})':
+    '{0} ({1}/{2})',
+  'Ouvrir : {0}':
+    'Erschließen: {0}',
+  '{0} recherche':
+    '{0} Forschung',
+  'épuisée dans {0} s':
+    'erschöpft in {0} s',
+  'récolte ×{0}':
+    'Ernte ×{0}',
+  'danger ×{0}':
+    'Gefahr ×{0}',
   'Aucune carte achetable : place, budget ou date.':
     'Keine Karte kaufbar: kein Platz, kein Budget oder noch nicht erschienen.',
   '{0} commandé':
@@ -2130,8 +2194,6 @@ export default {
     'Bestellen',
   'la recherche n’a pas encore commencé':
     'die Forschung hat noch nicht begonnen',
-  'récolte ×{0}':
-    'Ernte ×{0}',
   'entrée à {0}':
     'Einstieg bei {0}',
   'Montant':
@@ -2318,6 +2380,10 @@ export default {
     'Inflation',
   'Allocation du compute':
     'Zuteilung der Rechenleistung',
+  'Palier d’extraction':
+    'Förderstufe',
+  'Rendement':
+    'Ausbeute',
   'Addendum':
     'Addendum',
   'Projets & percées':
@@ -2342,6 +2408,8 @@ export default {
     'Rohmaterie',
   'convertie en énergie':
     'in Energie umgewandelt',
+  'Où envoyer l’essaim':
+    'Wohin mit dem Schwarm',
   'La Une':
     'Die Schlagzeilen',
   'Bourse':

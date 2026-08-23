@@ -718,6 +718,50 @@ export default {
     'Vigilância autónoma do enxame',
   'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
     'A mesma ideia, à escala do parque autónomo: uma parte do teu substrato não faz mais do que vigiar-se a si própria. Custa 60 % da tua matéria — e é preciso comprá-la de novo, a primeira já não vê nada a esta escala.',
+  'Cœur galactique':
+    'Núcleo galáctico',
+  'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.':
+    'Densidade inaudita, radiação ainda pior. As sondas derretem ali tão depressa quanto colhem.',
+  'Amas dense':
+    'Enxame denso',
+  'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.':
+    'Milhares de sistemas apertados. Ali as colisões são frequentes, e as perdas também.',
+  'Pouponnière stellaire':
+    'Berçário estelar',
+  'Du gaz partout, des étoiles en formation. Instable, mais généreux.':
+    'Gás por todo o lado, estrelas em formação. Instável, mas generoso.',
+  'Vestiges':
+    'Vestígios',
+  'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.':
+    'Alguém passou antes de ti. O que resta colhe-se sem esforço — e sem explicação.',
+  'Bras externe':
+    'Braço exterior',
+  'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.':
+    'Pouca matéria, poucos perigos. A região onde se reconstitui um enxame dizimado.',
+  'Vide profond':
+    'Vazio profundo',
+  'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
+    'Quase nada para levar, quase nada a temer. Um alívio, não uma estratégia.',
+  'Croûte accessible':
+    'Crosta acessível',
+  'Manteau supérieur':
+    'Manto superior',
+  'Manteau profond':
+    'Manto profundo',
+  'Noyau externe':
+    'Núcleo externo',
+  'Noyau interne':
+    'Núcleo interno',
+  'Système local':
+    'Sistema local',
+  'Bras galactique':
+    'Braço galáctico',
+  'Galaxies voisines':
+    'Galáxias vizinhas',
+  'Amas locaux':
+    'Enxames locais',
+  'Univers profond':
+    'Universo profundo',
   'Directives permanentes':
     'Diretivas permanentes',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1780,6 +1824,10 @@ export default {
     '~{0} min',
   '~{0} h':
     '~{0} h',
+  'Essaim redirigé : {0}.':
+    'Enxame redirecionado: {0}.',
+  'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
+    'Patamar de extração aberto: {0}. O rendimento volta ao máximo.',
   'percée dans {0}':
     'avanço em {0}',
   'd’abord : {0} (+{1})':
@@ -1900,6 +1948,10 @@ export default {
     'Jogo carregado',
   'TokenWar — Le Jeu du Token':
     'TokenWar — O Jogo do Token',
+  'Palier d’extraction ouvert':
+    'Patamar de extração aberto',
+  'Recherche insuffisante':
+    'Investigação insuficiente',
   'Trésorerie insuffisante':
     'Caixa insuficiente',
   'Partie sauvegardée':
@@ -1908,6 +1960,18 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     'Novo jogo — ano 2019',
+  '{0} ({1}/{2})':
+    '{0} ({1}/{2})',
+  'Ouvrir : {0}':
+    'Abrir: {0}',
+  '{0} recherche':
+    '{0} investigação',
+  'épuisée dans {0} s':
+    'esgotada em {0} s',
+  'récolte ×{0}':
+    'colheita ×{0}',
+  'danger ×{0}':
+    'perigo ×{0}',
   'Aucune carte achetable : place, budget ou date.':
     'Nenhuma placa comprável: sem lugar, sem orçamento ou ainda não lançada.',
   '{0} commandé':
@@ -2130,8 +2194,6 @@ export default {
     'Encomendar',
   'la recherche n’a pas encore commencé':
     'a investigação ainda não começou',
-  'récolte ×{0}':
-    'colheita ×{0}',
   'entrée à {0}':
     'entrada em {0}',
   'Montant':
@@ -2318,6 +2380,10 @@ export default {
     'Inflação',
   'Allocation du compute':
     'Alocação da computação',
+  'Palier d’extraction':
+    'Patamar de extração',
+  'Rendement':
+    'Rendimento',
   'Addendum':
     'Adendo',
   'Projets & percées':
@@ -2342,6 +2408,8 @@ export default {
     'matéria bruta',
   'convertie en énergie':
     'convertida em energia',
+  'Où envoyer l’essaim':
+    'Para onde enviar o enxame',
   'La Une':
     'A Primeira Página',
   'Bourse':

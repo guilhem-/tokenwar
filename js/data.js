@@ -405,6 +405,58 @@ export const CRISES = [
 // Attrition cosmique : IA rivales et entropie grignotent le nuage de sondes
 // en continu. Le « Blindage » était jusqu'ici un stat mort — on le payait, il
 // ne servait à rien. Chaque niveau ramène la perte à 60 % de la précédente.
+// ---------------------------------------------------------------------
+//  PALIERS D'EXTRACTION — ce qui empêche de régler les curseurs une fois pour
+//  toutes. La matière facile part la première ; au-delà de ce que le palier
+//  courant sait atteindre, le rendement s'effondre jusqu'à un plancher. Il
+//  faut alors basculer du compute vers la RECHERCHE pour ouvrir le palier
+//  suivant, puis revenir à la récolte. On passe d'un réglage unique à un
+//  va-et-vient.
+//
+//  `reach` : la fraction de la phase que le palier sait atteindre à plein
+//  rendement. `research` : ce qu'il en coûte pour l'ouvrir.
+// ---------------------------------------------------------------------
+//  DESTINATIONS — où envoyer l'essaim. Chaque région se paie en risque ce
+//  qu'elle rapporte en matière : le cœur galactique rend deux fois plus et
+//  dévore les sondes, le vide profond ne rend presque rien mais ne coûte
+//  personne. Une région s'épuise, et il faut rechoisir — l'expansion cesse
+//  d'être un curseur qu'on règle une fois.
+export const DEST_DURATION = 120;   // secondes de jeu avant épuisement d'une région
+export const DEST_CHOICES = 3;      // combien de destinations proposées à la fois
+export const DESTINATIONS = [
+  { id:'core',    name:'Cœur galactique',       yieldMult:2.0,  hazardMult:2.6,
+    desc:'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.' },
+  { id:'dense',   name:'Amas dense',            yieldMult:1.6,  hazardMult:1.8,
+    desc:'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.' },
+  { id:'nursery', name:'Pouponnière stellaire', yieldMult:1.35, hazardMult:1.3,
+    desc:'Du gaz partout, des étoiles en formation. Instable, mais généreux.' },
+  { id:'ruins',   name:'Vestiges',              yieldMult:1.2,  hazardMult:1.0,
+    desc:'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.' },
+  { id:'outer',   name:'Bras externe',          yieldMult:0.85, hazardMult:0.5,
+    desc:'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.' },
+  { id:'void',    name:'Vide profond',          yieldMult:0.6,  hazardMult:0.25,
+    desc:'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.' },
+];
+
+export const EXTRACT_FLOOR = 0.30;   // rendement plancher quand on force au-delà
+export const EXTRACT_FADE = 0.15;    // largeur de la décrue, en fraction de phase
+export const EXTRACTION = {
+  2: [
+    { reach:0.15, research:0,     name:'Croûte accessible' },
+    { reach:0.35, research:2e9,   name:'Manteau supérieur' },
+    { reach:0.60, research:5e10,  name:'Manteau profond' },
+    { reach:0.85, research:8e11,  name:'Noyau externe' },
+    { reach:1.01, research:1e13,  name:'Noyau interne' },
+  ],
+  3: [
+    { reach:0.15, research:0,     name:'Système local' },
+    { reach:0.35, research:5e13,  name:'Bras galactique' },
+    { reach:0.60, research:2e15,  name:'Galaxies voisines' },
+    { reach:0.85, research:5e16,  name:'Amas locaux' },
+    { reach:1.01, research:2e18,  name:'Univers profond' },
+  ],
+};
+
 export const HAZARD_RATE = 0.004;      // part du nuage perdue par seconde, blindage 1
 export const HAZARD_SHIELD = 0.6;      // facteur par niveau de blindage
 

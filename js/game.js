@@ -12,7 +12,8 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
          OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION,
          PHASE3_EARTH, ENDING_UNIVERSE, WATCHDOGS, WATCHDOG_AFTER, WATCHDOG_SHARE,
-         HAZARD_RATE, HAZARD_SHIELD } from './data.js';
+         HAZARD_RATE, HAZARD_SHIELD, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE,
+         DESTINATIONS, DEST_DURATION, DEST_CHOICES } from './data.js';
 import { clamp, fmtPower, fmtMoney, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
@@ -98,6 +99,8 @@ export class Game {
     // les prix du jeu ; l'inflation s'applique au moment du paiement.
     s.loans = [];
     s.loanSeq = 0;
+    s.extractTier = {};      // palier d'extraction ouvert, par phase
+    s.dest = null;           // région ciblée par l'essaim, et les candidates
     s.watchdogs = {};        // dispositifs de surveillance des incidents achetés
     s.opsCheckYear = 0;      // dernier contrôle annuel du risque d'exploitation
     s.lastIncident = null;   // pour ne pas tirer deux fois le même article de suite
@@ -1529,8 +1532,93 @@ export class Game {
       const ps = this.state.probeSpecs;
       probeSpeed = Math.min(8, Math.pow(1.25, ps.harvest + ps.speed) * (1 + Math.log10(this.state.probes + 1) * 0.15));
     }
-    return a.harvest * 1.33 * this.dysonBoost() * probeSpeed * 1.66e-9 * wafer.perf;
+    return a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * probeSpeed * 1.66e-9 * wafer.perf;
   }
+  // ---- destinations de l'essaim (phase 3) --------------------------
+  // Chaque région se paie en risque ce qu'elle rapporte en matière, et
+  // s'épuise au bout de DEST_DURATION : il faut rechoisir. C'est ce qui
+  // transforme l'expansion en suite de décisions plutôt qu'en curseur.
+  destActive() {
+    const d = this.state.dest;
+    if (!d || !d.id) return null;
+    if (this.state.playSeconds >= d.until) return null;
+    return DESTINATIONS.find(x => x.id === d.id) || null;
+  }
+  destLeft() {
+    const d = this.state.dest;
+    return d && d.id ? Math.max(0, d.until - this.state.playSeconds) : 0;
+  }
+  destYield() { const d = this.destActive(); return d ? d.yieldMult : 1; }
+  destHazard() { const d = this.destActive(); return d ? d.hazardMult : 1; }
+  // trois candidates, retirées au sort et renouvelées dès qu'une région s'épuise
+  destOffers() {
+    const s = this.state;
+    if (this.phase < 3) return [];
+    if (this.destActive()) return [];
+    if (!s.dest || !s.dest.offers || !s.dest.offers.length) {
+      const bag = [...DESTINATIONS];
+      const tirage = [];
+      while (tirage.length < DEST_CHOICES && bag.length) {
+        tirage.push(bag.splice(Math.floor(Math.random() * bag.length), 1)[0].id);
+      }
+      s.dest = { id: null, until: 0, offers: tirage };
+    }
+    return s.dest.offers.map(id => DESTINATIONS.find(x => x.id === id)).filter(Boolean);
+  }
+  chooseDest(id) {
+    const s = this.state;
+    if (this.phase < 3 || this.destActive()) return false;
+    const d = DESTINATIONS.find(x => x.id === id);
+    if (!d || !s.dest || !s.dest.offers.includes(id)) return false;
+    s.dest = { id, until: s.playSeconds + DEST_DURATION, offers: [] };
+    this.log(t('Essaim redirigé : {0}.', td(d.name)), 'info');
+    return true;
+  }
+
+  // ---- paliers d'extraction ----------------------------------------
+  // La matière facile part la première. Au-delà de ce que le palier courant
+  // sait atteindre, le rendement décroît jusqu'à EXTRACT_FLOOR ; il faut
+  // basculer du compute vers la recherche pour ouvrir le suivant. C'est ce
+  // qui empêche de régler les curseurs une fois pour toutes.
+  extractionTiers() { return EXTRACTION[Math.min(3, this.phase)] || null; }
+  extractionTier() { return (this.state.extractTier || {})[Math.min(3, this.phase)] || 0; }
+  extractionReach() {
+    const t = this.extractionTiers();
+    return t ? t[Math.min(this.extractionTier(), t.length - 1)].reach : 1;
+  }
+  // fraction d'avancement de la phase, sans les états « seuil atteint »
+  extractionFrac() {
+    const s = this.state;
+    if (this.phase === 2) return s.earthConsumed / PHASE3_EARTH;
+    if (this.phase === 3) return s.universeConsumed / ENDING_UNIVERSE;
+    return 0;
+  }
+  extractionYield() {
+    if (!this.extractionTiers()) return 1;
+    const au_dela = this.extractionFrac() - this.extractionReach();
+    if (au_dela <= 0) return 1;
+    return clamp(1 - (au_dela / EXTRACT_FADE) * (1 - EXTRACT_FLOOR), EXTRACT_FLOOR, 1);
+  }
+  nextExtraction() {
+    const t = this.extractionTiers();
+    if (!t) return null;
+    const i = this.extractionTier() + 1;
+    return i < t.length ? { ...t[i], index: i } : null;
+  }
+  canUnlockExtraction() {
+    const n = this.nextExtraction();
+    return !!n && this.state.research >= n.research;
+  }
+  unlockExtraction() {
+    const n = this.nextExtraction();
+    if (!n || this.state.research < n.research) return false;
+    this.state.research -= n.research;
+    if (!this.state.extractTier) this.state.extractTier = {};
+    this.state.extractTier[Math.min(3, this.phase)] = n.index;
+    this.log(t('Palier d’extraction ouvert : {0}. Le rendement repart à plein.', td(n.name)), 'milestone');
+    return true;
+  }
+
   phaseEtaSeconds() {
     const s = this.state, p = this.phase;
     if (p < 2 || p > 3) return null;
@@ -1541,10 +1629,40 @@ export class Game {
     if (reste <= 0) return 0;
     const debit = s.rates.matter || 0;
     if (debit <= 0) return Infinity;
-    const k = this.phaseLoopRate();
-    if (!(k > 0)) return reste / debit;            // récolte à zéro : plus aucune croissance
-    return Math.log(1 + reste * k / debit) / k;
+
+    // Sans croissance de boucle (récolte à zéro), une règle de trois suffit.
+    const rend0 = this.extractionYield();
+    const k0 = this.phaseLoopRate() / Math.max(1e-9, rend0);   // taux hors rendement
+    if (!(k0 > 0)) return reste / debit;
+
+    // Avec les paliers d'extraction, le rendement DÉCROÎT à mesure qu'on
+    // avance : plus de forme close. On intègre numériquement, sinon l'estimation
+    // ment — elle annonçait 12 min là où il en fallait 14,5.
+    const seuil = p === 2 ? PHASE3_EARTH : ENDING_UNIVERSE;
+    const tiers = this.extractionTiers();
+    const portee = tiers ? tiers[Math.min(this.extractionTier(), tiers.length - 1)].reach : 1;
+    const rendementA = frac => {
+      if (!tiers) return 1;
+      const d = frac - portee;
+      return d <= 0 ? 1 : clamp(1 - (d / EXTRACT_FADE) * (1 - EXTRACT_FLOOR), EXTRACT_FLOOR, 1);
+    };
+
+    let croissance = 1, accumule = fait, temps = 0;
+    for (let i = 0; i < 40000; i++) {
+      const frac = accumule / masse / seuil;
+      const rend = rendementA(frac);
+      const k = k0 * rend;
+      const dt = Math.min(4, 0.05 / Math.max(1e-9, k));        // pas court quand ça s'emballe
+      const taux = debit * croissance * (rend / Math.max(1e-9, rend0));
+      accumule += taux * dt;
+      croissance *= 1 + k * dt;
+      temps += dt;
+      if (accumule >= cible) return temps;
+      if (temps > 6e5) break;                                   // au-delà, autant dire jamais
+    }
+    return Infinity;
   }
+
 
   // Pourquoi le seuil est atteint sans que la phase bascule.
   //
@@ -2265,7 +2383,7 @@ export class Game {
 
       // RÉCOLTE DE BASE : pilote la boucle compute↔matière à τ ≈ 45 s, INDÉPENDANTE des bonus
       // (c'est la clé d'un rythme stable, quels que soient les choix du joueur).
-      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost();  // kg/s « bruts »
+      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield();  // kg/s « bruts »
 
       // bonus de consommation : intelligence + nanotech (matterMult) + événements. Borné → effet logarithmique sur le rythme.
       let consumeBonus = s.mods.matterMult
@@ -2282,7 +2400,7 @@ export class Game {
         // nuage par seconde, soit près de la moitié de ce que la réplication
         // apporte — le curseur Blindage cesse d'être décoratif et devient un
         // arbitrage : récolter maintenant, ou survivre pour récolter demain.
-        const perte = HAZARD_RATE * Math.pow(HAZARD_SHIELD, ps.hazard - 1);
+        const perte = HAZARD_RATE * this.destHazard() * Math.pow(HAZARD_SHIELD, ps.hazard - 1);
         s.probes = Math.max(1, s.probes * (1 - perte * dt));
         s.rates.hazard = perte;
         probeSpeed = Math.min(8, Math.pow(1.25, ps.harvest + ps.speed) * (1 + Math.log10(s.probes + 1) * 0.15));

@@ -718,6 +718,50 @@ export default {
     'Autonomous swarm watch',
   'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
     'The same idea, at the scale of the autonomous fleet: a slice of your substrate does nothing but watch itself. Costs 60% of your matter — and you have to buy it again, the first one sees nothing at this scale.',
+  'Cœur galactique':
+    'Galactic core',
+  'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.':
+    'Unheard-of density, worse radiation still. Probes melt there as fast as they reap.',
+  'Amas dense':
+    'Dense cluster',
+  'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.':
+    'Thousands of systems packed tight. Collisions are frequent there, and so are losses.',
+  'Pouponnière stellaire':
+    'Stellar nursery',
+  'Du gaz partout, des étoiles en formation. Instable, mais généreux.':
+    'Gas everywhere, stars still forming. Unstable, but generous.',
+  'Vestiges':
+    'Ruins',
+  'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.':
+    'Someone came through before you. What is left harvests easily — and without explanation.',
+  'Bras externe':
+    'Outer arm',
+  'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.':
+    'Little matter, little danger. The region where you rebuild a decimated swarm.',
+  'Vide profond':
+    'Deep void',
+  'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
+    'Almost nothing to take, almost nothing to fear. A respite, not a strategy.',
+  'Croûte accessible':
+    'Accessible crust',
+  'Manteau supérieur':
+    'Upper mantle',
+  'Manteau profond':
+    'Deep mantle',
+  'Noyau externe':
+    'Outer core',
+  'Noyau interne':
+    'Inner core',
+  'Système local':
+    'Local system',
+  'Bras galactique':
+    'Galactic arm',
+  'Galaxies voisines':
+    'Neighbouring galaxies',
+  'Amas locaux':
+    'Local clusters',
+  'Univers profond':
+    'Deep universe',
   'Directives permanentes':
     'Standing directives',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1780,6 +1824,10 @@ export default {
     '~{0} min',
   '~{0} h':
     '~{0} h',
+  'Essaim redirigé : {0}.':
+    'Swarm redirected: {0}.',
+  'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
+    'Extraction tier opened: {0}. Yield is back to full.',
   'percée dans {0}':
     'breakthrough in {0}',
   'd’abord : {0} (+{1})':
@@ -1900,6 +1948,10 @@ export default {
     'Game loaded',
   'TokenWar — Le Jeu du Token':
     'TokenWar — The Token Game',
+  'Palier d’extraction ouvert':
+    'Extraction tier opened',
+  'Recherche insuffisante':
+    'Not enough research',
   'Trésorerie insuffisante':
     'Not enough cash',
   'Partie sauvegardée':
@@ -1908,6 +1960,18 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     'New game — year 2019',
+  '{0} ({1}/{2})':
+    '{0} ({1}/{2})',
+  'Ouvrir : {0}':
+    'Open: {0}',
+  '{0} recherche':
+    '{0} research',
+  'épuisée dans {0} s':
+    'exhausted in {0} s',
+  'récolte ×{0}':
+    'harvest ×{0}',
+  'danger ×{0}':
+    'danger ×{0}',
   'Aucune carte achetable : place, budget ou date.':
     'No card can be bought: no slot, no budget, or not released yet.',
   '{0} commandé':
@@ -2130,8 +2194,6 @@ export default {
     'Order',
   'la recherche n’a pas encore commencé':
     'research has not started yet',
-  'récolte ×{0}':
-    'harvest ×{0}',
   'entrée à {0}':
     'entered at {0}',
   'Montant':
@@ -2318,6 +2380,10 @@ export default {
     'Inflation',
   'Allocation du compute':
     'Compute allocation',
+  'Palier d’extraction':
+    'Extraction tier',
+  'Rendement':
+    'Yield',
   'Addendum':
     'Addendum',
   'Projets & percées':
@@ -2342,6 +2408,8 @@ export default {
     'raw matter',
   'convertie en énergie':
     'converted to energy',
+  'Où envoyer l’essaim':
+    'Where to send the swarm',
   'La Une':
     'The Front Page',
   'Bourse':

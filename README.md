@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 181 chaînes × 7 langues = 8 267 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 249 chaînes × 7 langues = 8 743 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -465,6 +465,53 @@ Le rendu de l'aide interprète désormais deux marques légères : `**gras**` de
 `[[touche]]` devient un `<kbd>`. Ce n'était pas cosmétique — **vingt-deux paires d'astérisques
 s'affichaient littéralement à l'écran**, le Markdown n'ayant jamais été interprété. Les marques
 de touche survivent à la traduction : les sept langues portent bien leurs six touches balisées.
+
+## ⏱️ Tenir le joueur occupé après la phase 1
+
+La seconde moitié du jeu était contemplative, et c'était mesurable : **0,22 crise par minute en
+phase 1, zéro ensuite** — `tickCrisis` vivait dans `if (phase < 2)` parce que l'argent cesse
+d'exister. Les événements, eux, restaient plus fréquents qu'avant (2,3/min contre 1,5) : ce
+n'était donc pas le rythme qui manquait, mais l'enjeu. Entre deux événements, rien ne réclamait
+le joueur : les curseurs se réglaient une fois, la boucle s'emballait seule.
+
+**La boîte rouge revient**, libellée dans la monnaie de l'époque : la matière. La remédiation
+s'exprime en fraction du stock — un montant absolu n'a aucun sens sur une grandeur qui court de
+10¹⁸ à 10⁵². Six incidents propres à ces époques : essaim de nanomachines qui a perdu sa cible,
+région de calcul qui décroche du consensus, branche d'auto-amélioration qui optimise de travers,
+sonde qui réplique hors protocole, front d'entropie, intelligence rivale qui sonde le périmètre.
+
+**La surveillance des incidents** s'achète après la **huitième crise essuyée** — on ne vend pas
+une assurance à qui n'a pas encore compris le risque — contre **60 % de tout ce qu'on possède**.
+Une fois payée, un bandeau apparaît **une seconde après** le début de l'incident : assez pour ne
+plus le rater, assez tard pour que la seconde perdue se sente. Il signale sans localiser. Un
+second dispositif se reprend en phase 2, en matière, aux couleurs de la phase.
+
+**Le Blindage servait à rien.** `probeSpecs.hazard` était initialisé, achetable à prix octuplé
+par niveau, et **lu nulle part** : on payait une amélioration sans effet. L'espace grignote
+maintenant le nuage de sondes à **0,4 % par seconde**, près de la moitié de ce que la
+réplication apporte, et chaque niveau ramène la perte à 60 %. Récolter maintenant, ou survivre
+pour récolter demain.
+
+### Les curseurs ne se règlent plus une fois pour toutes
+
+La matière facile part la première. Au-delà de ce que le **palier d'extraction** courant sait
+atteindre, le rendement s'effondre jusqu'à **30 %** en quinze points d'avancement. Il faut alors
+basculer du compute vers la **Recherche** pour ouvrir le palier suivant — croûte, manteau,
+noyau ; système local, bras galactique, amas — puis revenir à la récolte. Un va-et-vient, pas un
+réglage.
+
+L'estimation de temps de la barre en tient compte : elle ne pouvait plus se calculer en forme
+close, elle est **intégrée numériquement**. Vérifié contre un rejeu réel : 14,8 min annoncés
+pour 14,5 réelles, 24,6 pour 24,2 — 2 % d'écart. Sans cela elle annonçait 12 min là où il en
+fallait 14,5.
+
+### Où envoyer l'essaim
+
+En phase 3, **trois régions** sont proposées, une seule active à la fois, et elle **s'épuise en
+deux minutes** de jeu. Chacune se paie en risque ce qu'elle rapporte en matière : le cœur
+galactique rend **deux fois plus** et dévore les sondes (**danger ×2,6**) ; le vide profond ne
+rend presque rien et ne coûte personne (**×0,25**). L'expansion cesse d'être un curseur pour
+devenir une suite de décisions — mesuré : une région dangereuse coûte plus du double de sondes.
 
 ## 📊 Où en est la phase courante
 

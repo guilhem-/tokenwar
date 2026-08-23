@@ -718,6 +718,50 @@ export default {
     '蜂群自主值守',
   'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
     '同样的思路，放到自主机群的尺度上：你的一部分基底只做一件事——盯着自己。要价你物质的 60%，而且必须重新购置：第一套在这个尺度上已经什么都看不见了。',
+  'Cœur galactique':
+    '银河核心',
+  'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.':
+    '密度前所未见，辐射更甚。探测器在那里熔化的速度和收割的速度一样快。',
+  'Amas dense':
+    '致密星团',
+  'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.':
+    '成千上万个星系挤在一起。碰撞频繁，损失同样频繁。',
+  'Pouponnière stellaire':
+    '恒星摇篮',
+  'Du gaz partout, des étoiles en formation. Instable, mais généreux.':
+    '到处是气体，恒星尚在成形。不稳定，但慷慨。',
+  'Vestiges':
+    '遗迹',
+  'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.':
+    '有人先你一步来过。留下的东西不费力就能收走——也没有解释。',
+  'Bras externe':
+    '外旋臂',
+  'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.':
+    '物质不多，危险也不多。这是重建被打残的蜂群的地方。',
+  'Vide profond':
+    '深空虚空',
+  'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
+    '几乎没什么可拿，也几乎没什么可怕。这是喘息，不是策略。',
+  'Croûte accessible':
+    '可及地壳',
+  'Manteau supérieur':
+    '上地幔',
+  'Manteau profond':
+    '深部地幔',
+  'Noyau externe':
+    '外核',
+  'Noyau interne':
+    '内核',
+  'Système local':
+    '本地星系',
+  'Bras galactique':
+    '银河旋臂',
+  'Galaxies voisines':
+    '邻近星系',
+  'Amas locaux':
+    '本星系群',
+  'Univers profond':
+    '深空宇宙',
   'Directives permanentes':
     '常设指令',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1780,6 +1824,10 @@ export default {
     '约 {0} 分钟',
   '~{0} h':
     '约 {0} 小时',
+  'Essaim redirigé : {0}.':
+    '蜂群已改道：{0}。',
+  'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
+    '已开启开采层级：{0}。产出恢复满值。',
   'percée dans {0}':
     '{0} 后可突破',
   'd’abord : {0} (+{1})':
@@ -1900,6 +1948,10 @@ export default {
     '存档已载入',
   'TokenWar — Le Jeu du Token':
     'TokenWar — Token 之战',
+  'Palier d’extraction ouvert':
+    '已开启新的开采层级',
+  'Recherche insuffisante':
+    '研究不足',
   'Trésorerie insuffisante':
     '现金不足',
   'Partie sauvegardée':
@@ -1908,6 +1960,18 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     '新游戏 — 2019 年',
+  '{0} ({1}/{2})':
+    '{0}（{1}/{2}）',
+  'Ouvrir : {0}':
+    '开启：{0}',
+  '{0} recherche':
+    '{0} 研究',
+  'épuisée dans {0} s':
+    '{0} 秒后枯竭',
+  'récolte ×{0}':
+    '采集 ×{0}',
+  'danger ×{0}':
+    '危险 ×{0}',
   'Aucune carte achetable : place, budget ou date.':
     '买不了显卡：没有空位、预算不足，或尚未上市。',
   '{0} commandé':
@@ -2130,8 +2194,6 @@ export default {
     '下单',
   'la recherche n’a pas encore commencé':
     '研究尚未开始',
-  'récolte ×{0}':
-    '采集 ×{0}',
   'entrée à {0}':
     '建仓于 {0}',
   'Montant':
@@ -2318,6 +2380,10 @@ export default {
     '通胀',
   'Allocation du compute':
     '算力分配',
+  'Palier d’extraction':
+    '开采层级',
+  'Rendement':
+    '产出效率',
   'Addendum':
     '附录',
   'Projets & percées':
@@ -2342,6 +2408,8 @@ export default {
     '原始物质',
   'convertie en énergie':
     '已转化为能量',
+  'Où envoyer l’essaim':
+    '把蜂群派往何处',
   'La Une':
     '头条',
   'Bourse':

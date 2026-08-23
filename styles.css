@@ -1814,3 +1814,8 @@ kbd {
   .watchdog-banner { animation: none; }
   .watchdog-icon { animation: none; }
 }
+
+/* ---- destinations de l essaim ------------------------------------------- */
+.dest-item { cursor: pointer; }
+.dest-item .item-cost { display: flex; gap: 0.3rem; }
+.extract-block { border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.6rem; }

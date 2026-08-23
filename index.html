@@ -177,6 +177,21 @@
       <div class="panel hidden" id="panel-alloc">
         <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
         <div class="panel-body" id="alloc-body"></div>
+        <div class="panel-body extract-block hidden" id="extract-block">
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Palier d’extraction">Palier d’extraction</span>
+            <span class="num" id="extract-tier">—</span>
+          </div>
+          <div class="meter"><div class="progress-fill" id="extract-fill" style="width:100%"></div></div>
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Rendement">Rendement</span>
+            <span class="num" id="extract-yield">100%</span>
+          </div>
+          <button class="btn btn-buy hidden" id="extract-buy">
+            <span class="choice-label" id="extract-label"></span>
+            <span class="btn-cost num" id="extract-cost"></span>
+          </button>
+        </div>
       </div>
 
       <div class="panel" id="panel-addendum">
@@ -265,6 +280,12 @@
             </div>
           </div>
           <div id="cosmos-body"></div>
+          <div class="sub-title" data-i18n="Où envoyer l’essaim">Où envoyer l’essaim</div>
+          <div class="meter-row" id="dest-active-row">
+            <span class="text-muted" id="dest-active-name">—</span>
+            <span class="num" id="dest-active-left"></span>
+          </div>
+          <div class="item-list" id="dest-list"></div>
         </div>
       </div>
 

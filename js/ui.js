@@ -80,6 +80,11 @@ export class UI {
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
       sovereignList: $('sovereign-list'),
       watchdogBanner: $('watchdog-banner'),
+      destList: $('dest-list'), destActiveRow: $('dest-active-row'),
+      destActiveName: $('dest-active-name'), destActiveLeft: $('dest-active-left'),
+      extractBlock: $('extract-block'), extractTier: $('extract-tier'), extractFill: $('extract-fill'),
+      extractYield: $('extract-yield'), extractBuy: $('extract-buy'),
+      extractLabel: $('extract-label'), extractCost: $('extract-cost'),
       panelDebt: $('panel-debt'), debtTotal: $('debt-total'), debtNext: $('debt-next'),
       debtNextRow: $('debt-next-row'), debtActive: $('debt-active'),
       debtOffers: $('debt-offers'), debtOffersTitle: $('debt-offers-title'),
@@ -203,6 +208,10 @@ export class UI {
     this.el.btnGenerate.addEventListener('click', () => { g.manualGenerate(); g.countClick('click'); });
     this.el.priceSlider.value = g.state.priceSlider;
     this.el.priceSlider.addEventListener('input', e => { g.state.priceSlider = +e.target.value; });
+    this.el.extractBuy.addEventListener('click', () => {
+      if (this.game.unlockExtraction()) { this.toast(t('Palier d’extraction ouvert'), 'good'); this.render(); }
+      else this.deny(this.el.extractBuy, t('Recherche insuffisante'));
+    });
     this.el.btnMarketing.addEventListener('click', () => { if (!g.buyMarketing()) this.deny(this.el.btnMarketing, t('Trésorerie insuffisante')); });
     this.el.btnFunding.addEventListener('click', () => this.claimBestFunding());
     this.el.btnSave.addEventListener('click', () => { g.save(); this.toast(t('Partie sauvegardée'), 'info'); });
@@ -296,6 +305,60 @@ export class UI {
   // les mêmes seuils que les percées de bascule, et distingue les trois états
   // qui se ressemblent à 100 % : il reste à prendre la percée, elle s'intègre,
   // ou l'on attend autre chose.
+  // Paliers d'extraction : le rendement décroît à mesure que la matière facile
+  // part, et il faut basculer vers la recherche pour ouvrir le palier suivant.
+  // C'est le seul mécanisme qui empêche de régler les curseurs une seule fois.
+  renderExtraction() {
+    const g = this.game, el = this.el.extractBlock;
+    if (!el) return;
+    const tiers = g.extractionTiers();
+    el.classList.toggle('hidden', !tiers);
+    if (!tiers) return;
+    const i = g.extractionTier(), rendement = g.extractionYield();
+    this.el.extractTier.textContent = t('{0} ({1}/{2})', td(tiers[i].name), i + 1, tiers.length);
+    this.el.extractFill.style.width = Math.round(rendement * 100) + '%';
+    this.el.extractYield.textContent = Math.round(rendement * 100) + '%';
+    this.el.extractYield.classList.toggle('text-bad', rendement < 0.6);
+    const suivant = g.nextExtraction();
+    this.el.extractBuy.classList.toggle('hidden', !suivant);
+    if (suivant) {
+      this.el.extractLabel.textContent = t('Ouvrir : {0}', td(suivant.name));
+      this.el.extractCost.textContent = t('{0} recherche', fmt(suivant.research));
+      this.setAfford(this.el.extractBuy, g.canUnlockExtraction());
+      this.el.extractBuy.classList.toggle('locked', !g.canUnlockExtraction());
+    }
+  }
+  // Destinations : trois régions proposées, une seule active à la fois, qui
+  // s'épuise et force à rechoisir. Le rendement se paie en danger.
+  renderDestinations() {
+    const g = this.game;
+    if (!this.el.destList) return;
+    const active = g.destActive();
+    this.el.destActiveRow.classList.toggle('hidden', !active);
+    if (active) {
+      this.el.destActiveName.textContent = td(active.name);
+      this.el.destActiveLeft.textContent = t('épuisée dans {0} s', Math.ceil(g.destLeft()));
+    }
+    const offres = g.destOffers();
+    const cles = offres.map(o => o.id).join(',');
+    if (this._destKey !== cles) {          // on ne reconstruit que si la liste change
+      this._destKey = cles;
+      this.el.destList.innerHTML = '';
+      for (const d of offres) {
+        const el = document.createElement('div');
+        el.className = 'item dest-item';
+        el.innerHTML = `<div class="item-header"><span class="item-name"></span>` +
+          `<span class="item-cost num"></span></div><div class="item-desc"></div>`;
+        el.querySelector('.item-name').textContent = td(d.name);
+        el.querySelector('.item-desc').textContent = td(d.desc);
+        el.querySelector('.item-cost').innerHTML =
+          `<span class="badge">${t('récolte ×{0}', this.game.decimal(d.yieldMult, 2))}</span> ` +
+          `<span class="badge ${d.hazardMult > 1 ? 'badge-warn' : ''}">${t('danger ×{0}', this.game.decimal(d.hazardMult, 2))}</span>`;
+        el.addEventListener('click', () => { if (g.chooseDest(d.id)) this.render(); });
+        this.el.destList.appendChild(el);
+      }
+    }
+  }
   renderPhaseBar() {
     const el = this.el.phaseBar;
     if (!el) return;
@@ -1184,6 +1247,8 @@ export class UI {
     const use = g.energyUse();
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + t('% utilisé');
     this.renderPhaseBar();   // sous les compteurs : où en est la phase courante
+    this.renderExtraction();
+    if (this.game.phase >= 3) this.renderDestinations();
 
     // bouton générer : tokens + valeur de la vente directe
     const cv = g.clickValue();

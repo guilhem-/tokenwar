@@ -1981,6 +1981,109 @@ await step('surveillance : le bandeau n apparaît qu après le délai, et pas sa
   game.state.crisis = null; game.state.watchdogs = {};
 });
 
+// ---- paliers d extraction : les curseurs doivent bouger ----
+await step('extraction : le rendement décroît, puis repart au palier suivant', () => {
+  const g2 = new Game(null);
+  g2.state.phase = 2;
+  const portee = data.EXTRACTION[2][0].reach;
+  const a = f => { g2.state.earthConsumed = f * data.PHASE3_EARTH; return g2.extractionYield(); };
+  if (a(portee * 0.5) !== 1) throw new Error('avant la portée du palier, le rendement doit être plein');
+  if (a(portee) !== 1) throw new Error('à la portée exacte, le rendement doit encore être plein');
+  const mi = a(portee + data.EXTRACT_FADE / 2);
+  if (!(mi < 1 && mi > data.EXTRACT_FLOOR)) throw new Error('la décrue devrait être progressive, obtenu ' + mi);
+  const bas = a(portee + data.EXTRACT_FADE * 2);
+  if (Math.abs(bas - data.EXTRACT_FLOOR) > 1e-9) throw new Error('le rendement devrait buter sur le plancher, obtenu ' + bas);
+  // ouvrir le palier suivant restaure le plein rendement
+  const suivant = g2.nextExtraction();
+  if (!suivant) throw new Error('aucun palier suivant proposé');
+  g2.state.research = suivant.research - 1;
+  if (g2.canUnlockExtraction()) throw new Error('palier ouvrable sans la recherche requise');
+  if (g2.unlockExtraction()) throw new Error('ouverture acceptée sans la recherche requise');
+  g2.state.research = suivant.research;
+  const avant = g2.extractionYield();
+  if (!g2.unlockExtraction()) throw new Error('ouverture refusée alors que la recherche suffit');
+  if (g2.state.research !== 0) throw new Error('la recherche n a pas été prélevée');
+  // Ouvrir un palier ne restaure pas le plein rendement si l on s est déjà
+  // enfoncé bien au-delà de sa portée : c est voulu, un seul palier ne rattrape
+  // pas n importe quel retard. Il doit en revanche améliorer les choses…
+  if (!(g2.extractionYield() > avant)) throw new Error('l ouverture devrait améliorer le rendement');
+  // …et redonner le plein rendement dès qu on est dans sa portée.
+  g2.state.earthConsumed = suivant.reach * 0.9 * data.PHASE3_EARTH;
+  if (g2.extractionYield() !== 1) throw new Error('dans la portée du nouveau palier, le rendement doit être plein');
+  // et le dernier palier ne propose plus rien
+  const tiers = data.EXTRACTION[2];
+  g2.state.extractTier[2] = tiers.length - 1;
+  if (g2.nextExtraction()) throw new Error('un palier est proposé au-delà du dernier');
+});
+
+await step('extraction : la décrue allonge le temps annoncé', () => {
+  const faire = frac => {
+    const g2 = new Game(null);
+    g2.state.phase = 2; g2.state.modelTier = data.MODELS.length - 1;
+    g2.state.gpuCounts = { wafer: 1.8e8 }; g2.state.energyCap = 1e12; g2.state.intelligence = 1e9;
+    g2.state.earthConsumed = frac * data.PHASE3_EARTH;
+    g2.state.matter = g2.state.earthConsumed * data.EARTH_MASS;
+    g2.state.alloc = { serve: 0.3, research: 0.1, improve: 0.1, harvest: 0.5 };
+    g2.tick(0.25);
+    return g2;
+  };
+  const tot = faire(0.05).phaseEtaSeconds();                       // plein rendement
+  const use = faire(data.EXTRACTION[2][0].reach + data.EXTRACT_FADE).phaseEtaSeconds();  // au plancher
+  if (!(isFinite(tot) && isFinite(use))) throw new Error('ETA non calculé');
+  // au plancher on est plus avancé, donc il reste moins de matière — mais le
+  // rendement divisé par trois doit se voir dans le temps par unité restante
+  const g1 = faire(0.05), g2 = faire(data.EXTRACTION[2][0].reach + data.EXTRACT_FADE);
+  if (!(g2.extractionYield() < g1.extractionYield() * 0.5))
+    throw new Error('le rendement au plancher devrait être bien plus bas');
+  if (!(g2.phaseLoopRate() < g1.phaseLoopRate()))
+    throw new Error('la décrue doit ralentir la boucle, donc le taux de croissance');
+});
+
+// ---- destinations de l essaim ----
+await step('destinations : trois candidates, une active, puis épuisement', () => {
+  const g2 = new Game(null);
+  g2.state.phase = 3; g2.state.probes = 1e6; g2.state.matter = 1e30;
+  const o = g2.destOffers();
+  if (o.length !== data.DEST_CHOICES) throw new Error('il devrait y avoir ' + data.DEST_CHOICES + ' candidates, pas ' + o.length);
+  if (new Set(o.map(d => d.id)).size !== o.length) throw new Error('candidates en double');
+  if (g2.destActive()) throw new Error('aucune région ne devrait être active avant le choix');
+  if (g2.destYield() !== 1 || g2.destHazard() !== 1) throw new Error('sans région choisie, aucun effet');
+  // on choisit, les effets s appliquent
+  const d = o[0];
+  if (!g2.chooseDest(d.id)) throw new Error('choix refusé');
+  if (g2.destActive().id !== d.id) throw new Error('région active fausse');
+  if (g2.destYield() !== d.yieldMult) throw new Error('le rendement de la région ne s applique pas');
+  if (g2.destHazard() !== d.hazardMult) throw new Error('le danger de la région ne s applique pas');
+  if (g2.destOffers().length) throw new Error('aucune candidate ne doit être proposée tant qu une région est active');
+  // on ne peut pas choisir une région hors de la liste proposée
+  const g3 = new Game(null); g3.state.phase = 3;
+  const off = g3.destOffers().map(x => x.id);
+  const hors = data.DESTINATIONS.find(x => !off.includes(x.id));
+  if (hors && g3.chooseDest(hors.id)) throw new Error('une région hors liste a été acceptée');
+  // épuisement : la région tombe et de nouvelles candidates arrivent
+  g2.state.playSeconds += data.DEST_DURATION + 1;
+  if (g2.destActive()) throw new Error('la région devrait être épuisée');
+  if (g2.destYield() !== 1) throw new Error('les effets devraient cesser avec l épuisement');
+  if (g2.destOffers().length !== data.DEST_CHOICES) throw new Error('de nouvelles candidates devraient être proposées');
+});
+
+await step('destinations : le danger d une région se paie vraiment en sondes', () => {
+  const perte = mult => {
+    const g2 = new Game(null);
+    g2.state.phase = 3; g2.state.probes = 1e6; g2.state.matter = 1e30;
+    g2.state.gpuCounts = {}; g2.state.energyCap = 1e12;
+    g2.state.alloc = { serve: 1, research: 0, improve: 0, harvest: 0 };
+    g2.state.probeSpecs = { replication: 0, harvest: 1, speed: 1, hazard: 1 };
+    const d = data.DESTINATIONS.reduce((a, b) => Math.abs(b.hazardMult - mult) < Math.abs(a.hazardMult - mult) ? b : a);
+    g2.state.dest = { id: d.id, until: g2.state.playSeconds + 1e9, offers: [] };
+    const av = g2.state.probes;
+    for (let i = 0; i < 40; i++) g2.tick(0.25);
+    return 1 - g2.state.probes / av;
+  };
+  const doux = perte(0.25), dur = perte(2.6);
+  if (!(dur > doux * 2)) throw new Error(`une région dangereuse devrait coûter bien plus de sondes : ${doux} vs ${dur}`);
+});
+
 // save/load
 await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 

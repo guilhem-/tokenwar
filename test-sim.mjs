@@ -120,6 +120,26 @@ function bot() {
   }
   // 8) améliorations de sondes phase 3
   if (g.phase >= 3) { for (const sp of ['harvest','replication','speed','hazard']) g.upgradeProbe(sp); }
+  // 9) paliers d'extraction : le rendement décroît si on ne les ouvre pas.
+  //    Un joueur qui joue bien bascule vers la recherche puis rouvre ; le bot
+  //    fait pareil, sinon la partie s'enlise sans que ce soit un défaut du jeu.
+  if (g.phase >= 2) {
+    if (g.canUnlockExtraction()) g.unlockExtraction();
+    // rendement au plancher : on met la recherche en avant le temps d'ouvrir
+    const rendement = g.extractionYield();
+    if (rendement < 0.7 && g.nextExtraction()) {
+      g.setAlloc('research', 0.45); g.setAlloc('harvest', 0.3);
+      g.setAlloc('improve', 0.15); g.setAlloc('serve', 0.1);
+    }
+  }
+  // 10) destination de l'essaim : on prend la plus rentable proposée
+  if (g.phase >= 3) {
+    const offres = g.destOffers();
+    if (offres.length) {
+      const best = offres.reduce((a, b) => (b.yieldMult / b.hazardMult > a.yieldMult / a.hazardMult ? b : a));
+      g.chooseDest(best.id);
+    }
+  }
 }
 const MAX_T = 4 * 3600; // 4h simulées max
 let badNum = false;

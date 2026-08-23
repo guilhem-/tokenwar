@@ -718,6 +718,50 @@ export default {
     '군집 자율 감시',
   'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
     '같은 발상을 자율 무리의 규모로. 기반의 일부가 오직 스스로를 감시하는 데만 쓰인다. 물질의 60%가 값이며, 다시 사야 한다 — 첫 번째 것은 이 규모에서 아무것도 보지 못한다.',
+  'Cœur galactique':
+    '은하 중심',
+  'Densité inouïe, rayonnement pire encore. Les sondes y fondent aussi vite qu’elles moissonnent.':
+    '유례없는 밀도, 그보다 더한 방사. 탐사선은 거두는 속도만큼 빠르게 녹아내린다.',
+  'Amas dense':
+    '조밀 성단',
+  'Des milliers de systèmes serrés. Les collisions y sont fréquentes, les pertes aussi.':
+    '수천 개의 항성계가 빽빽하다. 충돌이 잦고, 손실도 그만큼 잦다.',
+  'Pouponnière stellaire':
+    '항성 요람',
+  'Du gaz partout, des étoiles en formation. Instable, mais généreux.':
+    '사방이 기체이고 별들이 아직 태어나는 중이다. 불안정하지만 후하다.',
+  'Vestiges':
+    '잔해',
+  'Quelqu’un est passé avant vous. Ce qu’il reste se récolte sans peine — et sans explication.':
+    '누군가 당신보다 먼저 지나갔다. 남은 것은 힘들이지 않고 거둘 수 있다 — 설명도 없이.',
+  'Bras externe':
+    '바깥 나선팔',
+  'Peu de matière, peu de dangers. La région où l’on reconstitue un essaim décimé.':
+    '물질도 적고 위험도 적다. 무너진 군집을 다시 세우는 지역이다.',
+  'Vide profond':
+    '깊은 공허',
+  'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.':
+    '가져갈 것도 거의 없고, 두려워할 것도 거의 없다. 숨 돌리기이지 전략은 아니다.',
+  'Croûte accessible':
+    '접근 가능한 지각',
+  'Manteau supérieur':
+    '상부 맨틀',
+  'Manteau profond':
+    '심부 맨틀',
+  'Noyau externe':
+    '외핵',
+  'Noyau interne':
+    '내핵',
+  'Système local':
+    '인근 항성계',
+  'Bras galactique':
+    '은하 나선팔',
+  'Galaxies voisines':
+    '이웃 은하',
+  'Amas locaux':
+    '국부 은하단',
+  'Univers profond':
+    '심우주',
   'Directives permanentes':
     '상시 지침',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1780,6 +1824,10 @@ export default {
     '약 {0}분',
   '~{0} h':
     '약 {0}시간',
+  'Essaim redirigé : {0}.':
+    '군집 방향 전환: {0}.',
+  'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
+    '채굴 단계 개방: {0}. 수율이 다시 최대로.',
   'percée dans {0}':
     '돌파구까지 {0}',
   'd’abord : {0} (+{1})':
@@ -1900,6 +1948,10 @@ export default {
     '저장을 불러왔습니다',
   'TokenWar — Le Jeu du Token':
     'TokenWar — 토큰 전쟁',
+  'Palier d’extraction ouvert':
+    '채굴 단계 개방',
+  'Recherche insuffisante':
+    '연구 부족',
   'Trésorerie insuffisante':
     '현금이 부족합니다',
   'Partie sauvegardée':
@@ -1908,6 +1960,18 @@ export default {
     'Get a life ;-)',
   'Nouvelle partie — an 2019':
     '새 게임 — 2019년',
+  '{0} ({1}/{2})':
+    '{0} ({1}/{2})',
+  'Ouvrir : {0}':
+    '개방: {0}',
+  '{0} recherche':
+    '연구 {0}',
+  'épuisée dans {0} s':
+    '{0}초 뒤 고갈',
+  'récolte ×{0}':
+    '수확 ×{0}',
+  'danger ×{0}':
+    '위험 ×{0}',
   'Aucune carte achetable : place, budget ou date.':
     '구매 가능한 카드가 없습니다. 자리, 예산, 출시 시기 중 하나가 모자랍니다.',
   '{0} commandé':
@@ -2130,8 +2194,6 @@ export default {
     '발주',
   'la recherche n’a pas encore commencé':
     '연구가 아직 시작되지 않았다',
-  'récolte ×{0}':
-    '수확 ×{0}',
   'entrée à {0}':
     '{0}에 진입',
   'Montant':
@@ -2318,6 +2380,10 @@ export default {
     '인플레이션',
   'Allocation du compute':
     '연산 배분',
+  'Palier d’extraction':
+    '채굴 단계',
+  'Rendement':
+    '수율',
   'Addendum':
     '부록',
   'Projets & percées':
@@ -2342,6 +2408,8 @@ export default {
     '미변환 물질',
   'convertie en énergie':
     '에너지로 변환됨',
+  'Où envoyer l’essaim':
+    '군집을 어디로 보낼까',
   'La Une':
     '헤드라인',
   'Bourse':
