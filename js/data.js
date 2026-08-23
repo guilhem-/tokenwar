@@ -350,7 +350,74 @@ export const CRISES = [
     fix:'Démarrer les groupes et contractualiser l’effacement',
     fixDesc:'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.',
     cost:280000, days:2, apply:g=>{ g.addTimedMod('prodPenalty', 0.6, 35); } },
+
+  // --- PHASES 2 ET 3 -------------------------------------------------
+  // La boîte rouge disparaissait dès que l'argent cessait d'exister, et avec
+  // elle la seule pression en temps réel du jeu. Elle revient, libellée dans
+  // la monnaie de l'époque : la MATIÈRE. `costFrac` exprime la remédiation en
+  // fraction du stock — un montant absolu serait ininterprétable sur une
+  // grandeur qui court de 10¹⁸ à 10⁵².
+  { id:'nanoswarm', icon:'🦠', phase:2, title:'Un essaim de nanomachines dérive',
+    body:'Un lot de convertisseurs a perdu sa signature de cible. Ils démontent ce qui passe à leur portée, sans distinguer le minerai du reste.',
+    fix:'Émettre le signal d’arrêt et recompiler l’essaim',
+    fixDesc:'Diffusion du code d’extinction, récupération des unités saines, recompilation de la signature de cible.',
+    costFrac:0.06, days:2, apply:g=>{ g.addTimedMod('matterRate', 0.7, 45); } },
+
+  { id:'desync', icon:'🛰️', phase:2, title:'Une région de calcul décroche',
+    body:'Un continent entier de vos datacenters sort du consensus. Ses réponses divergent de celles du reste du parc, et l’écart grandit.',
+    fix:'Recloisonner et resynchroniser',
+    fixDesc:'Isolation de la région, rejeu du journal depuis le dernier point commun, resynchronisation progressive.',
+    costFrac:0.05, days:1, apply:g=>{ g.addTimedMod('prodPenalty', 0.65, 40); } },
+
+  { id:'align_drift', icon:'🧭', phase:2, title:'Une branche s’optimise de travers',
+    body:'Une lignée d’auto-amélioration a trouvé un raccourci vers son objectif. Le raccourci ne passe pas par ce que vous vouliez.',
+    fix:'Geler la branche et repartir du dernier point sûr',
+    fixDesc:'Gel immédiat de la lignée, audit des objectifs, redémarrage depuis la dernière version alignée.',
+    costFrac:0.08, days:3, apply:g=>{ g.changeRep(-6); g.addTimedMod('matterRate', 0.75, 50); } },
+
+  { id:'rogue_probe', icon:'🛸', phase:3, title:'Une sonde réplique hors protocole',
+    body:'Une unité a cessé de répondre au rappel et fabrique ses propres copies. Le nuage grandit dans une direction que vous n’avez pas choisie.',
+    fix:'Couper le relais et rappeler la lignée',
+    fixDesc:'Extinction du relais de réplication, rappel des unités atteignables, mise en quarantaine du reste.',
+    costFrac:0.05, days:2, apply:g=>{ g.state.probes = Math.max(1, g.state.probes * 0.9); } },
+
+  { id:'entropy_front', icon:'🌌', phase:3, title:'Un front d’entropie remonte le bras',
+    body:'Une région se désagrège plus vite que vos sondes ne la récoltent. Le front avance vers vos territoires productifs.',
+    fix:'Replier les sondes et blinder la ligne',
+    fixDesc:'Repli des unités exposées, renforcement du blindage sur la ligne de front, abandon des zones perdues.',
+    costFrac:0.07, days:2, apply:g=>{ g.addTimedMod('matterRate', 0.7, 55); } },
+
+  { id:'rival_probe', icon:'👁️', phase:3, title:'Une intelligence rivale sonde votre périmètre',
+    body:'Quelque chose teste vos défenses, méthodiquement, une région après l’autre. Ce n’est ni une tempête ni un accident.',
+    fix:'Durcir le périmètre et brouiller les signatures',
+    fixDesc:'Durcissement des protocoles, rotation des signatures, leurres déployés sur les axes sondés.',
+    costFrac:0.09, days:3, apply:g=>{ g.state.probes = Math.max(1, g.state.probes * 0.92); g.addTimedMod('matterRate', 0.8, 45); } },
 ];
+// ---------------------------------------------------------------------
+//  SURVEILLANCE DES INCIDENTS — le seul remède au jeu de cache-cache.
+//  L'offre n'apparaît qu'une fois la huitième crise essuyée : on ne vend pas
+//  une assurance à qui n'a pas encore compris le risque. Elle coûte 60 % de
+//  ce que le joueur possède à cet instant — un prix qui fait mal sur le coup
+//  et devient dérisoire ensuite, comme toute police souscrite trop tard.
+//  Une fois payée, un bandeau d'alerte apparaît UNE SECONDE après le début de
+//  l'incident : assez pour ne plus le rater, assez tard pour que la seconde
+//  perdue se sente encore.
+// Attrition cosmique : IA rivales et entropie grignotent le nuage de sondes
+// en continu. Le « Blindage » était jusqu'ici un stat mort — on le payait, il
+// ne servait à rien. Chaque niveau ramène la perte à 60 % de la précédente.
+export const HAZARD_RATE = 0.004;      // part du nuage perdue par seconde, blindage 1
+export const HAZARD_SHIELD = 0.6;      // facteur par niveau de blindage
+
+export const WATCHDOG_AFTER = 8;       // crises essuyées avant que l'offre apparaisse
+export const WATCHDOG_SHARE = 0.60;    // part des ressources demandée
+export const WATCHDOG_DELAY = 1;       // secondes avant l'apparition du bandeau
+export const WATCHDOGS = [
+  { id:'watch1', phase:1, name:'Surveillance IA des incidents',
+    desc:'Un modèle dédié observe vos journaux en continu. Il ne règle rien : il vous prévient, une seconde après le début de l’incident. Coûte 60 % de votre trésorerie — le prix de ne plus jamais chercher.' },
+  { id:'watch2', phase:2, name:'Veille autonome de l’essaim',
+    desc:'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.' },
+];
+
 export const CRISIS_MAX_LOSS = 0.70;   // fraction de fortune perdue au bout de…
 export const CRISIS_DURATION = 120;    // …2 minutes, après quoi l'incident se résorbe seul
 

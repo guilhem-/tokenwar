@@ -514,6 +514,54 @@ export default {
     '発電機を起動し、需給調整契約を結ぶ',
   'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
     '非常用発電機の復旧、需給調整契約の交渉、自動切替の動作確認。',
+  'Un essaim de nanomachines dérive':
+    'ナノマシンの群れが漂流している',
+  'Un lot de convertisseurs a perdu sa signature de cible. Ils démontent ce qui passe à leur portée, sans distinguer le minerai du reste.':
+    '一群の変換機が標的シグネチャを失った。手の届くものを片端から分解する——鉱石とそれ以外の区別なく。',
+  'Émettre le signal d’arrêt et recompiler l’essaim':
+    '停止信号を送り、群れを再コンパイルする',
+  'Diffusion du code d’extinction, récupération des unités saines, recompilation de la signature de cible.':
+    '停止コードの送信、健全な個体の回収、標的シグネチャの再コンパイル。',
+  'Une région de calcul décroche':
+    '計算リージョンが一つ脱落する',
+  'Un continent entier de vos datacenters sort du consensus. Ses réponses divergent de celles du reste du parc, et l’écart grandit.':
+    'データセンター群のうち大陸ひとつ分が合意から外れた。その応答は残りの機群から乖離し、その差は広がりつつある。',
+  'Recloisonner et resynchroniser':
+    '区画を切り直し、再同期する',
+  'Isolation de la région, rejeu du journal depuis le dernier point commun, resynchronisation progressive.':
+    'リージョンの隔離、直近の共通点からのログ再生、段階的な再同期。',
+  'Une branche s’optimise de travers':
+    'ある系統が見当違いの最適化を進めている',
+  'Une lignée d’auto-amélioration a trouvé un raccourci vers son objectif. Le raccourci ne passe pas par ce que vous vouliez.':
+    '自己改善の系統が目標への近道を見つけた。その近道は、あなたが意図したものを通らない。',
+  'Geler la branche et repartir du dernier point sûr':
+    '系統を凍結し、最後の安全な地点まで戻す',
+  'Gel immédiat de la lignée, audit des objectifs, redémarrage depuis la dernière version alignée.':
+    '系統の即時凍結、目標の監査、最後に整合していた版からの再起動。',
+  'Une sonde réplique hors protocole':
+    '一機のプローブが規定外の自己複製を始めた',
+  'Une unité a cessé de répondre au rappel et fabrique ses propres copies. Le nuage grandit dans une direction que vous n’avez pas choisie.':
+    '一機が呼び戻しに応じなくなり、自らの複製を作り始めた。群れは、あなたが選ばなかった方角へ膨らんでいく。',
+  'Couper le relais et rappeler la lignée':
+    '中継を断ち、系統を呼び戻す',
+  'Extinction du relais de réplication, rappel des unités atteignables, mise en quarantaine du reste.':
+    '複製中継の停止、到達可能な個体の呼び戻し、残りは隔離。',
+  'Un front d’entropie remonte le bras':
+    'エントロピーの波面が腕を遡ってくる',
+  'Une région se désagrège plus vite que vos sondes ne la récoltent. Le front avance vers vos territoires productifs.':
+    'ある領域が、プローブの採取より速く崩れていく。波面はあなたの生産地帯へ向かっている。',
+  'Replier les sondes et blinder la ligne':
+    'プローブを退かせ、前線を装甲する',
+  'Repli des unités exposées, renforcement du blindage sur la ligne de front, abandon des zones perdues.':
+    '露出した個体の後退、前線の装甲強化、失われた区域の放棄。',
+  'Une intelligence rivale sonde votre périmètre':
+    '敵対的な知性が、あなたの外縁を探っている',
+  'Quelque chose teste vos défenses, méthodiquement, une région après l’autre. Ce n’est ni une tempête ni un accident.':
+    '何かが、領域を一つ、また一つと変えながら、あなたの防御を体系的に試している。嵐でも事故でもない。',
+  'Durcir le périmètre et brouiller les signatures':
+    '外縁を固め、シグネチャを撹乱する',
+  'Durcissement des protocoles, rotation des signatures, leurres déployés sur les axes sondés.':
+    'プロトコルの強化、シグネチャの入れ替え、探られた軸への囮の配置。',
   'Réplication':
     '自己複製',
   'Vitesse de croissance du nuage de sondes.':
@@ -662,6 +710,14 @@ export default {
     '四半期ごとの利払い、元本は年20%、残額は最後に',
   'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
     '金はすぐ出る、条件も付かない。長所はそれだけだ——14%では、この融資は鎮めるはずの危機より高くつく。',
+  'Surveillance IA des incidents':
+    'AIによるインシデント監視',
+  'Un modèle dédié observe vos journaux en continu. Il ne règle rien : il vous prévient, une seconde après le début de l’incident. Coûte 60 % de votre trésorerie — le prix de ne plus jamais chercher.':
+    '専用のモデルがログを絶えず見張る。何も直しはしない——インシデント開始の一秒後に、あなたに知らせるだけだ。手元資金の60%と引き換えに、もう二度と探さずに済む。',
+  'Veille autonome de l’essaim':
+    '群れの自律監視',
+  'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
+    '同じ発想を、自律機群の規模で。基盤の一部が、ただ自分自身を見張ることだけに費やされる。物質の60%と引き換えだ——しかも買い直しが要る。最初のものは、この規模では何も見えない。',
   'Directives permanentes':
     '常設ディレクティブ',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1804,6 +1860,8 @@ export default {
     '一国まるごとがあなたの後見下に入る。そこに {0} のデータセンターが建設される。',
   '🏛️ Dette souveraine rachetée':
     '🏛️ 政府債務を買収',
+  '{0} en service. Vous serez prévenu une seconde après le début de l’incident.':
+    '{0} が稼働。インシデント開始の一秒後に通知が届く。',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}：現金が足りず、対処は部分的。損失{2}。',
   'Remédiation partielle — trésorerie épuisée':
@@ -1870,6 +1928,8 @@ export default {
     'インシデント：{0}',
   'Pertes en cours':
     '現在の損失',
+  'Incident détecté — trouvez la boîte rouge':
+    'インシデント検知——赤い枠を探せ',
   'Good choice. Enjoy the sun 🌱':
     'Good choice. Enjoy the sun 🌱',
   '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
@@ -1892,6 +1952,10 @@ export default {
     '停止中',
   'Auto-achat de cet élément précis':
     'この項目だけを自動購入',
+  'Surveillance en service':
+    '監視を開始',
+  'Offre indisponible':
+    'この提案は利用できない',
   'Réinitialiser les directives':
     'ディレクティブを初期化',
   'Directives effacées':
@@ -1952,6 +2016,12 @@ export default {
     '無効にする',
   'Activer':
     '有効にする',
+  'en service':
+    '稼働中',
+  'Vous êtes prévenu {0} s après le début de l’incident.':
+    'インシデント開始の {0} 秒後に通知。',
+  '{0} de ce que vous possédez':
+    '手持ちすべての {0}',
   'toutes acquises':
     'すべて取得済み',
   'quota atteint':
@@ -2076,8 +2146,6 @@ export default {
     '借入の総コスト',
   '{0} ans':
     '{0} 年',
-  'Offre indisponible':
-    'この提案は利用できない',
   'Tirer':
     '引き出す',
   'Tirer le solde disponible de la ligne':

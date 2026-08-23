@@ -9,7 +9,7 @@
 import { readFileSync, readdirSync } from 'fs';
 import { MODELS, GPUS, INFRA, ENERGY, PROJECTS, OPTIMS, EMPLOYEES, ACHIEVEMENTS,
          CRISES, HEADLINES, EVENTS, PROBE_SPECS, AUTOMATIONS, ADDENDUM, SPACE_DC, HELP,
-         CHRONICLE, EXTRAVAGANCES, OPS_INCIDENTS, TRAINING_FAILURES, LOANS } from '../js/data.js';
+         CHRONICLE, EXTRAVAGANCES, OPS_INCIDENTS, TRAINING_FAILURES, LOANS, WATCHDOGS } from '../js/data.js';
 import { FUNDING } from '../js/game.js';
 
 const push = (out, v) => { if (typeof v === 'string' && v.trim()) out.add(v); };
@@ -31,6 +31,7 @@ export function dataStrings() {
   take(AUTOMATIONS, ['name', 'desc']);
   take(FUNDING, ['name', 'desc']);
   take(LOANS, ['name', 'lender', 'repay', 'desc']);
+  take(WATCHDOGS, ['name', 'desc']);
   take([ADDENDUM, SPACE_DC], ['name', 'desc']);
   HEADLINES.forEach(h => push(out, h.t));
   CHRONICLE.forEach(c => push(out, c.t));      // titres datés à substitutions

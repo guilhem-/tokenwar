@@ -1871,6 +1871,116 @@ await step('aide : gras et touches sont mis en forme, pas affichés en clair', (
     if (!touches.includes(k)) throw new Error('raccourci absent de l aide : ' + k);
 });
 
+// ---- crises dans toutes les phases, et surveillance ----
+await step('crises : chaque phase a les siennes, ponctionnant sa propre ressource', () => {
+  const par = {};
+  for (const c of data.CRISES) par[c.phase || 1] = (par[c.phase || 1] || 0) + 1;
+  if (!par[2] || !par[3]) throw new Error('aucune crise pour les phases 2 et 3');
+
+  // phase 1 : la trésorerie
+  const g1 = new Game(null);
+  g1.state.phase = 1; g1.state.money = 1e9; g1.state.modelTier = 3; g1.state.crisisTimer = 0;
+  g1.tickCrisis(0.25);
+  if (!g1.state.crisis) throw new Error('aucune crise déclenchée en phase 1');
+  if (g1.crisisPool() !== 'money') throw new Error('la phase 1 devrait ponctionner la trésorerie');
+  const def1 = data.CRISES.find(c => c.id === g1.state.crisis.id);
+  if ((def1.phase || 1) !== 1) throw new Error('crise d une autre phase tirée en phase 1');
+
+  // phase 2 : la matière, et la trésorerie n y touche plus
+  const g2 = new Game(null);
+  g2.state.phase = 2; g2.state.matter = 1e20; g2.state.money = 1e9; g2.state.modelTier = 11; g2.state.crisisTimer = 0;
+  g2.tickCrisis(0.25);
+  if (!g2.state.crisis) throw new Error('aucune crise déclenchée en phase 2');
+  if (g2.crisisPool() !== 'matter') throw new Error('la phase 2 devrait ponctionner la matière');
+  const def2 = data.CRISES.find(c => c.id === g2.state.crisis.id);
+  if (def2.phase !== 2) throw new Error('crise de phase ' + def2.phase + ' tirée en phase 2');
+  const avM = g2.state.matter, avE = g2.state.money;
+  for (let i = 0; i < 200; i++) { g2.state.playSeconds += 0.25; g2.tickCrisis(0.25); }
+  if (!(g2.state.matter < avM)) throw new Error('la matière n a pas été ponctionnée');
+  if (g2.state.money !== avE) throw new Error('la trésorerie ne devrait plus être touchée en phase 2');
+  if (!(g2.state.crisis && g2.state.crisis.lost > 0)) throw new Error('pertes non comptabilisées');
+});
+
+await step('blindage : le stat mort protège désormais réellement le nuage', () => {
+  // `probeSpecs.hazard` était initialisé, achetable, et lu nulle part : on
+  // payait une amélioration qui ne faisait rien.
+  const croissance = h => {
+    const g2 = new Game(null);
+    g2.state.phase = 3; g2.state.probes = 1e6; g2.state.matter = 1e30;
+    g2.state.gpuCounts = { wafer: 1e6 }; g2.state.energyCap = 1e12;
+    g2.state.alloc = { serve: 0.2, research: 0.2, improve: 0.1, harvest: 0.5 };
+    g2.state.probeSpecs = { replication: 1, harvest: 1, speed: 1, hazard: h };
+    const av = g2.state.probes;
+    for (let i = 0; i < 40; i++) g2.tick(0.25);
+    return Math.pow(g2.state.probes / av, 1 / 10) - 1;
+  };
+  const c1 = croissance(1), c2 = croissance(2), c4 = croissance(4);
+  if (!(c1 < c2 && c2 < c4)) throw new Error(`le blindage doit améliorer la croissance : ${c1} / ${c2} / ${c4}`);
+  if (!((c4 - c1) / c1 > 0.05)) throw new Error('l effet du blindage est trop faible pour être un choix');
+  // et l attrition existe bien : sans réplication, le nuage recule
+  const g3 = new Game(null);
+  g3.state.phase = 3; g3.state.probes = 1e6; g3.state.matter = 1e30;
+  g3.state.gpuCounts = {}; g3.state.energyCap = 1e12;
+  g3.state.alloc = { serve: 1, research: 0, improve: 0, harvest: 0 };
+  g3.state.probeSpecs = { replication: 0, harvest: 1, speed: 1, hazard: 1 };
+  const av3 = g3.state.probes;
+  for (let i = 0; i < 40; i++) g3.tick(0.25);
+  if (!(g3.state.probes < av3)) throw new Error('sans réplication ni blindage, le nuage devrait reculer');
+});
+
+await step('surveillance : offerte après huit crises, contre 60% des ressources', () => {
+  const g2 = new Game(null);
+  g2.state.phase = 1; g2.state.money = 1e9; g2.state.modelTier = 3;
+  if (g2.watchdogOffer()) throw new Error('l offre ne doit pas apparaître avant le seuil');
+  for (let i = 0; i < data.WATCHDOG_AFTER - 1; i++) g2.state.crisisSeen['c' + i] = 1;
+  if (g2.watchdogOffer()) throw new Error('offre apparue une crise trop tôt');
+  g2.state.crisisSeen['c9'] = 1;
+  const o = g2.watchdogOffer();
+  if (!o || o.phase !== 1) throw new Error('l offre de phase 1 devrait apparaître à la 8e crise');
+  const av = g2.state.money;
+  const cout = g2.watchdogCost();
+  if (Math.abs(cout - av * data.WATCHDOG_SHARE) > 1) throw new Error('le coût devrait valoir 60% de la trésorerie');
+  if (!g2.buyWatchdog()) throw new Error('achat refusé');
+  if (Math.abs(g2.state.money - av * (1 - data.WATCHDOG_SHARE)) > 1) throw new Error('montant prélevé faux');
+  if (!g2.hasWatchdog()) throw new Error('dispositif non actif après achat');
+  if (g2.watchdogOffer()) throw new Error('l offre devrait disparaître une fois prise');
+
+  // en phase 2, il faut reprendre un dispositif, payé en matière
+  g2.state.phase = 2; g2.state.matter = 1e20;
+  if (g2.hasWatchdog()) throw new Error('le dispositif de phase 1 ne devrait pas couvrir la phase 2');
+  const o2 = g2.watchdogOffer();
+  if (!o2 || o2.phase !== 2) throw new Error('l offre de phase 2 devrait apparaître');
+  if (Math.abs(g2.watchdogCost() - 1e20 * data.WATCHDOG_SHARE) > 1e6) throw new Error('la phase 2 devrait facturer en matière');
+  g2.buyWatchdog();
+  if (!g2.hasWatchdog()) throw new Error('dispositif de phase 2 non actif');
+});
+
+await step('surveillance : le bandeau n apparaît qu après le délai, et pas sans dispositif', async () => {
+  const attendre = ms => new Promise(r => setTimeout(r, ms));
+  const banniere = ui.el.watchdogBanner;
+  if (!banniere) throw new Error('bandeau absent de la page');
+  // sans dispositif : rien, jamais
+  game.state.phase = 1; game.state.watchdogs = {}; game.state.money = 1e9; game.state.modelTier = 3;
+  ui.onCrisis(data.CRISES[0]);
+  await attendre(data.WATCHDOG_DELAY * 1000 + 250);
+  if (!banniere.classList.contains('hidden')) throw new Error('bandeau affiché sans dispositif payé');
+  ui.onCrisisEnd();
+
+  // avec dispositif : rien avant le délai, puis le bandeau
+  game.state.watchdogs = { watch1: true };
+  game.state.crisis = { id: data.CRISES[0].id, startedAt: 0, lost: 0 };
+  ui.onCrisis(data.CRISES[0]);
+  await attendre(200);
+  if (!banniere.classList.contains('hidden')) throw new Error('bandeau affiché avant le délai d une seconde');
+  await attendre(data.WATCHDOG_DELAY * 1000 + 250);
+  if (banniere.classList.contains('hidden')) throw new Error('bandeau jamais affiché malgré le dispositif');
+  if (!banniere.textContent.trim()) throw new Error('bandeau vide');
+  // il disparaît avec l incident
+  ui.onCrisisEnd();
+  if (!banniere.classList.contains('hidden')) throw new Error('bandeau resté après la fin de l incident');
+  game.state.crisis = null; game.state.watchdogs = {};
+});
+
 // save/load
 await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 

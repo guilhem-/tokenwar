@@ -1774,3 +1774,43 @@ kbd {
   text-align: center;
   white-space: nowrap;
 }
+
+/* ---- bandeau de surveillance des incidents ------------------------------
+   Il n'apparaît qu'une seconde après le début de l'incident, et seulement si
+   le dispositif a été payé. Il signale, il ne localise pas : la boîte reste à
+   trouver. Non cliquable, pour ne jamais voler un clic à la remédiation. */
+.watchdog-banner {
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--bad);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: rgba(255, 92, 108, 0.14);
+  color: var(--text);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  animation: watchdog-in 0.25s var(--ease);
+}
+.watchdog-icon {
+  font-size: 1.05rem;
+  animation: watchdog-pulse 1.1s ease-in-out infinite;
+}
+/* Phase 2 : même dispositif, autre époque — on reprend la teinte de la phase. */
+.watchdog-banner.is-phase2 {
+  border-color: var(--accent-2);
+  background: rgba(124, 92, 255, 0.16);
+}
+@keyframes watchdog-in { from { transform: translate(-50%, -100%); } to { transform: translate(-50%, 0); } }
+@keyframes watchdog-pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) {
+  .watchdog-banner { animation: none; }
+  .watchdog-icon { animation: none; }
+}

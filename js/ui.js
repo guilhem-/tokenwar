@@ -2,7 +2,8 @@
 //  TokenWar — INTERFACE
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
-         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS } from './data.js';
+         CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS,
+         WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
@@ -78,6 +79,7 @@ export class UI {
       saveExport: $('save-export'), saveImport: $('save-import'), saveFile: $('save-file'),
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
       sovereignList: $('sovereign-list'),
+      watchdogBanner: $('watchdog-banner'),
       panelDebt: $('panel-debt'), debtTotal: $('debt-total'), debtNext: $('debt-next'),
       debtNextRow: $('debt-next-row'), debtActive: $('debt-active'),
       debtOffers: $('debt-offers'), debtOffersTitle: $('debt-offers-title'),
@@ -396,6 +398,28 @@ export class UI {
     this.crisisBox = box;
     this.placeCrisisBox(box);
     this.el.crisisVignette.classList.remove('hidden');
+    this.armWatchdog();
+  }
+  // Bandeau de surveillance : il n'apparaît qu'UNE SECONDE après le début de
+  // l'incident. Assez pour ne plus jamais le rater, assez tard pour que la
+  // seconde perdue se sente encore — le dispositif prévient, il ne joue pas
+  // à votre place. Les couleurs suivent la phase : cyan d'alerte en phase 1,
+  // teinte de la phase 2 ensuite.
+  armWatchdog() {
+    clearTimeout(this._watchTimer);
+    if (!this.game.hasWatchdog()) return;
+    this._watchTimer = setTimeout(() => {
+      if (!this.game.state.crisis) return;
+      const el = this.el.watchdogBanner;
+      if (!el) return;
+      el.classList.remove('hidden');
+      el.classList.toggle('is-phase2', this.game.phase >= 2);
+      el.querySelector('.watchdog-text').textContent = t('Incident détecté — trouvez la boîte rouge');
+    }, WATCHDOG_DELAY * 1000);
+  }
+  disarmWatchdog() {
+    clearTimeout(this._watchTimer);
+    if (this.el.watchdogBanner) this.el.watchdogBanner.classList.add('hidden');
   }
   // position aléatoire dans le document, en évitant la zone actuellement visible
   placeCrisisBox(box) {
@@ -432,6 +456,7 @@ export class UI {
     if (cost && c) cost.textContent = fmtMoney(g.crisisCost(c));
   }
   onCrisisEnd() {
+    this.disarmWatchdog();
     if (this.el.crisisLayer) this.el.crisisLayer.innerHTML = '';
     this.crisisBox = null;
     this.el.crisisVignette.classList.add('hidden');
@@ -665,6 +690,15 @@ export class UI {
     // Addendum : directives permanentes + datacenter orbital
     this.buildDebt();
     this.el.addendumList.innerHTML = ''; this.rows.addendum = {};
+    {
+      // Surveillance des incidents : une ligne par phase, qui n'apparaît
+      // qu'une fois la huitième crise essuyée.
+      const r = this.makeRow(this.el.addendumList, 'watchdog', this.rows.addendum);
+      r.el.addEventListener('click', () => {
+        if (this.game.buyWatchdog()) { this.toast(t('Surveillance en service'), 'good'); this.render(); }
+        else this.deny(r.el, t('Offre indisponible'));
+      });
+    }
     {
       const r = this.makeRow(this.el.addendumList, 'directives', this.rows.addendum);
       r.name.textContent = td(ADDENDUM.name);
@@ -942,6 +976,29 @@ export class UI {
 
   renderAddendum() {
     const g = this.game, s = g.state;
+    // Surveillance des incidents
+    const rw = this.rows.addendum['watchdog'];
+    const offre = g.watchdogOffer();
+    if (rw) {
+      const actif = g.hasWatchdog();
+      rw.el.classList.toggle('hidden', !offre && !actif);
+      if (offre || actif) {
+        const w = offre || WATCHDOGS.find(x => x.phase === Math.min(2, g.phase));
+        rw.name.textContent = td(w.name);
+        rw.desc.textContent = td(w.desc);
+        if (actif) {
+          rw.cost.innerHTML = `<span class="badge badge-new">${t('en service')}</span>`;
+          rw.effect.innerHTML = `<span class="text-muted">${t('Vous êtes prévenu {0} s après le début de l’incident.', WATCHDOG_DELAY)}</span>`;
+          rw.el.classList.add('owned');
+        } else {
+          const c = g.watchdogCost();
+          rw.cost.textContent = g.phase >= 2 ? fmtMass(c) : fmtMoney(c);
+          rw.effect.innerHTML = `<span class="text-muted">${t('{0} de ce que vous possédez', pct(WATCHDOG_SHARE) + '%')}</span>`;
+          rw.el.classList.remove('owned');
+          this.setAfford(rw.el, c > 0);
+        }
+      }
+    }
     // Directives permanentes
     const rd = this.rows.addendum['directives'];
     const cost = g.addendumCost();

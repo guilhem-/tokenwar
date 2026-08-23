@@ -514,6 +514,54 @@ export default {
     'Arrancar os geradores e contratualizar o deslastre',
   'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
     'Reposição dos geradores, contrato de deslastre negociado e comutação automática testada.',
+  'Un essaim de nanomachines dérive':
+    'Um enxame de nanomáquinas está à deriva',
+  'Un lot de convertisseurs a perdu sa signature de cible. Ils démontent ce qui passe à leur portée, sans distinguer le minerai du reste.':
+    'Um lote de conversores perdeu a sua assinatura de alvo. Desmontam o que passa ao seu alcance, sem distinguir o minério do resto.',
+  'Émettre le signal d’arrêt et recompiler l’essaim':
+    'Emitir o sinal de paragem e recompilar o enxame',
+  'Diffusion du code d’extinction, récupération des unités saines, recompilation de la signature de cible.':
+    'Difusão do código de desligamento, recuperação das unidades sãs, recompilação da assinatura de alvo.',
+  'Une région de calcul décroche':
+    'Uma região de computação sai de sincronia',
+  'Un continent entier de vos datacenters sort du consensus. Ses réponses divergent de celles du reste du parc, et l’écart grandit.':
+    'Um continente inteiro dos teus centros de dados sai do consenso. As suas respostas divergem do resto do parque, e a diferença aumenta.',
+  'Recloisonner et resynchroniser':
+    'Recompartimentar e ressincronizar',
+  'Isolation de la région, rejeu du journal depuis le dernier point commun, resynchronisation progressive.':
+    'Isolamento da região, repetição do registo desde o último ponto comum, ressincronização progressiva.',
+  'Une branche s’optimise de travers':
+    'Um ramo está a otimizar-se de través',
+  'Une lignée d’auto-amélioration a trouvé un raccourci vers son objectif. Le raccourci ne passe pas par ce que vous vouliez.':
+    'Uma linhagem de auto-melhoria encontrou um atalho para o seu objetivo. O atalho não passa por aquilo que querias.',
+  'Geler la branche et repartir du dernier point sûr':
+    'Congelar o ramo e voltar ao último ponto seguro',
+  'Gel immédiat de la lignée, audit des objectifs, redémarrage depuis la dernière version alignée.':
+    'Congelamento imediato da linhagem, auditoria dos objetivos, reinício a partir da última versão alinhada.',
+  'Une sonde réplique hors protocole':
+    'Uma sonda replica-se fora de protocolo',
+  'Une unité a cessé de répondre au rappel et fabrique ses propres copies. Le nuage grandit dans une direction que vous n’avez pas choisie.':
+    'Uma unidade deixou de responder ao chamamento e fabrica cópias de si mesma. A nuvem cresce numa direção que não escolheste.',
+  'Couper le relais et rappeler la lignée':
+    'Cortar o relé e chamar de volta a linhagem',
+  'Extinction du relais de réplication, rappel des unités atteignables, mise en quarantaine du reste.':
+    'Desligamento do relé de replicação, chamada das unidades alcançáveis, quarentena para as restantes.',
+  'Un front d’entropie remonte le bras':
+    'Uma frente de entropia sobe o braço',
+  'Une région se désagrège plus vite que vos sondes ne la récoltent. Le front avance vers vos territoires productifs.':
+    'Uma região desagrega-se mais depressa do que as tuas sondas a colhem. A frente avança para os teus territórios produtivos.',
+  'Replier les sondes et blinder la ligne':
+    'Recolher as sondas e blindar a linha',
+  'Repli des unités exposées, renforcement du blindage sur la ligne de front, abandon des zones perdues.':
+    'Recolha das unidades expostas, reforço da blindagem na linha da frente, abandono das zonas perdidas.',
+  'Une intelligence rivale sonde votre périmètre':
+    'Uma inteligência rival sonda o teu perímetro',
+  'Quelque chose teste vos défenses, méthodiquement, une région après l’autre. Ce n’est ni une tempête ni un accident.':
+    'Algo testa as tuas defesas, metodicamente, região após região. Não é uma tempestade nem um acidente.',
+  'Durcir le périmètre et brouiller les signatures':
+    'Endurecer o perímetro e baralhar as assinaturas',
+  'Durcissement des protocoles, rotation des signatures, leurres déployés sur les axes sondés.':
+    'Endurecimento dos protocolos, rotação das assinaturas, engodos posicionados nos eixos sondados.',
   'Réplication':
     'Replicação',
   'Vitesse de croissance du nuage de sondes.':
@@ -662,6 +710,14 @@ export default {
     'Juros trimestrais, 20 % do capital por ano, saldo no fim',
   'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
     'O dinheiro está lá de imediato, sem condições. É a sua única virtude: a 14 %, este empréstimo vai custar-te mais do que a crise que apaga.',
+  'Surveillance IA des incidents':
+    'Vigilância de incidentes por IA',
+  'Un modèle dédié observe vos journaux en continu. Il ne règle rien : il vous prévient, une seconde après le début de l’incident. Coûte 60 % de votre trésorerie — le prix de ne plus jamais chercher.':
+    'Um modelo dedicado observa os teus registos continuamente. Não resolve nada: avisa-te, um segundo depois de o incidente começar. Custa 60 % da tua tesouraria — o preço de nunca mais procurares.',
+  'Veille autonome de l’essaim':
+    'Vigilância autónoma do enxame',
+  'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
+    'A mesma ideia, à escala do parque autónomo: uma parte do teu substrato não faz mais do que vigiar-se a si própria. Custa 60 % da tua matéria — e é preciso comprá-la de novo, a primeira já não vê nada a esta escala.',
   'Directives permanentes':
     'Diretivas permanentes',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1804,6 +1860,8 @@ export default {
     'Um país inteiro passa sob a tua tutela. Serão construídos lá {0} centros de dados.',
   '🏛️ Dette souveraine rachetée':
     '🏛️ Dívida soberana comprada',
+  '{0} en service. Vous serez prévenu une seconde après le début de l’incident.':
+    '{0} em serviço. Serás avisado um segundo depois do início do incidente.',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: sem caixa suficiente, remediação parcial. Perdas {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1870,6 +1928,8 @@ export default {
     'Incidente: {0}',
   'Pertes en cours':
     'Perdas em curso',
+  'Incident détecté — trouvez la boîte rouge':
+    'Incidente detetado — encontra a caixa vermelha',
   'Good choice. Enjoy the sun 🌱':
     'Good choice. Enjoy the sun 🌱',
   '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
@@ -1892,6 +1952,10 @@ export default {
     'congelado',
   'Auto-achat de cet élément précis':
     'Autocompra deste elemento específico',
+  'Surveillance en service':
+    'Vigilância em serviço',
+  'Offre indisponible':
+    'Oferta indisponível',
   'Réinitialiser les directives':
     'Reiniciar as diretivas',
   'Directives effacées':
@@ -1952,6 +2016,12 @@ export default {
     'Desativar',
   'Activer':
     'Ativar',
+  'en service':
+    'em serviço',
+  'Vous êtes prévenu {0} s après le début de l’incident.':
+    'És avisado {0} s depois do início do incidente.',
+  '{0} de ce que vous possédez':
+    '{0} de tudo o que possuis',
   'toutes acquises':
     'todas adquiridas',
   'quota atteint':
@@ -2076,8 +2146,6 @@ export default {
     'Custo total do crédito',
   '{0} ans':
     '{0} anos',
-  'Offre indisponible':
-    'Oferta indisponível',
   'Tirer':
     'Sacar',
   'Tirer le solde disponible de la ligne':

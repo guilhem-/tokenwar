@@ -11,7 +11,8 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          CHRONICLE, EXTRAVAGANCES, SOVEREIGN,
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
          OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION,
-         PHASE3_EARTH, ENDING_UNIVERSE } from './data.js';
+         PHASE3_EARTH, ENDING_UNIVERSE, WATCHDOGS, WATCHDOG_AFTER, WATCHDOG_SHARE,
+         HAZARD_RATE, HAZARD_SHIELD } from './data.js';
 import { clamp, fmtPower, fmtMoney, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
@@ -97,6 +98,7 @@ export class Game {
     // les prix du jeu ; l'inflation s'applique au moment du paiement.
     s.loans = [];
     s.loanSeq = 0;
+    s.watchdogs = {};        // dispositifs de surveillance des incidents achetés
     s.opsCheckYear = 0;      // dernier contrôle annuel du risque d'exploitation
     s.lastIncident = null;   // pour ne pas tirer deux fois le même article de suite
     s.autoChoices = {};      // eventId -> index du choix à appliquer automatiquement
@@ -2007,6 +2009,10 @@ export class Game {
   // La part « exploitation » est bornée à 3× le forfait : un incident doit faire mal,
   // pas vider la caisse d'un groupe devenu énorme.
   crisisCost(c) {
+    // En phase 2+ la remédiation se chiffre en fraction du stock de matière :
+    // un montant absolu n'aurait aucun sens sur une grandeur qui court de
+    // 10¹⁸ à 10⁵².
+    if (c.costFrac) return this.state.matter * c.costFrac;
     const base = this.moneyCost(c.cost);
     return base + Math.min((c.days || 1) * this.dailyTotal(), base * 3);
   }
@@ -2016,8 +2022,56 @@ export class Game {
   }
   // fraction cumulée de fortune détruite après u secondes (accélère avec le temps)
   _crisisCurve(u) { return CRISIS_MAX_LOSS * Math.pow(clamp(u / CRISIS_DURATION, 0, 1), 1.6); }
+  // ==================================================================
+  //  CRISES — la boîte rouge, désormais dans toutes les phases.
+  //
+  //  Elle s'éteignait dès la phase 2 « parce que l'argent n'existe plus »,
+  //  et le jeu perdait du même coup sa seule pression en temps réel. Elle
+  //  ponctionne maintenant la ressource de l'époque : la trésorerie tant
+  //  qu'il y en a une, la MATIÈRE ensuite.
+  // ==================================================================
+  crisisPool() { return this.phase >= 2 ? 'matter' : 'money'; }
+  crisisStock() { return this.crisisPool() === 'matter' ? this.state.matter : this.state.money; }
+  crisisDrain(f1, f0) {
+    const s = this.state, k = (1 - f1) / (1 - f0);
+    if (this.crisisPool() === 'matter') { const b = s.matter; s.matter *= k; return b - s.matter; }
+    const b = s.money; s.money *= k; return b - s.money;
+  }
+  crisisPay(cost) {
+    const s = this.state, pool = this.crisisPool();
+    const paid = Math.min(cost, pool === 'matter' ? s.matter : s.money);
+    if (pool === 'matter') s.matter -= paid; else s.money -= paid;
+    return paid;
+  }
+  // total d'incidents essuyés, toutes crises confondues
+  crisesFaced() { return Object.values(this.state.crisisSeen || {}).reduce((a, b) => a + b, 0); }
+
+  // ---- dispositif de surveillance ----
+  // Une offre par phase, qui n'apparaît qu'une fois la huitième crise passée
+  // et coûte 60 % de ce qu'on possède à cet instant.
+  watchdogOffer() {
+    if (this.crisesFaced() < WATCHDOG_AFTER) return null;
+    return WATCHDOGS.find(w => w.phase === Math.min(2, this.phase) && !this.state.watchdogs[w.id]) || null;
+  }
+  watchdogCost() { return this.crisisStock() * WATCHDOG_SHARE; }
+  hasWatchdog() {
+    const w = WATCHDOGS.find(x => x.phase === Math.min(2, this.phase));
+    return !!(w && this.state.watchdogs[w.id]);
+  }
+  buyWatchdog() {
+    const o = this.watchdogOffer();
+    if (!o) return false;
+    const cost = this.watchdogCost();
+    if (!(cost > 0)) return false;
+    this.crisisPay(cost);
+    this.state.watchdogs[o.id] = true;
+    this.log(t('{0} en service. Vous serez prévenu une seconde après le début de l’incident.', td(o.name)), 'milestone');
+    return true;
+  }
+
   pickCrisis() {
     const pool = CRISES.filter(c => {
+      if ((c.phase || 1) !== Math.min(3, this.phase)) return false;   // chaque époque a ses incidents
       if (c.cond && !c.cond(this)) return false;
       return true;
     });
@@ -2031,15 +2085,11 @@ export class Game {
   }
   tickCrisis(dt) {
     const s = this.state;
-    if (s.ended || this._offline || this.phase >= 2) return;  // en phase 2+, l'argent ne compte plus
+    if (s.ended || this._offline || this.phase >= 4) return;
     if (s.crisis) {
       const t = s.playSeconds - s.crisis.startedAt;
       const f0 = this._crisisCurve(t - dt), f1 = this._crisisCurve(t);
-      if (f1 > f0 && f1 < 1) {
-        const before = s.money;
-        s.money *= (1 - f1) / (1 - f0);          // saignée multiplicative exacte
-        s.crisis.lost += before - s.money;
-      }
+      if (f1 > f0 && f1 < 1) s.crisis.lost += this.crisisDrain(f1, f0);
       if (t >= CRISIS_DURATION) this.resolveCrisis(false);
       return;
     }
@@ -2048,7 +2098,8 @@ export class Game {
     s.crisisTimer = 150 + Math.random() * 160;
     if (this.ui && this.ui.modalOpen) return;                 // pas pendant une décision
     // on n'assomme pas un garage : il faut une vraie exploitation à mettre en péril
-    if (s.money < 25000 || s.modelTier < 1) return;
+    // on n'assomme pas un garage : il faut une exploitation à mettre en péril
+    if (this.phase < 2 ? (s.money < 25000 || s.modelTier < 1) : s.matter < 1e12) return;
     const c = this.pickCrisis();
     if (!c) return;
     s.crisisSeen[c.id] = (s.crisisSeen[c.id] || 0) + 1;
@@ -2067,8 +2118,7 @@ export class Game {
     const money = v => '$' + Math.round(v).toLocaleString(intlLocale());
     if (fixed && c) {
       const cost = this.crisisCost(c);
-      const paid = Math.min(cost, s.money);
-      s.money -= paid;
+      const paid = this.crisisPay(cost);
       s.crisis = null;
       if (c.apply) c.apply(this);
       if (paid < cost - 1) {                                   // remédiation au rabais
@@ -2228,6 +2278,13 @@ export class Game {
       if (this.phase >= 3) {
         if (s.probes < 1) s.probes = 1;
         s.probes = Math.min(1e25, s.probes * (1 + ps.replication * 0.01 * dt) + rawUnits * a.harvest * 1e-9 * dt);
+        // Attrition : l'espace n'est pas vide. Sans blindage on perd 0,4 % du
+        // nuage par seconde, soit près de la moitié de ce que la réplication
+        // apporte — le curseur Blindage cesse d'être décoratif et devient un
+        // arbitrage : récolter maintenant, ou survivre pour récolter demain.
+        const perte = HAZARD_RATE * Math.pow(HAZARD_SHIELD, ps.hazard - 1);
+        s.probes = Math.max(1, s.probes * (1 - perte * dt));
+        s.rates.hazard = perte;
         probeSpeed = Math.min(8, Math.pow(1.25, ps.harvest + ps.speed) * (1 + Math.log10(s.probes + 1) * 0.15));
         consumeBonus *= Math.pow(1.4, ps.harvest);
       }

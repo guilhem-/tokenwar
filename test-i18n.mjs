@@ -85,6 +85,25 @@ await step('aucune contamination d écriture entre langues', async () => {
   }
 });
 
+// Un mot anglais ordinaire resté au milieu d'une phrase CJK : la traduction a
+// été écrite à la main et un terme est passé à travers. Le test d'écritures ne
+// le voyait pas — le latin est légitime en CJK (GPU, RTX 5090, NVIDIA), c'est
+// le mot COURANT non traduit qui trahit l'oubli.
+await step('aucun mot anglais courant oublié dans une langue CJK', async () => {
+  const COURANTS = /(?:^|[^A-Za-z])(region|territory|cluster|node|storage|network|matter|energy|probe|swarm|shield|harvest|research|breakthrough|warning|incident)(?:[^A-Za-z]|$)/i;
+  const CJK = /[\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/;
+  const bad = [];
+  for (const code of ['zh', 'ja', 'ko']) {
+    const d = (await import(`./js/locales/${code}.js`)).default;
+    for (const [, v] of Object.entries(d)) {
+      if (!CJK.test(v)) continue;                 // pas une phrase CJK : rien à dire
+      const m = v.match(COURANTS);
+      if (m) bad.push(`${code} : « …${v.slice(Math.max(0, v.indexOf(m[1]) - 18), v.indexOf(m[1]) + m[1].length + 12)}… »`);
+    }
+  }
+  if (bad.length) throw new Error(`${bad.length} mot(s) anglais oublié(s) — ${bad.slice(0, 3).join(' | ')}`);
+});
+
 // Le piège le plus insidieux : une chaîne construite en dur dans le code, qui
 // n'entre jamais dans l'inventaire et s'affiche donc en français dans TOUTES
 // les langues (c'est ainsi qu'un « /j d'abonnement » s'était glissé en anglais).

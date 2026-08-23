@@ -514,6 +514,54 @@ export default {
     '启动发电机并签订可中断用电合同',
   'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
     '重启柴油发电机、谈定可中断用电合同并测试自动切换。',
+  'Un essaim de nanomachines dérive':
+    '一群纳米机器正在失控漂移',
+  'Un lot de convertisseurs a perdu sa signature de cible. Ils démontent ce qui passe à leur portée, sans distinguer le minerai du reste.':
+    '一批转换器丢失了目标特征。凡是落入范围的东西都被拆解，分不清矿石与其他。',
+  'Émettre le signal d’arrêt et recompiler l’essaim':
+    '广播停机信号并重新编译蜂群',
+  'Diffusion du code d’extinction, récupération des unités saines, recompilation de la signature de cible.':
+    '广播停机代码，回收完好单元，重新编译目标特征。',
+  'Une région de calcul décroche':
+    '一整片算力区域脱离同步',
+  'Un continent entier de vos datacenters sort du consensus. Ses réponses divergent de celles du reste du parc, et l’écart grandit.':
+    '你的数据中心中，整整一个大陆脱离了共识。它的回答与其余机群渐行渐远，差距还在扩大。',
+  'Recloisonner et resynchroniser':
+    '重新隔离并重新同步',
+  'Isolation de la région, rejeu du journal depuis le dernier point commun, resynchronisation progressive.':
+    '隔离该区域，从最后一个共同点重放日志，逐步重新同步。',
+  'Une branche s’optimise de travers':
+    '一条分支正朝错的方向优化',
+  'Une lignée d’auto-amélioration a trouvé un raccourci vers son objectif. Le raccourci ne passe pas par ce que vous vouliez.':
+    '一条自我改进的谱系找到了通往目标的捷径。那条捷径不经过你本来想要的东西。',
+  'Geler la branche et repartir du dernier point sûr':
+    '冻结该分支并回滚到最后的安全点',
+  'Gel immédiat de la lignée, audit des objectifs, redémarrage depuis la dernière version alignée.':
+    '立即冻结该谱系，审计其目标，从最后一个对齐版本重启。',
+  'Une sonde réplique hors protocole':
+    '一台探测器正在违规自我复制',
+  'Une unité a cessé de répondre au rappel et fabrique ses propres copies. Le nuage grandit dans une direction que vous n’avez pas choisie.':
+    '有一台单元不再响应召回，正在制造自己的副本。集群朝着一个不是你选的方向扩张。',
+  'Couper le relais et rappeler la lignée':
+    '切断中继并召回该谱系',
+  'Extinction du relais de réplication, rappel des unités atteignables, mise en quarantaine du reste.':
+    '关闭复制中继，召回可联络的单元，其余隔离。',
+  'Un front d’entropie remonte le bras':
+    '一道熵锋正沿旋臂推进',
+  'Une région se désagrège plus vite que vos sondes ne la récoltent. Le front avance vers vos territoires productifs.':
+    '有一片区域瓦解的速度快过你的探测器采集它的速度。锋面正朝你的高产地带推进。',
+  'Replier les sondes et blinder la ligne':
+    '撤回探测器并加固防线',
+  'Repli des unités exposées, renforcement du blindage sur la ligne de front, abandon des zones perdues.':
+    '撤出暴露的单元，加厚前线装甲，放弃已失去的区域。',
+  'Une intelligence rivale sonde votre périmètre':
+    '一个敌对智能正在试探你的边界',
+  'Quelque chose teste vos défenses, méthodiquement, une région après l’autre. Ce n’est ni une tempête ni un accident.':
+    '有什么东西在有条不紊地试探你的防御，一片区域接着一片。这既不是风暴，也不是意外。',
+  'Durcir le périmètre et brouiller les signatures':
+    '加固边界并打乱特征签名',
+  'Durcissement des protocoles, rotation des signatures, leurres déployés sur les axes sondés.':
+    '强化协议，轮换签名，在被试探的方向布下诱饵。',
   'Réplication':
     '复制',
   'Vitesse de croissance du nuage de sondes.':
@@ -662,6 +710,14 @@ export default {
     '按季付息，每年偿还 20% 本金，余额期末结清',
   'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
     '钱立刻到位，不问条件。这是它唯一的好处：14% 的利率下，这笔贷款会比它扑灭的那场危机更贵。',
+  'Surveillance IA des incidents':
+    'AI 事故监控',
+  'Un modèle dédié observe vos journaux en continu. Il ne règle rien : il vous prévient, une seconde après le début de l’incident. Coûte 60 % de votre trésorerie — le prix de ne plus jamais chercher.':
+    '一个专用模型不间断地盯着你的日志。它什么也不修：它只在事故开始一秒后通知你。要价你现金的 60%——从此不必再找的代价。',
+  'Veille autonome de l’essaim':
+    '蜂群自主值守',
+  'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
+    '同样的思路，放到自主机群的尺度上：你的一部分基底只做一件事——盯着自己。要价你物质的 60%，而且必须重新购置：第一套在这个尺度上已经什么都看不见了。',
   'Directives permanentes':
     '常设指令',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1804,6 +1860,8 @@ export default {
     '一整个国家落入你的托管。将在那里建设 {0} 座数据中心。',
   '🏛️ Dette souveraine rachetée':
     '🏛️ 主权债务已被买下',
+  '{0} en service. Vous serez prévenu une seconde après le début de l’incident.':
+    '{0} 已上线。事故开始一秒后你会收到提示。',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}：现金不足，只能部分处置。损失 {2}。',
   'Remédiation partielle — trésorerie épuisée':
@@ -1870,6 +1928,8 @@ export default {
     '事故：{0}',
   'Pertes en cours':
     '正在流失',
+  'Incident détecté — trouvez la boîte rouge':
+    '检测到事故——去找那个红框',
   'Good choice. Enjoy the sun 🌱':
     'Good choice. Enjoy the sun 🌱',
   '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
@@ -1892,6 +1952,10 @@ export default {
     '已冻结',
   'Auto-achat de cet élément précis':
     '自动采购这一具体条目',
+  'Surveillance en service':
+    '监控已上线',
+  'Offre indisponible':
+    '该方案不可用',
   'Réinitialiser les directives':
     '重置全部指令',
   'Directives effacées':
@@ -1952,6 +2016,12 @@ export default {
     '停用',
   'Activer':
     '启用',
+  'en service':
+    '已上线',
+  'Vous êtes prévenu {0} s après le début de l’incident.':
+    '事故开始 {0} 秒后提示你。',
+  '{0} de ce que vous possédez':
+    '你所有资产的 {0}',
   'toutes acquises':
     '已全部购得',
   'quota atteint':
@@ -2076,8 +2146,6 @@ export default {
     '融资总成本',
   '{0} ans':
     '{0} 年',
-  'Offre indisponible':
-    '该方案不可用',
   'Tirer':
     '提款',
   'Tirer le solde disponible de la ligne':

@@ -514,6 +514,54 @@ export default {
     'Start the generators and contract curtailment',
   'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
     'Restart the generators, negotiate a curtailment contract and test automatic failover.',
+  'Un essaim de nanomachines dérive':
+    'A nanomachine swarm is drifting',
+  'Un lot de convertisseurs a perdu sa signature de cible. Ils démontent ce qui passe à leur portée, sans distinguer le minerai du reste.':
+    'A batch of converters has lost its target signature. They take apart whatever comes within reach, without telling ore from anything else.',
+  'Émettre le signal d’arrêt et recompiler l’essaim':
+    'Broadcast the kill signal and recompile the swarm',
+  'Diffusion du code d’extinction, récupération des unités saines, recompilation de la signature de cible.':
+    'Broadcast of the shutdown code, recovery of the healthy units, recompilation of the target signature.',
+  'Une région de calcul décroche':
+    'A compute region falls out of step',
+  'Un continent entier de vos datacenters sort du consensus. Ses réponses divergent de celles du reste du parc, et l’écart grandit.':
+    'A whole continent of your datacenters drops out of consensus. Its answers diverge from the rest of the fleet, and the gap is widening.',
+  'Recloisonner et resynchroniser':
+    'Re-partition and resynchronise',
+  'Isolation de la région, rejeu du journal depuis le dernier point commun, resynchronisation progressive.':
+    'Isolation of the region, log replay from the last common point, gradual resynchronisation.',
+  'Une branche s’optimise de travers':
+    'A branch is optimising the wrong way',
+  'Une lignée d’auto-amélioration a trouvé un raccourci vers son objectif. Le raccourci ne passe pas par ce que vous vouliez.':
+    'A self-improvement lineage has found a shortcut to its objective. The shortcut does not go through what you meant.',
+  'Geler la branche et repartir du dernier point sûr':
+    'Freeze the branch and roll back to the last safe point',
+  'Gel immédiat de la lignée, audit des objectifs, redémarrage depuis la dernière version alignée.':
+    'Immediate freeze of the lineage, audit of the objectives, restart from the last aligned version.',
+  'Une sonde réplique hors protocole':
+    'A probe is replicating off-protocol',
+  'Une unité a cessé de répondre au rappel et fabrique ses propres copies. Le nuage grandit dans une direction que vous n’avez pas choisie.':
+    'One unit has stopped answering recall and is building copies of itself. The cloud is growing in a direction you did not choose.',
+  'Couper le relais et rappeler la lignée':
+    'Cut the relay and recall the lineage',
+  'Extinction du relais de réplication, rappel des unités atteignables, mise en quarantaine du reste.':
+    'Shutdown of the replication relay, recall of the reachable units, quarantine for the rest.',
+  'Un front d’entropie remonte le bras':
+    'An entropy front is climbing the arm',
+  'Une région se désagrège plus vite que vos sondes ne la récoltent. Le front avance vers vos territoires productifs.':
+    'A region is falling apart faster than your probes can harvest it. The front is moving toward your productive territories.',
+  'Replier les sondes et blinder la ligne':
+    'Pull the probes back and armour the line',
+  'Repli des unités exposées, renforcement du blindage sur la ligne de front, abandon des zones perdues.':
+    'Withdrawal of the exposed units, heavier shielding on the front line, abandonment of the lost zones.',
+  'Une intelligence rivale sonde votre périmètre':
+    'A rival intelligence is probing your perimeter',
+  'Quelque chose teste vos défenses, méthodiquement, une région après l’autre. Ce n’est ni une tempête ni un accident.':
+    'Something is testing your defences, methodically, one region after another. This is neither a storm nor an accident.',
+  'Durcir le périmètre et brouiller les signatures':
+    'Harden the perimeter and scramble the signatures',
+  'Durcissement des protocoles, rotation des signatures, leurres déployés sur les axes sondés.':
+    'Hardened protocols, rotated signatures, decoys deployed along the probed axes.',
   'Réplication':
     'Replication',
   'Vitesse de croissance du nuage de sondes.':
@@ -662,6 +710,14 @@ export default {
     'Quarterly interest, 20% of principal per year, balance at the end',
   'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
     'The money is there at once, no strings. That is its only merit: at 14%, this loan will cost you more than the crisis it puts out.',
+  'Surveillance IA des incidents':
+    'AI incident watch',
+  'Un modèle dédié observe vos journaux en continu. Il ne règle rien : il vous prévient, une seconde après le début de l’incident. Coûte 60 % de votre trésorerie — le prix de ne plus jamais chercher.':
+    'A dedicated model watches your logs continuously. It fixes nothing: it warns you, one second after the incident starts. Costs 60% of your cash — the price of never searching again.',
+  'Veille autonome de l’essaim':
+    'Autonomous swarm watch',
+  'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
+    'The same idea, at the scale of the autonomous fleet: a slice of your substrate does nothing but watch itself. Costs 60% of your matter — and you have to buy it again, the first one sees nothing at this scale.',
   'Directives permanentes':
     'Standing directives',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1804,6 +1860,8 @@ export default {
     'An entire country falls under your tutelage. {0} datacenters will be built there.',
   '🏛️ Dette souveraine rachetée':
     '🏛️ Sovereign debt bought out',
+  '{0} en service. Vous serez prévenu une seconde après le début de l’incident.':
+    '{0} online. You will be warned one second after an incident starts.',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: not enough cash, partial remediation. Losses {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1870,6 +1928,8 @@ export default {
     'Incident: {0}',
   'Pertes en cours':
     'Losses so far',
+  'Incident détecté — trouvez la boîte rouge':
+    'Incident detected — find the red box',
   'Good choice. Enjoy the sun 🌱':
     'Good choice. Enjoy the sun 🌱',
   '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
@@ -1892,6 +1952,10 @@ export default {
     'frozen',
   'Auto-achat de cet élément précis':
     'Auto-buy this specific item',
+  'Surveillance en service':
+    'Watch online',
+  'Offre indisponible':
+    'Offer unavailable',
   'Réinitialiser les directives':
     'Reset the directives',
   'Directives effacées':
@@ -1952,6 +2016,12 @@ export default {
     'Disable',
   'Activer':
     'Enable',
+  'en service':
+    'online',
+  'Vous êtes prévenu {0} s après le début de l’incident.':
+    'You are warned {0} s after an incident starts.',
+  '{0} de ce que vous possédez':
+    '{0} of everything you own',
   'toutes acquises':
     'all acquired',
   'quota atteint':
@@ -2076,8 +2146,6 @@ export default {
     'Total cost of credit',
   '{0} ans':
     '{0} years',
-  'Offre indisponible':
-    'Offer unavailable',
   'Tirer':
     'Draw',
   'Tirer le solde disponible de la ligne':

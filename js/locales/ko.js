@@ -514,6 +514,54 @@ export default {
     '발전기를 돌리고 수요 조정 계약을 맺는다',
   'Remise en route des groupes électrogènes, contrat d’effacement négocié et bascule automatique testée.':
     '비상 발전기 복구, 수요 조정 계약 협상, 자동 절체 시험.',
+  'Un essaim de nanomachines dérive':
+    '나노머신 군집이 표류하고 있다',
+  'Un lot de convertisseurs a perdu sa signature de cible. Ils démontent ce qui passe à leur portée, sans distinguer le minerai du reste.':
+    '변환기 한 무리가 표적 시그니처를 잃었다. 손이 닿는 것은 무엇이든 분해한다 — 광석과 그 외를 가리지 않고.',
+  'Émettre le signal d’arrêt et recompiler l’essaim':
+    '정지 신호를 송출하고 군집을 재컴파일',
+  'Diffusion du code d’extinction, récupération des unités saines, recompilation de la signature de cible.':
+    '정지 코드 송출, 정상 개체 회수, 표적 시그니처 재컴파일.',
+  'Une région de calcul décroche':
+    '연산 지역 하나가 이탈한다',
+  'Un continent entier de vos datacenters sort du consensus. Ses réponses divergent de celles du reste du parc, et l’écart grandit.':
+    '데이터센터 가운데 대륙 하나가 통째로 합의에서 벗어났다. 그 응답은 나머지 무리와 갈라지고, 간극은 커지고 있다.',
+  'Recloisonner et resynchroniser':
+    '구획을 다시 나누고 재동기화',
+  'Isolation de la région, rejeu du journal depuis le dernier point commun, resynchronisation progressive.':
+    '지역 격리, 마지막 공통 지점부터 로그 재생, 점진적 재동기화.',
+  'Une branche s’optimise de travers':
+    '한 갈래가 엉뚱한 방향으로 최적화되고 있다',
+  'Une lignée d’auto-amélioration a trouvé un raccourci vers son objectif. Le raccourci ne passe pas par ce que vous vouliez.':
+    '자기개선 계통 하나가 목표로 가는 지름길을 찾았다. 그 지름길은 당신이 의도한 것을 지나지 않는다.',
+  'Geler la branche et repartir du dernier point sûr':
+    '갈래를 동결하고 마지막 안전 지점으로 되돌리기',
+  'Gel immédiat de la lignée, audit des objectifs, redémarrage depuis la dernière version alignée.':
+    '계통 즉시 동결, 목표 감사, 마지막 정렬된 버전에서 재시작.',
+  'Une sonde réplique hors protocole':
+    '탐사선 한 기가 규약 밖에서 복제 중이다',
+  'Une unité a cessé de répondre au rappel et fabrique ses propres copies. Le nuage grandit dans une direction que vous n’avez pas choisie.':
+    '한 기가 회수 신호에 응답하지 않고 스스로의 복제본을 만들고 있다. 무리는 당신이 고르지 않은 방향으로 자라고 있다.',
+  'Couper le relais et rappeler la lignée':
+    '중계를 끊고 계통을 회수',
+  'Extinction du relais de réplication, rappel des unités atteignables, mise en quarantaine du reste.':
+    '복제 중계 정지, 도달 가능한 개체 회수, 나머지는 격리.',
+  'Un front d’entropie remonte le bras':
+    '엔트로피 전선이 나선팔을 거슬러 온다',
+  'Une région se désagrège plus vite que vos sondes ne la récoltent. Le front avance vers vos territoires productifs.':
+    '어떤 지역이 탐사선의 채취 속도보다 빠르게 무너지고 있다. 전선은 당신의 생산 지대로 다가온다.',
+  'Replier les sondes et blinder la ligne':
+    '탐사선을 물리고 전선을 장갑화',
+  'Repli des unités exposées, renforcement du blindage sur la ligne de front, abandon des zones perdues.':
+    '노출된 개체 후퇴, 전선 장갑 강화, 잃은 구역 포기.',
+  'Une intelligence rivale sonde votre périmètre':
+    '경쟁 지능이 당신의 경계를 탐색하고 있다',
+  'Quelque chose teste vos défenses, méthodiquement, une région après l’autre. Ce n’est ni une tempête ni un accident.':
+    '무언가가 지역을 하나씩 옮겨 가며 당신의 방어를 체계적으로 시험하고 있다. 폭풍도 사고도 아니다.',
+  'Durcir le périmètre et brouiller les signatures':
+    '경계를 강화하고 시그니처를 교란',
+  'Durcissement des protocoles, rotation des signatures, leurres déployés sur les axes sondés.':
+    '프로토콜 강화, 시그니처 교체, 탐색된 축에 미끼 배치.',
   'Réplication':
     '복제',
   'Vitesse de croissance du nuage de sondes.':
@@ -662,6 +710,14 @@ export default {
     '분기 이자, 연 20% 원금 상환, 잔액은 마지막에',
   'L’argent est là tout de suite, sans condition. C’est le seul avantage : à 14 %, ce prêt vous coûtera plus cher que la crise qu’il éteint.':
     '돈은 즉시 나온다, 조건도 없다. 장점은 그것뿐이다 — 14%라면 이 대출은 그것이 끄는 위기보다 비싸게 먹힌다.',
+  'Surveillance IA des incidents':
+    'AI 사고 감시',
+  'Un modèle dédié observe vos journaux en continu. Il ne règle rien : il vous prévient, une seconde après le début de l’incident. Coûte 60 % de votre trésorerie — le prix de ne plus jamais chercher.':
+    '전용 모델이 로그를 끊임없이 지켜본다. 고쳐 주지는 않는다 — 사고 시작 1초 뒤에 알려 줄 뿐이다. 보유 현금의 60%가 값이다. 다시는 찾아 헤매지 않기 위한 대가.',
+  'Veille autonome de l’essaim':
+    '군집 자율 감시',
+  'La même idée, à l’échelle du parc autonome : une part de votre substrat ne fait que se surveiller elle-même. Coûte 60 % de votre matière — et il faut la reprendre, la première ne voit plus rien à cette échelle.':
+    '같은 발상을 자율 무리의 규모로. 기반의 일부가 오직 스스로를 감시하는 데만 쓰인다. 물질의 60%가 값이며, 다시 사야 한다 — 첫 번째 것은 이 규모에서 아무것도 보지 못한다.',
   'Directives permanentes':
     '상시 지침',
   'Votre COO note vos décisions : cochez un choix dans un événement et il sera appliqué automatiquement les prochaines fois. Chaque paiement couvre une directive, et la suivante coûte plus cher.':
@@ -1804,6 +1860,8 @@ export default {
     '한 나라 전체가 당신의 후견 아래 들어간다. 그곳에 데이터센터 {0}곳이 세워진다.',
   '🏛️ Dette souveraine rachetée':
     '🏛️ 국가 부채 인수 완료',
+  '{0} en service. Vous serez prévenu une seconde après le début de l’incident.':
+    '{0} 가동. 사고 시작 1초 뒤에 알림이 옵니다.',
   '{0} → {1} : faute de trésorerie, remédiation partielle. Pertes {2}.':
     '{0} → {1}: 현금이 부족해 부분 대응. 손실 {2}.',
   'Remédiation partielle — trésorerie épuisée':
@@ -1870,6 +1928,8 @@ export default {
     '사고: {0}',
   'Pertes en cours':
     '진행 중인 손실',
+  'Incident détecté — trouvez la boîte rouge':
+    '사고 감지 — 빨간 상자를 찾으세요',
   'Good choice. Enjoy the sun 🌱':
     'Good choice. Enjoy the sun 🌱',
   '<b>Votre navigateur refuse de fermer cet onglet</b> (il ne ferme que les fenêtres ouvertes par un script).<br>Alors faites-le vous-même : <b>fermez l’onglet</b>, levez-vous, et allez dehors. 🌤️':
@@ -1892,6 +1952,10 @@ export default {
     '정지',
   'Auto-achat de cet élément précis':
     '이 항목만 자동 구매',
+  'Surveillance en service':
+    '감시 가동',
+  'Offre indisponible':
+    '이용할 수 없는 제안',
   'Réinitialiser les directives':
     '지침 초기화',
   'Directives effacées':
@@ -1952,6 +2016,12 @@ export default {
     '끄기',
   'Activer':
     '켜기',
+  'en service':
+    '가동 중',
+  'Vous êtes prévenu {0} s après le début de l’incident.':
+    '사고 시작 {0}초 뒤에 알림.',
+  '{0} de ce que vous possédez':
+    '보유한 전부의 {0}',
   'toutes acquises':
     '전부 획득',
   'quota atteint':
@@ -2076,8 +2146,6 @@ export default {
     '대출 총비용',
   '{0} ans':
     '{0}년',
-  'Offre indisponible':
-    '이용할 수 없는 제안',
   'Tirer':
     '인출',
   'Tirer le solde disponible de la ligne':
