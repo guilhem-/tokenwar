@@ -129,20 +129,39 @@
         </div>
       </div>
 
-      <div class="panel" id="panel-funding">
-        <div class="panel-title" data-i18n="Financement">Financement</div>
+      <div class="panel" id="panel-hosting">
+        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
         <div class="panel-body">
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Valorisation">Valorisation</span>
-            <span class="num" id="valuation-value">$0</span>
-          </div>
-          <button class="btn btn-buy" id="btn-funding" disabled>
-            <span id="funding-label" data-i18n="Lever des fonds">Lever des fonds</span>
-            <span class="btn-cost num" id="funding-sub" data-i18n="verrouillé">verrouillé</span>
-          </button>
-          <div class="item-list" id="funding-list"></div>
+          <div class="item-list" id="infra-list"></div>
         </div>
       </div>
+
+      <div class="panel" id="panel-compute">
+        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
+        <div class="panel-body">
+          <div class="meter-row" id="gpu-cap-row">
+            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
+            <span class="num" id="gpu-cap">0 / 0</span>
+          </div>
+          <div class="item-list" id="gpu-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-energy">
+        <div class="panel-title" data-i18n="Énergie">Énergie</div>
+        <div class="panel-body">
+          <div class="meter-row energy-meter">
+            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
+            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
+            <span class="num" id="energy-load-value">0 / 0 MW</span>
+          </div>
+          <div class="item-list" id="energy-list"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="col col-center">
 
       <div class="panel" id="panel-team">
         <div class="panel-title" data-i18n="Équipe">Équipe</div>
@@ -174,6 +193,21 @@
         </div>
       </div>
 
+      <div class="panel" id="panel-funding">
+        <div class="panel-title" data-i18n="Financement">Financement</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Valorisation">Valorisation</span>
+            <span class="num" id="valuation-value">$0</span>
+          </div>
+          <button class="btn btn-buy" id="btn-funding" disabled>
+            <span id="funding-label" data-i18n="Lever des fonds">Lever des fonds</span>
+            <span class="btn-cost num" id="funding-sub" data-i18n="verrouillé">verrouillé</span>
+          </button>
+          <div class="item-list" id="funding-list"></div>
+        </div>
+      </div>
+
       <div class="panel hidden" id="panel-alloc">
         <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
         <div class="panel-body" id="alloc-body"></div>
@@ -191,56 +225,6 @@
             <span class="choice-label" id="extract-label"></span>
             <span class="btn-cost num" id="extract-cost"></span>
           </button>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-addendum">
-        <div class="panel-title" data-i18n="Addendum">Addendum</div>
-        <div class="panel-body">
-          <div class="item-list" id="addendum-list"></div>
-          <div class="item-list" id="sovereign-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-projects">
-        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
-        <div class="panel-body">
-          <div class="item-list" id="optim-list"></div>
-          <div class="item-list" id="project-list"></div>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="col col-center">
-
-      <div class="panel" id="panel-hosting">
-        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
-        <div class="panel-body">
-          <div class="item-list" id="infra-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-compute">
-        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
-        <div class="panel-body">
-          <div class="meter-row" id="gpu-cap-row">
-            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
-            <span class="num" id="gpu-cap">0 / 0</span>
-          </div>
-          <div class="item-list" id="gpu-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-energy">
-        <div class="panel-title" data-i18n="Énergie">Énergie</div>
-        <div class="panel-body">
-          <div class="meter-row energy-meter">
-            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
-            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
-            <span class="num" id="energy-load-value">0 / 0 MW</span>
-          </div>
-          <div class="item-list" id="energy-list"></div>
         </div>
       </div>
 
@@ -268,6 +252,14 @@
         </div>
       </div>
 
+      <div class="panel" id="panel-projects">
+        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
+        <div class="panel-body">
+          <div class="item-list" id="optim-list"></div>
+          <div class="item-list" id="project-list"></div>
+        </div>
+      </div>
+
       <div class="panel hidden" id="panel-cosmos">
         <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
         <div class="panel-body">
@@ -280,19 +272,6 @@
             </div>
           </div>
           <div id="cosmos-body"></div>
-          <div class="sub-title" data-i18n="Où envoyer l’essaim">Où envoyer l’essaim</div>
-          <div class="meter-row" id="dest-active-row">
-            <span class="text-muted" id="dest-active-name">—</span>
-            <span class="num" id="dest-active-left"></span>
-          </div>
-          <div class="item-list" id="dest-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-press">
-        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
-        <div class="panel-body">
-          <div class="headlines" id="headlines"></div>
         </div>
       </div>
 
@@ -381,6 +360,32 @@
           <div class="item-list" id="debt-active"></div>
           <div class="sub-title" id="debt-offers-title" data-i18n="Offres de financement">Offres de financement</div>
           <div class="item-list" id="debt-offers"></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-dest">
+        <div class="panel-title" data-i18n="Où envoyer l’essaim">Où envoyer l’essaim</div>
+        <div class="panel-body">
+          <div class="meter-row" id="dest-active-row">
+            <span class="text-muted" id="dest-active-name">—</span>
+            <span class="num" id="dest-active-left"></span>
+          </div>
+          <div class="item-list" id="dest-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-addendum">
+        <div class="panel-title" data-i18n="Addendum">Addendum</div>
+        <div class="panel-body">
+          <div class="item-list" id="addendum-list"></div>
+          <div class="item-list" id="sovereign-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-press">
+        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
+        <div class="panel-body">
+          <div class="headlines" id="headlines"></div>
         </div>
       </div>
 

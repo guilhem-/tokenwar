@@ -579,22 +579,39 @@ voyant `0,002 %` croit le jeu figé, alors qu'il lui suffit de pousser un curseu
 
 ## 🧱 Trois colonnes de hauteur comparable
 
-L'écran de jeu est une grille de trois colonnes, et leur contenu ne se répartit pas tout seul :
-chaque panneau vit dans celle où il a été écrit. À force d'ajouts, la première avait dérivé —
-elle mesurait **2 850 px quand la troisième en faisait 578**, un facteur cinq.
+Le contenu d'une grille à trois colonnes ne se répartit pas tout seul : chaque panneau vit dans
+celle où il a été écrit. Et le jeu change de visage en cours de partie — en phase 3, la moitié
+des panneaux de la phase 1 disparaissent et un autre, énorme, apparaît. Une répartition réglée
+sur un seul état se défait donc dans les autres.
 
-La répartition a été refaite sur une mesure, pas à vue d'œil : un script rend l'interface sous
-jsdom en milieu de partie, puis estime la hauteur de chaque panneau en respectant les
-**plafonds CSS** — une liste qui déborde ne grandit pas, elle défile. C'est ce qui distingue un
-panneau de 14 lignes d'un panneau de 4 : le premier est plafonné, pas trois fois plus haut.
+Première tentative, mesurée sous jsdom : équilibrée en phase 1, mais **×4,12 en phase 2 et
+×6,07 en phase 3**. jsdom ne fait pas de mise en page — l'estimation ne valait rien hors de
+l'état où je l'avais calibrée.
 
-- **Gauche — piloter l'entreprise** : production, marché, automatisation, financement, équipe,
-  charges, allocation, addendum, percées.
-- **Centre — l'infrastructure et la recherche** : hébergement, calcul, énergie, grands
-  programmes, entraînement, cosmos, et La Une.
-- **Droite — les marchés et le journal** : bourse, crypto, dette, journal de bord.
+La mesure se fait maintenant dans **Chromium**, sur les `offsetHeight` réels, pour les trois
+phases à la fois. La répartition est ensuite calculée par recherche exhaustive sur des
+**groupes thématiques soudés** — on ne veut pas de colonnes qui se lisent comme un sac.
 
-Résultat mesuré : **1 910 / 2 042 / 1 862 px**, soit un écart de 1,10 au lieu de 4,93.
+Un seul panneau bloquait le résultat à ×1,67 : **Expansion cosmique**, 1 062 px et présent
+uniquement en phase 3. Il a été **scindé** — la carte et les sondes d'un côté, *Où envoyer
+l'essaim* de l'autre, qui méritait son propre panneau de toute façon. Cela suffisait à donner
+la latitude qui manquait.
+
+| | Avant | Après |
+|---|---:|---:|
+| Phase 1 | ×2,10 | **×1,24** |
+| Phase 2 | ×4,12 | **×1,33** |
+| Phase 3 | ×6,07 | **×1,13** |
+
+- **Gauche — ce qu'on produit, et avec quoi** : production, marché, automatisation,
+  hébergement, calcul, énergie.
+- **Centre — l'entreprise, son pilotage, sa recherche** : équipe, charges, financement,
+  allocation, grands programmes, entraînement, percées, expansion cosmique.
+- **Droite — l'argent, l'essaim, la gouvernance et les flux** : bourse, dette, destinations,
+  addendum, La Une, journal.
+
+La répartition est **fixe** : aucun panneau ne change de colonne en cours de partie, aucun
+saut de mise en page. Un test la fige, pour qu'un ajout futur ne la défasse pas en silence.
 
 ## Tech
 

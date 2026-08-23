@@ -2084,6 +2084,46 @@ await step('destinations : le danger d une région se paie vraiment en sondes', 
   if (!(dur > doux * 2)) throw new Error(`une région dangereuse devrait coûter bien plus de sondes : ${doux} vs ${dur}`);
 });
 
+// ---- répartition des colonnes ----
+await step('colonnes : la répartition mesurée est celle qui est en place', () => {
+  // Les hauteurs ont été mesurées dans un vrai navigateur, pour les trois
+  // phases, et cette répartition ramène le déséquilibre de ×6,07 à ×1,33 au
+  // pire. Elle est FIXE : aucun panneau ne change de colonne en cours de
+  // partie. Ce test la fige, pour qu'un ajout ne la défasse pas en silence.
+  const ATTENDU = {
+    left:   ['produce', 'market', 'auto', 'hosting', 'compute', 'energy'],
+    center: ['team', 'charges', 'funding', 'alloc', 'programs', 'training', 'projects', 'cosmos'],
+    right:  ['stock', 'debt', 'dest', 'addendum', 'press', 'log'],
+  };
+  const doc = dom.window.document;
+  const vus = [];
+  for (const [nom, attendu] of Object.entries(ATTENDU)) {
+    const col = doc.querySelector('.col-' + nom);
+    if (!col) throw new Error('colonne absente : ' + nom);
+    const ids = [...col.querySelectorAll('.panel')].map(p => p.id.replace('panel-', ''));
+    vus.push(...ids);
+    if (ids.join(',') !== attendu.join(','))
+      throw new Error(`colonne ${nom} : ${ids.join(', ')} au lieu de ${attendu.join(', ')}`);
+  }
+  // aucun panneau orphelin ni en double
+  const tous = [...doc.querySelectorAll('.panel')].map(p => p.id.replace('panel-', ''));
+  if (tous.length !== vus.length) throw new Error('des panneaux vivent hors des trois colonnes');
+  if (new Set(vus).size !== vus.length) throw new Error('un panneau apparaît deux fois');
+});
+
+await step('colonnes : le panneau des destinations ne s affiche qu en phase 3', () => {
+  const panneau = ui.el.panelDest;
+  if (!panneau) throw new Error('le panneau des destinations n existe pas');
+  game.state.phase = 1; ui.render();
+  if (!panneau.classList.contains('hidden')) throw new Error('visible en phase 1');
+  game.state.phase = 2; ui.render();
+  if (!panneau.classList.contains('hidden')) throw new Error('visible en phase 2');
+  game.state.phase = 3; game.state.probes = 1e6; game.state.matter = 1e30; ui.render();
+  if (panneau.classList.contains('hidden')) throw new Error('masqué en phase 3');
+  if (!ui.el.destList.querySelectorAll('.dest-item').length) throw new Error('aucune destination listée en phase 3');
+  game.state.phase = 1;
+});
+
 // save/load
 await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 

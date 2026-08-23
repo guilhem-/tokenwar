@@ -80,7 +80,7 @@ export class UI {
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
       sovereignList: $('sovereign-list'),
       watchdogBanner: $('watchdog-banner'),
-      destList: $('dest-list'), destActiveRow: $('dest-active-row'),
+      panelDest: $('panel-dest'), destList: $('dest-list'), destActiveRow: $('dest-active-row'),
       destActiveName: $('dest-active-name'), destActiveLeft: $('dest-active-left'),
       extractBlock: $('extract-block'), extractTier: $('extract-tier'), extractFill: $('extract-fill'),
       extractYield: $('extract-yield'), extractBuy: $('extract-buy'),
@@ -333,6 +333,8 @@ export class UI {
   renderDestinations() {
     const g = this.game;
     if (!this.el.destList) return;
+    // le panneau n'existe qu'en phase 3 : ailleurs il resterait vide
+    if (this.el.panelDest) this.el.panelDest.classList.toggle('hidden', g.phase < 3);
     const active = g.destActive();
     this.el.destActiveRow.classList.toggle('hidden', !active);
     if (active) {
@@ -1251,7 +1253,7 @@ export class UI {
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + t('% utilisé');
     this.renderPhaseBar();   // sous les compteurs : où en est la phase courante
     this.renderExtraction();
-    if (this.game.phase >= 3) this.renderDestinations();
+    this.renderDestinations();
 
     // bouton générer : tokens + valeur de la vente directe
     const cv = g.clickValue();
