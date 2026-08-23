@@ -12,7 +12,7 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
          OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION,
          PHASE3_EARTH, ENDING_UNIVERSE, WATCHDOGS, WATCHDOG_AFTER, WATCHDOG_SHARE,
-         HAZARD_RATE, HAZARD_SHIELD, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE,
+         HAZARD_RATE, HAZARD_SHIELD, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE, OPTIM_MATTER, DIRECTIVE_MATTER,
          DESTINATIONS, DEST_DURATION, DEST_CHOICES } from './data.js';
 import { clamp, fmtPower, fmtMoney, fmtMass, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
@@ -1278,12 +1278,14 @@ export class Game {
     if (this.integrationOf('optim')) return false;   // une intégration à la fois
     const next = this.nextOptim();
     if (!next || next.id !== id) return false;
-    return this.state.money >= this.optimCost(next);
+    return this.usesMatter()
+      ? this.state.matter >= this.matterPriceOf(OPTIM_MATTER)
+      : this.state.money >= this.optimCost(next);
   }
   buyOptim(id) {
     const o = OPTIMS.find(x => x.id === id);
     if (!o || !this.canBuyOptim(id)) return false;
-    this.state.money -= this.optimCost(o);
+    if (!this.paySoft(this.optimCost(o), OPTIM_MATTER)) return false;
     // Comme les percées : payée maintenant, effective à la fin de l'intégration.
     this.startIntegration('optim', id);
     return true;
@@ -1825,11 +1827,15 @@ export class Game {
   directivesUsed() { return Object.keys(this.state.autoChoices).length; }
   directivesLeft() { return this.directiveSlots() - this.directivesUsed(); }
   directivesMaxed() { return this.directiveSlots() >= this.directiveCap(); }
+  canPayDirective() {
+    if (this.directivesMaxed()) return false;
+    return this.usesMatter()
+      ? this.state.matter >= this.matterPriceOf(DIRECTIVE_MATTER)
+      : this.state.money >= this.addendumCost();
+  }
   buyAddendum() {                                 // achat d'UNE directive de plus
     if (this.directivesMaxed()) return false;
-    const cost = this.addendumCost();
-    if (this.state.money < cost) return false;
-    this.state.money -= cost;
+    if (!this.paySoft(this.addendumCost(), DIRECTIVE_MATTER)) return false;
     this.state.directivesPaid = (this.state.directivesPaid || 0) + 1;
     this.state.addendum = true;
     this.log(this.state.directivesPaid === 1
@@ -2148,6 +2154,37 @@ export class Game {
   //  ponctionne maintenant la ressource de l'époque : la trésorerie tant
   //  qu'il y en a une, la MATIÈRE ensuite.
   // ==================================================================
+  // ==================================================================
+  //  MONNAIE DE L'ÉPOQUE
+  //  Dès la phase 2 la trésorerie disparaît de l'écran, mais plusieurs options
+  //  continuaient d'en réclamer : on demandait au joueur de payer dans une
+  //  devise qu'il ne voit plus. Tout ce qui reste achetable après la bascule
+  //  se règle donc en MATIÈRE, exprimée en fraction du stock — un montant
+  //  absolu n'aurait aucun sens sur une grandeur qui court de 10¹⁸ à 10⁵².
+  // ==================================================================
+  usesMatter() { return this.phase >= 2; }
+  // prix affiché d'une option : dollars tant qu'il y en a, matière ensuite
+  softCost(money, matterPart) {
+    return this.usesMatter() ? this.matterPriceOf(matterPart) : money;
+  }
+  softLabel(money, matterPart) {
+    return this.usesMatter() ? fmtMass(this.matterPriceOf(matterPart)) : fmtMoney(money);
+  }
+  // convertit un prix libellé en dollars en une ponction de matière
+  // équivalente à l'échelle où l'on se trouve
+  matterPriceOf(part) { return this.state.matter * part; }
+  // paie dans la monnaie courante ; rend false si l'on n'a pas de quoi
+  paySoft(money, matterPart) {
+    if (this.usesMatter()) {
+      const c = this.matterPriceOf(matterPart);
+      if (this.state.matter < c) return false;
+      this.state.matter -= c;
+      return true;
+    }
+    if (this.state.money < money) return false;
+    this.state.money -= money;
+    return true;
+  }
   crisisPool() { return this.phase >= 2 ? 'matter' : 'money'; }
   crisisStock() { return this.crisisPool() === 'matter' ? this.state.matter : this.state.money; }
   crisisDrain(f1, f0) {

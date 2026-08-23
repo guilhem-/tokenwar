@@ -2091,9 +2091,9 @@ await step('colonnes : la répartition mesurée est celle qui est en place', () 
   // pire. Elle est FIXE : aucun panneau ne change de colonne en cours de
   // partie. Ce test la fige, pour qu'un ajout ne la défasse pas en silence.
   const ATTENDU = {
-    left:   ['produce', 'market', 'auto', 'hosting', 'compute', 'energy'],
-    center: ['team', 'charges', 'funding', 'alloc', 'programs', 'training', 'projects', 'cosmos'],
-    right:  ['stock', 'debt', 'dest', 'addendum', 'press', 'log'],
+    left:   ['produce', 'market', 'auto', 'team', 'charges', 'funding', 'alloc', 'cosmos'],
+    center: ['stock', 'debt', 'hosting', 'dest', 'press', 'log'],
+    right:  ['compute', 'energy', 'programs', 'training', 'projects', 'addendum'],
   };
   const doc = dom.window.document;
   const vus = [];
@@ -2122,6 +2122,80 @@ await step('colonnes : le panneau des destinations ne s affiche qu en phase 3', 
   if (panneau.classList.contains('hidden')) throw new Error('masqué en phase 3');
   if (!ui.el.destList.querySelectorAll('.dest-item').length) throw new Error('aucune destination listée en phase 3');
   game.state.phase = 1;
+});
+
+// ---- « Play again » : on doit repartir sur un écran de phase 1 propre ----
+await step('nouvelle partie : aucun panneau de la partie précédente ne survit', () => {
+  // onPhaseChange ne faisait qu enlever la classe `hidden`, jamais la remettre :
+  // après un NG+, le panneau cosmique et le compteur de matière restaient
+  // affichés en pleine phase Startup.
+  game.state.phase = 3;
+  ui.onPhaseChange(3);
+  if (ui.el.panelCosmos.classList.contains('hidden')) throw new Error('le panneau cosmique devrait être visible en phase 3');
+  if (ui.el.statMatterWrap.classList.contains('hidden')) throw new Error('le compteur de matière devrait être visible en phase 3');
+
+  // on repart à zéro, comme le fait « Play again »
+  game.hardReset();
+  ui.onPhaseChange(1);
+  if (!ui.el.panelCosmos.classList.contains('hidden')) throw new Error('le panneau cosmique survit en phase Startup');
+  if (!ui.el.statMatterWrap.classList.contains('hidden')) throw new Error('le compteur de matière survit en phase Startup');
+  if (game.phase !== 1) throw new Error('la nouvelle partie ne repart pas en phase 1');
+  if (game.state.ngPlus < 1) throw new Error('le cycle NG+ n a pas été incrémenté');
+
+  // et un rendu complet ne les ramène pas
+  ui.render(true);
+  for (const [nom, el] of [['cosmique', ui.el.panelCosmos], ['matière', ui.el.statMatterWrap],
+                           ['destinations', ui.el.panelDest]]) {
+    if (el && !el.classList.contains('hidden')) throw new Error('après rendu, le panneau ' + nom + ' est revenu');
+  }
+  // les panneaux de la phase 1, eux, doivent être là
+  for (const id of ['produce', 'market', 'hosting', 'compute', 'energy', 'team']) {
+    const p = dom.window.document.getElementById('panel-' + id);
+    if (p && p.classList.contains('hidden')) throw new Error('le panneau ' + id + ' manque en phase Startup');
+  }
+});
+
+// ---- cohérence de la monnaie après la bascule ----
+await step('phase 2+ : plus rien ne se paie ni ne s affiche en dollars', () => {
+  // La trésorerie disparaît de l en-tête dès la phase 2, mais plusieurs
+  // options continuaient d en réclamer, et les panneaux Calcul et Énergie
+  // affichaient encore leurs prix : on demandait de payer dans une devise
+  // qu on ne voit plus.
+  game.state.phase = 2;
+  game.state.matter = 4e24; game.state.money = 1e12;
+  game.state.addendum = true; game.state.directivesPaid = 2;
+  ui.onPhaseChange(2); ui.render(true);
+
+  // les panneaux devenus vestigiaux sont masqués
+  for (const id of ['compute', 'energy']) {
+    const p = dom.window.document.getElementById('panel-' + id);
+    if (!p.classList.contains('hidden')) throw new Error('le panneau ' + id + ' reste visible en phase 2');
+  }
+  // et ils le sont pour une bonne raison : acheter n y change plus rien
+  game.state.gpuCounts = { wafer: 3e9 };
+  const avant = game.computeRaw();
+  const meilleure = GPUS.filter(x => game.canBuyGPU(x.id)).sort((a, b) => b.perf - a.perf)[0];
+  if (meilleure && (meilleure.perf * 1000) / avant > 0.01)
+    throw new Error('acheter des cartes compte encore en phase 2 : le panneau ne devrait pas être masqué');
+
+  // Aucun PRIX en dollars dans ce qui reste réellement affiché. On ne regarde
+  // que les éléments qui portent un montant — un texte d'ambiance qui cite
+  // « $60/Mtok » en 2020 raconte l'histoire, il ne demande pas de payer. Et on
+  // écarte tout ce qui vit sous un ancêtre masqué : jsdom n'a pas de mise en
+  // page, une ligne cachée garde son texte.
+  const masque = el => { for (let n = el; n; n = n.parentElement) if (n.classList && n.classList.contains('hidden')) return true; return false; };
+  const dollars = [...dom.window.document.querySelectorAll('.panel:not(.hidden) .item-cost, .panel:not(.hidden) .btn-cost, .panel:not(.hidden) .choice-desc')]
+    .filter(el => /\$/.test(el.textContent || '') && !masque(el))
+    .map(el => el.closest('.panel').id + ' → ' + el.textContent.trim().slice(0, 40));
+  if (dollars.length) throw new Error(`${dollars.length} prix en dollars après la bascule : ${[...new Set(dollars)].slice(0,3).join(' | ')}`);
+
+  // les directives se paient bien en matière, pas en trésorerie
+  const avM = game.state.matter, avE = game.state.money;
+  if (!game.canPayDirective()) throw new Error('directive impayable alors que la matière abonde');
+  game.buyAddendum();
+  if (game.state.money !== avE) throw new Error('la trésorerie a été débitée après la bascule');
+  if (!(game.state.matter < avM)) throw new Error('la matière n a pas été débitée');
+  game.state.phase = 1; ui.onPhaseChange(1);
 });
 
 // save/load

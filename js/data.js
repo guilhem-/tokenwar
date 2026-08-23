@@ -438,6 +438,12 @@ export const DESTINATIONS = [
     desc:'Presque rien à prendre, presque rien à craindre. Un répit, pas une stratégie.' },
 ];
 
+// Prix, en fraction du stock de matière, de ce qui restait libellé en dollars
+// après la bascule. Deux ordres de grandeur très différents : une optimisation
+// d'ingénierie est une broutille, une directive permanente reste un engagement.
+export const OPTIM_MATTER = 0.0004;      // optimisation récurrente
+export const DIRECTIVE_MATTER = 0.02;    // une directive de plus
+
 export const EXTRACT_FLOOR = 0.30;   // rendement plancher quand on force au-delà
 export const EXTRACT_FADE = 0.15;    // largeur de la décrue, en fraction de phase
 export const EXTRACTION = {

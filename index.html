@@ -129,40 +129,6 @@
         </div>
       </div>
 
-      <div class="panel" id="panel-hosting">
-        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
-        <div class="panel-body">
-          <div class="item-list" id="infra-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-compute">
-        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
-        <div class="panel-body">
-          <div class="meter-row" id="gpu-cap-row">
-            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
-            <span class="num" id="gpu-cap">0 / 0</span>
-          </div>
-          <div class="item-list" id="gpu-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-energy">
-        <div class="panel-title" data-i18n="Énergie">Énergie</div>
-        <div class="panel-body">
-          <div class="meter-row energy-meter">
-            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
-            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
-            <span class="num" id="energy-load-value">0 / 0 MW</span>
-          </div>
-          <div class="item-list" id="energy-list"></div>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="col col-center">
-
       <div class="panel" id="panel-team">
         <div class="panel-title" data-i18n="Équipe">Équipe</div>
         <div class="panel-body">
@@ -228,38 +194,6 @@
         </div>
       </div>
 
-      <div class="panel hidden" id="panel-programs">
-        <div class="panel-title" data-i18n="Grands programmes">Grands programmes</div>
-        <div class="panel-body">
-          <div class="item-list" id="program-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-training">
-        <div class="panel-title" data-i18n="R&amp;D — Entraînement de modèles">R&amp;D — Entraînement de modèles</div>
-        <div class="panel-body">
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Recherche">Recherche</span>
-            <span class="num" id="research-value">0</span>
-            <span class="text-muted">·</span>
-            <span class="num" id="research-rate">0 /s</span>
-          </div>
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Données">Données</span>
-            <span class="num" id="data-value">0</span>
-          </div>
-          <div class="item-list" id="train-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-projects">
-        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
-        <div class="panel-body">
-          <div class="item-list" id="optim-list"></div>
-          <div class="item-list" id="project-list"></div>
-        </div>
-      </div>
-
       <div class="panel hidden" id="panel-cosmos">
         <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
         <div class="panel-body">
@@ -277,7 +211,7 @@
 
     </section>
 
-    <section class="col col-right">
+    <section class="col col-center">
 
       <div class="panel" id="panel-stock">
         <div class="panel-title" data-i18n="Bourse">Bourse</div>
@@ -363,6 +297,13 @@
         </div>
       </div>
 
+      <div class="panel" id="panel-hosting">
+        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
+        <div class="panel-body">
+          <div class="item-list" id="infra-list"></div>
+        </div>
+      </div>
+
       <div class="panel hidden" id="panel-dest">
         <div class="panel-title" data-i18n="Où envoyer l’essaim">Où envoyer l’essaim</div>
         <div class="panel-body">
@@ -371,14 +312,6 @@
             <span class="num" id="dest-active-left"></span>
           </div>
           <div class="item-list" id="dest-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-addendum">
-        <div class="panel-title" data-i18n="Addendum">Addendum</div>
-        <div class="panel-body">
-          <div class="item-list" id="addendum-list"></div>
-          <div class="item-list" id="sovereign-list"></div>
         </div>
       </div>
 
@@ -393,6 +326,73 @@
         <div class="panel-title" data-i18n="Journal">Journal</div>
         <div class="panel-body">
           <div class="log" id="log"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="col col-right">
+
+      <div class="panel" id="panel-compute">
+        <div class="panel-title" data-i18n="Infrastructure de calcul">Infrastructure de calcul</div>
+        <div class="panel-body">
+          <div class="meter-row" id="gpu-cap-row">
+            <span class="text-muted" data-i18n="Emplacements GPU">Emplacements GPU</span>
+            <span class="num" id="gpu-cap">0 / 0</span>
+          </div>
+          <div class="item-list" id="gpu-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-energy">
+        <div class="panel-title" data-i18n="Énergie">Énergie</div>
+        <div class="panel-body">
+          <div class="meter-row energy-meter">
+            <span class="text-muted" data-i18n="Charge réseau">Charge réseau</span>
+            <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
+            <span class="num" id="energy-load-value">0 / 0 MW</span>
+          </div>
+          <div class="item-list" id="energy-list"></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-programs">
+        <div class="panel-title" data-i18n="Grands programmes">Grands programmes</div>
+        <div class="panel-body">
+          <div class="item-list" id="program-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-training">
+        <div class="panel-title" data-i18n="R&amp;D — Entraînement de modèles">R&amp;D — Entraînement de modèles</div>
+        <div class="panel-body">
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Recherche">Recherche</span>
+            <span class="num" id="research-value">0</span>
+            <span class="text-muted">·</span>
+            <span class="num" id="research-rate">0 /s</span>
+          </div>
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Données">Données</span>
+            <span class="num" id="data-value">0</span>
+          </div>
+          <div class="item-list" id="train-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-projects">
+        <div class="panel-title" data-i18n="Projets &amp; percées">Projets &amp; percées</div>
+        <div class="panel-body">
+          <div class="item-list" id="optim-list"></div>
+          <div class="item-list" id="project-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-addendum">
+        <div class="panel-title" data-i18n="Addendum">Addendum</div>
+        <div class="panel-body">
+          <div class="item-list" id="addendum-list"></div>
+          <div class="item-list" id="sovereign-list"></div>
         </div>
       </div>
 

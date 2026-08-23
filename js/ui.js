@@ -3,7 +3,7 @@
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS,
-         WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE } from './data.js';
+         WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE, DIRECTIVE_MATTER, OPTIM_MATTER } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
@@ -80,6 +80,7 @@ export class UI {
       addendumList: $('addendum-list'), panelAddendum: $('panel-addendum'),
       sovereignList: $('sovereign-list'),
       watchdogBanner: $('watchdog-banner'),
+      panelCompute: $('panel-compute'), panelEnergy: $('panel-energy'),
       panelDest: $('panel-dest'), destList: $('dest-list'), destActiveRow: $('dest-active-row'),
       destActiveName: $('dest-active-name'), destActiveLeft: $('dest-active-left'),
       extractBlock: $('extract-block'), extractTier: $('extract-tier'), extractFill: $('extract-fill'),
@@ -1060,7 +1061,7 @@ export class UI {
           rw.el.classList.add('owned');
         } else {
           const c = g.watchdogCost();
-          rw.cost.textContent = g.phase >= 2 ? fmtMass(c) : fmtMoney(c);
+          rw.cost.textContent = g.usesMatter() ? fmtMass(c) : fmtMoney(c);
           rw.effect.innerHTML = `<span class="text-muted">${t('{0} de ce que vous possédez', pct(WATCHDOG_SHARE) + '%')}</span>`;
           rw.el.classList.remove('owned');
           this.setAfford(rw.el, c > 0);
@@ -1070,6 +1071,7 @@ export class UI {
     // Directives permanentes
     const rd = this.rows.addendum['directives'];
     const cost = g.addendumCost();
+    const prixDirective = g.softLabel(cost, DIRECTIVE_MATTER);
     if (s.addendum) {
       const used = g.directivesUsed(), slots = g.directiveSlots();
       const full = used >= slots, maxed = g.directivesMaxed();
@@ -1079,18 +1081,18 @@ export class UI {
       rd.cost.innerHTML = maxed
         ? `<span class="badge badge-new">${t('toutes acquises')}</span>`
         : full
-          ? `<span class="badge badge-warn">${t('quota atteint')}</span> <span class="num">${fmtMoney(cost)}</span>`
-          : `<span class="badge badge-new">${t('actives')}</span> <span class="num">${fmtMoney(cost)}</span>`;
+          ? `<span class="badge badge-warn">${t('quota atteint')}</span> <span class="num">${prixDirective}</span>`
+          : `<span class="badge badge-new">${t('actives')}</span> <span class="num">${prixDirective}</span>`;
       rd.effect.innerHTML =
         `<span class="${full && !maxed ? 'text-bad' : 'text-muted'}">${t('{0}/{1} directive(s) mémorisée(s)', used, slots)}</span>` +
         (maxed ? '' : ` <span class="text-muted">· ${t('payez pour une directive de plus (plafond : {0})', g.directiveCap())}</span>`);
       rd.el.classList.toggle('owned', maxed);
-      this.setAfford(rd.el, !maxed && s.money >= cost);
+      this.setAfford(rd.el, !maxed && g.canPayDirective());
       rd.resetBtn.classList.toggle('hidden', used === 0);
     } else {
-      rd.cost.textContent = fmtMoney(cost);
+      rd.cost.textContent = prixDirective;
       rd.effect.innerHTML = `<span class="text-muted">${t('Ne soyez plus jamais interrompu — une directive par paiement, {0} au total.', g.directiveCap())}</span>`;
-      this.setAfford(rd.el, s.money >= cost);
+      this.setAfford(rd.el, g.canPayDirective());
       rd.resetBtn.classList.add('hidden');
     }
     // Datacenter orbital
@@ -1270,7 +1272,9 @@ export class UI {
     this.el.modelStats.innerHTML =
       `<span>${t('débit')} <b class="num">${fmt(m.throughput)}</b></span>` +
       (g.phase >= 2 ? `<span>${t('intelligence')} <b class="num">${fmt(s.intelligence)}×</b></span>` : '') +
-      `<span>${t('prix juste')} <b class="num">${fmtPrice(g.fairPrice())}</b>/Mtok</span>`;
+      // le prix accepté par le marché ne veut plus rien dire une fois que la
+      // trésorerie a disparu de l'écran : on ne l'affiche plus
+      (g.usesMatter() ? '' : `<span>${t('prix juste')} <b class="num">${fmtPrice(g.fairPrice())}</b>/Mtok</span>`);
 
     // marché
     this.el.priceValue.textContent = fmtPrice(g.priceMtok()) + ' /Mtok';
@@ -1500,7 +1504,7 @@ export class UI {
         return;
       }
       r.bar.classList.add('hidden');
-      r.cost.textContent = fmtMoney(g.optimCost(o));
+      r.cost.textContent = g.softLabel(g.optimCost(o), OPTIM_MATTER);
       r.effect.innerHTML = `<span class="badge badge-new">${t('disponible')}</span> `
         + `<span class="text-good">${o.gain}</span>`
         + count
@@ -2075,13 +2079,19 @@ export class UI {
     // étendue en phase 2 (Auto-amélioration, Récolte de matière).
     this.el.panelAlloc.classList.remove('hidden');
     this.buildAlloc();
-    if (p >= 2) {
-      this.el.statMatterWrap.classList.remove('hidden');
-    }
-    if (p >= 3) {
-      this.el.panelCosmos.classList.remove('hidden');
-      this.buildCosmos();
-    }
+    // Symétrique, et c'est le point : cette fonction ne faisait qu'ENLEVER la
+    // classe `hidden`, jamais la remettre. Après « Play again », le panneau
+    // cosmique et le compteur de matière restaient donc affichés en pleine
+    // phase Startup, hérités de la partie précédente.
+    this.el.statMatterWrap.classList.toggle('hidden', p < 2);
+    this.el.panelCosmos.classList.toggle('hidden', p < 3);
+    // Dès la phase 2, acheter une carte ou une centrale n'a plus de sens : mille
+    // des meilleures cartes ajouteraient 0,00003 % du compute, et l'énergie
+    // s'auto-échelonne. Ces panneaux ne servaient plus qu'à afficher des prix
+    // en dollars dans une phase où la trésorerie a disparu.
+    this.el.panelCompute.classList.toggle('hidden', p >= 2);
+    this.el.panelEnergy.classList.toggle('hidden', p >= 2);
+    if (p >= 3) this.buildCosmos();
   }
 
   // lance la cinématique de fin (destruction pixel → étoiles → scroller + musique 8-bit),

@@ -579,39 +579,55 @@ voyant `0,002 %` croit le jeu figé, alors qu'il lui suffit de pousser un curseu
 
 ## 🧱 Trois colonnes de hauteur comparable
 
-Le contenu d'une grille à trois colonnes ne se répartit pas tout seul : chaque panneau vit dans
-celle où il a été écrit. Et le jeu change de visage en cours de partie — en phase 3, la moitié
-des panneaux de la phase 1 disparaissent et un autre, énorme, apparaît. Une répartition réglée
-sur un seul état se défait donc dans les autres.
+Le contenu d'une grille à trois colonnes ne se répartit pas tout seul, et le jeu change de
+visage en cours de partie : après la bascule, la moitié des panneaux disparaît et d'autres
+apparaissent. Une répartition réglée sur un seul état se défait donc dans les autres.
 
 Première tentative, mesurée sous jsdom : équilibrée en phase 1, mais **×4,12 en phase 2 et
 ×6,07 en phase 3**. jsdom ne fait pas de mise en page — l'estimation ne valait rien hors de
-l'état où je l'avais calibrée.
-
-La mesure se fait maintenant dans **Chromium**, sur les `offsetHeight` réels, pour les trois
-phases à la fois. La répartition est ensuite calculée par recherche exhaustive sur des
-**groupes thématiques soudés** — on ne veut pas de colonnes qui se lisent comme un sac.
-
-Un seul panneau bloquait le résultat à ×1,67 : **Expansion cosmique**, 1 062 px et présent
-uniquement en phase 3. Il a été **scindé** — la carte et les sondes d'un côté, *Où envoyer
-l'essaim* de l'autre, qui méritait son propre panneau de toute façon. Cela suffisait à donner
-la latitude qui manquait.
+l'état où je l'avais calibrée. La mesure se fait désormais dans **Chromium**, sur les
+`offsetHeight` réels, pour les trois phases à la fois, et la répartition est calculée par
+recherche exhaustive sur des **groupes thématiques soudés**.
 
 | | Avant | Après |
 |---|---:|---:|
-| Phase 1 | ×2,10 | **×1,24** |
-| Phase 2 | ×4,12 | **×1,33** |
-| Phase 3 | ×6,07 | **×1,13** |
+| Phase 1 | ×2,10 | **×1,13** |
+| Phase 2 | ×4,12 | **×1,51** |
+| Phase 3 | ×6,07 | **×1,45** |
 
-- **Gauche — ce qu'on produit, et avec quoi** : production, marché, automatisation,
-  hébergement, calcul, énergie.
-- **Centre — l'entreprise, son pilotage, sa recherche** : équipe, charges, financement,
-  allocation, grands programmes, entraînement, percées, expansion cosmique.
-- **Droite — l'argent, l'essaim, la gouvernance et les flux** : bourse, dette, destinations,
-  addendum, La Une, journal.
+- **Gauche — l'entreprise et son pilotage** : production, marché, automatisation, équipe,
+  charges, financement, allocation, expansion cosmique.
+- **Centre — l'argent, l'hébergement, l'essaim et les flux** : bourse, dette, hébergement,
+  destinations, La Une, journal.
+- **Droite — les machines, la recherche et la gouvernance** : calcul, énergie, grands
+  programmes, entraînement, percées, addendum.
 
-La répartition est **fixe** : aucun panneau ne change de colonne en cours de partie, aucun
-saut de mise en page. Un test la fige, pour qu'un ajout futur ne la défasse pas en silence.
+La répartition est **fixe** : aucun panneau ne change de colonne en cours de partie, donc
+aucun saut de mise en page. Une variante réassignant par phase ne faisait pas mieux au pire cas
+tout en imposant des déplacements ; elle a été écartée. Un optimum libre, panneau par panneau,
+descendrait à ×1,31 — au prix de colonnes qu'on ne peut plus nommer (« charges, cosmos, dette,
+financement, presse… »). L'écart ne le valait pas.
+
+Deux tests figent le résultat : la composition exacte des trois colonnes, et le fait que le
+panneau des destinations n'apparaisse qu'en phase 3.
+
+## 💱 Une seule monnaie par époque
+
+Dès la phase 2 la trésorerie disparaît de l'en-tête — mais plusieurs choses continuaient d'en
+réclamer. On demandait au joueur de payer dans une devise qu'il ne voyait plus.
+
+- Les **directives permanentes** se règlent maintenant en **matière**, exprimée en fraction du
+  stock, comme les crises et la surveillance. Un montant absolu n'aurait aucun sens sur une
+  grandeur qui court de 10¹⁸ à 10⁵².
+- Les panneaux **Calcul** et **Énergie** disparaissent après la bascule. Ils n'affichaient plus
+  que des prix en dollars pour des achats devenus vains : mesuré, **mille des meilleures cartes
+  ajouteraient 0,00003 %** du compute, l'ASI auto-construisant ses wafers, et l'énergie
+  s'auto-échelonne.
+- Le **prix accepté par le marché** n'est plus affiché : il ne veut plus rien dire.
+
+Un test balaie l'interface rendue en phase 2 et échoue si le moindre élément de prix affiche
+encore un dollar. Il ne regarde que les montants — un texte d'ambiance qui cite « $60/Mtok »
+en 2020 raconte l'histoire, il ne demande pas de payer.
 
 ## Tech
 
