@@ -1138,10 +1138,10 @@ export default {
     'Schlampige Annotation: Das Modell hat die Fehler seiner Annotatoren gelernt',
   'But :':
     'Ziel:',
-  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
-    'so viele Tokens wie möglich produzieren — bis das Universum verbraucht ist und ein neuer Urknall ausgelöst wird.',
-  'Phase 1 — Startup :':
-    'Phase 1 — Start-up:',
+  'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.':
+    'so viele Tokens wie möglich erzeugen. Wohin das führt, findest du beim Spielen heraus.',
+  'Pour commencer :':
+    'Zum Anfang:',
   'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
     'klicke, um Tokens zu erzeugen, setze den Preis (niedrig = Volumen, hoch = Marge), betreibe Marketing, kaufe GPUs und Energie, sammle Forschung, trainiere immer stärkere Modelle und sammle auf jeder Stufe Kapital ein.',
   'Hébergement :':
@@ -1178,8 +1178,8 @@ export default {
     'eine Warnung mit rotem Rahmen und pulsierendem Schein kann irgendwo auf der Seite auftauchen, oft außerhalb deines Bildschirms, ohne jede Benachrichtigung. Bis sie behandelt wird, blutet deine Kasse aus — bis zu 70% in 2 Minuten. Einziger Hinweis: der rote Saum an den Rändern. Scrolle die Seite.',
   '🔬 Grands programmes :':
     '🔬 Große Programme:',
-  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
-    'Fusion und Dyson-Sphäre kauft man nicht von der Stange. Sie durchlaufen Forschung, Entwicklung, Verfügbarkeit, deine Bestellung und schließlich das Ausrollen — jede Stufe von der Presse begleitet. Ohne abgeschlossenes Fusionsprogramm ist kein Fusionsreaktor käuflich. Die Sphäre wird in Materie bezahlt, ist wiederholbar und beschleunigt die Ernte dauerhaft.',
+  'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.':
+    'manche Technologien gibt es nicht von der Stange. Sie durchlaufen Forschung, Erprobung, Verfügbarkeit, deine Bestellung und schließlich die Inbetriebnahme — jede Etappe von der Presse begleitet. Ohne abgeschlossenes Fusionsprogramm etwa ist kein Fusionsreaktor käuflich.',
   '₿ Crypto :':
     '₿ Krypto:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
@@ -1194,8 +1194,10 @@ export default {
     'eine CUDA-Optimierung alle 18 Monate, eine der Inferenz-Engine alle 9 Monate, ein Durchgang zur Kontextverwaltung alle 12 Monate. Je 1.000 $: Die Kunst ist, daran zu denken. Es wird nur eine auf einmal angeboten, sie wird wie ein Durchbruch integriert, und zwei ruhige Monate trennen die verschwundene von der nächsten.',
   '⌨️ Raccourcis :':
     '⌨️ Tastenkürzel:',
-  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
-    '**Leertaste** schaltet zur nächsten Geschwindigkeit, **F** friert das Spiel ein und gibt es mit der vorherigen Geschwindigkeit wieder frei. Eingefroren steht die Zeit still, die Oberfläche bleibt lebendig: Du kannst lesen, vergleichen, kaufen. **G** bestellt die beste Karte, die du bezahlen und unterbringen kannst, **H** die fehlende Hosting-Stufe, **B** den angebotenen Durchbruch, **M** eine Stufe Marketing. Fahre über eine Zahl in der Kopfzeile, um sie bis zur letzten Ziffer zu sehen.',
+  '[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.':
+    '[[Leertaste]] nächste Geschwindigkeit · [[F]] einfrieren / auftauen · [[G]] die beste Karte bestellen, die du bezahlen und unterbringen kannst · [[H]] die fehlende Hosting-Stufe · [[B]] den angebotenen Durchbruch · [[M]] eine Stufe Marketing.',
+  'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    'Eingefroren steht die Zeit still — keine Tokens, kein Kalender, kein Training — doch die Oberfläche bleibt lebendig: Du kannst lesen, vergleichen, kaufen. Beim Auftauen kehrt genau die vorherige Geschwindigkeit zurück. Nichts wird abgefangen, während du in ein Feld tippst, weder unter [[Ctrl]] noch während eine Entscheidung wartet. Fahre über eine Zahl in der Kopfzeile, um sie bis zur letzten Ziffer zu sehen.',
   'Automatisation :':
     'Automatisierung:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
@@ -1214,8 +1216,8 @@ export default {
     'freigeschaltet ab 100.000 $ in der Kasse. Lege dein Geld an (einstellbares Risiko), um es zu vermehren — oder zu verlieren.',
   'Allocation :':
     'Zuteilung:',
-  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
-    'ab Phase 2 verteilst du deine Rechenleistung auf Auslieferung, Forschung, Selbstverbesserung und Materie-Ernte.',
+  'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.':
+    'verteile deine Rechenleistung auf Dienst, Forschung, Selbstverbesserung und Ernte. **Die Ernte bestimmt, wie lange diese Phase dauert**, und ihre Wirkung ist nicht proportional: Sie steuert das Tempo, mit dem die Schleife durchgeht. Bei 15 % braucht die Phase Dutzende Minuten, bei 50 % rund ein Dutzend, bei 100 % weniger als zehn. Die Kopfzeilenleiste zeigt die verbleibende Zeit beim gewählten Tempo — wird sie orange, ist genau dieser Regler zu erhöhen.',
   'Calendrier :':
     'Kalender:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
@@ -1884,6 +1886,8 @@ export default {
     'Ungültige Spielstanddatei',
   'Succès':
     'Erfolge',
+  'Succès caché':
+    'Verstecktes Erfolgserlebnis',
   'figé':
     'eingefroren',
   'Auto-achat de cet élément précis':

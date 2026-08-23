@@ -1138,10 +1138,10 @@ export default {
     '허술한 라벨링: 모델이 주석자의 실수를 배웠다',
   'But :':
     '목표:',
-  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
-    '가능한 한 많은 토큰을 생산하는 것 — 우주를 다 써 버리고 새로운 빅뱅을 일으킬 때까지.',
-  'Phase 1 — Startup :':
-    '1단계 — 스타트업:',
+  'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.':
+    '가능한 한 많은 토큰을 생산하는 것. 그것이 어디로 이어지는지는 직접 플레이하며 확인하게 된다.',
+  'Pour commencer :':
+    '시작하기:',
   'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
     '클릭해 토큰을 만들고, 가격을 정하고 (낮으면 물량, 높으면 마진), 마케팅을 하고, GPU와 전력을 사고, 연구를 쌓고, 점점 강한 모델을 학습시키고, 단계마다 자금을 조달한다.',
   'Hébergement :':
@@ -1178,8 +1178,8 @@ export default {
     '빨간 테두리와 맥동하는 붉은 후광을 두른 경고가 페이지 어딘가에, 대개 화면 밖에, 아무 알림 없이 나타난다. 처리되기 전까지 현금을 계속 흘리며, 2분이면 최대 70%를 가져간다. 단서는 화면 가장자리의 붉은 테두리뿐이다. 페이지를 스크롤하라.',
   '🔬 Grands programmes :':
     '🔬 대형 프로그램:',
-  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
-    '핵융합과 다이슨 구는 진열대에서 사는 물건이 아니다. 연구, 개발, 사용 가능, 당신의 발주, 그리고 전개를 차례로 거치며 각 단계를 언론이 따라붙는다. 핵융합 프로그램을 끝내지 못하면 핵융합로는 살 수 없다. 구는 물질로 지불하고, 반복해서 지을 수 있으며, 수확을 지속적으로 가속한다.',
+  'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.':
+    '선반에서 사올 수 없는 기술이 있다. 연구, 조정, 실용화, 발주, 그리고 배치의 단계를 거치며 각 단계가 보도된다. 예컨대 핵융합 계획을 끝내지 않으면 핵융합로는 살 수 없다.',
   '₿ Crypto :':
     '₿ 크립토:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
@@ -1194,8 +1194,10 @@ export default {
     'CUDA 최적화는 18개월마다, 추론 엔진은 9개월마다, 컨텍스트 관리 정비는 12개월마다. 각 1,000달러, 관건은 잊지 않는 것이다. 한 번에 하나만 제시되고, 돌파구와 같은 방식으로 통합되며, 사라진 것과 다음 것 사이에는 두 달의 간격이 있다.',
   '⌨️ Raccourcis :':
     '⌨️ 단축키:',
-  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
-    '**스페이스**는 다음 속도로, **F**는 게임을 정지하고 다시 누르면 원래 속도로 돌아온다. 정지 중에도 시간만 멈출 뿐 인터페이스는 살아 있다 — 읽고, 비교하고, 살 수 있다. **G**는 살 수 있고 수용도 되는 최상의 카드를, **H**는 모자란 수용 단계를, **B**는 제시된 돌파구를, **M**은 마케팅 한 단계를 집행한다. 헤더의 숫자에 마우스를 올리면 마지막 자리까지 보인다.',
+  '[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.':
+    '[[스페이스]] 다음 속도 · [[F]] 정지 / 해제 · [[G]] 살 수 있고 수용도 되는 최상의 카드 주문 · [[H]] 모자란 수용 단계 · [[B]] 제시된 돌파구 · [[M]] 마케팅 한 단계.',
+  'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '정지 중에는 시간이 완전히 멈춘다 — 토큰도, 달력도, 학습도 나아가지 않는다. 그래도 화면은 살아 있어 읽고, 비교하고, 살 수 있다. 해제하면 원래 속도로 정확히 돌아온다. 입력란에 타이핑하는 동안에도, [[Ctrl]]을 누른 채로도, 결정이 대기 중일 때도 단축키는 가로채지 않는다. 헤더의 숫자에 마우스를 올리면 마지막 자리까지 보인다.',
   'Automatisation :':
     '자동화:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
@@ -1214,8 +1216,8 @@ export default {
     '현금 $100,000에서 해금된다. 돈을 넣어 (위험도 조절 가능) 불리거나 — 잃는다.',
   'Allocation :':
     '배분:',
-  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
-    '2단계부터는 연산을 서비스, 연구, 자기개선, 물질 수확에 나눈다.',
+  'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.':
+    '연산 자원을 서비스, 연구, 자기개선, 수확에 나눈다. **이 단계의 길이를 정하는 것은 수확이다.** 게다가 그 효과는 비례하지 않는다 — 순환이 폭주하는 속도 자체를 좌우한다. 15%면 수십 분, 50%면 십여 분, 100%면 십 분 미만이다. 헤더의 막대가 선택한 배분에서의 남은 시간을 보여 준다. 주황색으로 바뀌면 밀어 올릴 것은 바로 이 슬라이더다.',
   'Calendrier :':
     '달력:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
@@ -1884,6 +1886,8 @@ export default {
     '저장 파일이 올바르지 않습니다',
   'Succès':
     '업적',
+  'Succès caché':
+    '숨겨진 업적',
   'figé':
     '정지',
   'Auto-achat de cet élément précis':

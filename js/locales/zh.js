@@ -1138,10 +1138,10 @@ export default {
     '标注草率：模型学会了标注员的错误',
   'But :':
     '目标：',
-  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
-    '尽可能多地产出 token——直到把整个宇宙消耗殆尽，引发一次新的大爆炸。',
-  'Phase 1 — Startup :':
-    '第一阶段 — 初创：',
+  'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.':
+    '尽可能多地产出 token。至于这会通向何处，留待你自己去发现。',
+  'Pour commencer :':
+    '开始之前：',
   'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
     '点击生成 token，定好价格（低价走量、高价走利），做市场推广，购买 GPU 和能源，积累研究，训练越来越强的模型，并在各个门槛处融资。',
   'Hébergement :':
@@ -1178,8 +1178,8 @@ export default {
     '一个红框加红色脉冲光晕的警报可能出现在页面的任何位置，常常在你的屏幕之外，而且毫无提示。只要没有处理，它就会持续放血——2 分钟内最多吃掉 70%。唯一线索：屏幕边缘的红边。请滚动页面。',
   '🔬 Grands programmes :':
     '🔬 重大计划：',
-  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
-    '聚变和戴森球不是货架上的商品。它们要走完研究、调试、可用、你的下单、再到部署，每一步都有媒体跟进。聚变计划没有走完，就买不到聚变堆。戴森球用物质支付，可以反复建造，并持久加快采集。',
+  'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.':
+    '有些技术买不到现货。它们要走完研究、调试、可用、你下单、再部署这几步，每一步都会上新闻。比如没有完成聚变计划，就买不到聚变反应堆。',
   '₿ Crypto :':
     '₿ 加密资产：',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
@@ -1194,8 +1194,10 @@ export default {
     'CUDA 优化每 18 个月一次，推理引擎每 9 个月一次，上下文管理每 12 个月梳理一次。每项 1 000 美元，难的是记得去做。一次只提供一个，整合方式与突破相同，消失的那个与下一个之间相隔两个月。',
   '⌨️ Raccourcis :':
     '⌨️ 快捷键：',
-  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
-    '**空格**切到下一档速度，**F** 冻结游戏，再按一次以原速恢复。冻结时时间停住，界面照常可用：可以读、可以比、可以买。**G** 订购你买得起也放得下的最好显卡，**H** 补上缺的那一层托管，**B** 启动当前提供的突破，**M** 加一档市场投入。把鼠标停在顶栏的数字上，就能看到它的每一位。',
+  '[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.':
+    '[[空格]] 下一档速度 · [[F]] 冻结／解冻 · [[G]] 订购你买得起也放得下的最好显卡 · [[H]] 补上缺的那层托管 · [[B]] 启动当前提供的突破 · [[M]] 加一档市场投入。',
+  'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '冻结时时间彻底停住——没有 token，没有日历，也没有训练——但界面照常可用：可以读、可以比、可以买。解冻后回到你原来的速度。你在输入框里打字时、按住 [[Ctrl]] 时、或有决定待处理时，快捷键都不会被拦截。把鼠标停在顶栏的数字上，就能看到它的每一位。',
   'Automatisation :':
     '自动化：',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
@@ -1214,8 +1216,8 @@ export default {
     '现金达到 10 万美元后解锁。把钱投进去（风险可调）让它增值——或者亏掉。',
   'Allocation :':
     '分配：',
-  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
-    '从第二阶段起，把算力分配给服务、研究、自我改进和物质采集。',
+  'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.':
+    '把算力分配给服务、研究、自我改进和采集。**决定这一阶段长短的是采集**，而且它的作用不是成正比的：它左右着循环失控的速度。设在 15% 这一阶段要几十分钟，50% 约十来分钟，100% 则不到十分钟。顶栏的进度条会按你选的节奏显示剩余时间——一旦变成橙色，要推的就是这个滑块。',
   'Calendrier :':
     '日历：',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
@@ -1884,6 +1886,8 @@ export default {
     '存档文件无效',
   'Succès':
     '成就',
+  'Succès caché':
+    '隐藏成就',
   'figé':
     '已冻结',
   'Auto-achat de cet élément précis':

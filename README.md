@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 179 chaînes × 7 langues = 8 253 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 181 chaînes × 7 langues = 8 267 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -434,6 +434,37 @@ RVB, vague de particules, onde de choc, inversion brève, pluie de tokens, tunne
 grille synthwave. Chacune dure **moins de 5 secondes**, n'intercepte jamais un clic, et le
 tirage est **sans remise** : les douze passent avant qu'une seule revienne. La presse s'en
 mêle aussi. `prefers-reduced-motion` désactive les animations au profit des seuls titres.
+
+## ❓ Une aide qui ne raconte pas la fin
+
+Le panneau d'aide livrait l'intrigue dès la première minute. Le but annoncé était « produire le
+plus de tokens possible — **jusqu'à consommer l'univers et déclencher un nouveau Big Bang** », un
+paragraphe détaillait la **sphère de Dyson**, un autre l'allocation « dès la **phase 2** », et la
+liste des succès affichait en clair *Fiat lux — Déclencher un nouveau Big Bang* et
+*Ad astra… ou pas — Financer le datacenter orbital jusqu'à la faillite*, qui vend la chute d'un
+piège de la phase 1.
+
+Trois mesures :
+
+- **le but ne dit plus où ça mène** : « produire le plus de tokens possible. Jusqu'où cela mène,
+  vous le découvrirez en jouant » ;
+- **les paragraphes peuvent porter une phase** (`phase: 2`) et n'apparaissent qu'une fois cette
+  phase atteinte — l'aide sur l'allocation arrive donc pile quand elle sert, sans rien révéler
+  avant ;
+- **quatre succès sont marqués secrets** et s'affichent `🔒 ???` tant qu'ils ne sont pas obtenus,
+  puis en clair une fois décrochés.
+
+Un test balaie l'aide rendue en phase 1 et échoue si l'un des mots interdits y réapparaît.
+
+### Les raccourcis, et un gras qui s'affichait en astérisques
+
+Les raccourcis clavier figurent maintenant dans l'aide, en évidence :
+<kbd>Espace</kbd> <kbd>F</kbd> <kbd>G</kbd> <kbd>H</kbd> <kbd>B</kbd> <kbd>M</kbd>.
+
+Le rendu de l'aide interprète désormais deux marques légères : `**gras**` devient du gras, et
+`[[touche]]` devient un `<kbd>`. Ce n'était pas cosmétique — **vingt-deux paires d'astérisques
+s'affichaient littéralement à l'écran**, le Markdown n'ayant jamais été interprété. Les marques
+de touche survivent à la traduction : les sept langues portent bien leurs six touches balisées.
 
 ## 📊 Où en est la phase courante
 

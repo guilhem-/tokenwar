@@ -1814,6 +1814,63 @@ await step('barre de phase : à 100 % elle dit ce qu on attend', () => {
   if (!val) throw new Error('valeur absente');
 });
 
+// ---- l aide ne raconte pas la fin ----
+await step('aide : aucune révélation sur la suite de la partie', () => {
+  game.state.phase = 1;
+  game.state.achievements = {};
+  ui.fillHelp(); ui.renderAchievements();
+  const txt = ui.el.helpBody.textContent + ' ' + ui.el.achievementsBody.textContent;
+  // « Universal Paperclips » est une attribution, pas une révélation : on la
+  // met de côté avant de chercher les fuites.
+  const propre = txt.replace(/Universal Paperclips/gi, '');
+  const interdits = ['Big Bang', 'Dyson', 'sonde', 'von Neumann', 'cosmos', 'galaxie',
+                     'recompression', 'convertir la moitié de la terre', 'faillite', 'sanctuaire'];
+  const fuites = interdits.filter(m => new RegExp(m, 'i').test(propre));
+  if (fuites.length) throw new Error('l aide révèle la suite : ' + fuites.join(', '));
+  // les succès secrets sont masqués tant qu ils ne sont pas obtenus
+  const secrets = data.ACHIEVEMENTS.filter(a => a.secret);
+  if (secrets.length < 3) throw new Error('trop peu de succès marqués secrets');
+  for (const a of secrets)
+    if (ui.el.achievementsBody.textContent.includes(a.desc))
+      throw new Error('succès secret révélé : ' + a.name);
+});
+
+await step('aide : un succès secret se révèle une fois obtenu', () => {
+  const secret = data.ACHIEVEMENTS.find(a => a.secret);
+  game.state.achievements[secret.id] = true;
+  ui.fillHelp(); ui.renderAchievements();
+  if (!ui.el.achievementsBody.textContent.includes(secret.desc))
+    throw new Error('un succès obtenu devrait s afficher en clair');
+  game.state.achievements = {};
+});
+
+await step('aide : les paragraphes de phase 2 n apparaissent qu en phase 2', () => {
+  const tardifs = data.HELP.filter(h => (h.phase || 1) >= 2);
+  if (!tardifs.length) throw new Error('aucun paragraphe d aide n est réservé aux phases suivantes');
+  game.state.phase = 1; ui.fillHelp(); ui.renderAchievements();
+  for (const h of tardifs)
+    if (ui.el.helpBody.textContent.includes(h.p.slice(0, 40).replace(/\*\*/g, '')))
+      throw new Error('paragraphe de phase 2 visible en phase 1 : ' + h.b);
+  game.state.phase = 2; ui.fillHelp(); ui.renderAchievements();
+  const vu = ui.el.helpBody.textContent.includes(tardifs[0].p.slice(0, 40).replace(/\*\*/g, ''));
+  if (!vu) throw new Error('le paragraphe de phase 2 devrait apparaître en phase 2');
+  game.state.phase = 1;
+});
+
+await step('aide : gras et touches sont mis en forme, pas affichés en clair', () => {
+  game.state.phase = 1; ui.fillHelp(); ui.renderAchievements();
+  const html = ui.el.helpBody.innerHTML, txt = ui.el.helpBody.textContent;
+  if (/\*\*/.test(txt)) throw new Error('des astérisques Markdown s affichent littéralement');
+  if (/\[\[/.test(txt)) throw new Error('des crochets de touche s affichent littéralement');
+  if (!/<strong>/.test(html)) throw new Error('le gras n est pas rendu');
+  const kbd = ui.el.helpBody.querySelectorAll('kbd');
+  if (kbd.length < 6) throw new Error('les raccourcis clavier ne sont pas balisés : ' + kbd.length + ' touches');
+  // les six raccourcis du jeu doivent y figurer
+  const touches = [...kbd].map(k => k.textContent);
+  for (const k of ['Espace', 'F', 'G', 'H', 'B', 'M'])
+    if (!touches.includes(k)) throw new Error('raccourci absent de l aide : ' + k);
+});
+
 // save/load
 await step('save', () => { if(!game.save()) throw new Error('save a échoué'); });
 

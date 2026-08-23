@@ -988,6 +988,10 @@ export const BASE_GRID_MW = 0;
 // ---------------------------------------------------------------------
 //  SUCCÈS — vérifiés en continu ; check(g) → bool
 // ---------------------------------------------------------------------
+// `secret: true` : le libellé raconte la suite de la partie ou l'issue d'un
+// piège. Ces succès restent masqués tant qu'ils ne sont pas débloqués — le
+// panneau d'aide les affichait en clair dès la première minute, y compris
+// « Déclencher un nouveau Big Bang ».
 export const ACHIEVEMENTS = [
   { id:'first_tokens', name:'Premiers mots',        desc:'Produire 1 000 tokens.',              check:g=>g.lifetimeTokens>=1e3 },
   { id:'million',      name:'Le million',           desc:'Produire 1 million de tokens.',       check:g=>g.lifetimeTokens>=1e6 },
@@ -1002,10 +1006,10 @@ export const ACHIEVEMENTS = [
   { id:'millionaire',  name:'Millionnaire',         desc:'Détenir $1 M de trésorerie.',         check:g=>g.money>=1e6 },
   { id:'trader',       name:'Loup de la tech',      desc:'Doubler une mise en bourse.',         check:g=>g.state.stock.basis>0 && g.state.stock.invested>=g.state.stock.basis*2 },
   { id:'automated',    name:'Pilote automatique',   desc:'Posséder les 4 automatisations.',     check:g=>Object.values(g.state.auto).every(a=>a.owned) },
-  { id:'half_earth',   name:'Géo-ingénieur',        desc:'Convertir la moitié de la Terre.',    check:g=>g.earthConsumed>=0.5 },
-  { id:'promise',      name:'Parole tenue',         desc:'Préserver le sanctuaire jusqu’au bout.', check:g=>!!g.flags.keptPromise },
-  { id:'spacedc',      name:'Ad astra… ou pas',     desc:'Financer le datacenter orbital jusqu’à la faillite.', check:g=>g.state.spaceDC && g.state.spaceDC.status==='bankrupt' },
-  { id:'bigbang',      name:'Fiat lux',             desc:'Déclencher un nouveau Big Bang.',     check:g=>g.state.ended },
+  { id:'half_earth', secret:true,   name:'Géo-ingénieur',        desc:'Convertir la moitié de la Terre.',    check:g=>g.earthConsumed>=0.5 },
+  { id:'promise', secret:true,      name:'Parole tenue',         desc:'Préserver le sanctuaire jusqu’au bout.', check:g=>!!g.flags.keptPromise },
+  { id:'spacedc', secret:true,      name:'Ad astra… ou pas',     desc:'Financer le datacenter orbital jusqu’à la faillite.', check:g=>g.state.spaceDC && g.state.spaceDC.status==='bankrupt' },
+  { id:'bigbang', secret:true,      name:'Fiat lux',             desc:'Déclencher un nouveau Big Bang.',     check:g=>g.state.ended },
 ];
 
 // ---------------------------------------------------------------------
@@ -1242,8 +1246,8 @@ export const AUTOMATIONS = [
 //  Découpé ainsi pour rester lisible dans les fichiers de langue.
 // ---------------------------------------------------------------------
 export const HELP = [
-  { b:'But :', p:'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.' },
-  { b:'Phase 1 — Startup :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
+  { b:'But :', p:'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.' },
+  { b:'Pour commencer :', p:'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.' },
   { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
   { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
   { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
@@ -1252,16 +1256,21 @@ export const HELP = [
   { b:'💸 Salaires impayés :', p:'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.' },
   { b:'📈 Inflation :', p:'l’argent perd de sa valeur. Prix, salaires, énergie, loyers et tarifs acceptés suivent l’indice — pas votre trésorerie. Dormir sur son cash coûte du pouvoir d’achat.' },
   { b:'🚨 Incidents :', p:'une alerte à bordure rouge et halo pulsant peut apparaître n’importe où dans la page, souvent hors de votre écran, sans notification. Tant qu’elle n’est pas traitée, elle saigne votre trésorerie — jusqu’à 70% en 2 minutes. Seul indice : le liseré rouge des bords. Faites défiler la page.' },
-  { b:'🔬 Grands programmes :', p:'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.' },
+  { b:'🔬 Grands programmes :', p:'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.' },
   { b:'₿ Crypto :', p:'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.' },
   { b:'Percées :', p:'une seule est proposée à la fois. Une fois payée, elle ne produit rien tout de suite : son intégration prend de une à quatre semaines, suivies par une barre de progression, et l’effet ne tombe qu’au bout. La ligne disparaît alors, et deux mois s’écoulent avant que la suivante apparaisse.' },
   { b:'🔧 Optimisations récurrentes :', p:'une optimisation CUDA tous les 18 mois, une du moteur d’inférence tous les 9 mois, une passe sur la gestion du contexte tous les 12 mois. $1 000 pièce : l’enjeu est d’y penser. Une seule est proposée à la fois, elle s’intègre comme une percée, et deux mois de calme séparent celle qui disparaît de la suivante.' },
-  { b:'⌨️ Raccourcis :', p:'**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.' },
+  { b:'⌨️ Raccourcis :', p:'[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.' },
+  { b:'', p:'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.' },
   { b:'Automatisation :', p:'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.' },
   { b:'📋 Directives permanentes :', p:'chaque paiement mémorise **une** décision, ensuite appliquée automatiquement. La directive suivante coûte un cran de plus, et le total est plafonné au nombre d’événements à choix. Remplacer une directive existante ne consomme pas de place.' },
   { b:'🏦 Dette :', p:'dix instruments, du crédit bancaire ordinaire au prêt de sauvetage à 14 %. La ligne n’affiche que le nom, le montant et le taux : **survolez-la** pour voir le prêteur, la durée, la mécanique de remboursement et surtout le **coût total du crédit** — le seul chiffre qui permette de comparer un taux bas amorti dès le premier trimestre à un taux élevé payé in fine. Certaines offres exigent une société cotée ; le fonds opportuniste n’apparaît que lorsque ça va mal. Chaque prêt affiche sa prochaine échéance et son montant, et se rembourse par anticipation depuis sa ligne. **La banque ne perd jamais** : les montants sont libellés en dollars constants, donc l’inflation n’efface pas la dette, et si la trésorerie ne suffit pas à l’échéance, les actifs sont saisis et vendus.' },
   { b:'Bourse :', p:'débloquée à $100 000 de trésorerie. Placez votre argent (risque réglable) pour le faire fructifier — ou le perdre.' },
-  { b:'Allocation :', p:'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.' },
+  // Marqué `phase: 2` : ce paragraphe révélerait la suite de la partie s'il
+  // apparaissait plus tôt. Il porte en revanche l'information la plus utile de
+  // toute cette phase — le curseur Récolte pilote la durée, et l'effet est
+  // exponentiel, donc violent.
+  { b:'Allocation :', phase:2, p:'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.' },
   { b:'Calendrier :', p:'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.' },
   { b:'🌍 La chronique :', p:'chaque année, la presse publie les chiffres du monde : réchauffement, banquise, espèces disparues, fécondité et population, concentration des richesses. Ils ne sont pas décoratifs — ils s’aggravent d’autant plus vite que votre exploitation est lourde. Vous lisez votre propre partie.' },
   { b:'📰 La Une :', p:'les titres de presse font monter (+1) ou descendre (−1) votre réputation. Ils suivent l’actualité réelle de l’IA et votre propre avancement : la presse ne parle d’une capacité que lorsque vous l’avez livrée, et raille votre retard.' },

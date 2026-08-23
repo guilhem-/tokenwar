@@ -1756,3 +1756,21 @@ body.is-frozen::after {
   .phase-bar-label { display: none; }   /* le titre de phase est déjà dans la marque */
   .phase-bar-eta { min-width: 0; }
 }
+
+/* ---- touches de clavier dans l'aide ------------------------------------- */
+kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.1em 0.4em;
+  margin: 0 0.1em;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--bg-3);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+}

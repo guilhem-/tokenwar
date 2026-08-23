@@ -1138,10 +1138,10 @@ export default {
     'Sloppy labelling: the model learned its annotators\' mistakes',
   'But :':
     'Goal:',
-  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
-    'produce as many tokens as possible — until you consume the universe and trigger a new Big Bang.',
-  'Phase 1 — Startup :':
-    'Phase 1 — Startup:',
+  'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.':
+    'produce as many tokens as you can. Where that leads is for you to find out.',
+  'Pour commencer :':
+    'To begin:',
   'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
     'click to generate tokens, set your price (low = volume, high = margin), do marketing, buy GPUs and energy, accumulate research, train ever more powerful models and raise funding at each tier.',
   'Hébergement :':
@@ -1178,8 +1178,8 @@ export default {
     'an alert with a red border and a pulsing halo can appear anywhere on the page, often off your screen, with no notification. Until it is handled it bleeds your cash — up to 70% in 2 minutes. The only clue: the red rim at the edges. Scroll the page.',
   '🔬 Grands programmes :':
     '🔬 Major programmes:',
-  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
-    'fusion and the Dyson sphere are not bought off the shelf. They go through research, development, availability, your order, then deployment — each stage covered by the press. Without a completed fusion programme, no fusion reactor can be bought. The sphere is paid for in matter, can be repeated, and lastingly speeds up harvesting.',
+  'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.':
+    'some technologies cannot be bought off the shelf. They go through research, tuning, availability, your order, then deployment — each step covered by the press. Without a completed fusion programme, for instance, no fusion reactor can be bought.',
   '₿ Crypto :':
     '₿ Crypto:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
@@ -1194,8 +1194,10 @@ export default {
     'a CUDA optimisation every 18 months, an inference-engine one every 9 months, a context-management pass every 12 months. $1,000 each: the point is remembering them. Only one is offered at a time, it integrates like a breakthrough, and two quiet months separate the one that disappears from the next.',
   '⌨️ Raccourcis :':
     '⌨️ Shortcuts:',
-  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
-    '**Space** steps to the next speed, **F** freezes the game and releases it at the speed it had. Frozen, time stops but the interface stays alive: you can read, compare, buy. **G** orders the best card you can afford and house, **H** the hosting tier that is missing, **B** the breakthrough on offer, **M** one notch of marketing. Hover a figure in the header to see it down to the last digit.',
+  '[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.':
+    '[[Space]] next speed · [[F]] freeze / unfreeze · [[G]] order the best card you can afford and house · [[H]] the hosting tier that is missing · [[B]] the breakthrough on offer · [[M]] one notch of marketing.',
+  'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    'Frozen, time stops dead — no tokens, no calendar, no training — but the interface stays alive: you can read, compare, buy. Unfreezing returns exactly the speed you had. Nothing is intercepted while you type in a field, nor under [[Ctrl]], nor while a decision is waiting. Hover a figure in the header to see it down to the last digit.',
   'Automatisation :':
     'Automation:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
@@ -1214,8 +1216,8 @@ export default {
     'unlocked at $100,000 in cash. Invest your money (adjustable risk) to grow it — or lose it.',
   'Allocation :':
     'Allocation:',
-  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
-    'from phase 2 on, split your compute between Serving, Research, Self-improvement and Matter harvesting.',
+  'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.':
+    'split your compute between Serving, Research, Self-improvement and Harvest. **Harvest is what governs how long this phase lasts**, and its effect is not proportional: it drives the rate at which the loop runs away. At 15% the phase takes tens of minutes, at 50% about a dozen, at 100% under ten. The header bar shows the time left at the rate you chose — if it turns orange, that is the slider to push.',
   'Calendrier :':
     'Calendar:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
@@ -1884,6 +1886,8 @@ export default {
     'Invalid save file',
   'Succès':
     'Achievements',
+  'Succès caché':
+    'Hidden achievement',
   'figé':
     'frozen',
   'Auto-achat de cet élément précis':

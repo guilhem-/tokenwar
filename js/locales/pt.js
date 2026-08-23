@@ -1138,10 +1138,10 @@ export default {
     'Etiquetagem desleixada: o modelo aprendeu os erros dos seus anotadores',
   'But :':
     'Objetivo:',
-  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
-    'produzir o máximo de tokens possível — até consumir o universo e provocar um novo Big Bang.',
-  'Phase 1 — Startup :':
-    'Fase 1 — Startup:',
+  'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.':
+    'produzir o máximo de tokens possível. Até onde isso leva, descobrirás a jogar.',
+  'Pour commencer :':
+    'Para começar:',
   'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
     'clica para gerar tokens, fixa o preço (baixo = volume, alto = margem), faz marketing, compra GPU e energia, acumula investigação, treina modelos cada vez mais potentes e levanta fundos em cada patamar.',
   'Hébergement :':
@@ -1178,8 +1178,8 @@ export default {
     'um alerta com contorno vermelho e halo pulsante pode aparecer em qualquer ponto da página, muitas vezes fora do teu ecrã, sem aviso. Enquanto não for tratado, sangra a tua caixa — até 70% em 2 minutos. Única pista: o rebordo vermelho dos limites. Percorre a página.',
   '🔬 Grands programmes :':
     '🔬 Grandes programas:',
-  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
-    'a fusão e a esfera de Dyson não se compram numa prateleira. Passam pela investigação, pela afinação, pela disponibilidade, pela tua encomenda e depois pela implantação — cada etapa coberta pela imprensa. Sem um programa de fusão concluído, nenhum reator de fusão é comprável. A esfera paga-se em matéria, repete-se e acelera duradouramente a colheita.',
+  'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.':
+    'algumas tecnologias não se compram na prateleira. Passam pela investigação, pelo aperfeiçoamento, pela disponibilidade, pela tua encomenda e depois pela implantação — cada etapa coberta pela imprensa. Sem um programa de fusão concluído, por exemplo, nenhum reator de fusão é comprável.',
   '₿ Crypto :':
     '₿ Cripto:',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
@@ -1194,8 +1194,10 @@ export default {
     'uma otimização CUDA a cada 18 meses, uma do motor de inferência a cada 9 meses, uma passagem pela gestão do contexto a cada 12 meses. $1 000 cada: o difícil é lembrar-se delas. Apenas uma é proposta de cada vez, integra-se como um avanço, e dois meses de calma separam a que desaparece da seguinte.',
   '⌨️ Raccourcis :':
     '⌨️ Atalhos:',
-  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
-    '**Espaço** passa à velocidade seguinte, **F** congela o jogo e liberta-o à velocidade que tinha. Congelado, o tempo pára mas a interface continua viva: podes ler, comparar, comprar. **G** encomenda a melhor placa que possas pagar e alojar, **H** o nível de alojamento que falta, **B** o avanço proposto, **M** um patamar de marketing. Passa o rato sobre um número do cabeçalho para o veres até ao último algarismo.',
+  '[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.':
+    '[[Espaço]] velocidade seguinte · [[F]] congelar / descongelar · [[G]] encomendar a melhor placa que possas pagar e alojar · [[H]] o nível de alojamento que falta · [[B]] o avanço proposto · [[M]] um patamar de marketing.',
+  'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    'Congelado, o tempo pára a seco — nem tokens, nem calendário, nem treino — mas a interface continua viva: podes ler, comparar, comprar. Ao descongelar recuperas exatamente a velocidade que tinhas. Nada é intercetado enquanto escreves num campo, nem sob [[Ctrl]], nem enquanto uma decisão espera. Passa o rato sobre um número do cabeçalho para o veres até ao último algarismo.',
   'Automatisation :':
     'Automatização:',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
@@ -1214,8 +1216,8 @@ export default {
     'desbloqueada com 100.000 $ em caixa. Coloca o teu dinheiro (risco ajustável) para o fazer render — ou perdê-lo.',
   'Allocation :':
     'Alocação:',
-  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
-    'a partir da fase 2, reparte a tua computação entre Serviço, Investigação, Automelhoria e Colheita de matéria.',
+  'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.':
+    'reparte o teu compute entre Serviço, Investigação, Auto-melhoria e Recolha. **É a Recolha que manda na duração desta fase**, e o seu efeito não é proporcional: age sobre a velocidade a que o ciclo dispara. A 15 % a fase pede dezenas de minutos, a 50 % uma dúzia, a 100 % menos de dez. A barra do cabeçalho mostra o tempo que falta ao ritmo escolhido — se ficar laranja, é esse cursor que há que empurrar.',
   'Calendrier :':
     'Calendário:',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
@@ -1884,6 +1886,8 @@ export default {
     'Ficheiro de jogo inválido',
   'Succès':
     'Feitos',
+  'Succès caché':
+    'Feito oculto',
   'figé':
     'congelado',
   'Auto-achat de cet élément précis':

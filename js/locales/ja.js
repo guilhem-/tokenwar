@@ -1138,10 +1138,10 @@ export default {
     '雑なラベル付け：モデルは注釈者の間違いを学んだ',
   'But :':
     '目的：',
-  'produire le plus de tokens possible — jusqu’à consommer l’univers et déclencher un nouveau Big Bang.':
-    'できるだけ多くのトークンを産み出すこと——宇宙を使い尽くし、新たなビッグバンを引き起こすまで。',
-  'Phase 1 — Startup :':
-    '第1段階 — スタートアップ：',
+  'produire le plus de tokens possible. Jusqu’où cela mène, vous le découvrirez en jouant.':
+    'できるだけ多くのトークンを生み出すこと。それがどこへ向かうのかは、遊びながら確かめてほしい。',
+  'Pour commencer :':
+    'はじめに：',
   'cliquez pour générer des tokens, fixez le prix (bas = volume, haut = marge), faites du marketing, achetez des GPU et de l’énergie, accumulez de la recherche, entraînez des modèles de plus en plus puissants et levez des fonds aux paliers.':
     'クリックしてトークンを生み、価格を決め（安く広く、高く厚く）、マーケティングを打ち、GPUと電力を買い、研究を溜め、より強力なモデルを学習させ、節目ごとに資金を調達する。',
   'Hébergement :':
@@ -1178,8 +1178,8 @@ export default {
     '赤い枠と脈打つ赤い光を持つ警告が、ページのどこかに、多くは画面の外に、通知もなく現れる。対処されない限り現金を出血させ続け、2分で最大70%を持っていく。手がかりは画面の縁の赤い縁取りだけ。ページをスクロールすること。',
   '🔬 Grands programmes :':
     '🔬 大型プログラム：',
-  'la fusion et la sphère de Dyson ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, aucun réacteur à fusion n’est achetable. La sphère se paie en matière, se répète, et accélère durablement la récolte.':
-    '核融合もダイソン球も、棚から買えるものではない。研究、作り込み、利用可能、あなたの発注、そして展開という順に進み、その各段階を報道が追う。核融合プログラムを終えていなければ、核融合炉は買えない。球は物質で支払い、何度でも建造でき、採取を恒久的に速める。',
+  'certaines technologies ne s’achètent pas sur étagère. Elles passent par la recherche, la mise au point, la disponibilité, votre commande, puis le déploiement — chaque étape étant couverte par la presse. Sans programme de fusion abouti, par exemple, aucun réacteur à fusion n’est achetable.':
+    '既製品として買えない技術がある。研究、調整、実用化、発注、そして配備という段階を踏み、その一つひとつが報道される。たとえば核融合計画をやり遂げていなければ、核融合炉は買えない。',
   '₿ Crypto :':
     '₿ クリプト：',
   'un second marché, bien plus violent que la Bourse, calé sur les vrais cycles (bulle 2017, hiver 2018, envolée 2021, effondrement 2022, ETF et halving 2024). Il ne sert pas qu’à parier : pendant les envolées, les mineurs se disputent les mêmes cartes que vous et le prix des GPU monte.':
@@ -1194,8 +1194,10 @@ export default {
     'CUDA最適化は18か月ごと、推論エンジンは9か月ごと、コンテキスト管理の見直しは12か月ごと。1件1,000ドル、問題は忘れないことだ。提示されるのは一度に一つだけで、ブレークスルーと同じように統合され、消えたものと次のものの間には2か月の間が空く。',
   '⌨️ Raccourcis :':
     '⌨️ ショートカット：',
-  '**Espace** passe à la vitesse suivante, **F** gèle la partie et la relâche à la vitesse qu’elle avait. Gelé, le temps s’arrête mais l’interface reste vivante : on peut lire, comparer, acheter. **G** commande la meilleure carte qu’on puisse s’offrir et loger, **H** le niveau d’hébergement qui manque, **B** la percée proposée, **M** un cran de marketing. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
-    '**スペース**で次の速度へ、**F** で停止し、もう一度押せば元の速度で再開する。停止中は時間が止まるが画面は生きている——読む、比べる、買う、いずれもできる。**G** は買えて収容できる最良のカードを発注し、**H** は足りていない収容段を、**B** は提示中のブレイクスルーを、**M** はマーケティングを一段。ヘッダーの数字にカーソルを合わせると、最後の桁まで見える。',
+  '[[Espace]] vitesse suivante · [[F]] geler / dégeler · [[G]] commander la meilleure carte qu’on puisse s’offrir et loger · [[H]] le niveau d’hébergement qui manque · [[B]] la percée proposée · [[M]] un cran de marketing.':
+    '[[スペース]] 次の速度 · [[F]] 停止／再開 · [[G]] 買えて収容できる最良のカードを発注 · [[H]] 足りていない収容段 · [[B]] 提示中のブレイクスルー · [[M]] マーケティングを一段。',
+  'Gelé, le temps s’arrête net — ni tokens, ni calendrier, ni entraînement — mais l’interface reste vivante : on peut lire, comparer, acheter. Le dégel rend exactement la vitesse qu’on avait. Rien n’est intercepté pendant qu’on écrit dans un champ, ni sous [[Ctrl]], ni pendant qu’une décision attend. Survolez un chiffre de l’en-tête pour le voir jusqu’au dernier chiffre.':
+    '停止中は時間が完全に止まる——トークンも、暦も、学習も進まない。だが画面は生きている。読む、比べる、買う、いずれもできる。再開すれば元の速度に戻る。入力欄に文字を打っている間も、[[Ctrl]] を押している間も、判断待ちの間も、ショートカットは横取りしない。ヘッダーの数字にカーソルを合わせれば、最後の桁まで見える。',
   'Automatisation :':
     '自動化：',
   'une automatisation n’apparaît qu’après **50 gestes faits à la main** dans sa famille : on n’automatise pas ce qu’on n’a pas appris. Elles sont distinctes — inférence, cartes, matériel (baies et serveurs), immobilier (bâtiments et datacenters), énergie. Achetez-les, puis cochez ⟳ auto sur chaque élément précis à racheter. La carte pulse à chaque action, pour que vous voyiez ce que la machine fait à votre place. Les boutons ⟳ et ×10 n’apparaissent qu’à partir de 20 exemplaires en service ; ×100 dès 200. La cadence des automatisations est volontairement découplée du bouton ⏩ : en ×10 le temps va dix fois plus vite, les automatisations seulement trois fois. Accélérer aide, mais ne remplace pas la décision.':
@@ -1214,8 +1216,8 @@ export default {
     '現金10万ドルで解放。資金を投じて（リスクは調整可能）増やす——あるいは失う。',
   'Allocation :':
     '配分：',
-  'dès la phase 2, répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte de matière.':
-    '第2段階からは、演算を提供・研究・自己改善・物質採取に振り分ける。',
+  'répartissez votre compute entre Service, Recherche, Auto-amélioration et Récolte. **C’est la Récolte qui commande la durée de cette phase**, et son effet n’est pas proportionnel : elle agit sur la vitesse à laquelle la boucle s’emballe. À 15 % la phase demande des dizaines de minutes, à 50 % une douzaine, à 100 % moins de dix. La barre de l’en-tête affiche le temps qu’il reste au rythme choisi — si elle passe à l’orange, c’est ce curseur qu’il faut pousser.':
+    '計算資源をサービス、研究、自己改善、採取に振り分ける。**このフェーズの長さを決めるのは採取だ**。しかもその効き方は比例ではない——ループが加速する速さそのものを左右する。15% なら数十分、50% なら十数分、100% なら十分を切る。ヘッダーのバーが選んだ配分での残り時間を示す。オレンジになったら、押し上げるべきはこのつまみだ。',
   'Calendrier :':
     'カレンダー：',
   'une année défile toutes les 5 minutes (× la vitesse ⏩). Matériels, modèles et levées de fonds n’apparaissent qu’à leur année de sortie.':
@@ -1884,6 +1886,8 @@ export default {
     'セーブファイルが不正です',
   'Succès':
     '実績',
+  'Succès caché':
+    '隠し実績',
   'figé':
     '停止中',
   'Auto-achat de cet élément précis':

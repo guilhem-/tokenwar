@@ -524,7 +524,14 @@ export class UI {
     const n = Object.keys(got).length;
     this.el.achievementsBody.innerHTML =
       `<p><b>🏆 ${t('Succès')} (${n}/${ACHIEVEMENTS.length})</b></p>` +
-      ACHIEVEMENTS.map(a => `<p class="ach ${got[a.id] ? 'done' : 'todo'}">${got[a.id] ? '🏆' : '🔒'} <b>${td(a.name)}</b> — <span class="text-muted">${td(a.desc)}</span></p>`).join('');
+      ACHIEVEMENTS.map(a => {
+        // un succès secret ne se lit qu'une fois obtenu : son libellé dirait
+        // sinon ce qui attend le joueur à la fin de la partie
+        const cache = a.secret && !got[a.id];
+        const nom = cache ? '???' : td(a.name);
+        const desc = cache ? t('Succès caché') : td(a.desc);
+        return `<p class="ach ${got[a.id] ? 'done' : 'todo'}">${got[a.id] ? '🏆' : '🔒'} <b>${nom}</b> — <span class="text-muted">${desc}</span></p>`;
+      }).join('');
   }
 
   syncRiskTabs() {
@@ -2040,7 +2047,18 @@ export class UI {
   fillHelp() {
     // L'aide est un tableau de paragraphes : chacun est une chaîne traduisible,
     // ce qui la garde lisible dans les fichiers de langue.
-    this.el.helpBody.innerHTML = HELP.map(h => `<p${h.muted ? ' class="text-muted"' : ''}>` +
-      (h.b ? `<b>${t(h.b)}</b> ` : '') + t(h.p) + `</p>`).join('');
+    // Deux mises en forme légères, et un filtre.
+    //   **gras**   → <strong>. Les astérisques s'affichaient littéralement :
+    //               vingt-deux paires visibles à l'écran, jamais interprétées.
+    //   [[touche]] → <kbd>, pour que les raccourcis se lisent d'un coup d'œil.
+    // Le filtre de phase évite de révéler la suite de la partie : un paragraphe
+    // marqué `phase: 2` n'apparaît qu'une fois la phase 2 atteinte.
+    const deco = txt => String(txt)
+      .replace(/\[\[([^\]]+)\]\]/g, '<kbd>$1</kbd>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    this.el.helpBody.innerHTML = HELP
+      .filter(h => this.game.phase >= (h.phase || 1))
+      .map(h => `<p${h.muted ? ' class="text-muted"' : ''}>` +
+        (h.b ? `<b>${deco(t(h.b))}</b> ` : '') + deco(t(h.p)) + `</p>`).join('');
   }
 }
