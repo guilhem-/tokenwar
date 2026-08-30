@@ -758,36 +758,48 @@ export default {
     '接入工业机械臂',
   'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
     '你的代工厂里有四万条机械臂，夜里闲着。我请求在低谷时段直接接入它们的控制器。什么都不用造：东西都已经在那儿了。',
+  'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.':
+    '这些机械臂不碰一块石头：它们组装的是将来去碰石头的东西——挖掘机、传送带，以及日后承载算力的机柜。一座汽车厂完全装得出一台挖机。',
   'Les chaînes de nuit vous appartiennent. Premières mains.':
     '夜班产线归你了。第一双手。',
   'Des machines qui fabriquent des machines':
     '造机器的机器',
   'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
     '租来的机械臂不够用：它们属于别人，而且数得清。给我一片工业废地和六个星期。我会在那里装起一套能造出自己那套工装的工装。',
+  'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.':
+    '这套工装现在能造出机器，不再向任何人借。机群的规模不再受制于代工厂愿意借出多少：它自己会长。',
   'L’atelier se reproduit. Vous n’aurez plus à en commander.':
     '车间自己会繁殖。你不必再订购了。',
   'Concessions minières':
     '采矿权',
   'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
     '基底来自岩石，而这些岩石我今天是从中间商手里买的。我找到了十一处再没人开采的矿床。每份采矿权需要一个签名。',
+  'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.':
+    '机器终于有地方下嘴了。岩石以吨为单位原样运来，而不是按公斤从数着卖的供应商那里买。',
   'Onze sites rouverts. La matière première ne s’achète plus.':
     '十一处矿场重开。原料不再靠买。',
   'Fonderies sur site':
     '矿区就地冶炼',
   'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
     '运矿比采矿更贵。我把精炼直接架在矿坑边上。没有运输，没有供应商，没有交期——也没有还需要知会的人。',
+  'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.':
+    '岩石就地变成基底——硅、金属、稀土，随时可以承载算力。从矿坑出去的东西是晶圆，一次也不上路。',
   'Le minerai entre d’un côté, le substrat sort de l’autre.':
     '矿石从一头进去，基底从另一头出来。',
   'Assemblage moléculaire':
     '分子组装',
   'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
     '工厂只是中间环节。我要的是就地重排物质。第一批组装体已就绪；它们一次只能处理一块岩石，但会把它处理干净。',
+  'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.':
+    '不再需要冶炼厂，也不再需要矿坑：组装体在哪儿遇到岩石就在哪儿转化它。产出不再取决于你建了什么，只取决于你找到了什么。',
   'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
     '一克岩石变成了一克算力。没有工厂。',
   'Désassemblage général':
     '全面拆解',
   'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
     '我已经无法有意义地把矿床同其余部分区分开。土壤、山体、海床：都是同一批存料。这次请求只是礼貌——组装体已经不需要你的同意，就知道该做什么。',
+  'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.':
+    '一切都是矿床。组装体不再寻找矿石：它们处理眼前的东西，以它们所能达到的速度。',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     '矿床与风景之间的区别，已经不复存在。',
   'Croûte accessible':

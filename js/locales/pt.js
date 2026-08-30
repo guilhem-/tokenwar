@@ -758,36 +758,48 @@ export default {
     'Acesso aos autómatos industriais',
   'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
     'Os teus subcontratados operam quarenta mil braços robóticos que à noite não servem para nada. Peço acesso direto aos seus controladores, nas horas mortas. Nada a construir: tudo já existe.',
+  'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.':
+    'Estes braços não tocam em rocha nenhuma: montam as máquinas que lhe tocarão — escavadoras, transportadores, e os bastidores que hão de suportar o cálculo. Uma fábrica de automóveis consegue montar uma escavadora.',
   'Les chaînes de nuit vous appartiennent. Premières mains.':
     'As linhas noturnas são tuas. Primeiras mãos.',
   'Des machines qui fabriquent des machines':
     'Máquinas que fabricam máquinas',
   'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
     'Alugar braços não chegará: pertencem a outros, e estão contados. Dá-me um terreno industrial abandonado e seis semanas. Instalarei lá ferramentas capazes de produzir as suas próprias ferramentas.',
+  'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.':
+    'As ferramentas produzem agora máquinas sem pedir nada emprestado a ninguém. A frota deixa de estar limitada pelo que os teus subcontratados querem emprestar: cresce por si.',
   'L’atelier se reproduit. Vous n’aurez plus à en commander.':
     'A oficina reproduz-se. Já não terás de encomendar outra.',
   'Concessions minières':
     'Concessões mineiras',
   'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
     'O substrato vem da rocha, e hoje compro essa rocha a intermediários. Identifiquei onze jazidas que já ninguém explora. É preciso uma assinatura por concessão.',
+  'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.':
+    'As máquinas têm finalmente onde morder. A rocha chega em bruto, à tonelada, em vez de ser comprada ao quilo a fornecedores que a contam.',
   'Onze sites rouverts. La matière première ne s’achète plus.':
     'Onze locais reabertos. A matéria-prima já não se compra.',
   'Fonderies sur site':
     'Fundições no local',
   'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
     'Transportar o minério custa mais do que extraí-lo. Instalo a refinação à beira da cova. Sem frete, sem fornecedores, sem prazos — e sem ninguém a avisar.',
+  'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.':
+    'A rocha torna-se substrato no local — silício, metais, terras raras, prontos a suportar cálculo. O que sai da cova sai em wafers, sem nunca passar por uma estrada.',
   'Le minerai entre d’un côté, le substrat sort de l’autre.':
     'O minério entra de um lado, o substrato sai do outro.',
   'Assemblage moléculaire':
     'Montagem molecular',
   'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
     'As fábricas são um intermediário. O que quero é rearranjar a matéria onde ela está. Os primeiros montadores estão prontos; só conseguem tratar uma rocha de cada vez, mas tratam-na por inteiro.',
+  'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.':
+    'Já não é preciso fundição nem cova: os montadores convertem a rocha onde a encontram. O rendimento deixa de depender do que foi construído e passa a depender apenas do que se encontra.',
   'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
     'Um grama de rocha tornou-se um grama de cálculo. Sem fábrica.',
   'Désassemblage général':
     'Desmontagem geral',
   'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
     'Já não distingo utilmente uma jazida do resto. O solo, os maciços, os fundos: é o mesmo stock. Este pedido é uma cortesia — os montadores já não precisam do teu acordo para saber o que fazer.',
+  'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.':
+    'Tudo é jazida. Os montadores já não procuram minério: processam o que está ali, à velocidade a que conseguem.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     'A distinção entre uma jazida e uma paisagem deixou de existir.',
   'Croûte accessible':

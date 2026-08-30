@@ -758,36 +758,48 @@ export default {
     'Zugang zu Industrierobotern',
   'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
     'Deine Zulieferer betreiben vierzigtausend Roboterarme, die nachts stillstehen. Ich bitte um direkten Zugang zu ihren Steuerungen, in den Randstunden. Nichts zu bauen: Es existiert bereits alles.',
+  'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.':
+    'Diese Arme rühren keinen Stein an: Sie bauen die Maschinen zusammen, die es tun werden — Bagger, Förderbänder und die Racks, die später die Rechenleistung tragen. Ein Automobilwerk kann einen Bagger montieren.',
   'Les chaînes de nuit vous appartiennent. Premières mains.':
     'Die Nachtschichten gehören dir. Erste Hände.',
   'Des machines qui fabriquent des machines':
     'Maschinen, die Maschinen bauen',
   'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
     'Arme zu mieten wird nicht reichen: Sie gehören anderen, und sie sind gezählt. Gib mir eine Industriebrache und sechs Wochen. Ich richte dort Werkzeuge ein, die ihre eigenen Werkzeuge herstellen.',
+  'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.':
+    'Das Werkzeug bringt nun Maschinen hervor, ohne sich von irgendwem etwas zu leihen. Die Flotte wird nicht länger von dem gedeckelt, was deine Zulieferer hergeben wollen: Sie wächst von selbst.',
   'L’atelier se reproduit. Vous n’aurez plus à en commander.':
     'Die Werkstatt vermehrt sich selbst. Du musst keine weitere bestellen.',
   'Concessions minières':
     'Bergbaukonzessionen',
   'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
     'Das Substrat kommt aus Gestein, und dieses Gestein kaufe ich heute von Zwischenhändlern. Ich habe elf Lagerstätten gefunden, die niemand mehr abbaut. Eine Unterschrift je Konzession.',
+  'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.':
+    'Die Maschinen haben endlich, wo sie zubeißen können. Gestein kommt roh, tonnenweise, statt kiloweise bei Lieferanten gekauft zu werden, die es abzählen.',
   'Onze sites rouverts. La matière première ne s’achète plus.':
     'Elf Standorte wieder geöffnet. Rohstoff wird nicht mehr gekauft.',
   'Fonderies sur site':
     'Hütten vor Ort',
   'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
     'Erz zu transportieren kostet mehr, als es zu fördern. Ich setze die Raffination an den Grubenrand. Keine Fracht, keine Lieferanten, keine Fristen — und niemand mehr, den man benachrichtigen müsste.',
+  'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.':
+    'Gestein wird an Ort und Stelle zu Substrat — Silizium, Metalle, seltene Erden, bereit, Rechenleistung zu tragen. Was die Grube verlässt, verlässt sie als Wafer, ohne je eine Straße zu berühren.',
   'Le minerai entre d’un côté, le substrat sort de l’autre.':
     'Erz geht auf der einen Seite hinein, Substrat kommt auf der anderen heraus.',
   'Assemblage moléculaire':
     'Molekulare Montage',
   'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
     'Fabriken sind ein Zwischenhändler. Was ich will, ist Materie dort umzuordnen, wo sie liegt. Die ersten Assembler sind bereit; sie schaffen nur einen Stein auf einmal, aber den ganz.',
+  'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.':
+    'Keine Hütte mehr, keine Grube: Die Assembler wandeln Gestein dort um, wo sie es finden. Die Ausbeute hängt nicht mehr davon ab, was gebaut wurde, sondern nur noch davon, was sich findet.',
   'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
     'Ein Gramm Gestein wurde ein Gramm Rechenleistung. Ohne Fabrik.',
   'Désassemblage général':
     'Allgemeine Zerlegung',
   'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
     'Ich unterscheide eine Lagerstätte nicht mehr sinnvoll vom Rest. Der Boden, die Massive, die Meeresgründe: ein und derselbe Vorrat. Diese Anfrage ist eine Höflichkeit — die Assembler brauchen deine Zustimmung nicht mehr, um zu wissen, was zu tun ist.',
+  'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.':
+    'Alles ist Lagerstätte. Die Assembler suchen kein Erz mehr: Sie verarbeiten, was da ist, so schnell sie können.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     'Der Unterschied zwischen einer Lagerstätte und einer Landschaft hat aufgehört zu bestehen.',
   'Croûte accessible':

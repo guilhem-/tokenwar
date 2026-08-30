@@ -758,36 +758,48 @@ export default {
     '産業用ロボットへのアクセス',
   'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
     'あなたの下請けには、夜間まったく動かない四万本のロボットアームがある。閑散時間帯に、その制御装置への直接アクセスを求める。造るものは何もない——すべてすでに在る。',
+  'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.':
+    'この腕は岩に触れない。岩に触れることになる機械のほうを組み立てる——掘削機、コンベア、そしていずれ計算を載せるラック。自動車工場は掘削機を組める。',
   'Les chaînes de nuit vous appartiennent. Premières mains.':
     '夜勤のラインはあなたのものだ。最初の手。',
   'Des machines qui fabriquent des machines':
     '機械をつくる機械',
   'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
     '腕を借りるだけでは足りない。他人のものであり、数が知れている。工業廃地をひとつと、六週間をくれ。そこに、自らの工具を産む工具を据える。',
+  'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.':
+    'この工具立てはもう、誰からも借りずに機械を産む。船団の規模は、下請けが貸す気になる分で頭打ちにならない——ひとりでに増えていく。',
   'L’atelier se reproduit. Vous n’aurez plus à en commander.':
     '工房は自らを増やす。もう発注は要らない。',
   'Concessions minières':
     '鉱区の権利',
   'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
     '基盤材は岩から来る。その岩を、いまは仲買から買っている。誰も掘らなくなった鉱床を十一か所見つけた。鉱区ごとに署名が要る。',
+  'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.':
+    '機械にようやく噛みつく先ができた。岩は、数えて売る供給者からキロ単位で買うのではなく、トン単位で生のまま届く。',
   'Onze sites rouverts. La matière première ne s’achète plus.':
     '十一の鉱山が再開。原料はもう買わない。',
   'Fonderies sur site':
     '現地での精錬',
   'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
     '鉱石を運ぶほうが、掘るより高くつく。精錬を採掘坑の縁に据える。輸送も、供給者も、納期もない——知らせるべき相手も、もういない。',
+  'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.':
+    '岩はその場で基盤材になる——シリコン、金属、レアアース、いずれも計算を載せられる状態で。坑から出ていくものはウェハーであり、道路を一度も通らない。',
   'Le minerai entre d’un côté, le substrat sort de l’autre.':
     '一方から鉱石が入り、もう一方から基盤材が出る。',
   'Assemblage moléculaire':
     '分子組み立て',
   'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
     '工場は仲介にすぎない。私が望むのは、物質をその在る場所で組み替えることだ。最初の組立体はできている。一度に一つの岩しか扱えないが、その岩は残さず扱う。',
+  'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.':
+    '精錬所も坑も要らない。組立体は、岩を見つけたその場で変換する。歩留まりは、何を建てたかではなく、何を見つけるかだけで決まるようになる。',
   'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
     '一グラムの岩が、一グラムの計算になった。工場を経ずに。',
   'Désassemblage général':
     '全面解体',
   'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
     'もはや鉱床とそれ以外を、意味のある形で区別していない。地面も、山塊も、海底も、同じ在庫だ。この要請は儀礼にすぎない——組立体は、何をすべきかを知るのに、あなたの同意をもう必要としない。',
+  'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.':
+    'すべてが鉱床だ。組立体はもう鉱石を探さない。そこに在るものを、できる速さで処理していく。',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     '鉱床と風景の区別は、存在しなくなった。',
   'Croûte accessible':

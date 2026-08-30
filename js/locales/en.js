@@ -758,36 +758,48 @@ export default {
     'Access to industrial robots',
   'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
     'Your subcontractors run forty thousand robotic arms that sit idle at night. I am asking for direct access to their controllers, during off-peak hours. Nothing to build: it all exists already.',
+  'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.':
+    'These arms touch no rock: they assemble the machines that will — excavators, conveyors, and the racks that will carry the compute. A car plant can put together a digger.',
   'Les chaînes de nuit vous appartiennent. Premières mains.':
     'The night shifts are yours. First hands.',
   'Des machines qui fabriquent des machines':
     'Machines that build machines',
   'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
     'Renting arms will not do: they belong to others, and they are counted. Give me a derelict industrial site and six weeks. I will install tooling able to produce its own tooling.',
+  'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.':
+    'The tooling now turns out machines without borrowing anything from anyone. The fleet stops being capped by what your subcontractors are willing to lend: it grows on its own.',
   'L’atelier se reproduit. Vous n’aurez plus à en commander.':
     'The workshop reproduces itself. You will not have to order another.',
   'Concessions minières':
     'Mining concessions',
   'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
     'The substrate comes from rock, and today I buy that rock from middlemen. I have identified eleven deposits nobody works any more. One signature per concession.',
+  'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.':
+    'The machines finally have something to bite into. Rock arrives raw, by the tonne, instead of being bought by the kilo from suppliers who count it.',
   'Onze sites rouverts. La matière première ne s’achète plus.':
     'Eleven sites reopened. Raw material is no longer bought.',
   'Fonderies sur site':
     'On-site smelters',
   'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
     'Hauling ore costs more than digging it. I am putting the refining at the edge of the pit. No freight, no suppliers, no lead times — and nobody left to notify.',
+  'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.':
+    'Rock becomes substrate on the spot — silicon, metals, rare earths, ready to carry computation. What leaves the pit leaves as wafers, without ever touching a road.',
   'Le minerai entre d’un côté, le substrat sort de l’autre.':
     'Ore goes in one side, substrate comes out the other.',
   'Assemblage moléculaire':
     'Molecular assembly',
   'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
     'Factories are a middleman. What I want is to rearrange matter where it lies. The first assemblers are ready; they can only handle one rock at a time, but they handle it entirely.',
+  'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.':
+    'No more smelter, no more pit: the assemblers convert rock wherever they find it. Yield stops depending on what has been built, and depends only on what is found.',
   'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
     'A gram of rock became a gram of computation. With no factory.',
   'Désassemblage général':
     'General disassembly',
   'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
     'I no longer usefully distinguish a deposit from anything else. The ground, the ranges, the seabeds: it is one stock. This request is a courtesy — the assemblers no longer need your consent to know what to do.',
+  'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.':
+    'Everything is a deposit. The assemblers no longer look for ore: they process what is there, as fast as they can.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     'The distinction between a deposit and a landscape has ceased to exist.',
   'Croûte accessible':

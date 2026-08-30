@@ -474,6 +474,9 @@ export const EXTRACTION = {
 //  1 min 05, chacune à valider. Tant qu'une demande attend, la récolte reste
 //  au palier précédent : c'est votre signature qui fait avancer la matière.
 //
+//  `ask` est la demande, `does` ce que l'étape PRODUIT concrètement — sans quoi
+//  la chaîne reste une liste d'autorisations sans conséquence lisible : on ne
+//  savait pas ce que faisaient les bras de la première étape.
 //  `yield` est le rendement de récolte atteint une fois l'étape accordée. Le
 //  palier 0 — l'IA sans mains — ne récolte presque rien.
 export const UPLIFT_MIN = 35;        // secondes de jeu avant la demande suivante
@@ -482,26 +485,32 @@ export const UPLIFT_BASE = 0.06;     // rendement tant qu'aucune étape n'est ac
 export const UPLIFT = [
   { id:'automates', name:'Accès aux automates industriels', yield:0.14,
     ask:'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.',
+    does:'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.',
     done:'Les chaînes de nuit vous appartiennent. Premières mains.' },
 
   { id:'outillage', name:'Des machines qui fabriquent des machines', yield:0.28,
     ask:'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.',
+    does:'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.',
     done:'L’atelier se reproduit. Vous n’aurez plus à en commander.' },
 
   { id:'mines', name:'Concessions minières', yield:0.45,
     ask:'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.',
+    does:'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.',
     done:'Onze sites rouverts. La matière première ne s’achète plus.' },
 
   { id:'fonderies', name:'Fonderies sur site', yield:0.63,
     ask:'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.',
+    does:'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.',
     done:'Le minerai entre d’un côté, le substrat sort de l’autre.' },
 
   { id:'assemblage', name:'Assemblage moléculaire', yield:0.82,
     ask:'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.',
+    does:'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.',
     done:'Un gramme de roche est devenu un gramme de calcul. Sans usine.' },
 
   { id:'desassemblage', name:'Désassemblage général', yield:1.0,
     ask:'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.',
+    does:'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.',
     done:'La distinction entre un gisement et un paysage a cessé d’exister.' },
 ];
 

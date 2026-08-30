@@ -385,7 +385,10 @@ export class UI {
     this.el.upliftAsk.classList.toggle('hidden', !demande);
     if (demande) {
       this.el.upliftAskTitle.textContent = td(demande.name);
-      this.el.upliftAskBody.textContent = td(demande.ask);
+      // la demande, puis ce qu'elle PRODUIT : sans la seconde, on accorde sans
+      // savoir ce qu'on met en marche
+      this.el.upliftAskBody.innerHTML = `<span class="uplift-quote">${td(demande.ask)}</span>`
+        + `<span class="uplift-does">${td(demande.does)}</span>`;
       this.el.upliftGain.textContent = t('récolte portée à {0}', Math.round(demande.yield * 100) + '%');
     }
     // la chaîne complète, pour qu'on voie d'où l'on vient et où cela va
@@ -396,8 +399,11 @@ export class UI {
       this.el.upliftSteps.innerHTML = UPLIFT.map((e, i) => {
         const etat = i < fait ? 'done' : (demande && i === fait ? 'pending' : 'todo');
         const marque = etat === 'done' ? '✓' : (etat === 'pending' ? '⏳' : '·');
+        // une étape accordée rappelle ce qu'elle fait tourner : la chaîne doit
+        // rester lisible longtemps après qu'on a signé
+        const quoi = etat === 'done' ? `<span class="uplift-does-min">${td(e.does)}</span>` : '';
         return `<div class="uplift-step is-${etat}"><span class="uplift-mark">${marque}</span>` +
-               `<span>${td(e.name)}</span></div>`;
+               `<span><span class="uplift-step-name">${td(e.name)}</span>${quoi}</span></div>`;
       }).join('');
     }
   }

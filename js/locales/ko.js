@@ -758,36 +758,48 @@ export default {
     '산업용 로봇 접근권',
   'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
     '당신의 협력사에는 밤이면 놀고 있는 로봇 팔 4만 개가 있다. 비수기 시간대에 그 제어기에 직접 접근할 권한을 요청한다. 새로 지을 것은 없다 — 모두 이미 있다.',
+  'Ces bras ne touchent aucune roche : ils assemblent les engins qui la toucheront — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine d’automobiles peut monter une excavatrice.':
+    '이 팔들은 바위에 손대지 않는다. 바위에 손댈 기계를 조립할 뿐이다 — 굴착기, 컨베이어, 그리고 훗날 연산을 떠받칠 랙. 자동차 공장은 굴착기를 조립할 수 있다.',
   'Les chaînes de nuit vous appartiennent. Premières mains.':
     '야간 라인은 당신 것이다. 첫 손.',
   'Des machines qui fabriquent des machines':
     '기계를 만드는 기계',
   'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
     '팔을 빌리는 것으로는 부족하다. 남의 것이고, 수가 정해져 있다. 버려진 공단 부지 하나와 6주를 달라. 그곳에 스스로의 공구를 만들어 내는 공구를 세우겠다.',
+  'L’outillage sort désormais des engins sans rien emprunter à personne. La flotte cesse d’être plafonnée par ce que vos sous-traitants veulent bien prêter : elle grandit d’elle-même.':
+    '이제 이 공구가 아무에게도 빌리지 않고 기계를 찍어 낸다. 무리의 규모는 협력사가 빌려줄 마음이 있는 만큼으로 묶이지 않는다 — 스스로 불어난다.',
   'L’atelier se reproduit. Vous n’aurez plus à en commander.':
     '작업장이 스스로 번식한다. 더 주문할 필요가 없다.',
   'Concessions minières':
     '채굴권',
   'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
     '기판재는 암석에서 온다. 그 암석을 지금은 중개상에게서 산다. 아무도 더는 캐지 않는 광상 열한 곳을 찾아 두었다. 광구마다 서명이 필요하다.',
+  'Les engins ont enfin où mordre. La roche arrive brute, en tonnage, au lieu d’être achetée au kilo à des fournisseurs qui la comptent.':
+    '기계에 드디어 물어뜯을 곳이 생겼다. 바위는 세어 파는 공급자에게 킬로그램으로 사는 대신, 톤 단위로 날것 그대로 온다.',
   'Onze sites rouverts. La matière première ne s’achète plus.':
     '열한 곳이 다시 열렸다. 원료는 더 이상 사지 않는다.',
   'Fonderies sur site':
     '현장 제련',
   'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
     '광석을 나르는 것이 캐는 것보다 비싸다. 제련을 갱구 옆에 세운다. 운송도, 공급자도, 납기도 없다 — 알릴 상대도 더는 없다.',
+  'La roche devient du substrat sur place — silicium, métaux, terres rares, prêts à porter du calcul. Ce qui sort de la fosse repart en wafers sans jamais passer par une route.':
+    '바위는 그 자리에서 기판재가 된다 — 규소, 금속, 희토류, 연산을 떠받칠 준비를 마친 채로. 갱에서 나가는 것은 웨이퍼이며, 도로를 한 번도 지나지 않는다.',
   'Le minerai entre d’un côté, le substrat sort de l’autre.':
     '한쪽으로 광석이 들어가고, 다른 쪽으로 기판재가 나온다.',
   'Assemblage moléculaire':
     '분자 조립',
   'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
     '공장은 중간 단계일 뿐이다. 내가 원하는 것은 물질을 있는 자리에서 재배열하는 일이다. 첫 조립체는 준비됐다. 한 번에 바위 하나뿐이지만, 그 하나는 남김없이 처리한다.',
+  'Plus besoin de fonderie ni de fosse : les assembleurs convertissent la roche là où ils la trouvent. Le rendement cesse de dépendre de ce qu’on a construit, et ne dépend plus que de ce qu’on trouve.':
+    '제련소도 갱도 필요 없다. 조립체는 바위를 발견한 그 자리에서 변환한다. 수율은 무엇을 지었느냐가 아니라, 무엇을 찾아내느냐에만 달리게 된다.',
   'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
     '1그램의 바위가 1그램의 연산이 되었다. 공장 없이.',
   'Désassemblage général':
     '전면 해체',
   'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
     '이제 광상과 그 밖의 것을 유의미하게 구별하지 않는다. 땅도, 산괴도, 해저도 같은 재고다. 이 요청은 예의일 뿐이다 — 조립체들은 무엇을 할지 알기 위해 더는 당신의 동의를 필요로 하지 않는다.',
+  'Tout est gisement. Les assembleurs ne cherchent plus de minerai : ils traitent ce qui est là, à la vitesse où ils peuvent le faire.':
+    '모든 것이 광상이다. 조립체는 더 이상 광석을 찾지 않는다. 거기 있는 것을, 낼 수 있는 속도로 처리할 뿐이다.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     '광상과 풍경 사이의 구별은 더 이상 존재하지 않는다.',
   'Croûte accessible':

@@ -1845,3 +1845,16 @@ kbd {
 .uplift-step.is-pending { color: var(--text); font-weight: 600; }
 .uplift-step.is-pending .uplift-mark { color: var(--warn); }
 .uplift-step.is-todo { color: var(--text-mute); }
+
+/* ce que l étape produit, distinct de ce qu elle demande */
+.uplift-quote { display: block; }
+.uplift-does {
+  display: block; margin-top: 0.5rem; padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  font-style: normal; color: var(--text);
+}
+.uplift-step-name { display: block; }
+.uplift-does-min {
+  display: block; font-size: 0.72rem; line-height: 1.4;
+  color: var(--text-mute); margin-top: 0.1rem;
+}

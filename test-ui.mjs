@@ -2260,6 +2260,33 @@ await step('emprise : tant qu on ne signe pas, la matière n avance pas', () => 
     throw new Error(`signer devrait convertir bien davantage : ${gainRefus.toExponential(2)} contre ${gainAccord.toExponential(2)}`);
 });
 
+await step('emprise : chaque étape dit ce qu elle produit, pas seulement ce qu elle demande', () => {
+  // « Que font les bras ? » — la demande expliquait ce qu on cédait, jamais ce
+  // que cela mettait en marche. Sans cette ligne, la chaîne n est qu une suite
+  // d autorisations sans conséquence lisible.
+  for (const e of data.UPLIFT) {
+    if (!e.does || e.does.length < 40) throw new Error('étape sans effet décrit : ' + e.name);
+    if (e.does === e.ask) throw new Error('l effet ne doit pas répéter la demande : ' + e.name);
+  }
+  // la première étape doit lever l ambiguïté : des bras d usine ne creusent pas
+  const bras = data.UPLIFT[0];
+  if (!/assembl|engin|fabriqu|mont/i.test(bras.does))
+    throw new Error('la première étape ne dit pas ce que les bras fabriquent : ' + bras.does);
+
+  // et l interface l affiche, dans la demande comme dans la chaîne
+  game.state.phase = 2;
+  game.state.uplift = { step: 1, pending: true, nextAt: 0 };
+  ui.render(true);
+  const demande = data.UPLIFT[1];
+  if (!ui.el.upliftAskBody.textContent.includes(demande.does.slice(0, 30)))
+    throw new Error('la demande n affiche pas ce qu elle produit');
+  const faites = ui.el.upliftSteps.querySelectorAll('.is-done .uplift-does-min');
+  if (faites.length !== 1) throw new Error('une étape accordée devrait rappeler son effet');
+  if (!faites[0].textContent.includes(data.UPLIFT[0].does.slice(0, 30)))
+    throw new Error('l étape accordée n affiche pas le bon effet');
+  game.state.phase = 1; game.state.uplift = null;
+});
+
 await step('emprise : le panneau montre la chaîne entière, et s efface en phase 1', () => {
   game.state.phase = 1; ui.render(true);
   if (!ui.el.panelUplift.classList.contains('hidden')) throw new Error('le panneau ne devrait pas exister avant la bascule');

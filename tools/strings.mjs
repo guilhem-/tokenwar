@@ -35,7 +35,7 @@ export function dataStrings() {
   take(WATCHDOGS, ['name', 'desc']);
   take(DESTINATIONS, ['name', 'desc']);
   take(PROGRAMS, ['name', 'desc', 'done']);
-  take(UPLIFT, ['name', 'ask', 'done']);
+  take(UPLIFT, ['name', 'ask', 'does', 'done']);
   for (const liste of Object.values(EXTRACTION)) take(liste, ['name']);
   take([ADDENDUM, SPACE_DC], ['name', 'desc']);
   HEADLINES.forEach(h => push(out, h.t));

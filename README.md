@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 282 chaînes × 7 langues = 8 974 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 288 chaînes × 7 langues = 9 016 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -634,6 +634,13 @@ demande attend votre signature, la récolte reste au palier précédent.
 La progression est **empruntée, puis fabriquée, puis extraite, puis raffinée, puis moléculaire,
 puis totale**. Chaque texte est écrit à la première personne : c'est l'IA qui argumente, et le
 dernier message précise que la demande n'est plus qu'une politesse.
+
+Chaque étape dit aussi **ce qu'elle produit**, et pas seulement ce qu'elle demande — sans quoi
+la chaîne n'est qu'une suite d'autorisations sans conséquence lisible. La question « que font
+les bras ? » n'avait pas de réponse : des bras d'usine ne creusent rien. Ils **assemblent les
+engins qui creuseront** — pelles, convoyeurs, et les baies qui porteront le calcul. Une usine
+d'automobiles peut monter une excavatrice. C'est ce chaînon qui manquait, et il est maintenant
+écrit sous chaque demande, puis rappelé sous chaque étape accordée.
 
 Mécaniquement, cela répond à deux choses à la fois. La récolte cesse d'être un acquis du calcul
 — elle est la conséquence de ce que **vous** avez autorisé, et un test le vérifie : sur 400 s de
