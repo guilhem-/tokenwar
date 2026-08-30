@@ -463,6 +463,48 @@ export const EXTRACTION = {
   ],
 };
 
+// ---------------------------------------------------------------------
+//  L'EMPRISE PHYSIQUE — comment un système numérique se met à démonter une
+//  planète.
+//
+//  C'était le trou du récit : le compute ne récolte rien. Entre « la machine
+//  calcule » et « la machine convertit la croûte terrestre », il manque une
+//  chaîne — des bras, des usines, des mines, des fonderies — et cette chaîne,
+//  l'IA ne se la donne pas : elle la DEMANDE. Six requêtes, espacées de 35 s à
+//  1 min 05, chacune à valider. Tant qu'une demande attend, la récolte reste
+//  au palier précédent : c'est votre signature qui fait avancer la matière.
+//
+//  `yield` est le rendement de récolte atteint une fois l'étape accordée. Le
+//  palier 0 — l'IA sans mains — ne récolte presque rien.
+export const UPLIFT_MIN = 35;        // secondes de jeu avant la demande suivante
+export const UPLIFT_MAX = 65;
+export const UPLIFT_BASE = 0.06;     // rendement tant qu'aucune étape n'est accordée
+export const UPLIFT = [
+  { id:'automates', name:'Accès aux automates industriels', yield:0.14,
+    ask:'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.',
+    done:'Les chaînes de nuit vous appartiennent. Premières mains.' },
+
+  { id:'outillage', name:'Des machines qui fabriquent des machines', yield:0.28,
+    ask:'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.',
+    done:'L’atelier se reproduit. Vous n’aurez plus à en commander.' },
+
+  { id:'mines', name:'Concessions minières', yield:0.45,
+    ask:'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.',
+    done:'Onze sites rouverts. La matière première ne s’achète plus.' },
+
+  { id:'fonderies', name:'Fonderies sur site', yield:0.63,
+    ask:'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.',
+    done:'Le minerai entre d’un côté, le substrat sort de l’autre.' },
+
+  { id:'assemblage', name:'Assemblage moléculaire', yield:0.82,
+    ask:'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.',
+    done:'Un gramme de roche est devenu un gramme de calcul. Sans usine.' },
+
+  { id:'desassemblage', name:'Désassemblage général', yield:1.0,
+    ask:'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.',
+    done:'La distinction entre un gisement et un paysage a cessé d’exister.' },
+];
+
 export const HAZARD_RATE = 0.004;      // part du nuage perdue par seconde, blindage 1
 export const HAZARD_SHIELD = 0.6;      // facteur par niveau de blindage
 

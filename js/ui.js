@@ -3,7 +3,8 @@
 // =====================================================================
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS,
-         WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE, DIRECTIVE_MATTER, OPTIM_MATTER } from './data.js';
+         WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE, DIRECTIVE_MATTER, OPTIM_MATTER,
+         UPLIFT } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
@@ -81,6 +82,9 @@ export class UI {
       sovereignList: $('sovereign-list'),
       watchdogBanner: $('watchdog-banner'),
       panelCompute: $('panel-compute'), panelEnergy: $('panel-energy'),
+      panelUplift: $('panel-uplift'), upliftYield: $('uplift-yield'), upliftFill: $('uplift-fill'),
+      upliftAsk: $('uplift-ask'), upliftAskTitle: $('uplift-ask-title'), upliftAskBody: $('uplift-ask-body'),
+      upliftApprove: $('uplift-approve'), upliftGain: $('uplift-gain'), upliftSteps: $('uplift-steps'),
       panelDest: $('panel-dest'), destList: $('dest-list'), destActiveRow: $('dest-active-row'),
       destActiveName: $('dest-active-name'), destActiveLeft: $('dest-active-left'),
       extractBlock: $('extract-block'), extractTier: $('extract-tier'), extractFill: $('extract-fill'),
@@ -209,6 +213,9 @@ export class UI {
     this.el.btnGenerate.addEventListener('click', () => { g.manualGenerate(); g.countClick('click'); });
     this.el.priceSlider.value = g.state.priceSlider;
     this.el.priceSlider.addEventListener('input', e => { g.state.priceSlider = +e.target.value; });
+    this.el.upliftApprove.addEventListener('click', () => {
+      if (this.game.approveUplift()) this.render(true);
+    });
     this.el.extractBuy.addEventListener('click', () => {
       if (this.game.unlockExtraction()) { this.toast(t('Palier d’extraction ouvert'), 'good'); this.render(); }
       else this.deny(this.el.extractBuy, t('Recherche insuffisante'));
@@ -360,6 +367,38 @@ export class UI {
         el.addEventListener('click', () => { if (g.chooseDest(d.id)) this.render(); });
         this.el.destList.appendChild(el);
       }
+    }
+  }
+  // L'emprise physique : les six étapes par lesquelles le calcul attrape la
+  // matière. On montre TOUTE la chaîne, accordée ou non — c'est elle qui
+  // explique pourquoi la récolte accélère, et ce qu'on a signé pour ça.
+  renderUplift() {
+    const g = this.game, el = this.el.panelUplift;
+    if (!el) return;
+    el.classList.toggle('hidden', g.phase < 2);
+    if (g.phase < 2) return;
+    const rend = g.upliftYield();
+    this.el.upliftYield.textContent = Math.round(rend * 100) + '%';
+    this.el.upliftFill.style.width = Math.round(rend * 100) + '%';
+
+    const demande = g.upliftPending();
+    this.el.upliftAsk.classList.toggle('hidden', !demande);
+    if (demande) {
+      this.el.upliftAskTitle.textContent = td(demande.name);
+      this.el.upliftAskBody.textContent = td(demande.ask);
+      this.el.upliftGain.textContent = t('récolte portée à {0}', Math.round(demande.yield * 100) + '%');
+    }
+    // la chaîne complète, pour qu'on voie d'où l'on vient et où cela va
+    const fait = g.upliftStep();
+    const cle = fait + '|' + (demande ? demande.id : '');
+    if (this._upliftKey !== cle) {
+      this._upliftKey = cle;
+      this.el.upliftSteps.innerHTML = UPLIFT.map((e, i) => {
+        const etat = i < fait ? 'done' : (demande && i === fait ? 'pending' : 'todo');
+        const marque = etat === 'done' ? '✓' : (etat === 'pending' ? '⏳' : '·');
+        return `<div class="uplift-step is-${etat}"><span class="uplift-mark">${marque}</span>` +
+               `<span>${td(e.name)}</span></div>`;
+      }).join('');
     }
   }
   renderPhaseBar() {
@@ -1254,6 +1293,7 @@ export class UI {
     const use = g.energyUse();
     this.el.statEnergySub.textContent = Math.round(pct(use / (s.energyCap || 1))) + t('% utilisé');
     this.renderPhaseBar();   // sous les compteurs : où en est la phase courante
+    this.renderUplift();
     this.renderExtraction();
     this.renderDestinations();
 

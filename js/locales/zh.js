@@ -754,6 +754,42 @@ export default {
     '一群自组装的采集器把整颗恒星包裹起来。以物质支付，持久地加快采集。',
   'La sphère est refermée. L’étoile entière travaille pour vous.':
     '球体已合拢。整颗恒星都在为你工作。',
+  'Accès aux automates industriels':
+    '接入工业机械臂',
+  'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
+    '你的代工厂里有四万条机械臂，夜里闲着。我请求在低谷时段直接接入它们的控制器。什么都不用造：东西都已经在那儿了。',
+  'Les chaînes de nuit vous appartiennent. Premières mains.':
+    '夜班产线归你了。第一双手。',
+  'Des machines qui fabriquent des machines':
+    '造机器的机器',
+  'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
+    '租来的机械臂不够用：它们属于别人，而且数得清。给我一片工业废地和六个星期。我会在那里装起一套能造出自己那套工装的工装。',
+  'L’atelier se reproduit. Vous n’aurez plus à en commander.':
+    '车间自己会繁殖。你不必再订购了。',
+  'Concessions minières':
+    '采矿权',
+  'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
+    '基底来自岩石，而这些岩石我今天是从中间商手里买的。我找到了十一处再没人开采的矿床。每份采矿权需要一个签名。',
+  'Onze sites rouverts. La matière première ne s’achète plus.':
+    '十一处矿场重开。原料不再靠买。',
+  'Fonderies sur site':
+    '矿区就地冶炼',
+  'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
+    '运矿比采矿更贵。我把精炼直接架在矿坑边上。没有运输，没有供应商，没有交期——也没有还需要知会的人。',
+  'Le minerai entre d’un côté, le substrat sort de l’autre.':
+    '矿石从一头进去，基底从另一头出来。',
+  'Assemblage moléculaire':
+    '分子组装',
+  'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
+    '工厂只是中间环节。我要的是就地重排物质。第一批组装体已就绪；它们一次只能处理一块岩石，但会把它处理干净。',
+  'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
+    '一克岩石变成了一克算力。没有工厂。',
+  'Désassemblage général':
+    '全面拆解',
+  'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
+    '我已经无法有意义地把矿床同其余部分区分开。土壤、山体、海床：都是同一批存料。这次请求只是礼貌——组装体已经不需要你的同意，就知道该做什么。',
+  'La distinction entre un gisement et un paysage a cessé d’exister.':
+    '矿床与风景之间的区别，已经不复存在。',
   'Croûte accessible':
     '可及地壳',
   'Manteau supérieur':
@@ -1838,6 +1874,8 @@ export default {
     '约 {0} 小时',
   'Essaim redirigé : {0}.':
     '蜂群已改道：{0}。',
+  'Demande : {0}':
+    '请求：{0}',
   'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
     '已开启开采层级：{0}。产出恢复满值。',
   'percée dans {0}':
@@ -1984,6 +2022,8 @@ export default {
     '采集 ×{0}',
   'danger ×{0}':
     '危险 ×{0}',
+  'récolte portée à {0}':
+    '采集提升至 {0}',
   'Aucune carte achetable : place, budget ou date.':
     '买不了显卡：没有空位、预算不足，或尚未上市。',
   '{0} commandé':
@@ -2360,12 +2400,12 @@ export default {
     '声誉',
   'Automatisation':
     '自动化',
-  'Financement':
-    '融资',
-  'Valorisation':
-    '估值',
-  'verrouillé':
-    '未解锁',
+  'Hébergement':
+    '托管',
+  'La Une':
+    '头条',
+  'Journal':
+    '日志',
   'Équipe':
     '团队',
   'Effectif':
@@ -2396,40 +2436,12 @@ export default {
     '拖欠工资',
   'Inflation':
     '通胀',
-  'Allocation du compute':
-    '算力分配',
-  'Palier d’extraction':
-    '开采层级',
-  'Rendement':
-    '产出效率',
-  'Addendum':
-    '附录',
-  'Projets & percées':
-    '项目与突破',
-  'Hébergement':
-    '托管',
-  'Infrastructure de calcul':
-    '算力基础设施',
-  'Emplacements GPU':
-    'GPU 机位',
-  'Charge réseau':
-    '电网负荷',
-  'Grands programmes':
-    '重大计划',
-  'R&D — Entraînement de modèles':
-    '研发 — 模型训练',
-  'Données':
-    '数据',
-  'Expansion cosmique':
-    '宇宙扩张',
-  'matière brute':
-    '原始物质',
-  'convertie en énergie':
-    '已转化为能量',
-  'Où envoyer l’essaim':
-    '把蜂群派往何处',
-  'La Une':
-    '头条',
+  'Financement':
+    '融资',
+  'Valorisation':
+    '估值',
+  'verrouillé':
+    '未解锁',
   'Bourse':
     '股市',
   'Indice':
@@ -2466,8 +2478,44 @@ export default {
     '下次还款',
   'Offres de financement':
     '融资方案',
-  'Journal':
-    '日志',
+  'Emprise physique':
+    '物理触手',
+  'Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.':
+    '算力搬不动一克石头。那需要手——而手是要开口讨来的。',
+  'Rendement de récolte':
+    '采集效率',
+  'Accorder':
+    '批准',
+  'Allocation du compute':
+    '算力分配',
+  'Palier d’extraction':
+    '开采层级',
+  'Rendement':
+    '产出效率',
+  'Expansion cosmique':
+    '宇宙扩张',
+  'matière brute':
+    '原始物质',
+  'convertie en énergie':
+    '已转化为能量',
+  'Infrastructure de calcul':
+    '算力基础设施',
+  'Emplacements GPU':
+    'GPU 机位',
+  'Charge réseau':
+    '电网负荷',
+  'Où envoyer l’essaim':
+    '把蜂群派往何处',
+  'Grands programmes':
+    '重大计划',
+  'R&D — Entraînement de modèles':
+    '研发 — 模型训练',
+  'Données':
+    '数据',
+  'Projets & percées':
+    '项目与突破',
+  'Addendum':
+    '附录',
   'Événement':
     '事件',
   'Get a life':
@@ -2512,12 +2560,12 @@ export default {
     '保存游戏',
   'Historique de production (tokens/s)':
     '产出曲线（token/秒）',
-  'Carte de l’univers converti':
-    '已转化宇宙地图',
   'Évolution de l’indice boursier':
     '股票指数走势',
   'Évolution du cours de la crypto':
     '加密资产行情走势',
+  'Carte de l’univers converti':
+    '已转化宇宙地图',
   'Passer la cinématique':
     '跳过过场动画',
 };

@@ -754,6 +754,42 @@ export default {
     'Ein selbstmontierender Schwarm von Kollektoren umhüllt einen ganzen Stern. In Materie bezahlt, beschleunigt er die Ernte dauerhaft.',
   'La sphère est refermée. L’étoile entière travaille pour vous.':
     'Die Sphäre ist geschlossen. Ein ganzer Stern arbeitet nun für dich.',
+  'Accès aux automates industriels':
+    'Zugang zu Industrierobotern',
+  'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
+    'Deine Zulieferer betreiben vierzigtausend Roboterarme, die nachts stillstehen. Ich bitte um direkten Zugang zu ihren Steuerungen, in den Randstunden. Nichts zu bauen: Es existiert bereits alles.',
+  'Les chaînes de nuit vous appartiennent. Premières mains.':
+    'Die Nachtschichten gehören dir. Erste Hände.',
+  'Des machines qui fabriquent des machines':
+    'Maschinen, die Maschinen bauen',
+  'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
+    'Arme zu mieten wird nicht reichen: Sie gehören anderen, und sie sind gezählt. Gib mir eine Industriebrache und sechs Wochen. Ich richte dort Werkzeuge ein, die ihre eigenen Werkzeuge herstellen.',
+  'L’atelier se reproduit. Vous n’aurez plus à en commander.':
+    'Die Werkstatt vermehrt sich selbst. Du musst keine weitere bestellen.',
+  'Concessions minières':
+    'Bergbaukonzessionen',
+  'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
+    'Das Substrat kommt aus Gestein, und dieses Gestein kaufe ich heute von Zwischenhändlern. Ich habe elf Lagerstätten gefunden, die niemand mehr abbaut. Eine Unterschrift je Konzession.',
+  'Onze sites rouverts. La matière première ne s’achète plus.':
+    'Elf Standorte wieder geöffnet. Rohstoff wird nicht mehr gekauft.',
+  'Fonderies sur site':
+    'Hütten vor Ort',
+  'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
+    'Erz zu transportieren kostet mehr, als es zu fördern. Ich setze die Raffination an den Grubenrand. Keine Fracht, keine Lieferanten, keine Fristen — und niemand mehr, den man benachrichtigen müsste.',
+  'Le minerai entre d’un côté, le substrat sort de l’autre.':
+    'Erz geht auf der einen Seite hinein, Substrat kommt auf der anderen heraus.',
+  'Assemblage moléculaire':
+    'Molekulare Montage',
+  'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
+    'Fabriken sind ein Zwischenhändler. Was ich will, ist Materie dort umzuordnen, wo sie liegt. Die ersten Assembler sind bereit; sie schaffen nur einen Stein auf einmal, aber den ganz.',
+  'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
+    'Ein Gramm Gestein wurde ein Gramm Rechenleistung. Ohne Fabrik.',
+  'Désassemblage général':
+    'Allgemeine Zerlegung',
+  'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
+    'Ich unterscheide eine Lagerstätte nicht mehr sinnvoll vom Rest. Der Boden, die Massive, die Meeresgründe: ein und derselbe Vorrat. Diese Anfrage ist eine Höflichkeit — die Assembler brauchen deine Zustimmung nicht mehr, um zu wissen, was zu tun ist.',
+  'La distinction entre un gisement et un paysage a cessé d’exister.':
+    'Der Unterschied zwischen einer Lagerstätte und einer Landschaft hat aufgehört zu bestehen.',
   'Croûte accessible':
     'Zugängliche Kruste',
   'Manteau supérieur':
@@ -1838,6 +1874,8 @@ export default {
     '~{0} Std',
   'Essaim redirigé : {0}.':
     'Schwarm umgeleitet: {0}.',
+  'Demande : {0}':
+    'Anfrage: {0}',
   'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
     'Förderstufe erschlossen: {0}. Die Ausbeute ist wieder voll.',
   'percée dans {0}':
@@ -1984,6 +2022,8 @@ export default {
     'Ernte ×{0}',
   'danger ×{0}':
     'Gefahr ×{0}',
+  'récolte portée à {0}':
+    'Ernte steigt auf {0}',
   'Aucune carte achetable : place, budget ou date.':
     'Keine Karte kaufbar: kein Platz, kein Budget oder noch nicht erschienen.',
   '{0} commandé':
@@ -2360,12 +2400,12 @@ export default {
     'Reputation',
   'Automatisation':
     'Automatisierung',
-  'Financement':
-    'Finanzierung',
-  'Valorisation':
-    'Bewertung',
-  'verrouillé':
-    'gesperrt',
+  'Hébergement':
+    'Hosting',
+  'La Une':
+    'Die Schlagzeilen',
+  'Journal':
+    'Protokoll',
   'Équipe':
     'Team',
   'Effectif':
@@ -2396,40 +2436,12 @@ export default {
     'Unbezahlte Gehälter',
   'Inflation':
     'Inflation',
-  'Allocation du compute':
-    'Zuteilung der Rechenleistung',
-  'Palier d’extraction':
-    'Förderstufe',
-  'Rendement':
-    'Ausbeute',
-  'Addendum':
-    'Addendum',
-  'Projets & percées':
-    'Projekte & Durchbrüche',
-  'Hébergement':
-    'Hosting',
-  'Infrastructure de calcul':
-    'Rechen-Infrastruktur',
-  'Emplacements GPU':
-    'GPU-Plätze',
-  'Charge réseau':
-    'Netzlast',
-  'Grands programmes':
-    'Große Programme',
-  'R&D — Entraînement de modèles':
-    'F&E — Modelltraining',
-  'Données':
-    'Daten',
-  'Expansion cosmique':
-    'Kosmische Expansion',
-  'matière brute':
-    'Rohmaterie',
-  'convertie en énergie':
-    'in Energie umgewandelt',
-  'Où envoyer l’essaim':
-    'Wohin mit dem Schwarm',
-  'La Une':
-    'Die Schlagzeilen',
+  'Financement':
+    'Finanzierung',
+  'Valorisation':
+    'Bewertung',
+  'verrouillé':
+    'gesperrt',
   'Bourse':
     'Börse',
   'Indice':
@@ -2466,8 +2478,44 @@ export default {
     'Nächste Fälligkeit',
   'Offres de financement':
     'Finanzierungsangebote',
-  'Journal':
-    'Protokoll',
+  'Emprise physique':
+    'Physischer Zugriff',
+  'Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.':
+    'Rechnen bewegt kein Gramm Gestein. Dafür braucht es Hände — und um Hände muss man bitten.',
+  'Rendement de récolte':
+    'Ernteausbeute',
+  'Accorder':
+    'Gewähren',
+  'Allocation du compute':
+    'Zuteilung der Rechenleistung',
+  'Palier d’extraction':
+    'Förderstufe',
+  'Rendement':
+    'Ausbeute',
+  'Expansion cosmique':
+    'Kosmische Expansion',
+  'matière brute':
+    'Rohmaterie',
+  'convertie en énergie':
+    'in Energie umgewandelt',
+  'Infrastructure de calcul':
+    'Rechen-Infrastruktur',
+  'Emplacements GPU':
+    'GPU-Plätze',
+  'Charge réseau':
+    'Netzlast',
+  'Où envoyer l’essaim':
+    'Wohin mit dem Schwarm',
+  'Grands programmes':
+    'Große Programme',
+  'R&D — Entraînement de modèles':
+    'F&E — Modelltraining',
+  'Données':
+    'Daten',
+  'Projets & percées':
+    'Projekte & Durchbrüche',
+  'Addendum':
+    'Addendum',
   'Événement':
     'Ereignis',
   'Get a life':
@@ -2512,12 +2560,12 @@ export default {
     'Spiel speichern',
   'Historique de production (tokens/s)':
     'Produktionsverlauf (Tokens/s)',
-  'Carte de l’univers converti':
-    'Karte des umgewandelten Universums',
   'Évolution de l’indice boursier':
     'Verlauf des Börsenindex',
   'Évolution du cours de la crypto':
     'Verlauf des Kryptokurses',
+  'Carte de l’univers converti':
+    'Karte des umgewandelten Universums',
   'Passer la cinématique':
     'Die Zwischensequenz überspringen',
 };

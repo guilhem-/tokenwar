@@ -12,7 +12,7 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          OPS_RATIO, OPS_RISK, OPS_VALUE_LOSS, DATA_RATIO, TRAIN_FAIL_RISK,
          OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION,
          PHASE3_EARTH, ENDING_UNIVERSE, WATCHDOGS, WATCHDOG_AFTER, WATCHDOG_SHARE,
-         HAZARD_RATE, HAZARD_SHIELD, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE, OPTIM_MATTER, DIRECTIVE_MATTER,
+         HAZARD_RATE, HAZARD_SHIELD, UPLIFT, UPLIFT_MIN, UPLIFT_MAX, UPLIFT_BASE, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE, OPTIM_MATTER, DIRECTIVE_MATTER,
          DESTINATIONS, DEST_DURATION, DEST_CHOICES } from './data.js';
 import { clamp, fmtPower, fmtMoney, fmtMass, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
@@ -99,6 +99,7 @@ export class Game {
     // les prix du jeu ; l'inflation s'applique au moment du paiement.
     s.loans = [];
     s.loanSeq = 0;
+    s.uplift = null;         // emprise physique : étapes accordées et demande en attente
     s.extractTier = {};      // palier d'extraction ouvert, par phase
     s.dest = null;           // région ciblée par l'essaim, et les candidates
     s.watchdogs = {};        // dispositifs de surveillance des incidents achetés
@@ -1534,7 +1535,7 @@ export class Game {
       const ps = this.state.probeSpecs;
       probeSpeed = Math.min(8, Math.pow(1.25, ps.harvest + ps.speed) * (1 + Math.log10(this.state.probes + 1) * 0.15));
     }
-    return a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * probeSpeed * 1.66e-9 * wafer.perf;
+    return a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * this.upliftYield() * probeSpeed * 1.66e-9 * wafer.perf;
   }
   // ---- destinations de l'essaim (phase 3) --------------------------
   // Chaque région se paie en risque ce qu'elle rapporte en matière, et
@@ -1574,6 +1575,58 @@ export class Game {
     if (!d || !s.dest || !s.dest.offers.includes(id)) return false;
     s.dest = { id, until: s.playSeconds + DEST_DURATION, offers: [] };
     this.log(t('Essaim redirigé : {0}.', td(d.name)), 'info');
+    return true;
+  }
+
+  // ---- l'emprise physique -------------------------------------------
+  // Six demandes que l'IA vous adresse pour passer du calcul à la matière.
+  // Tant qu'une demande attend votre signature, la récolte reste au palier
+  // précédent : c'est la seule chose qui explique, dans le jeu, comment un
+  // système numérique se met à démonter une planète.
+  upliftStep() { return this.state.uplift ? this.state.uplift.step : 0; }
+  upliftDone() { return this.upliftStep() >= UPLIFT.length; }
+  // rendement de récolte accordé par les étapes déjà validées
+  upliftYield() {
+    if (this.phase < 2) return 1;
+    const n = this.upliftStep();
+    return n === 0 ? UPLIFT_BASE : UPLIFT[n - 1].yield;
+  }
+  // la demande en attente, s'il y en a une
+  upliftPending() {
+    const u = this.state.uplift;
+    if (!u || !u.pending || this.upliftDone()) return null;
+    return UPLIFT[u.step] || null;
+  }
+  upliftWait() {
+    const u = this.state.uplift;
+    if (!u || u.pending || this.upliftDone()) return 0;
+    return Math.max(0, u.nextAt - this.state.playSeconds);
+  }
+  tickUplift() {
+    const s = this.state;
+    if (this.phase < 2 || this.upliftDone()) return;
+    if (!s.uplift) s.uplift = { step: 0, pending: false, nextAt: 0 };
+    const u = s.uplift;
+    if (u.pending) return;                       // on attend votre signature
+    if (!u.nextAt) {                             // premier rendez-vous après la bascule
+      u.nextAt = s.playSeconds + UPLIFT_MIN + Math.random() * (UPLIFT_MAX - UPLIFT_MIN);
+      return;
+    }
+    if (s.playSeconds < u.nextAt) return;
+    u.pending = true;
+    const e = UPLIFT[u.step];
+    this.log(t('Demande : {0}', td(e.name)), 'info');
+    this.ui && this.ui.onUplift && this.ui.onUplift(e);
+  }
+  approveUplift() {
+    const e = this.upliftPending();
+    if (!e) return false;
+    const u = this.state.uplift;
+    u.step += 1;
+    u.pending = false;
+    u.nextAt = this.state.playSeconds + UPLIFT_MIN + Math.random() * (UPLIFT_MAX - UPLIFT_MIN);
+    this.log(td(e.done), 'milestone');
+    this.toast(td(e.name), 'good');
     return true;
   }
 
@@ -2422,7 +2475,7 @@ export class Game {
 
       // RÉCOLTE DE BASE : pilote la boucle compute↔matière à τ ≈ 45 s, INDÉPENDANTE des bonus
       // (c'est la clé d'un rythme stable, quels que soient les choix du joueur).
-      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield();  // kg/s « bruts »
+      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * this.upliftYield();  // kg/s « bruts »
 
       // bonus de consommation : intelligence + nanotech (matterMult) + événements. Borné → effet logarithmique sur le rythme.
       let consumeBonus = s.mods.matterMult
@@ -2469,6 +2522,7 @@ export class Game {
     this.tickPrograms();                          // recherche → mise au point → déploiement
     this.tickAuto(dt);
     this.tickSpaceDC();
+    this.tickUplift();
     if (this.phase < 2) { this.tickStock(dt); this.tickCrypto(dt); this.tickCrisis(dt); this.tickDebt(); } // ni bourse, ni incident, ni dette quand l'argent disparaît
     this.tickEvents(dt);
     this.tickHeadlines(dt);

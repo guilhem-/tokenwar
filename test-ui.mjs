@@ -1714,6 +1714,8 @@ await step('barre de phase : le temps restant tient compte de la boucle exponent
     g2.state.intelligence = 1e9;
     g2.state.energyCap = 1e12;
     g2.state.alloc = { serve: (1 - h) * 0.7, research: (1 - h) * 0.2, improve: (1 - h) * 0.1, harvest: h };
+    // l'emprise physique est accordée : sans elle la récolte plafonne à 6 %
+    g2.state.uplift = { step: data.UPLIFT.length, pending: false, nextAt: 0 };
     g2.tick(0.25);
     return g2;
   };
@@ -2024,6 +2026,7 @@ await step('extraction : la décrue allonge le temps annoncé', () => {
     g2.state.earthConsumed = frac * data.PHASE3_EARTH;
     g2.state.matter = g2.state.earthConsumed * data.EARTH_MASS;
     g2.state.alloc = { serve: 0.3, research: 0.1, improve: 0.1, harvest: 0.5 };
+    g2.state.uplift = { step: data.UPLIFT.length, pending: false, nextAt: 0 };
     g2.tick(0.25);
     return g2;
   };
@@ -2091,9 +2094,9 @@ await step('colonnes : la répartition mesurée est celle qui est en place', () 
   // pire. Elle est FIXE : aucun panneau ne change de colonne en cours de
   // partie. Ce test la fige, pour qu'un ajout ne la défasse pas en silence.
   const ATTENDU = {
-    left:   ['produce', 'market', 'auto', 'team', 'charges', 'funding', 'alloc', 'cosmos'],
-    center: ['stock', 'debt', 'hosting', 'dest', 'press', 'log'],
-    right:  ['compute', 'energy', 'programs', 'training', 'projects', 'addendum'],
+    left:   ['produce', 'market', 'auto', 'hosting', 'press', 'log'],
+    center: ['team', 'charges', 'funding', 'stock', 'debt', 'uplift', 'alloc', 'cosmos'],
+    right:  ['compute', 'energy', 'dest', 'programs', 'training', 'projects', 'addendum'],
   };
   const doc = dom.window.document;
   const vus = [];
@@ -2196,6 +2199,85 @@ await step('phase 2+ : plus rien ne se paie ni ne s affiche en dollars', () => {
   if (game.state.money !== avE) throw new Error('la trésorerie a été débitée après la bascule');
   if (!(game.state.matter < avM)) throw new Error('la matière n a pas été débitée');
   game.state.phase = 1; ui.onPhaseChange(1);
+});
+
+// ---- l emprise physique : comment le calcul attrape la matière ----
+await step('emprise : six demandes espacées, chacune à accorder', () => {
+  const g2 = new Game(null);
+  g2.state.phase = 2; g2.state.gpuCounts = { wafer: 1e8 }; g2.state.energyCap = 1e9;
+  // sans la moindre étape accordée, l IA calcule mais ne déplace rien
+  if (g2.upliftYield() !== data.UPLIFT_BASE) throw new Error('le palier de départ devrait être ' + data.UPLIFT_BASE);
+  if (g2.upliftPending()) throw new Error('une demande ne devrait pas attendre dès la bascule');
+
+  const instants = [];
+  let t = 0, accordees = 0;
+  while (accordees < data.UPLIFT.length && t < 900) {
+    g2.state.playSeconds += 0.25; g2.tickUplift(); t += 0.25;
+    const p = g2.upliftPending();
+    if (!p) continue;
+    if (p.id !== data.UPLIFT[accordees].id) throw new Error('les demandes doivent arriver dans l ordre');
+    const avant = g2.upliftYield();
+    instants.push(t);
+    if (!g2.approveUplift()) throw new Error('accord refusé');
+    if (!(g2.upliftYield() > avant)) throw new Error('accorder devrait relever la récolte');
+    accordees++;
+  }
+  if (accordees !== data.UPLIFT.length) throw new Error('les six demandes ne sont pas arrivées');
+  if (g2.upliftYield() !== 1) throw new Error('la chaîne complète devrait rendre 100%, obtenu ' + g2.upliftYield());
+  if (!g2.upliftDone() || g2.upliftPending()) throw new Error('rien ne doit plus être demandé une fois la chaîne finie');
+
+  // les espacements tombent bien dans la fourchette demandée
+  const ecarts = instants.map((v, i) => v - (i ? instants[i - 1] : 0));
+  for (const e of ecarts)
+    if (e < data.UPLIFT_MIN - 1 || e > data.UPLIFT_MAX + 1)
+      throw new Error(`espacement hors de [${data.UPLIFT_MIN}, ${data.UPLIFT_MAX}] s : ${e.toFixed(1)}`);
+});
+
+await step('emprise : tant qu on ne signe pas, la matière n avance pas', () => {
+  // C est tout l enjeu : la récolte n est pas un acquis du calcul, elle est
+  // la conséquence de ce que le joueur a autorisé.
+  const jouer = (accorder) => {
+    const g2 = new Game(null);
+    g2.state.phase = 2; g2.state.modelTier = 11;
+    g2.state.gpuCounts = { wafer: 1e8 }; g2.state.energyCap = 1e9; g2.state.matter = 1e20;
+    g2.state.earthConsumed = g2.state.matter / data.EARTH_MASS;
+    g2.state.alloc = { serve: 0.2, research: 0.15, improve: 0.15, harvest: 0.5 };
+    for (let i = 0; i < 1600; i++) {          // 400 s de jeu
+      g2.tick(0.25);
+      if (accorder && g2.upliftPending()) g2.approveUplift();
+    }
+    return g2;
+  };
+  const refus = jouer(false), accord = jouer(true);
+  if (refus.upliftStep() !== 0) throw new Error('ne rien signer ne devrait rien accorder');
+  if (accord.upliftStep() < 4) throw new Error('en 400 s, plusieurs étapes devraient être passées');
+  // On compare ce qui a été CONVERTI pendant la partie, pas le total : les deux
+  // partent du même stock, et l'écart s'y noierait.
+  const depart = 1e20 / data.EARTH_MASS;
+  const gainRefus = refus.state.earthConsumed - depart;
+  const gainAccord = accord.state.earthConsumed - depart;
+  if (!(gainAccord > gainRefus * 100))
+    throw new Error(`signer devrait convertir bien davantage : ${gainRefus.toExponential(2)} contre ${gainAccord.toExponential(2)}`);
+});
+
+await step('emprise : le panneau montre la chaîne entière, et s efface en phase 1', () => {
+  game.state.phase = 1; ui.render(true);
+  if (!ui.el.panelUplift.classList.contains('hidden')) throw new Error('le panneau ne devrait pas exister avant la bascule');
+  game.state.phase = 2;
+  game.state.uplift = { step: 2, pending: false, nextAt: game.state.playSeconds + 999 };
+  ui.render(true);
+  if (ui.el.panelUplift.classList.contains('hidden')) throw new Error('le panneau devrait s afficher en phase 2');
+  const lignes = ui.el.upliftSteps.querySelectorAll('.uplift-step');
+  if (lignes.length !== data.UPLIFT.length) throw new Error('la chaîne complète devrait être listée');
+  if (ui.el.upliftSteps.querySelectorAll('.is-done').length !== 2) throw new Error('deux étapes devraient être marquées faites');
+  if (!ui.el.upliftAsk.classList.contains('hidden')) throw new Error('aucune demande n attend : le bloc devrait être masqué');
+  // une demande en attente s affiche avec son texte
+  game.state.uplift = { step: 2, pending: true, nextAt: 0 };
+  ui.render(true);
+  if (ui.el.upliftAsk.classList.contains('hidden')) throw new Error('la demande en attente devrait s afficher');
+  if (!ui.el.upliftAskBody.textContent.trim()) throw new Error('la demande est vide');
+  if (!ui.el.upliftSteps.querySelectorAll('.is-pending').length) throw new Error('l étape en attente n est pas marquée');
+  game.state.phase = 1; game.state.uplift = null;
 });
 
 // save/load

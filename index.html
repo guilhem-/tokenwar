@@ -129,6 +129,31 @@
         </div>
       </div>
 
+      <div class="panel" id="panel-hosting">
+        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
+        <div class="panel-body">
+          <div class="item-list" id="infra-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-press">
+        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
+        <div class="panel-body">
+          <div class="headlines" id="headlines"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-log">
+        <div class="panel-title" data-i18n="Journal">Journal</div>
+        <div class="panel-body">
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="col col-center">
+
       <div class="panel" id="panel-team">
         <div class="panel-title" data-i18n="Équipe">Équipe</div>
         <div class="panel-body">
@@ -173,45 +198,6 @@
           <div class="item-list" id="funding-list"></div>
         </div>
       </div>
-
-      <div class="panel hidden" id="panel-alloc">
-        <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
-        <div class="panel-body" id="alloc-body"></div>
-        <div class="panel-body extract-block hidden" id="extract-block">
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Palier d’extraction">Palier d’extraction</span>
-            <span class="num" id="extract-tier">—</span>
-          </div>
-          <div class="meter"><div class="progress-fill" id="extract-fill" style="width:100%"></div></div>
-          <div class="meter-row">
-            <span class="text-muted" data-i18n="Rendement">Rendement</span>
-            <span class="num" id="extract-yield">100%</span>
-          </div>
-          <button class="btn btn-buy hidden" id="extract-buy">
-            <span class="choice-label" id="extract-label"></span>
-            <span class="btn-cost num" id="extract-cost"></span>
-          </button>
-        </div>
-      </div>
-
-      <div class="panel hidden" id="panel-cosmos">
-        <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
-        <div class="panel-body">
-          <div class="universe-wrap">
-            <canvas id="universe-map" height="150" data-i18n-aria="Carte de l’univers converti" aria-label="Carte de l’univers converti"></canvas>
-            <div class="universe-legend">
-              <span><i class="dot raw"></i> <span data-i18n="matière brute">matière brute</span></span>
-              <span><i class="dot done"></i> <span data-i18n="convertie en énergie">convertie en énergie</span></span>
-              <span class="num" id="universe-pct">0,000 %</span>
-            </div>
-          </div>
-          <div id="cosmos-body"></div>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="col col-center">
 
       <div class="panel" id="panel-stock">
         <div class="panel-title" data-i18n="Bourse">Bourse</div>
@@ -297,35 +283,59 @@
         </div>
       </div>
 
-      <div class="panel" id="panel-hosting">
-        <div class="panel-title" data-i18n="Hébergement">Hébergement</div>
+      <div class="panel hidden" id="panel-uplift">
+        <div class="panel-title" data-i18n="Emprise physique">Emprise physique</div>
         <div class="panel-body">
-          <div class="item-list" id="infra-list"></div>
-        </div>
-      </div>
-
-      <div class="panel hidden" id="panel-dest">
-        <div class="panel-title" data-i18n="Où envoyer l’essaim">Où envoyer l’essaim</div>
-        <div class="panel-body">
-          <div class="meter-row" id="dest-active-row">
-            <span class="text-muted" id="dest-active-name">—</span>
-            <span class="num" id="dest-active-left"></span>
+          <div class="uplift-intro text-muted" data-i18n="Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.">Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.</div>
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Rendement de récolte">Rendement de récolte</span>
+            <span class="num" id="uplift-yield">6%</span>
           </div>
-          <div class="item-list" id="dest-list"></div>
+          <div class="meter"><div class="progress-fill" id="uplift-fill" style="width:6%"></div></div>
+          <div class="uplift-ask hidden" id="uplift-ask">
+            <div class="uplift-ask-title" id="uplift-ask-title"></div>
+            <div class="uplift-ask-body" id="uplift-ask-body"></div>
+            <button class="btn btn-primary" id="uplift-approve">
+              <span class="choice-label" data-i18n="Accorder">Accorder</span>
+              <span class="choice-desc" id="uplift-gain"></span>
+            </button>
+          </div>
+          <div class="uplift-steps" id="uplift-steps"></div>
         </div>
       </div>
 
-      <div class="panel" id="panel-press">
-        <div class="panel-title">📰 <span data-i18n="La Une">La Une</span></div>
-        <div class="panel-body">
-          <div class="headlines" id="headlines"></div>
+      <div class="panel hidden" id="panel-alloc">
+        <div class="panel-title" data-i18n="Allocation du compute">Allocation du compute</div>
+        <div class="panel-body" id="alloc-body"></div>
+        <div class="panel-body extract-block hidden" id="extract-block">
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Palier d’extraction">Palier d’extraction</span>
+            <span class="num" id="extract-tier">—</span>
+          </div>
+          <div class="meter"><div class="progress-fill" id="extract-fill" style="width:100%"></div></div>
+          <div class="meter-row">
+            <span class="text-muted" data-i18n="Rendement">Rendement</span>
+            <span class="num" id="extract-yield">100%</span>
+          </div>
+          <button class="btn btn-buy hidden" id="extract-buy">
+            <span class="choice-label" id="extract-label"></span>
+            <span class="btn-cost num" id="extract-cost"></span>
+          </button>
         </div>
       </div>
 
-      <div class="panel" id="panel-log">
-        <div class="panel-title" data-i18n="Journal">Journal</div>
+      <div class="panel hidden" id="panel-cosmos">
+        <div class="panel-title" data-i18n="Expansion cosmique">Expansion cosmique</div>
         <div class="panel-body">
-          <div class="log" id="log"></div>
+          <div class="universe-wrap">
+            <canvas id="universe-map" height="150" data-i18n-aria="Carte de l’univers converti" aria-label="Carte de l’univers converti"></canvas>
+            <div class="universe-legend">
+              <span><i class="dot raw"></i> <span data-i18n="matière brute">matière brute</span></span>
+              <span><i class="dot done"></i> <span data-i18n="convertie en énergie">convertie en énergie</span></span>
+              <span class="num" id="universe-pct">0,000 %</span>
+            </div>
+          </div>
+          <div id="cosmos-body"></div>
         </div>
       </div>
 
@@ -353,6 +363,17 @@
             <span class="num" id="energy-load-value">0 / 0 MW</span>
           </div>
           <div class="item-list" id="energy-list"></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="panel-dest">
+        <div class="panel-title" data-i18n="Où envoyer l’essaim">Où envoyer l’essaim</div>
+        <div class="panel-body">
+          <div class="meter-row" id="dest-active-row">
+            <span class="text-muted" id="dest-active-name">—</span>
+            <span class="num" id="dest-active-left"></span>
+          </div>
+          <div class="item-list" id="dest-list"></div>
         </div>
       </div>
 

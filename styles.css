@@ -1819,3 +1819,29 @@ kbd {
 .dest-item { cursor: pointer; }
 .dest-item .item-cost { display: flex; gap: 0.3rem; }
 .extract-block { border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.6rem; }
+
+/* ---- emprise physique ---------------------------------------------------
+   La chaîne des six demandes. On montre les étapes à venir en retrait : le
+   joueur doit voir où cela va, pas seulement où il en est. */
+.uplift-intro { font-size: 0.76rem; line-height: 1.45; margin-bottom: 0.6rem; }
+.uplift-ask {
+  margin: 0.7rem 0;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--accent-line);
+  border-left-width: 3px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+}
+.uplift-ask-title { font-weight: 600; margin-bottom: 0.35rem; }
+.uplift-ask-body {
+  font-size: 0.78rem; line-height: 1.5; color: var(--text-dim);
+  font-style: italic; margin-bottom: 0.6rem;
+}
+.uplift-steps { margin-top: 0.7rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.uplift-step { display: flex; gap: 0.5rem; font-size: 0.76rem; align-items: baseline; }
+.uplift-mark { width: 1em; text-align: center; flex: none; }
+.uplift-step.is-done { color: var(--text-dim); }
+.uplift-step.is-done .uplift-mark { color: var(--good); }
+.uplift-step.is-pending { color: var(--text); font-weight: 600; }
+.uplift-step.is-pending .uplift-mark { color: var(--warn); }
+.uplift-step.is-todo { color: var(--text-mute); }

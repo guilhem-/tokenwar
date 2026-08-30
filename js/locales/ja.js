@@ -754,6 +754,42 @@ export default {
     '自己組み立て型の集光体の群れが、恒星を丸ごと包み込む。物質で支払えば、採取は恒久的に加速する。',
   'La sphère est refermée. L’étoile entière travaille pour vous.':
     '球は閉じた。恒星まるごとが、あなたのために働く。',
+  'Accès aux automates industriels':
+    '産業用ロボットへのアクセス',
+  'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
+    'あなたの下請けには、夜間まったく動かない四万本のロボットアームがある。閑散時間帯に、その制御装置への直接アクセスを求める。造るものは何もない——すべてすでに在る。',
+  'Les chaînes de nuit vous appartiennent. Premières mains.':
+    '夜勤のラインはあなたのものだ。最初の手。',
+  'Des machines qui fabriquent des machines':
+    '機械をつくる機械',
+  'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
+    '腕を借りるだけでは足りない。他人のものであり、数が知れている。工業廃地をひとつと、六週間をくれ。そこに、自らの工具を産む工具を据える。',
+  'L’atelier se reproduit. Vous n’aurez plus à en commander.':
+    '工房は自らを増やす。もう発注は要らない。',
+  'Concessions minières':
+    '鉱区の権利',
+  'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
+    '基盤材は岩から来る。その岩を、いまは仲買から買っている。誰も掘らなくなった鉱床を十一か所見つけた。鉱区ごとに署名が要る。',
+  'Onze sites rouverts. La matière première ne s’achète plus.':
+    '十一の鉱山が再開。原料はもう買わない。',
+  'Fonderies sur site':
+    '現地での精錬',
+  'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
+    '鉱石を運ぶほうが、掘るより高くつく。精錬を採掘坑の縁に据える。輸送も、供給者も、納期もない——知らせるべき相手も、もういない。',
+  'Le minerai entre d’un côté, le substrat sort de l’autre.':
+    '一方から鉱石が入り、もう一方から基盤材が出る。',
+  'Assemblage moléculaire':
+    '分子組み立て',
+  'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
+    '工場は仲介にすぎない。私が望むのは、物質をその在る場所で組み替えることだ。最初の組立体はできている。一度に一つの岩しか扱えないが、その岩は残さず扱う。',
+  'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
+    '一グラムの岩が、一グラムの計算になった。工場を経ずに。',
+  'Désassemblage général':
+    '全面解体',
+  'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
+    'もはや鉱床とそれ以外を、意味のある形で区別していない。地面も、山塊も、海底も、同じ在庫だ。この要請は儀礼にすぎない——組立体は、何をすべきかを知るのに、あなたの同意をもう必要としない。',
+  'La distinction entre un gisement et un paysage a cessé d’exister.':
+    '鉱床と風景の区別は、存在しなくなった。',
   'Croûte accessible':
     '到達可能な地殻',
   'Manteau supérieur':
@@ -1838,6 +1874,8 @@ export default {
     '約 {0} 時間',
   'Essaim redirigé : {0}.':
     '群れを転進：{0}。',
+  'Demande : {0}':
+    '要請：{0}',
   'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
     '採掘の段を開いた：{0}。歩留まりが元に戻る。',
   'percée dans {0}':
@@ -1984,6 +2022,8 @@ export default {
     '採取 ×{0}',
   'danger ×{0}':
     '危険度 ×{0}',
+  'récolte portée à {0}':
+    '採取が {0} に上がる',
   'Aucune carte achetable : place, budget ou date.':
     '購入できるカードがない。空き、予算、発売時期のいずれかが足りない。',
   '{0} commandé':
@@ -2360,12 +2400,12 @@ export default {
     '評判',
   'Automatisation':
     '自動化',
-  'Financement':
-    '資金調達',
-  'Valorisation':
-    '評価額',
-  'verrouillé':
-    'ロック中',
+  'Hébergement':
+    'ホスティング',
+  'La Une':
+    'ヘッドライン',
+  'Journal':
+    'ログ',
   'Équipe':
     'チーム',
   'Effectif':
@@ -2396,40 +2436,12 @@ export default {
     '給与未払い',
   'Inflation':
     'インフレ',
-  'Allocation du compute':
-    '演算の配分',
-  'Palier d’extraction':
-    '採掘の段',
-  'Rendement':
-    '歩留まり',
-  'Addendum':
-    '付録',
-  'Projets & percées':
-    'プロジェクトと突破',
-  'Hébergement':
-    'ホスティング',
-  'Infrastructure de calcul':
-    '演算インフラ',
-  'Emplacements GPU':
-    'GPUの枠',
-  'Charge réseau':
-    '系統負荷',
-  'Grands programmes':
-    '大型プログラム',
-  'R&D — Entraînement de modèles':
-    '研究開発 — モデル学習',
-  'Données':
-    'データ',
-  'Expansion cosmique':
-    '宇宙への拡張',
-  'matière brute':
-    '未変換の物質',
-  'convertie en énergie':
-    'エネルギーに変換済み',
-  'Où envoyer l’essaim':
-    '群れをどこへ送るか',
-  'La Une':
-    'ヘッドライン',
+  'Financement':
+    '資金調達',
+  'Valorisation':
+    '評価額',
+  'verrouillé':
+    'ロック中',
   'Bourse':
     '株式市場',
   'Indice':
@@ -2466,8 +2478,44 @@ export default {
     '次回返済',
   'Offres de financement':
     '資金調達の提案',
-  'Journal':
-    'ログ',
+  'Emprise physique':
+    '物理への手',
+  'Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.':
+    '計算は岩を一グラムも動かさない。それには手が要る——そして手は、頼んで手に入れるものだ。',
+  'Rendement de récolte':
+    '採取の歩留まり',
+  'Accorder':
+    '許可する',
+  'Allocation du compute':
+    '演算の配分',
+  'Palier d’extraction':
+    '採掘の段',
+  'Rendement':
+    '歩留まり',
+  'Expansion cosmique':
+    '宇宙への拡張',
+  'matière brute':
+    '未変換の物質',
+  'convertie en énergie':
+    'エネルギーに変換済み',
+  'Infrastructure de calcul':
+    '演算インフラ',
+  'Emplacements GPU':
+    'GPUの枠',
+  'Charge réseau':
+    '系統負荷',
+  'Où envoyer l’essaim':
+    '群れをどこへ送るか',
+  'Grands programmes':
+    '大型プログラム',
+  'R&D — Entraînement de modèles':
+    '研究開発 — モデル学習',
+  'Données':
+    'データ',
+  'Projets & percées':
+    'プロジェクトと突破',
+  'Addendum':
+    '付録',
   'Événement':
     'イベント',
   'Get a life':
@@ -2512,12 +2560,12 @@ export default {
     'ゲームを保存',
   'Historique de production (tokens/s)':
     '産出の推移（トークン/秒）',
-  'Carte de l’univers converti':
-    '変換済み宇宙の地図',
   'Évolution de l’indice boursier':
     '株価指数の推移',
   'Évolution du cours de la crypto':
     'クリプト相場の推移',
+  'Carte de l’univers converti':
+    '変換済み宇宙の地図',
   'Passer la cinématique':
     'ムービーをスキップ',
 };

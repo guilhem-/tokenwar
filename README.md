@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 249 chaînes × 7 langues = 8 743 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 282 chaînes × 7 langues = 8 974 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -591,16 +591,16 @@ recherche exhaustive sur des **groupes thématiques soudés**.
 
 | | Avant | Après |
 |---|---:|---:|
-| Phase 1 | ×2,10 | **×1,13** |
-| Phase 2 | ×4,12 | **×1,51** |
-| Phase 3 | ×6,07 | **×1,45** |
+| Phase 1 | ×2,10 | **×1,09** |
+| Phase 2 | ×4,12 | **×1,30** |
+| Phase 3 | ×6,07 | **×1,21** |
 
-- **Gauche — l'entreprise et son pilotage** : production, marché, automatisation, équipe,
-  charges, financement, allocation, expansion cosmique.
-- **Centre — l'argent, l'hébergement, l'essaim et les flux** : bourse, dette, hébergement,
-  destinations, La Une, journal.
-- **Droite — les machines, la recherche et la gouvernance** : calcul, énergie, grands
-  programmes, entraînement, percées, addendum.
+- **Gauche — ce qu'on produit, et ce qu'on en lit** : production, marché, automatisation,
+  hébergement, La Une, journal.
+- **Centre — l'entreprise, son argent, son emprise et son pilotage** : équipe, charges,
+  financement, bourse, dette, emprise physique, allocation, expansion cosmique.
+- **Droite — les machines, la recherche et la gouvernance** : calcul, énergie, destinations,
+  grands programmes, entraînement, percées, addendum.
 
 La répartition est **fixe** : aucun panneau ne change de colonne en cours de partie, donc
 aucun saut de mise en page. Une variante réassignant par phase ne faisait pas mieux au pire cas
@@ -610,6 +610,38 @@ financement, presse… »). L'écart ne le valait pas.
 
 Deux tests figent le résultat : la composition exacte des trois colonnes, et le fait que le
 panneau des destinations n'apparaisse qu'en phase 3.
+
+## 🦾 Comment le calcul attrape la matière
+
+Il manquait un maillon, et il se voyait : **le compute ne récolte rien**. Entre « la machine
+calcule » et « la machine convertit la croûte terrestre », le jeu ne montrait aucune chaîne —
+la matière apparaissait comme par magie dès la bascule.
+
+Cette chaîne existe désormais, et elle ne s'obtient pas : **elle se demande**. Six requêtes que
+l'IA vous adresse, espacées de **35 s à 1 min 05**, chacune à accorder d'un clic. Tant qu'une
+demande attend votre signature, la récolte reste au palier précédent.
+
+| | Étape | Récolte |
+|---|---|---:|
+| — | *l'IA calcule, mais n'a pas de mains* | 6 % |
+| 1 | Accès aux automates industriels — les bras qui dorment la nuit chez vos sous-traitants | 14 % |
+| 2 | Des machines qui fabriquent des machines — un outillage qui produit son propre outillage | 28 % |
+| 3 | Concessions minières — onze gisements que plus personne n'exploite | 45 % |
+| 4 | Fonderies sur site — le raffinage au bord de la fosse, plus de fret ni de fournisseurs | 63 % |
+| 5 | Assemblage moléculaire — réarranger la roche là où elle se trouve, sans usine | 82 % |
+| 6 | Désassemblage général — la distinction entre un gisement et un paysage cesse d'exister | 100 % |
+
+La progression est **empruntée, puis fabriquée, puis extraite, puis raffinée, puis moléculaire,
+puis totale**. Chaque texte est écrit à la première personne : c'est l'IA qui argumente, et le
+dernier message précise que la demande n'est plus qu'une politesse.
+
+Mécaniquement, cela répond à deux choses à la fois. La récolte cesse d'être un acquis du calcul
+— elle est la conséquence de ce que **vous** avez autorisé, et un test le vérifie : sur 400 s de
+jeu, ne rien signer convertit plus de cent fois moins de matière. Et l'accélération de la
+consommation de matière devient lisible, parce qu'elle a une cause visible et datée.
+
+Le panneau montre **toute la chaîne**, y compris les étapes à venir : on doit voir où cela va,
+pas seulement où l'on en est.
 
 ## 💱 Une seule monnaie par époque
 

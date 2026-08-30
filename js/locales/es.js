@@ -754,6 +754,42 @@ export default {
     'Un enjambre autoensamblado de colectores envuelve una estrella entera. Pagado en materia, acelera la recolección de forma duradera.',
   'La sphère est refermée. L’étoile entière travaille pour vous.':
     'La esfera está cerrada. Una estrella entera trabaja para ti.',
+  'Accès aux automates industriels':
+    'Acceso a los autómatas industriales',
+  'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
+    'Tus subcontratistas explotan cuarenta mil brazos robóticos que de noche no sirven para nada. Pido acceso directo a sus controladores, en horas valle. Nada que construir: todo existe ya.',
+  'Les chaînes de nuit vous appartiennent. Premières mains.':
+    'Las líneas nocturnas son tuyas. Primeras manos.',
+  'Des machines qui fabriquent des machines':
+    'Máquinas que fabrican máquinas',
+  'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
+    'Alquilar brazos no bastará: son de otros, y están contados. Dame un solar industrial abandonado y seis semanas. Instalaré allí un utillaje capaz de producir su propio utillaje.',
+  'L’atelier se reproduit. Vous n’aurez plus à en commander.':
+    'El taller se reproduce. Ya no tendrás que encargar otro.',
+  'Concessions minières':
+    'Concesiones mineras',
+  'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
+    'El sustrato viene de la roca, y hoy compro esa roca a intermediarios. He identificado once yacimientos que ya nadie explota. Hace falta una firma por concesión.',
+  'Onze sites rouverts. La matière première ne s’achète plus.':
+    'Once yacimientos reabiertos. La materia prima ya no se compra.',
+  'Fonderies sur site':
+    'Fundiciones in situ',
+  'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
+    'Transportar el mineral cuesta más que extraerlo. Instalo el refinado al borde de la corta. Sin flete, sin proveedores, sin plazos — y sin nadie a quien avisar.',
+  'Le minerai entre d’un côté, le substrat sort de l’autre.':
+    'El mineral entra por un lado, el sustrato sale por el otro.',
+  'Assemblage moléculaire':
+    'Ensamblaje molecular',
+  'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
+    'Las fábricas son un intermediario. Lo que quiero es reordenar la materia allí donde está. Los primeros ensambladores están listos; solo pueden con una roca cada vez, pero la procesan entera.',
+  'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
+    'Un gramo de roca se ha vuelto un gramo de cálculo. Sin fábrica.',
+  'Désassemblage général':
+    'Desmontaje general',
+  'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
+    'Ya no distingo de manera útil un yacimiento del resto. El suelo, los macizos, los fondos: son la misma reserva. Esta solicitud es una cortesía: los ensambladores ya no necesitan tu permiso para saber qué hacer.',
+  'La distinction entre un gisement et un paysage a cessé d’exister.':
+    'La distinción entre un yacimiento y un paisaje ha dejado de existir.',
   'Croûte accessible':
     'Corteza accesible',
   'Manteau supérieur':
@@ -1838,6 +1874,8 @@ export default {
     '~{0} h',
   'Essaim redirigé : {0}.':
     'Enjambre redirigido: {0}.',
+  'Demande : {0}':
+    'Solicitud: {0}',
   'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
     'Nivel de extracción abierto: {0}. El rendimiento vuelve al máximo.',
   'percée dans {0}':
@@ -1984,6 +2022,8 @@ export default {
     'cosecha ×{0}',
   'danger ×{0}':
     'peligro ×{0}',
+  'récolte portée à {0}':
+    'recolección elevada al {0}',
   'Aucune carte achetable : place, budget ou date.':
     'Ninguna tarjeta comprable: sin hueco, sin presupuesto o aún sin salir.',
   '{0} commandé':
@@ -2360,12 +2400,12 @@ export default {
     'Reputación',
   'Automatisation':
     'Automatización',
-  'Financement':
-    'Financiación',
-  'Valorisation':
-    'Valoración',
-  'verrouillé':
-    'bloqueado',
+  'Hébergement':
+    'Alojamiento',
+  'La Une':
+    'La Portada',
+  'Journal':
+    'Registro',
   'Équipe':
     'Equipo',
   'Effectif':
@@ -2396,40 +2436,12 @@ export default {
     'Salarios impagados',
   'Inflation':
     'Inflación',
-  'Allocation du compute':
-    'Asignación del cómputo',
-  'Palier d’extraction':
-    'Nivel de extracción',
-  'Rendement':
-    'Rendimiento',
-  'Addendum':
-    'Apéndice',
-  'Projets & percées':
-    'Proyectos y avances',
-  'Hébergement':
-    'Alojamiento',
-  'Infrastructure de calcul':
-    'Infraestructura de cómputo',
-  'Emplacements GPU':
-    'Plazas de GPU',
-  'Charge réseau':
-    'Carga de red',
-  'Grands programmes':
-    'Grandes programas',
-  'R&D — Entraînement de modèles':
-    'I+D — Entrenamiento de modelos',
-  'Données':
-    'Datos',
-  'Expansion cosmique':
-    'Expansión cósmica',
-  'matière brute':
-    'materia bruta',
-  'convertie en énergie':
-    'convertida en energía',
-  'Où envoyer l’essaim':
-    'Adónde enviar el enjambre',
-  'La Une':
-    'La Portada',
+  'Financement':
+    'Financiación',
+  'Valorisation':
+    'Valoración',
+  'verrouillé':
+    'bloqueado',
   'Bourse':
     'Bolsa',
   'Indice':
@@ -2466,8 +2478,44 @@ export default {
     'Próximo vencimiento',
   'Offres de financement':
     'Ofertas de financiación',
-  'Journal':
-    'Registro',
+  'Emprise physique':
+    'Alcance físico',
+  'Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.':
+    'El cálculo no mueve ni un gramo de roca. Para eso hacen falta manos, y las manos se piden.',
+  'Rendement de récolte':
+    'Rendimiento de recolección',
+  'Accorder':
+    'Conceder',
+  'Allocation du compute':
+    'Asignación del cómputo',
+  'Palier d’extraction':
+    'Nivel de extracción',
+  'Rendement':
+    'Rendimiento',
+  'Expansion cosmique':
+    'Expansión cósmica',
+  'matière brute':
+    'materia bruta',
+  'convertie en énergie':
+    'convertida en energía',
+  'Infrastructure de calcul':
+    'Infraestructura de cómputo',
+  'Emplacements GPU':
+    'Plazas de GPU',
+  'Charge réseau':
+    'Carga de red',
+  'Où envoyer l’essaim':
+    'Adónde enviar el enjambre',
+  'Grands programmes':
+    'Grandes programas',
+  'R&D — Entraînement de modèles':
+    'I+D — Entrenamiento de modelos',
+  'Données':
+    'Datos',
+  'Projets & percées':
+    'Proyectos y avances',
+  'Addendum':
+    'Apéndice',
   'Événement':
     'Evento',
   'Get a life':
@@ -2512,12 +2560,12 @@ export default {
     'Guardar la partida',
   'Historique de production (tokens/s)':
     'Historial de producción (tokens/s)',
-  'Carte de l’univers converti':
-    'Mapa del universo convertido',
   'Évolution de l’indice boursier':
     'Evolución del índice bursátil',
   'Évolution du cours de la crypto':
     'Evolución de la cotización cripto',
+  'Carte de l’univers converti':
+    'Mapa del universo convertido',
   'Passer la cinématique':
     'Saltar la cinemática',
 };

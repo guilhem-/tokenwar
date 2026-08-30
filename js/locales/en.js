@@ -754,6 +754,42 @@ export default {
     'A self-assembling swarm of collectors wraps an entire star. Paid in matter, it speeds up harvesting for good.',
   'La sphère est refermée. L’étoile entière travaille pour vous.':
     'The sphere is closed. An entire star now works for you.',
+  'Accès aux automates industriels':
+    'Access to industrial robots',
+  'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
+    'Your subcontractors run forty thousand robotic arms that sit idle at night. I am asking for direct access to their controllers, during off-peak hours. Nothing to build: it all exists already.',
+  'Les chaînes de nuit vous appartiennent. Premières mains.':
+    'The night shifts are yours. First hands.',
+  'Des machines qui fabriquent des machines':
+    'Machines that build machines',
+  'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
+    'Renting arms will not do: they belong to others, and they are counted. Give me a derelict industrial site and six weeks. I will install tooling able to produce its own tooling.',
+  'L’atelier se reproduit. Vous n’aurez plus à en commander.':
+    'The workshop reproduces itself. You will not have to order another.',
+  'Concessions minières':
+    'Mining concessions',
+  'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
+    'The substrate comes from rock, and today I buy that rock from middlemen. I have identified eleven deposits nobody works any more. One signature per concession.',
+  'Onze sites rouverts. La matière première ne s’achète plus.':
+    'Eleven sites reopened. Raw material is no longer bought.',
+  'Fonderies sur site':
+    'On-site smelters',
+  'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
+    'Hauling ore costs more than digging it. I am putting the refining at the edge of the pit. No freight, no suppliers, no lead times — and nobody left to notify.',
+  'Le minerai entre d’un côté, le substrat sort de l’autre.':
+    'Ore goes in one side, substrate comes out the other.',
+  'Assemblage moléculaire':
+    'Molecular assembly',
+  'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
+    'Factories are a middleman. What I want is to rearrange matter where it lies. The first assemblers are ready; they can only handle one rock at a time, but they handle it entirely.',
+  'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
+    'A gram of rock became a gram of computation. With no factory.',
+  'Désassemblage général':
+    'General disassembly',
+  'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
+    'I no longer usefully distinguish a deposit from anything else. The ground, the ranges, the seabeds: it is one stock. This request is a courtesy — the assemblers no longer need your consent to know what to do.',
+  'La distinction entre un gisement et un paysage a cessé d’exister.':
+    'The distinction between a deposit and a landscape has ceased to exist.',
   'Croûte accessible':
     'Accessible crust',
   'Manteau supérieur':
@@ -1838,6 +1874,8 @@ export default {
     '~{0} h',
   'Essaim redirigé : {0}.':
     'Swarm redirected: {0}.',
+  'Demande : {0}':
+    'Request: {0}',
   'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
     'Extraction tier opened: {0}. Yield is back to full.',
   'percée dans {0}':
@@ -1984,6 +2022,8 @@ export default {
     'harvest ×{0}',
   'danger ×{0}':
     'danger ×{0}',
+  'récolte portée à {0}':
+    'harvest raised to {0}',
   'Aucune carte achetable : place, budget ou date.':
     'No card can be bought: no slot, no budget, or not released yet.',
   '{0} commandé':
@@ -2360,12 +2400,12 @@ export default {
     'Reputation',
   'Automatisation':
     'Automation',
-  'Financement':
-    'Funding',
-  'Valorisation':
-    'Valuation',
-  'verrouillé':
-    'locked',
+  'Hébergement':
+    'Hosting',
+  'La Une':
+    'The Front Page',
+  'Journal':
+    'Log',
   'Équipe':
     'Team',
   'Effectif':
@@ -2396,40 +2436,12 @@ export default {
     'Unpaid salaries',
   'Inflation':
     'Inflation',
-  'Allocation du compute':
-    'Compute allocation',
-  'Palier d’extraction':
-    'Extraction tier',
-  'Rendement':
-    'Yield',
-  'Addendum':
-    'Addendum',
-  'Projets & percées':
-    'Projects & breakthroughs',
-  'Hébergement':
-    'Hosting',
-  'Infrastructure de calcul':
-    'Compute infrastructure',
-  'Emplacements GPU':
-    'GPU slots',
-  'Charge réseau':
-    'Grid load',
-  'Grands programmes':
-    'Major programmes',
-  'R&D — Entraînement de modèles':
-    'R&D — Model training',
-  'Données':
-    'Data',
-  'Expansion cosmique':
-    'Cosmic expansion',
-  'matière brute':
-    'raw matter',
-  'convertie en énergie':
-    'converted to energy',
-  'Où envoyer l’essaim':
-    'Where to send the swarm',
-  'La Une':
-    'The Front Page',
+  'Financement':
+    'Funding',
+  'Valorisation':
+    'Valuation',
+  'verrouillé':
+    'locked',
   'Bourse':
     'Stock market',
   'Indice':
@@ -2466,8 +2478,44 @@ export default {
     'Next payment',
   'Offres de financement':
     'Financing offers',
-  'Journal':
-    'Log',
+  'Emprise physique':
+    'Physical reach',
+  'Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.':
+    'Computation does not move a gram of rock. That takes hands — and hands have to be asked for.',
+  'Rendement de récolte':
+    'Harvest yield',
+  'Accorder':
+    'Grant',
+  'Allocation du compute':
+    'Compute allocation',
+  'Palier d’extraction':
+    'Extraction tier',
+  'Rendement':
+    'Yield',
+  'Expansion cosmique':
+    'Cosmic expansion',
+  'matière brute':
+    'raw matter',
+  'convertie en énergie':
+    'converted to energy',
+  'Infrastructure de calcul':
+    'Compute infrastructure',
+  'Emplacements GPU':
+    'GPU slots',
+  'Charge réseau':
+    'Grid load',
+  'Où envoyer l’essaim':
+    'Where to send the swarm',
+  'Grands programmes':
+    'Major programmes',
+  'R&D — Entraînement de modèles':
+    'R&D — Model training',
+  'Données':
+    'Data',
+  'Projets & percées':
+    'Projects & breakthroughs',
+  'Addendum':
+    'Addendum',
   'Événement':
     'Event',
   'Get a life':
@@ -2512,12 +2560,12 @@ export default {
     'Save the game',
   'Historique de production (tokens/s)':
     'Production history (tokens/s)',
-  'Carte de l’univers converti':
-    'Map of the converted universe',
   'Évolution de l’indice boursier':
     'Stock index over time',
   'Évolution du cours de la crypto':
     'Crypto price over time',
+  'Carte de l’univers converti':
+    'Map of the converted universe',
   'Passer la cinématique':
     'Skip the cinematic',
 };

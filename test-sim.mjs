@@ -120,7 +120,10 @@ function bot() {
   }
   // 8) améliorations de sondes phase 3
   if (g.phase >= 3) { for (const sp of ['harvest','replication','speed','hazard']) g.upgradeProbe(sp); }
-  // 9) paliers d'extraction : le rendement décroît si on ne les ouvre pas.
+  // 9) l'emprise physique : sans signature, la récolte reste à 6 % et la
+  //    partie s'enlise — un joueur signerait, le bot aussi.
+  if (g.phase >= 2 && g.upliftPending()) g.approveUplift();
+  // 10) paliers d'extraction : le rendement décroît si on ne les ouvre pas.
   //    Un joueur qui joue bien bascule vers la recherche puis rouvre ; le bot
   //    fait pareil, sinon la partie s'enlise sans que ce soit un défaut du jeu.
   if (g.phase >= 2) {
@@ -132,7 +135,7 @@ function bot() {
       g.setAlloc('improve', 0.15); g.setAlloc('serve', 0.1);
     }
   }
-  // 10) destination de l'essaim : on prend la plus rentable proposée
+  // 11) destination de l'essaim : on prend la plus rentable proposée
   if (g.phase >= 3) {
     const offres = g.destOffers();
     if (offres.length) {

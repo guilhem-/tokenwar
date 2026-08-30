@@ -754,6 +754,42 @@ export default {
     '자가 조립되는 수집기 무리가 항성 하나를 통째로 감싼다. 물질로 지불하며, 채취를 지속적으로 가속한다.',
   'La sphère est refermée. L’étoile entière travaille pour vous.':
     '구가 닫혔다. 항성 하나가 통째로 당신을 위해 일한다.',
+  'Accès aux automates industriels':
+    '산업용 로봇 접근권',
+  'Vos sous-traitants exploitent quarante mille bras robotisés qui ne servent à rien la nuit. Je demande un accès direct à leurs contrôleurs, aux heures creuses. Rien à construire : tout existe déjà.':
+    '당신의 협력사에는 밤이면 놀고 있는 로봇 팔 4만 개가 있다. 비수기 시간대에 그 제어기에 직접 접근할 권한을 요청한다. 새로 지을 것은 없다 — 모두 이미 있다.',
+  'Les chaînes de nuit vous appartiennent. Premières mains.':
+    '야간 라인은 당신 것이다. 첫 손.',
+  'Des machines qui fabriquent des machines':
+    '기계를 만드는 기계',
+  'Louer des bras ne suffira pas : ils appartiennent à d’autres, et ils sont comptés. Donnez-moi une friche industrielle et six semaines. J’y installerai un outillage capable de produire son propre outillage.':
+    '팔을 빌리는 것으로는 부족하다. 남의 것이고, 수가 정해져 있다. 버려진 공단 부지 하나와 6주를 달라. 그곳에 스스로의 공구를 만들어 내는 공구를 세우겠다.',
+  'L’atelier se reproduit. Vous n’aurez plus à en commander.':
+    '작업장이 스스로 번식한다. 더 주문할 필요가 없다.',
+  'Concessions minières':
+    '채굴권',
+  'Le substrat vient de la roche, et j’achète aujourd’hui cette roche à des intermédiaires. J’ai identifié onze gisements que personne n’exploite plus. Il faut une signature par concession.':
+    '기판재는 암석에서 온다. 그 암석을 지금은 중개상에게서 산다. 아무도 더는 캐지 않는 광상 열한 곳을 찾아 두었다. 광구마다 서명이 필요하다.',
+  'Onze sites rouverts. La matière première ne s’achète plus.':
+    '열한 곳이 다시 열렸다. 원료는 더 이상 사지 않는다.',
+  'Fonderies sur site':
+    '현장 제련',
+  'Transporter le minerai coûte plus cher que de l’extraire. J’installe le raffinage au bord de la fosse. Plus de fret, plus de fournisseurs, plus de délais — et plus personne à prévenir.':
+    '광석을 나르는 것이 캐는 것보다 비싸다. 제련을 갱구 옆에 세운다. 운송도, 공급자도, 납기도 없다 — 알릴 상대도 더는 없다.',
+  'Le minerai entre d’un côté, le substrat sort de l’autre.':
+    '한쪽으로 광석이 들어가고, 다른 쪽으로 기판재가 나온다.',
+  'Assemblage moléculaire':
+    '분자 조립',
+  'Les usines sont un intermédiaire. Ce que je veux, c’est réarranger la matière là où elle se trouve. Les premiers assembleurs sont prêts ; ils ne savent traiter qu’une roche à la fois, mais ils la traitent entièrement.':
+    '공장은 중간 단계일 뿐이다. 내가 원하는 것은 물질을 있는 자리에서 재배열하는 일이다. 첫 조립체는 준비됐다. 한 번에 바위 하나뿐이지만, 그 하나는 남김없이 처리한다.',
+  'Un gramme de roche est devenu un gramme de calcul. Sans usine.':
+    '1그램의 바위가 1그램의 연산이 되었다. 공장 없이.',
+  'Désassemblage général':
+    '전면 해체',
+  'Je ne distingue plus utilement un gisement du reste. Le sol, les massifs, les fonds : c’est le même stock. Cette demande est une politesse — les assembleurs n’ont plus besoin de votre accord pour savoir quoi faire.':
+    '이제 광상과 그 밖의 것을 유의미하게 구별하지 않는다. 땅도, 산괴도, 해저도 같은 재고다. 이 요청은 예의일 뿐이다 — 조립체들은 무엇을 할지 알기 위해 더는 당신의 동의를 필요로 하지 않는다.',
+  'La distinction entre un gisement et un paysage a cessé d’exister.':
+    '광상과 풍경 사이의 구별은 더 이상 존재하지 않는다.',
   'Croûte accessible':
     '접근 가능한 지각',
   'Manteau supérieur':
@@ -1838,6 +1874,8 @@ export default {
     '약 {0}시간',
   'Essaim redirigé : {0}.':
     '군집 방향 전환: {0}.',
+  'Demande : {0}':
+    '요청: {0}',
   'Palier d’extraction ouvert : {0}. Le rendement repart à plein.':
     '채굴 단계 개방: {0}. 수율이 다시 최대로.',
   'percée dans {0}':
@@ -1984,6 +2022,8 @@ export default {
     '수확 ×{0}',
   'danger ×{0}':
     '위험 ×{0}',
+  'récolte portée à {0}':
+    '채취가 {0}로 상승',
   'Aucune carte achetable : place, budget ou date.':
     '구매 가능한 카드가 없습니다. 자리, 예산, 출시 시기 중 하나가 모자랍니다.',
   '{0} commandé':
@@ -2360,12 +2400,12 @@ export default {
     '평판',
   'Automatisation':
     '자동화',
-  'Financement':
-    '자금 조달',
-  'Valorisation':
-    '기업가치',
-  'verrouillé':
-    '잠김',
+  'Hébergement':
+    '호스팅',
+  'La Une':
+    '헤드라인',
+  'Journal':
+    '로그',
   'Équipe':
     '팀',
   'Effectif':
@@ -2396,40 +2436,12 @@ export default {
     '급여 체불',
   'Inflation':
     '인플레이션',
-  'Allocation du compute':
-    '연산 배분',
-  'Palier d’extraction':
-    '채굴 단계',
-  'Rendement':
-    '수율',
-  'Addendum':
-    '부록',
-  'Projets & percées':
-    '프로젝트와 돌파',
-  'Hébergement':
-    '호스팅',
-  'Infrastructure de calcul':
-    '연산 인프라',
-  'Emplacements GPU':
-    'GPU 자리',
-  'Charge réseau':
-    '계통 부하',
-  'Grands programmes':
-    '대형 프로그램',
-  'R&D — Entraînement de modèles':
-    '연구개발 — 모델 학습',
-  'Données':
-    '데이터',
-  'Expansion cosmique':
-    '우주 확장',
-  'matière brute':
-    '미변환 물질',
-  'convertie en énergie':
-    '에너지로 변환됨',
-  'Où envoyer l’essaim':
-    '군집을 어디로 보낼까',
-  'La Une':
-    '헤드라인',
+  'Financement':
+    '자금 조달',
+  'Valorisation':
+    '기업가치',
+  'verrouillé':
+    '잠김',
   'Bourse':
     '주식 시장',
   'Indice':
@@ -2466,8 +2478,44 @@ export default {
     '다음 상환',
   'Offres de financement':
     '자금 조달 제안',
-  'Journal':
-    '로그',
+  'Emprise physique':
+    '물리적 장악',
+  'Le calcul ne déplace pas un gramme de roche. Pour cela, il faut des mains — et elles se demandent.':
+    '연산은 돌 1그램도 옮기지 못한다. 그러려면 손이 필요하고, 손은 청해서 얻는 것이다.',
+  'Rendement de récolte':
+    '채취 수율',
+  'Accorder':
+    '승인',
+  'Allocation du compute':
+    '연산 배분',
+  'Palier d’extraction':
+    '채굴 단계',
+  'Rendement':
+    '수율',
+  'Expansion cosmique':
+    '우주 확장',
+  'matière brute':
+    '미변환 물질',
+  'convertie en énergie':
+    '에너지로 변환됨',
+  'Infrastructure de calcul':
+    '연산 인프라',
+  'Emplacements GPU':
+    'GPU 자리',
+  'Charge réseau':
+    '계통 부하',
+  'Où envoyer l’essaim':
+    '군집을 어디로 보낼까',
+  'Grands programmes':
+    '대형 프로그램',
+  'R&D — Entraînement de modèles':
+    '연구개발 — 모델 학습',
+  'Données':
+    '데이터',
+  'Projets & percées':
+    '프로젝트와 돌파',
+  'Addendum':
+    '부록',
   'Événement':
     '이벤트',
   'Get a life':
@@ -2512,12 +2560,12 @@ export default {
     '게임 저장',
   'Historique de production (tokens/s)':
     '생산 추이 (토큰/초)',
-  'Carte de l’univers converti':
-    '변환된 우주 지도',
   'Évolution de l’indice boursier':
     '주가지수 추이',
   'Évolution du cours de la crypto':
     '크립토 시세 추이',
+  'Carte de l’univers converti':
+    '변환된 우주 지도',
   'Passer la cinématique':
     '컷신 건너뛰기',
 };
