@@ -802,6 +802,14 @@ export default {
     'Everything is a deposit. The assemblers no longer look for ore: they process what is there, as fast as they can.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     'The distinction between a deposit and a landscape has ceased to exist.',
+  'Refroidissement':
+    'Cooling',
+  'Alimentation électrique':
+    'Electrical supply',
+  'Ventilation':
+    'Ventilation',
+  'Éclairage':
+    'Lighting',
   'Croûte accessible':
     'Accessible crust',
   'Manteau supérieur':
@@ -1316,6 +1324,14 @@ export default {
     '⚡ Energy costs:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
     'capex is a one-off cost, paid on order. Operations (O&M) is a fixed daily cost, owed even when idle. Fuel is variable, billed per MWh drawn. The grid standing charge depends on your subscribed power.',
+  '🌡️ Où part le mégawatt :':
+    '🌡️ Where the megawatt goes:',
+  'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.':
+    'the box in the Energy panel separates the IT load — cards, servers, racks and data network — from the datacenter auxiliaries: cooling, electrical supply, ventilation, lighting. The ratio between the two is the PUE. The network is never bought: its draw follows from the fleet, one port per server, one switch per rack, one core per room. An empty room costs almost nothing, a full one costs its cooling: filling your rooms pays.',
+  '❄️ Rendement du site (PUE) :':
+    '❄️ Site efficiency (PUE):',
+  'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.':
+    'it starts at 1.58 and is earned in steps of 0.02, one a year — free cooling, aisle containment, warm water, immersion. Each step removes megawatts from the bill without removing anything from the compute. The floor is 1.10: the heat still has to go somewhere.',
   '🏗️ Délais :':
     '🏗️ Lead times:',
   'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
@@ -1824,6 +1840,8 @@ export default {
     'Conversion +50% for 90s.',
   'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
     'Delivery cancelled: no free slot left for {0}. Order refunded ({1}).',
+  'Rendement du site amélioré : PUE {0}.':
+    'Site efficiency improved: PUE {0}.',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     'Salaries are no longer being paid. After 30 days of arrears the team will start leaving.',
   '⚠️ Salaires impayés':
@@ -2010,6 +2028,10 @@ export default {
     'Game loaded',
   'TokenWar — Le Jeu du Token':
     'TokenWar — The Token Game',
+  'Une seule tranche par an':
+    'One upgrade per year',
+  'Ressources insuffisantes':
+    'Not enough resources',
   'Palier d’extraction ouvert':
     'Extraction tier opened',
   'Recherche insuffisante':
@@ -2186,8 +2208,6 @@ export default {
     '{0} days unpaid — the team is leaving',
   'Modèle pas encore disponible ({0})':
     'Model not available yet ({0})',
-  'Ressources insuffisantes':
-    'Not enough resources',
   'Service (tokens)':
     'Serving (tokens)',
   'Recherche':
@@ -2240,6 +2260,14 @@ export default {
     'recurring: {0}',
   'aucun coût récurrent':
     'no recurring cost',
+  'Améliorer : {0} → {1} · {2}':
+    'Improve: {0} → {1} · {2}',
+  'prochaine tranche l’an prochain':
+    'next upgrade next year',
+  'une tranche par an, plancher {0}':
+    'one upgrade a year, floor {0}',
+  'plancher atteint : la chaleur doit bien sortir':
+    'floor reached: the heat still has to go somewhere',
   'intégration':
     'integrating',
   'disponible':
@@ -2516,6 +2544,26 @@ export default {
     'GPU slots',
   'Charge réseau':
     'Grid load',
+  'Charge informatique':
+    'IT load',
+  'Cartes':
+    'Cards',
+  'Serveurs':
+    'Servers',
+  'Baies':
+    'Racks',
+  'Réseau de données':
+    'Data network',
+  'Auxiliaires':
+    'Auxiliaries',
+  'Bâtiment':
+    'Building',
+  'Total site':
+    'Site total',
+  'Construction de capacité':
+    'Capacity build-out',
+  'Rendement du site (PUE)':
+    'Site efficiency (PUE)',
   'Où envoyer l’essaim':
     'Where to send the swarm',
   'Grands programmes':
@@ -2564,6 +2612,12 @@ export default {
     'With no cash, salaries stop being paid. After 30 days of arrears, the team starts leaving.',
   'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
     'Money loses value: prices and salaries follow the index, your cash does not.',
+  'Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.':
+    'Top-of-rack ports, rack switches, core routing and interconnect: the network is never bought, it comes with the fleet.',
+  'Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.':
+    'Everything that does not compute but has to be powered so the computing holds up. PUE is the ratio of the site total to that IT load.',
+  'L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.':
+    'The swarm builds its own generation, and it builds it out of matter: what goes into power plants does not go into compute.',
   'Langue':
     'Language',
   'Vitesse de simulation':

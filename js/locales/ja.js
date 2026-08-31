@@ -802,6 +802,14 @@ export default {
     'すべてが鉱床だ。組立体はもう鉱石を探さない。そこに在るものを、できる速さで処理していく。',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     '鉱床と風景の区別は、存在しなくなった。',
+  'Refroidissement':
+    '冷却',
+  'Alimentation électrique':
+    '受電・給電',
+  'Ventilation':
+    '換気',
+  'Éclairage':
+    '照明',
   'Croûte accessible':
     '到達可能な地殻',
   'Manteau supérieur':
@@ -1316,6 +1324,14 @@ export default {
     '⚡ エネルギー費用：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
     '初期費用は発注時に一度だけ払う。運転保守（O&M）は停止中でも発生する日次の固定費。燃料は実際に使ったMWhに応じた変動費。系統の基本料金は契約電力で決まる。',
+  '🌡️ Où part le mégawatt :':
+    '🌡️ メガワットはどこへ行くか：',
+  'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.':
+    'エネルギー画面のこの枠は、情報機器の負荷——カード、サーバー、ラック、データ網——と、機械室の付帯設備、すなわち冷却・受電給電・換気・照明とを分けて示す。両者の比が PUE である。データ網は買うものではない。その消費は設備から導かれる。サーバー一台につき一ポート、ラック一本につき一台のスイッチ、部屋一つにつき一組の中核。空の部屋はほとんど金を食わず、満杯の部屋は冷却に食う。部屋を埋めるほうが得だ。',
+  '❄️ Rendement du site (PUE) :':
+    '❄️ サイト効率（PUE）：',
+  'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.':
+    '1.58 から始まり、年に一期ずつ 0.02 を稼ぐ——外気冷却、通路の封じ込め、温水冷却、液浸。どの一期も、計算からは何も奪わずに、請求からメガワットを奪う。下限は 1.10。熱はどこかへ逃がすほかない。',
   '🏗️ Délais :':
     '🏗️ 工期：',
   'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
@@ -1824,6 +1840,8 @@ export default {
     '変換+50%を90秒。',
   'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
     '納入中止：{0} を収める空きがない。注文は返金（{1}）。',
+  'Rendement du site amélioré : PUE {0}.':
+    'サイトの効率が改善：PUE {0}。',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     '給与が支払われなくなりました。滞納30日を過ぎると、チームは去りはじめます。',
   '⚠️ Salaires impayés':
@@ -2010,6 +2028,10 @@ export default {
     'セーブを読み込みました',
   'TokenWar — Le Jeu du Token':
     'TokenWar — トークンの戦い',
+  'Une seule tranche par an':
+    '改修は年に一期だけ',
+  'Ressources insuffisantes':
+    '資源が足りません',
   'Palier d’extraction ouvert':
     '採掘の段を開いた',
   'Recherche insuffisante':
@@ -2186,8 +2208,6 @@ export default {
     '未払い{0}日 — チームが去っていく',
   'Modèle pas encore disponible ({0})':
     'このモデルはまだ利用できません（{0}）',
-  'Ressources insuffisantes':
-    '資源が足りません',
   'Service (tokens)':
     '提供（トークン）',
   'Recherche':
@@ -2240,6 +2260,14 @@ export default {
     '経常：{0}',
   'aucun coût récurrent':
     '経常費用なし',
+  'Améliorer : {0} → {1} · {2}':
+    '改修：{0} → {1} · {2}',
+  'prochaine tranche l’an prochain':
+    '次の改修は来年',
+  'une tranche par an, plancher {0}':
+    '年に一期、下限は {0}',
+  'plancher atteint : la chaleur doit bien sortir':
+    '下限に到達。熱はどこかへ逃がすほかない',
   'intégration':
     '統合中',
   'disponible':
@@ -2516,6 +2544,26 @@ export default {
     'GPUの枠',
   'Charge réseau':
     '系統負荷',
+  'Charge informatique':
+    '情報機器の負荷',
+  'Cartes':
+    'カード',
+  'Serveurs':
+    'サーバー',
+  'Baies':
+    'ラック',
+  'Réseau de données':
+    'データ網',
+  'Auxiliaires':
+    '付帯設備',
+  'Bâtiment':
+    '建屋',
+  'Total site':
+    'サイト合計',
+  'Construction de capacité':
+    '容量の建設',
+  'Rendement du site (PUE)':
+    'サイト効率（PUE）',
   'Où envoyer l’essaim':
     '群れをどこへ送るか',
   'Grands programmes':
@@ -2564,6 +2612,12 @@ export default {
     '現金がなければ給与は支払われません。滞納30日を過ぎると、チームは去りはじめます。',
   'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
     'お金は価値を失います：価格と給与は指数に追随しますが、あなたの現金は追随しません。',
+  'Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.':
+    'ラック上部のポート、ラック用スイッチ、コアと相互接続。これは買うものではなく、設備を持てば付いてくる。',
+  'Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.':
+    '計算はしないが、計算を保たせるために電気を要するもの一切。PUE とは、サイト合計をこの情報機器の負荷で割った比である。',
+  'L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.':
+    '群れは自前の発電を建てる。それを物質で建てる——発電所へ回った分は、計算へは回らない。',
   'Langue':
     '言語',
   'Vitesse de simulation':

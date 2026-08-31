@@ -4,7 +4,7 @@
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS,
          WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE, DIRECTIVE_MATTER, OPTIM_MATTER,
-         UPLIFT } from './data.js';
+         UPLIFT, PUE_SPLIT, PUE_STEP, PUE_FLOOR, PUE_MATTER } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
@@ -65,6 +65,10 @@ export class UI {
       chargeElecVar: $('charge-elec-var'), chargeElecFix: $('charge-elec-fix'), chargeElecSub: $('charge-elec-sub'),
       chargeRent: $('charge-rent'), chargeTotal: $('charge-total'), chargeSec: $('charge-sec'), chargeInfl: $('charge-infl'),
       chargeArrears: $('charge-arrears'), chargeArrearsValue: $('charge-arrears-value'),
+      energyMix: $('energy-mix'), mixIt: $('mix-it'), mixGpu: $('mix-gpu'), mixServer: $('mix-server'),
+      mixRack: $('mix-rack'), mixNet: $('mix-net'), mixAux: $('mix-aux'), mixAuxRows: $('mix-aux-rows'),
+      mixSite: $('mix-site'), mixTotal: $('mix-total'), mixMatterRow: $('mix-matter-row'), mixMatter: $('mix-matter'),
+      mixPueRow: $('mix-pue-row'), mixPue: $('mix-pue'), mixPueBtn: $('mix-pue-btn'), mixPueHint: $('mix-pue-hint'),
       crisisLayer: $('crisis-layer'), crisisVignette: $('crisis-vignette'), idleFx: $('idle-fx'),
       gpuCap: $('gpu-cap'),
       gpuList: $('gpu-list'),
@@ -215,6 +219,10 @@ export class UI {
     this.el.priceSlider.addEventListener('input', e => { g.state.priceSlider = +e.target.value; });
     this.el.upliftApprove.addEventListener('click', () => {
       if (this.game.approveUplift()) this.render(true);
+    });
+    this.el.mixPueBtn.addEventListener('click', () => {
+      if (!g.improvePue()) this.deny(this.el.mixPueBtn, g.pueYearLeft() > 0
+        ? t('Une seule tranche par an') : t('Ressources insuffisantes'));
     });
     this.el.extractBuy.addEventListener('click', () => {
       if (this.game.unlockExtraction()) { this.toast(t('Palier d’extraction ouvert'), 'good'); this.render(); }
@@ -1506,10 +1514,21 @@ export class UI {
         return;
       }
       const cost = g.energyCost(e);
-      const show = this.reveal(g, i, ENERGY, id => s.energyCounts[id] || 0, cost, s.money) || e.year >= g.simYear() - 1;
+      // La révélation se juge dans la monnaie de l'époque : en phase 2 la
+      // trésorerie est nulle, et comparer un prix en dollars à zéro masquait
+      // tout ce qu'on pouvait encore bâtir.
+      const bourse = g.usesMatter() ? s.matter : s.money;
+      const prix = g.usesMatter() ? g.matterPriceOf(g.energyMatterPart(e)) : cost;
+      let show = this.reveal(g, i, ENERGY, id => s.energyCounts[id] || 0, prix, bourse)
+        || e.year >= g.simYear() - 1;
+      // En phase 2 le site tire des centaines de MW : proposer un raccordement
+      // de 10 kW est du bruit. On ne garde que ce qui pèse — et ce qu'on possède.
+      if (show && g.phase >= 2 && !(s.energyCounts[e.id] > 0)) {
+        show = e.mw >= g.energyUse() * 0.01;
+      }
       r.el.classList.toggle('hidden', !show);
       if (!show) return;
-      r.cost.textContent = fmtMoney(cost);
+      r.cost.textContent = g.energyLabel(e);       // dollars, puis matière en phase 2
       const owned = s.energyCounts[e.id] || 0;
       // on distingue explicitement le coût UNIQUE (affiché en tête) des coûts RÉCURRENTS
       const recur = [];
@@ -1519,10 +1538,79 @@ export class UI {
       r.effect.innerHTML = `<span>+<b class="num">${fmtPower(e.mw)}</b></span> ${e.rep ? `<span class="badge ${e.rep > 0 ? '' : 'badge-warn'}">${t('rép')} ${e.rep > 0 ? '+' : ''}${e.rep}</span>` : ''} <span class="badge">×${fmt(owned)}</span>`
         + (recur.length ? ` <span class="text-muted">${t('récurrent : {0}', recur.join(' + '))}</span>` : ` <span class="text-muted">${t('aucun coût récurrent')}</span>`)
         + this.buildBadge('energy', e.id);
-      this.setAfford(r.el, s.money >= cost);
-      this.updateBulk(r, owned, s.money >= cost);
+      const ok = g.canBuyEnergy(e);
+      this.setAfford(r.el, ok);
+      this.updateBulk(r, owned, ok);
       this.updateAutoToggle(r, 'energy', e.id, owned);
     });
+    this.renderEnergyMix();
+  }
+
+  // Récapitulatif du site : où part réellement le mégawatt. La règle de
+  // partage est simple — ce qui calcule ou fait circuler des bits est de la
+  // charge INFORMATIQUE, le reste est un AUXILIAIRE, et le rapport des deux
+  // est exactement le PUE.
+  renderEnergyMix() {
+    const g = this.game, s = g.state;
+    if (!this.el.energyMix) return;
+    // la boîte n'a de sens que là où l'on exploite un site : phases 1 et 2
+    const show = g.phase < 3;
+    this.el.energyMix.classList.toggle('hidden', !show);
+    if (!show) return;
+    const b = g.energyBreakdown();
+    const p = v => fmtPower(v);
+    this.el.mixIt.textContent = p(b.it);
+    this.el.mixGpu.textContent = p(b.gpu);
+    this.el.mixServer.textContent = p(b.server);
+    this.el.mixRack.textContent = p(b.rack);
+    this.el.mixNet.textContent = p(b.net);
+    this.el.mixAux.textContent = p(b.aux);
+    this.el.mixSite.textContent = p(b.site);
+    this.el.mixTotal.textContent = p(b.total);
+    // les quatre postes d'auxiliaires, construits une fois puis mis à jour
+    if (!this.mixAuxCells) {
+      this.mixAuxCells = {};
+      for (const part of PUE_SPLIT) {
+        const row = document.createElement('div');
+        row.className = 'mix-row mix-sub';
+        const label = document.createElement('span');
+        label.className = 'text-muted';
+        label.textContent = td(part.name);
+        const val = document.createElement('span');
+        val.className = 'num';
+        row.append(label, val);
+        this.el.mixAuxRows.appendChild(row);
+        this.mixAuxCells[part.id] = { label, val };
+      }
+    }
+    for (const part of PUE_SPLIT) {
+      const c = this.mixAuxCells[part.id];
+      c.label.textContent = td(part.name);
+      c.val.textContent = p(b.aux * part.share);
+    }
+    // phase 2 : la capacité qui manque se paie en matière, en continu
+    const enMatter = g.phase >= 2;
+    this.el.mixMatterRow.classList.toggle('hidden', !enMatter);
+    if (enMatter) this.el.mixMatter.textContent = fmtMass(s.rates.energyMatter || 0) + ' ' + t('/s');
+    // rendement du site : une tranche par an, jamais sous le plancher
+    this.el.mixPue.textContent = b.pue.toFixed(2);
+    const offered = g.pueOffered();
+    this.el.mixPueRow.classList.toggle('dim', !offered);
+    this.el.mixPueBtn.classList.toggle('hidden', !offered);
+    if (offered) {
+      const next = Math.max(PUE_FLOOR, b.pue - PUE_STEP);
+      this.el.mixPueBtn.textContent = t('Améliorer : {0} → {1} · {2}',
+        b.pue.toFixed(2), next.toFixed(2), g.softLabel(g.pueCost(), PUE_MATTER));
+      const wait = g.pueYearLeft();
+      this.el.mixPueBtn.disabled = !g.canImprovePue();
+      this.el.mixPueHint.textContent = wait > 0
+        ? t('prochaine tranche l’an prochain')
+        : t('une tranche par an, plancher {0}', PUE_FLOOR.toFixed(2));
+    } else {
+      this.el.mixPueHint.textContent = g.pueMaxed()
+        ? t('plancher atteint : la chaleur doit bien sortir')
+        : '';
+    }
   }
   // Optimisations : la ligne n'apparaît que lorsque la prochaine version est due
   // (sinon elle disparaît, comme toute option indisponible).
@@ -2131,12 +2219,14 @@ export class UI {
     // phase Startup, hérités de la partie précédente.
     this.el.statMatterWrap.classList.toggle('hidden', p < 2);
     this.el.panelCosmos.classList.toggle('hidden', p < 3);
-    // Dès la phase 2, acheter une carte ou une centrale n'a plus de sens : mille
-    // des meilleures cartes ajouteraient 0,00003 % du compute, et l'énergie
-    // s'auto-échelonne. Ces panneaux ne servaient plus qu'à afficher des prix
-    // en dollars dans une phase où la trésorerie a disparu.
+    // Dès la phase 2, acheter une CARTE n'a plus de sens : mille des meilleures
+    // ajouteraient 0,00003 % du compute.
     this.el.panelCompute.classList.toggle('hidden', p >= 2);
-    this.el.panelEnergy.classList.toggle('hidden', p >= 2);
+    // L'ÉNERGIE, elle, reste un sujet jusqu'au bout de la phase 2 : la capacité
+    // ne s'auto-échelonne plus gratuitement, elle se bâtit avec de la matière.
+    // Le panneau reste donc en place — les prix y sont libellés en matière —
+    // et il ne disparaît qu'en phase 3, quand il n'y a plus de site à exploiter.
+    this.el.panelEnergy.classList.toggle('hidden', p >= 3);
     if (p >= 3) this.buildCosmos();
   }
 

@@ -802,6 +802,14 @@ export default {
     'Alles ist Lagerstätte. Die Assembler suchen kein Erz mehr: Sie verarbeiten, was da ist, so schnell sie können.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     'Der Unterschied zwischen einer Lagerstätte und einer Landschaft hat aufgehört zu bestehen.',
+  'Refroidissement':
+    'Kühlung',
+  'Alimentation électrique':
+    'Stromversorgung',
+  'Ventilation':
+    'Belüftung',
+  'Éclairage':
+    'Beleuchtung',
   'Croûte accessible':
     'Zugängliche Kruste',
   'Manteau supérieur':
@@ -1316,6 +1324,14 @@ export default {
     '⚡ Energiekosten:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
     'der Capex ist eine einmalige Ausgabe bei der Bestellung. Der Betrieb (O&M) ist ein fixer Tagessatz, auch im Stillstand fällig. Der Brennstoff ist variabel, abgerechnet je bezogener MWh. Der Netz-Grundpreis richtet sich nach der vereinbarten Leistung.',
+  '🌡️ Où part le mégawatt :':
+    '🌡️ Wohin das Megawatt geht:',
+  'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.':
+    'Der Kasten im Energie-Panel trennt die IT-Last — Karten, Server, Racks und Datennetz — von den Nebenverbrauchern des Rechenzentrums: Kühlung, Stromversorgung, Belüftung, Beleuchtung. Das Verhältnis beider ist der PUE. Das Netz wird nie gekauft: Sein Verbrauch ergibt sich aus dem Bestand, ein Port je Server, ein Switch je Rack, ein Kern je Saal. Ein leerer Saal kostet fast nichts, ein voller kostet seine Kühlung: Säle zu füllen zahlt sich aus.',
+  '❄️ Rendement du site (PUE) :':
+    '❄️ Standortwirkungsgrad (PUE):',
+  'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.':
+    'Er startet bei 1,58 und wird in Schritten von 0,02 gewonnen, einer pro Jahr — freie Kühlung, Gangeinhausung, Warmwasser, Immersion. Jeder Schritt nimmt Megawatt von der Rechnung, ohne dem Rechnen etwas zu nehmen. Die Untergrenze ist 1,10: Die Wärme muss irgendwo hin.',
   '🏗️ Délais :':
     '🏗️ Lieferzeiten:',
   'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
@@ -1824,6 +1840,8 @@ export default {
     'Umwandlung +50% für 90 s.',
   'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
     'Lieferung storniert: kein freier Platz mehr für {0}. Bestellung erstattet ({1}).',
+  'Rendement du site amélioré : PUE {0}.':
+    'Standortwirkungsgrad verbessert: PUE {0}.',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     'Die Gehälter werden nicht mehr gezahlt. Nach 30 Tagen Rückstand beginnt das Team zu gehen.',
   '⚠️ Salaires impayés':
@@ -2010,6 +2028,10 @@ export default {
     'Spielstand geladen',
   'TokenWar — Le Jeu du Token':
     'TokenWar — Das Token-Spiel',
+  'Une seule tranche par an':
+    'Nur ein Bauabschnitt pro Jahr',
+  'Ressources insuffisantes':
+    'Nicht genug Ressourcen',
   'Palier d’extraction ouvert':
     'Förderstufe erschlossen',
   'Recherche insuffisante':
@@ -2186,8 +2208,6 @@ export default {
     '{0} Tage unbezahlt — das Team geht',
   'Modèle pas encore disponible ({0})':
     'Modell noch nicht verfügbar ({0})',
-  'Ressources insuffisantes':
-    'Nicht genug Ressourcen',
   'Service (tokens)':
     'Auslieferung (Tokens)',
   'Recherche':
@@ -2240,6 +2260,14 @@ export default {
     'laufend: {0}',
   'aucun coût récurrent':
     'keine laufenden Kosten',
+  'Améliorer : {0} → {1} · {2}':
+    'Verbessern: {0} → {1} · {2}',
+  'prochaine tranche l’an prochain':
+    'nächster Abschnitt im nächsten Jahr',
+  'une tranche par an, plancher {0}':
+    'ein Abschnitt pro Jahr, Untergrenze {0}',
+  'plancher atteint : la chaleur doit bien sortir':
+    'Untergrenze erreicht: Die Wärme muss irgendwo hin',
   'intégration':
     'Integration',
   'disponible':
@@ -2516,6 +2544,26 @@ export default {
     'GPU-Plätze',
   'Charge réseau':
     'Netzlast',
+  'Charge informatique':
+    'IT-Last',
+  'Cartes':
+    'Karten',
+  'Serveurs':
+    'Server',
+  'Baies':
+    'Racks',
+  'Réseau de données':
+    'Datennetz',
+  'Auxiliaires':
+    'Nebenverbraucher',
+  'Bâtiment':
+    'Gebäude',
+  'Total site':
+    'Standort gesamt',
+  'Construction de capacité':
+    'Kapazitätsausbau',
+  'Rendement du site (PUE)':
+    'Standortwirkungsgrad (PUE)',
   'Où envoyer l’essaim':
     'Wohin mit dem Schwarm',
   'Grands programmes':
@@ -2564,6 +2612,12 @@ export default {
     'Ohne Kasse werden keine Gehälter mehr gezahlt. Nach 30 Tagen Rückstand beginnt das Team zu gehen.',
   'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
     'Geld verliert an Wert: Preise und Gehälter folgen dem Index, deine Kasse nicht.',
+  'Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.':
+    'Top-of-Rack-Ports, Rack-Switches, Kern und Zusammenschaltung: Das Netz wird nie gekauft, es kommt mit dem Bestand.',
+  'Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.':
+    'Alles, was nicht rechnet, aber versorgt werden muss, damit das Rechnen hält. PUE ist das Verhältnis von Standortsumme zu dieser IT-Last.',
+  'L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.':
+    'Der Schwarm baut seine eigene Erzeugung, und er baut sie aus Materie: Was in Kraftwerke geht, geht nicht in Rechenleistung.',
   'Langue':
     'Sprache',
   'Vitesse de simulation':

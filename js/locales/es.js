@@ -802,6 +802,14 @@ export default {
     'Todo es yacimiento. Los ensambladores ya no buscan mineral: procesan lo que hay, a la velocidad que pueden.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     'La distinción entre un yacimiento y un paisaje ha dejado de existir.',
+  'Refroidissement':
+    'Refrigeración',
+  'Alimentation électrique':
+    'Alimentación eléctrica',
+  'Ventilation':
+    'Ventilación',
+  'Éclairage':
+    'Iluminación',
   'Croûte accessible':
     'Corteza accesible',
   'Manteau supérieur':
@@ -1316,6 +1324,14 @@ export default {
     '⚡ Costes de energía:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
     'el capex es un coste único, pagado al pedir. La operación (O&M) es un coste fijo diario, debido incluso parado. El combustible es variable, facturado por MWh consumido. La cuota de red depende de la potencia contratada.',
+  '🌡️ Où part le mégawatt :':
+    '🌡️ Adónde va el megavatio:',
+  'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.':
+    'la caja del panel Energía separa la carga informática — tarjetas, servidores, bastidores y red de datos — de los auxiliares del centro de datos: refrigeración, alimentación eléctrica, ventilación, iluminación. La razón entre ambas es el PUE. La red no se compra: su consumo se deduce del parque, un puerto por servidor, un conmutador por bastidor, un núcleo por sala. Una sala vacía casi no cuesta, una sala llena cuesta su frío: llenar las salas compensa.',
+  '❄️ Rendement du site (PUE) :':
+    '❄️ Rendimiento del sitio (PUE):',
+  'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.':
+    'arranca en 1,58 y se gana por fases de 0,02, una al año: free cooling, confinamiento de pasillos, agua templada, inmersión. Cada fase quita megavatios de la factura sin quitar nada al cálculo. El suelo es 1,10: el calor tiene que salir por algún lado.',
   '🏗️ Délais :':
     '🏗️ Plazos:',
   'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
@@ -1824,6 +1840,8 @@ export default {
     'Conversión +50% durante 90 s.',
   'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
     'Entrega cancelada: ya no queda hueco para {0}. Pedido reembolsado ({1}).',
+  'Rendement du site amélioré : PUE {0}.':
+    'Rendimiento del sitio mejorado: PUE {0}.',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     'Los salarios ya no se pagan. Pasados 30 días de atrasos, el equipo empezará a marcharse.',
   '⚠️ Salaires impayés':
@@ -2010,6 +2028,10 @@ export default {
     'Partida cargada',
   'TokenWar — Le Jeu du Token':
     'TokenWar — El Juego del Token',
+  'Une seule tranche par an':
+    'Solo una fase al año',
+  'Ressources insuffisantes':
+    'Recursos insuficientes',
   'Palier d’extraction ouvert':
     'Nivel de extracción abierto',
   'Recherche insuffisante':
@@ -2186,8 +2208,6 @@ export default {
     '{0} días impagados — el equipo se va',
   'Modèle pas encore disponible ({0})':
     'Modelo aún no disponible ({0})',
-  'Ressources insuffisantes':
-    'Recursos insuficientes',
   'Service (tokens)':
     'Servicio (tokens)',
   'Recherche':
@@ -2240,6 +2260,14 @@ export default {
     'recurrente: {0}',
   'aucun coût récurrent':
     'sin coste recurrente',
+  'Améliorer : {0} → {1} · {2}':
+    'Mejorar: {0} → {1} · {2}',
+  'prochaine tranche l’an prochain':
+    'la siguiente fase, el año que viene',
+  'une tranche par an, plancher {0}':
+    'una fase al año, suelo {0}',
+  'plancher atteint : la chaleur doit bien sortir':
+    'suelo alcanzado: el calor tiene que salir por algún lado',
   'intégration':
     'integración',
   'disponible':
@@ -2516,6 +2544,26 @@ export default {
     'Plazas de GPU',
   'Charge réseau':
     'Carga de red',
+  'Charge informatique':
+    'Carga informática',
+  'Cartes':
+    'Tarjetas',
+  'Serveurs':
+    'Servidores',
+  'Baies':
+    'Bastidores',
+  'Réseau de données':
+    'Red de datos',
+  'Auxiliaires':
+    'Auxiliares',
+  'Bâtiment':
+    'Edificio',
+  'Total site':
+    'Total del sitio',
+  'Construction de capacité':
+    'Construcción de capacidad',
+  'Rendement du site (PUE)':
+    'Rendimiento del sitio (PUE)',
   'Où envoyer l’essaim':
     'Adónde enviar el enjambre',
   'Grands programmes':
@@ -2564,6 +2612,12 @@ export default {
     'Sin caja, los salarios dejan de pagarse. Tras 30 días de atrasos, el equipo empieza a marcharse.',
   'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
     'El dinero pierde valor: los precios y los salarios siguen el índice, tu caja no.',
+  'Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.':
+    'Puertos top-of-rack, conmutadores de bastidor, núcleo y interconexión: la red no se compra, viene con el parque.',
+  'Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.':
+    'Todo lo que no calcula pero hay que alimentar para que el cálculo aguante. El PUE es la razón entre el total del sitio y esa carga informática.',
+  'L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.':
+    'El enjambre construye su propia generación, y la construye con materia: lo que se va en centrales no se va en cálculo.',
   'Langue':
     'Idioma',
   'Vitesse de simulation':

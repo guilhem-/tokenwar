@@ -52,6 +52,9 @@ function bot() {
   // 3) projets abordables + optimisations récurrentes dès qu'elles sont dues
   for (const p of PROJECTS) { if (!s.projectsDone[p.id] && p.req(g)) g.buyProject(p.id); }
   for (const o of OPTIMS) if (g.canBuyOptim(o.id)) g.buyOptim(o.id);
+  // rendement du site : une tranche par an, toujours rentable (elle retire du
+  // MW à payer sans rien retirer au calcul) — un joueur la prend, le bot aussi
+  if (g.canImprovePue()) g.improvePue();
   // grands programmes : on commande dès que c'est finançable (fusion, sphères de Dyson)
   for (const pr of PROGRAMS) if (g.canOrderProgram(pr.id)) g.orderProgram(pr.id);
   // crypto : on suit le cycle — on entre quand le marché monte, on sort quand il tombe
@@ -77,7 +80,10 @@ function bot() {
         if (e.phase && g.phase < e.phase) continue;
         if (!g.dateUnlocked(e)) continue;
         const c = g.energyCost(e);
-        if (c <= s.money - reserve) { const r = c / e.mw; if (r < bestRatio) { bestRatio = r; best = e; } }
+        // en phase 2 une source se paie en matière : c'est canBuyEnergy qui
+        // tranche, la réserve de trésorerie n'a plus cours
+        const abordable = g.usesMatter() ? g.canBuyEnergy(e) : c <= s.money - reserve;
+        if (abordable) { const r = c / e.mw; if (r < bestRatio) { bestRatio = r; best = e; } }
       }
       if (!best || !g.buyEnergy(best.id)) break;
     }

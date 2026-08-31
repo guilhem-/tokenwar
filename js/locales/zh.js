@@ -802,6 +802,14 @@ export default {
     '一切都是矿床。组装体不再寻找矿石：它们处理眼前的东西，以它们所能达到的速度。',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     '矿床与风景之间的区别，已经不复存在。',
+  'Refroidissement':
+    '制冷',
+  'Alimentation électrique':
+    '供电',
+  'Ventilation':
+    '通风',
+  'Éclairage':
+    '照明',
   'Croûte accessible':
     '可及地壳',
   'Manteau supérieur':
@@ -1316,6 +1324,14 @@ export default {
     '⚡ 能源成本：',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
     '资本开支是一次性支出，下单时付清。运维（O&M）是每天的固定成本，停机也照付。燃料是可变成本，按实际取用的 MWh 计费。电网月租取决于签约功率。',
+  '🌡️ Où part le mégawatt :':
+    '🌡️ 兆瓦去了哪里：',
+  'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.':
+    '能源面板里的这个方框，把信息设备负载——显卡、服务器、机柜和数据网络——同机房的辅助设施分开：制冷、供电、通风、照明。两者之比就是 PUE。网络买不到：它的耗电由机群推出来，每台服务器一个端口，每个机柜一台交换机，每个机房一套核心。空机房几乎不花钱，满机房要花在制冷上：把机房装满是划算的。',
+  '❄️ Rendement du site (PUE) :':
+    '❄️ 站点能效（PUE）：',
+  'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.':
+    '它从 1.58 起步，每年可改造一期，每期降 0.02——自然冷却、通道封闭、温水冷却、浸没式。每一期都从电费里拿走兆瓦，却不从算力里拿走任何东西。下限是 1.10：热量总得排出去。',
   '🏗️ Délais :':
     '🏗️ 工期：',
   'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
@@ -1824,6 +1840,8 @@ export default {
     '转化 +50% 持续 90 秒。',
   'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
     '交付取消：已无空位安置 {0}。订单已退款（{1}）。',
+  'Rendement du site amélioré : PUE {0}.':
+    '站点能效改善：PUE {0}。',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     '工资已经发不出去了。拖欠满 30 天后，团队会开始离开。',
   '⚠️ Salaires impayés':
@@ -2010,6 +2028,10 @@ export default {
     '存档已载入',
   'TokenWar — Le Jeu du Token':
     'TokenWar — Token 之战',
+  'Une seule tranche par an':
+    '每年只能改造一期',
+  'Ressources insuffisantes':
+    '资源不足',
   'Palier d’extraction ouvert':
     '已开启新的开采层级',
   'Recherche insuffisante':
@@ -2186,8 +2208,6 @@ export default {
     '拖欠 {0} 天 — 团队正在离开',
   'Modèle pas encore disponible ({0})':
     '模型尚未推出（{0}）',
-  'Ressources insuffisantes':
-    '资源不足',
   'Service (tokens)':
     '服务（token）',
   'Recherche':
@@ -2240,6 +2260,14 @@ export default {
     '经常性：{0}',
   'aucun coût récurrent':
     '无经常性成本',
+  'Améliorer : {0} → {1} · {2}':
+    '改造：{0} → {1} · {2}',
+  'prochaine tranche l’an prochain':
+    '下一期改造要等明年',
+  'une tranche par an, plancher {0}':
+    '每年一期，下限 {0}',
+  'plancher atteint : la chaleur doit bien sortir':
+    '已到下限：热量总得排出去',
   'intégration':
     '整合中',
   'disponible':
@@ -2516,6 +2544,26 @@ export default {
     'GPU 机位',
   'Charge réseau':
     '电网负荷',
+  'Charge informatique':
+    '信息设备负载',
+  'Cartes':
+    '显卡',
+  'Serveurs':
+    '服务器',
+  'Baies':
+    '机柜',
+  'Réseau de données':
+    '数据网络',
+  'Auxiliaires':
+    '辅助设施',
+  'Bâtiment':
+    '建筑',
+  'Total site':
+    '站点合计',
+  'Construction de capacité':
+    '产能建设',
+  'Rendement du site (PUE)':
+    '站点能效（PUE）',
   'Où envoyer l’essaim':
     '把蜂群派往何处',
   'Grands programmes':
@@ -2564,6 +2612,12 @@ export default {
     '没有现金，工资就发不出去。拖欠满 30 天后，团队会开始离开。',
   'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
     '钱会贬值：价格和工资跟随指数，你的现金不会。',
+  'Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.':
+    '机柜顶端口、机柜交换机、核心与互连：这套东西买不到，有了机群就有了它。',
+  'Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.':
+    '凡是不参与计算、却必须供电才能让计算撑住的部分。PUE 就是站点总量与这部分信息设备负载之比。',
+  'L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.':
+    '蜂群自己建发电，而它是拿物质建的：进了电厂的那一份，就不会进算力。',
   'Langue':
     '语言',
   'Vitesse de simulation':

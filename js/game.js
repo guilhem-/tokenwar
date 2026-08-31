@@ -13,7 +13,10 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          OPS_INCIDENTS, TRAINING_FAILURES, AUTO_SPEED, LOANS, LOAN_MIN_VALUATION,
          PHASE3_EARTH, ENDING_UNIVERSE, WATCHDOGS, WATCHDOG_AFTER, WATCHDOG_SHARE,
          HAZARD_RATE, HAZARD_SHIELD, UPLIFT, UPLIFT_MIN, UPLIFT_MAX, UPLIFT_BASE, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE, OPTIM_MATTER, DIRECTIVE_MATTER,
-         DESTINATIONS, DEST_DURATION, DEST_CHOICES } from './data.js';
+         DESTINATIONS, DEST_DURATION, DEST_CHOICES,
+         NETWORK, PUE_START, PUE_FLOOR, PUE_STEP, PUE_COST, PUE_MULT, PUE_MATTER,
+         ENERGY_MATTER_PART_PER_MW, ENERGY_MATTER_PER_MW, PHASE2_ENERGY_SHARE,
+         HARVEST_POWER_FLOOR } from './data.js';
 import { clamp, fmtPower, fmtMoney, fmtMass, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
@@ -110,6 +113,8 @@ export class Game {
     s.energyCounts = {};
     s.energyCap = BASE_GRID_MW; // rien : il faut se raccorder avant de calculer
     s.baseGridMW = BASE_GRID_MW; // marqueur de règle : permet de migrer les vieilles sauvegardes
+    s.pueSteps = 0;          // tranches d'amélioration du rendement du site posées
+    s.pueYear = null;        // année de la dernière tranche : une seule par an
     s.unpaidDays = 0;        // jours d'arriérés de salaire (30 → les gens partent)
     s.quitDebt = 0;          // départs accumulés en attente d'être appliqués
     s.modelTier = 0;
@@ -152,7 +157,7 @@ export class Game {
     s.ngPlus = this.state ? (this.state.ngPlus || 0) : 0;
     s.ended = false;
     // derived caches (remplis au tick)
-    s.rates = { tokens:0, money:0, research:0, matter:0 };
+    s.rates = { tokens:0, money:0, research:0, matter:0, energyMatter:0 };
     this.state = s;
   }
 
@@ -333,12 +338,73 @@ export class Game {
     for (const id in this.state.gpuCounts) n += this.state.gpuCounts[id];
     return n;
   }
-  energyUse() {
-    let e = 0;
-    for (const g of GPUS) e += (this.state.gpuCounts[g.id] || 0) * g.energy;
-    for (const it of INFRA) e += (this.infraCount(it.id) || 0) * (it.energy || 0); // datacenters, baies, serveurs
-    return e * this.state.mods.energyEff * this.getTimed('energyEff');
+  // ---- PUE : rendement du site ----
+  // On ne descend jamais sous PUE_FLOOR : la chaleur doit bien sortir.
+  pue() {
+    const n = this.state.pueSteps || 0;
+    return Math.max(PUE_FLOOR, PUE_START - PUE_STEP * n);
   }
+  pueMaxed() { return this.pue() <= PUE_FLOOR + 1e-9; }
+  pueCost() {
+    return PUE_COST * Math.pow(PUE_MULT, this.state.pueSteps || 0)
+      * this.state.mods.opex * this.inflIndex();
+  }
+  // une tranche par an, et pas avant d'avoir une salle à améliorer
+  pueYearLeft() {
+    if (this.state.pueYear == null) return 0;
+    return Math.max(0, this.state.pueYear + 1 - this.simYearInt());
+  }
+  // On améliore une SALLE : l'offre tient à en posséder ou en louer une, pas à
+  // un déblocage d'interface. En phase 2 les salles sont toujours là, et le
+  // gain compte double — chaque MW d'auxiliaire en moins est de la matière
+  // qu'on ne met pas en centrales.
+  pueOffered() {
+    const salles = this.infraCount('datacenter') + (this.state.rentedDC || 0);
+    return salles > 0 && !this.pueMaxed();
+  }
+  canImprovePue() {
+    if (!this.pueOffered() || this.pueYearLeft() > 0) return false;
+    return this.usesMatter()
+      ? this.state.matter >= this.matterPriceOf(PUE_MATTER)
+      : this.state.money >= this.pueCost();
+  }
+  improvePue() {
+    if (!this.canImprovePue()) return false;
+    if (!this.paySoft(this.pueCost(), PUE_MATTER)) return false;
+    this.state.pueSteps = (this.state.pueSteps || 0) + 1;
+    this.state.pueYear = this.simYearInt();
+    this.log(t('Rendement du site amélioré : PUE {0}.', this.pue().toFixed(2)), 'good');
+    return true;
+  }
+
+  // ---- DÉTAIL DE LA CONSOMMATION ----
+  // Deux natures, et une seule règle pour les séparer : est-ce que ça calcule
+  // ou fait circuler des bits ? Si oui, c'est de la charge INFORMATIQUE ; tout
+  // le reste — froid, onduleurs, ventilation, lumière — est un AUXILIAIRE,
+  // dérivé du PUE et donc proportionnel à ce qui est réellement hébergé.
+  // Le bâtiment, lui, vit sa vie hors du périmètre PUE : bureaux et parking ne
+  // sont pas du datacenter.
+  energyBreakdown() {
+    const s = this.state;
+    const eff = s.mods.energyEff * this.getTimed('energyEff');
+    let gpu = 0;
+    for (const g of GPUS) gpu += (s.gpuCounts[g.id] || 0) * g.energy;
+    const servers = this.infraCount('server');
+    const racks = this.infraCount('rack') + (s.rentedSpace || 0) * COLO.racks;
+    const rooms = this.infraCount('datacenter') + (s.rentedDC || 0);
+    const server = servers * (INFRA.find(x => x.id === 'server').energy || 0);
+    const rack = racks * (INFRA.find(x => x.id === 'rack').energy || 0);
+    // interpolation du réseau sur les trois échelles du parc
+    const net = servers * NETWORK.perServer + racks * NETWORK.perRack + rooms * NETWORK.perDC;
+    const it = (gpu + server + rack + net) * eff;
+    const aux = it * (this.pue() - 1);
+    const site = this.infraCount('realestate') * (INFRA.find(x => x.id === 'realestate').energy || 0);
+    // les quatre postes d'auxiliaires se déduisent de `aux` par PUE_SPLIT :
+    // c'est l'affaire de l'affichage, pas du moteur.
+    return { gpu: gpu * eff, server: server * eff, rack: rack * eff, net: net * eff,
+             it, aux, site, total: it + aux + site, pue: this.pue() };
+  }
+  energyUse() { return this.energyBreakdown().total; }
   energyThrottle() {
     const use = this.energyUse();
     if (use <= this.state.energyCap || use === 0) return 1;
@@ -648,7 +714,7 @@ export class Game {
           if (!this.isAutoItem('energy', e.id)) continue;
           // on compte la capacité déjà en chantier : sinon on recommande en boucle
           if (this.energyUse() <= this.energyCapPlanned() * 0.98) break;
-          if ((!e.phase || this.phase >= e.phase) && this.dateUnlocked(e) && s.money >= this.energyCost(e)) {
+          if (this.canBuyEnergy(e)) {
             this.buyEnergy(e.id); this.autoFired('energy', e.id);
           }
         }
@@ -769,12 +835,24 @@ export class Game {
     this.state.money += refund;
     return true;
   }
+  // Part de matière que coûte une source, proportionnelle à sa puissance : une
+  // tranche de fusion de 5 GW n'est pas une ferme solaire de 3 MW.
+  energyMatterPart(e) { return ENERGY_MATTER_PART_PER_MW * e.mw; }
+  canBuyEnergy(e) {
+    if (!this.dateUnlocked(e)) return false;
+    if (e.phase && this.phase < e.phase) return false;
+    return this.usesMatter()
+      ? this.state.matter >= this.matterPriceOf(this.energyMatterPart(e))
+      : this.state.money >= this.energyCost(e);
+  }
+  energyLabel(e) { return this.softLabel(this.energyCost(e), this.energyMatterPart(e)); }
   buyEnergy(id) {
     const e = ENERGY.find(x => x.id === id);
     if (!this.dateUnlocked(e)) return false;
     const cost = this.energyCost(e);
-    if (this.state.money < cost) return false;
-    this.state.money -= cost;                    // CAPEX : coût unique, payé à la commande
+    // CAPEX : coût unique, payé à la commande — en dollars tant qu'il y en a,
+    // en matière ensuite. Construire une centrale reste un prélèvement.
+    if (!this.paySoft(cost, this.energyMatterPart(e))) return false;
     this.queueBuild('energy', id, e, cost);      // puis raccordement / construction
     return true;
   }
@@ -1535,7 +1613,9 @@ export class Game {
       const ps = this.state.probeSpecs;
       probeSpeed = Math.min(8, Math.pow(1.25, ps.harvest + ps.speed) * (1 + Math.log10(this.state.probes + 1) * 0.15));
     }
-    return a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * this.upliftYield() * probeSpeed * 1.66e-9 * wafer.perf;
+    // même facteur courant que la récolte réelle, sinon le temps annoncé ment
+    const powerFactor = HARVEST_POWER_FLOOR + (1 - HARVEST_POWER_FLOOR) * this.energyThrottle();
+    return a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * this.upliftYield() * powerFactor * probeSpeed * 1.66e-9 * wafer.perf;
   }
   // ---- destinations de l'essaim (phase 3) --------------------------
   // Chaque région se paie en risque ce qu'elle rapporte en matière, et
@@ -1822,6 +1902,9 @@ export class Game {
     }
     if (p === 2) {
       this.state.intelligence = Math.max(this.state.intelligence, 1);
+      // On entre dans la phase 2 avec les lumières allumées : le parc hérité de
+      // la phase 1 est alimenté. TOUT ce qui vient après se paie en matière.
+      this.state.energyCap = Math.max(this.state.energyCap, this.energyUse() * 1.5);
       this.state.alloc = { serve:0.4, research:0.1, improve:0.2, harvest:0.3 };
       this.state.eventTimer = 20;
       this.log(t('SINGULARITÉ. Le système s’auto-améliore. La conversion de la matière commence.'), 'milestone');
@@ -2460,9 +2543,29 @@ export class Game {
 
     // --- phase 2+ : auto-amélioration, conversion de matière, auto-scaling ---
     if (this.phase >= 2) {
-      // l'énergie cesse d'être un goulot (fusion / Dyson) : les datacenters s'auto-alimentent
-      const need = this.energyUse();
-      if (s.energyCap < need * 1.5) s.energyCap = need * 1.5;
+      // L'essaim construit sa propre production — mais il la construit AVEC
+      // QUELQUE CHOSE. Une centrale, même de l'autre côté de la galaxie, est
+      // de la matière qu'on ne convertira pas en calcul : la capacité qui
+      // manque se prélève sur le stock, au prorata de ce qu'on ajoute.
+      // Si la matière ne suit pas, la capacité ne suit pas non plus, le
+      // throttling mord, et la boucle ralentit. L'énergie ne cesse jamais
+      // d'être un goulot en phase 2 : elle change simplement de monnaie.
+      const cible = this.energyUse() * 1.5;
+      s.rates.energyMatter = 0;
+      if (s.energyCap < cible && cible > 0) {
+        const manque = cible - s.energyCap;                    // MW encore à bâtir
+        const voulu = manque * ENERGY_MATTER_PER_MW;           // la matière qu'il y faut
+        // On n'y consacre qu'une PART DU FLUX de récolte : la production ne se
+        // bâtit pas plus vite que la matière n'arrive. Le débit est le vrai
+        // frein — un prélèvement sur le stock, lui, serait toujours payable et
+        // ne freinerait jamais rien.
+        const budget = Math.min(voulu, (s.rates.matter || 0) * PHASE2_ENERGY_SHARE * dt, s.matter);
+        if (budget > 0) {
+          s.matter -= budget;
+          s.energyCap += budget / ENERGY_MATTER_PER_MW;
+          s.rates.energyMatter = budget / Math.max(dt, 1e-9);
+        }
+      }
 
       // On travaille sur le compute BRUT (unités matérielles), SANS le multiplicateur
       // d'efficacité des projets : la boucle de rétroaction matière↔compute reste ainsi
@@ -2475,7 +2578,11 @@ export class Game {
 
       // RÉCOLTE DE BASE : pilote la boucle compute↔matière à τ ≈ 45 s, INDÉPENDANTE des bonus
       // (c'est la clé d'un rythme stable, quels que soient les choix du joueur).
-      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * this.upliftYield();  // kg/s « bruts »
+      // La récolte tourne à l'électricité comme le reste : un essaim sous-alimenté
+      // mine au ralenti. Sans ce facteur, l'énergie n'aurait plus aucune prise sur
+      // la boucle en phase 2 — on paierait des centrales pour rien.
+      const powerFactor = HARVEST_POWER_FLOOR + (1 - HARVEST_POWER_FLOOR) * this.energyThrottle();
+      const baseHarvest = rawUnits * a.harvest * 1.33 * this.dysonBoost() * this.extractionYield() * this.destYield() * this.upliftYield() * powerFactor;  // kg/s « bruts »
 
       // bonus de consommation : intelligence + nanotech (matterMult) + événements. Borné → effet logarithmique sur le rythme.
       let consumeBonus = s.mods.matterMult

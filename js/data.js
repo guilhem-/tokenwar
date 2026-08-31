@@ -173,7 +173,11 @@ export const INFRA = [
   // détail. L'achat s'amortit en quatre ans. Sans cela, acheter était
   // remboursé en 25 jours et louer une salle entière revenait plus cher, à la
   // baie, que d'en louer trois au détail.
-  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:2600000, energy:0.02, rentDaily:1700, family:'housing',
+  // La salle n'a PAS de consommation propre en dur : ses auxiliaires (froid,
+  // onduleurs, ventilation, éclairage) sont dérivés du PUE, donc proportionnels
+  // à la charge informatique réellement hébergée. Un forfait fixe faisait payer
+  // autant pour une salle vide que pour une salle pleine.
+  { id:'datacenter', name:'Datacenter', unit:'datacenter', needs:'realestate', child:'rack', capacity:8, cost:2600000, energy:0, rentDaily:1700, family:'housing',
     desc:'Salle climatisée (le cooling consomme). Achat, ou location à la journée.' },
   { id:'rack',       name:'Baie (rack)', unit:'baie', needs:'datacenter', child:'server', capacity:12, cost:1500, energy:0.0002, family:'hardware',
     desc:'Armoire 42U (PDU, switch). Occupe une place en datacenter.' },
@@ -184,6 +188,65 @@ export const INFRA = [
     eraPrice:[[0,25000],[2025,45000],[2027,32000]],
     desc:'Châssis multi-GPU. Prix tiré vers le haut par la flambée mémoire (2025-2026).' },
 ];
+
+// ---------------------------------------------------------------------
+//  RÉSEAU DE DONNÉES — il ne s'achète pas : on ne commande pas un switch,
+//  on en a un parce qu'on a des baies. Sa consommation est donc INTERPOLÉE
+//  depuis la taille du parc, à trois échelles qui existent vraiment :
+//   · par serveur   — le port top-of-rack et son optique ;
+//   · par baie      — le switch de baie et son PDU réseau ;
+//   · par salle     — le cœur, les routeurs de bordure, l'interconnexion.
+//  Le réseau est une charge INFORMATIQUE : il entre dans le dénominateur du
+//  PUE, il n'en est pas un auxiliaire.
+// ---------------------------------------------------------------------
+export const NETWORK = { perServer: 0.00006, perRack: 0.00035, perDC: 0.006 };
+
+// ---------------------------------------------------------------------
+//  PUE (Power Usage Effectiveness) — le rapport entre ce que tire le site et
+//  ce qui arrive réellement aux machines. PUE 1,58 : pour 1 MW de calcul, on
+//  paie 580 kW de froid, d'onduleurs, de ventilation et de lumière. C'était la
+//  moyenne du secteur en 2016 ; les meilleurs exploitants tiennent 1,10, et
+//  personne ne descend en dessous — il faut bien extraire la chaleur.
+//  Chaque tranche d'amélioration gagne 0,02, et on ne peut en poser qu'UNE PAR
+//  AN : le froid libre, le confinement d'allées, l'eau tempérée puis
+//  l'immersion se déploient à l'échelle d'une tranche de travaux, pas d'un clic.
+// ---------------------------------------------------------------------
+export const PUE_START = 1.58;
+export const PUE_FLOOR = 1.10;
+export const PUE_STEP  = 0.02;
+export const PUE_COST  = 180000;   // capex de la première tranche
+export const PUE_MULT  = 1.35;     // chaque tranche suivante coûte plus cher
+export const PUE_MATTER = 0.0008;  // en phase 2, ça se paie en matière
+// Répartition des auxiliaires. Le froid domine partout, l'électrique (pertes
+// d'onduleurs et de transformateurs) vient ensuite, la ventilation et
+// l'éclairage ferment la marche.
+export const PUE_SPLIT = [
+  { id:'cooling', name:'Refroidissement',  share:0.62 },
+  { id:'power',   name:'Alimentation électrique', share:0.24 },
+  { id:'air',     name:'Ventilation',      share:0.09 },
+  { id:'light',   name:'Éclairage',        share:0.05 },
+];
+
+// Phase 2 : l'essaim construit sa propre production, mais rien n'est gratuit.
+// Le capex d'une source se règle en MATIÈRE, proportionnellement à sa
+// puissance ; et la capacité qui manque au fil de l'eau se prélève elle aussi
+// sur le stock. L'énergie ne cesse jamais d'être un goulot, elle change de
+// monnaie.
+// Le capex d'une source achetée à la main : une fraction du stock par MW.
+export const ENERGY_MATTER_PART_PER_MW = 6e-7;
+// Ce que coûte VRAIMENT un mégawatt bâti par l'essaim : ~110 tonnes de
+// matière, turbines, blindage et radiateurs compris. Une constante absolue est
+// ici légitime — la récolte et la consommation croissent toutes deux avec le
+// compute, donc le rapport des deux reste stable à toutes les échelles.
+export const ENERGY_MATTER_PER_MW = 1.1e5;
+// Part MAXIMALE du flux de récolte que l'essaim consacre à sa production.
+// C'est un plafond de débit, pas un prélèvement sur le stock : sans récolte,
+// pas de centrale — et donc pas de calcul. L'énergie reste un goulot.
+export const PHASE2_ENERGY_SHARE = 0.35;
+// Le throttling ne coupe jamais la récolte entièrement : un essaim sous-alimenté
+// mine au ralenti, il ne meurt pas. Sans ce plancher, la moindre coupure au
+// moment de la bascule condamnait la partie.
+export const HARVEST_POWER_FLOOR = 0.25;
 
 // ---------------------------------------------------------------------
 //  ÉNERGIE — plafond dur de production. Trois natures de coût, distinctes :
@@ -1427,6 +1490,8 @@ export const HELP = [
   { b:'Hébergement :', p:'un GPU doit tenir dans un serveur, dans une baie, dans un datacenter, sur de l’immobilier — qui consomment aussi de l’énergie. Le matériel obsolète se revend — à l’unité, par dix au-delà de 10 exemplaires, en totalité au-delà de 100 ; une carte sortie depuis plus de 5 ans disparaît du marché. Vous pouvez aussi louer un datacenter ou de l’espace en colocation.' },
   { b:'⚡ Au départ :', p:'vous n’avez aucune puissance disponible, ni baie ni serveur — seulement un local, une salle et $50 000. Votre première décision est de vous raccorder, puis de monter une baie et un serveur avant de pouvoir loger la moindre carte. Surveillez La Une : une subvention énergie pour les jeunes pousses viendra renforcer votre raccordement.' },
   { b:'⚡ Coûts d’énergie :', p:'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.' },
+  { b:'🌡️ Où part le mégawatt :', p:'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.' },
+  { b:'❄️ Rendement du site (PUE) :', p:'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.' },
   { b:'🏗️ Délais :', p:'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.' },
   { b:'Équipe :', p:'les RH ouvrent des postes, les ingénieurs R&D débloquent l’entraînement des modèles, les marketeurs relèvent le plafond marketing. Chaque embauche coûte $1 000, puis un salaire chaque jour. Les RH occupent eux-mêmes un poste : mal doser son effectif peut bloquer le modèle suivant. Deux négligences se paient : moins de 10% d’ingénieurs SRE et, chaque année après l’introduction en Bourse, un incident d’exploitation a 20% de chances de vous coûter 15% de la valeur ; moins de 20% de data engineers et chaque entraînement a 5% de risque d’échouer — ressources consommées, palier non franchi.' },
   { b:'💸 Salaires impayés :', p:'trésorerie à zéro, les salaires ne sortent plus. Au bout de 30 jours d’arriérés quelqu’un démissionne, puis un départ tous les 2 jours. Repayez avant, et l’équipe reste.' },

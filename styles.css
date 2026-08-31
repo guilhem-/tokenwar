@@ -1858,3 +1858,34 @@ kbd {
   display: block; font-size: 0.72rem; line-height: 1.4;
   color: var(--text-mute); margin-top: 0.1rem;
 }
+
+/* --- Récapitulatif énergie : où part le mégawatt --- */
+.energy-mix {
+  margin: 8px 0 10px;
+  padding: 8px 9px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 12px;
+}
+.energy-mix .mix-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-weight: 600; letter-spacing: .02em;
+  padding: 3px 0; margin-top: 2px;
+  border-bottom: 1px solid var(--line);
+}
+.energy-mix .mix-head:first-child { margin-top: 0; }
+.energy-mix .mix-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 2px 0;
+}
+.energy-mix .mix-sub { padding-left: 12px; opacity: .85; }
+.energy-mix .mix-total {
+  margin-top: 4px; padding-top: 4px;
+  border-top: 1px solid var(--line); font-weight: 600;
+}
+.energy-mix .mix-matter { color: var(--matter, #c9a227); }
+.energy-mix .mix-pue { margin-top: 6px; padding-top: 5px; border-top: 1px dashed var(--line); }
+.energy-mix .mix-pue.dim { opacity: .55; }
+.energy-mix .mix-pue .btn { width: 100%; margin-top: 3px; }
+.energy-mix .mix-pue .hint { display: block; margin-top: 3px; font-size: 11px; }

@@ -362,6 +362,29 @@
             <div class="progress"><div class="progress-fill" id="energy-load-fill" style="width:0%"></div></div>
             <span class="num" id="energy-load-value">0 / 0 MW</span>
           </div>
+          <div class="energy-mix" id="energy-mix">
+            <div class="mix-head"><span data-i18n="Charge informatique">Charge informatique</span><span class="num" id="mix-it">—</span></div>
+            <div class="mix-row"><span class="text-muted">🎛️ <span data-i18n="Cartes">Cartes</span></span><span class="num" id="mix-gpu">—</span></div>
+            <div class="mix-row"><span class="text-muted">🖥️ <span data-i18n="Serveurs">Serveurs</span></span><span class="num" id="mix-server">—</span></div>
+            <div class="mix-row"><span class="text-muted">🗄️ <span data-i18n="Baies">Baies</span></span><span class="num" id="mix-rack">—</span></div>
+            <div class="mix-row" data-i18n-title="Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc." title="Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.">
+              <span class="text-muted">🔗 <span data-i18n="Réseau de données">Réseau de données</span></span><span class="num" id="mix-net">—</span>
+            </div>
+            <div class="mix-head" data-i18n-title="Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique." title="Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.">
+              <span data-i18n="Auxiliaires">Auxiliaires</span><span class="num" id="mix-aux">—</span>
+            </div>
+            <div class="mix-aux-rows" id="mix-aux-rows"></div>
+            <div class="mix-row"><span class="text-muted">🏢 <span data-i18n="Bâtiment">Bâtiment</span></span><span class="num" id="mix-site">—</span></div>
+            <div class="mix-row mix-total"><span data-i18n="Total site">Total site</span><span class="num" id="mix-total">—</span></div>
+            <div class="mix-row mix-matter hidden" id="mix-matter-row" data-i18n-title="L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul." title="L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.">
+              <span class="text-muted">⛏️ <span data-i18n="Construction de capacité">Construction de capacité</span></span><span class="num" id="mix-matter">—</span>
+            </div>
+            <div class="mix-pue" id="mix-pue-row">
+              <div class="mix-row"><span class="text-muted" data-i18n="Rendement du site (PUE)">Rendement du site (PUE)</span><span class="num" id="mix-pue">—</span></div>
+              <button class="btn btn-small" id="mix-pue-btn" type="button">—</button>
+              <div class="hint" id="mix-pue-hint"></div>
+            </div>
+          </div>
           <div class="item-list" id="energy-list"></div>
         </div>
       </div>

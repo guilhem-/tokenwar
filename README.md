@@ -26,7 +26,7 @@ suit la langue** : longue en français et en allemand (`Md`, `Mrd`, `Bio`), cour
 (`B` = 10⁹), et **groupée par 10⁴** en chinois, japonais et coréen (`万` / `億` / `兆`).
 Séparateur décimal, groupement des milliers et noms de mois du calendrier suivent aussi.
 
-**1 288 chaînes × 7 langues = 9 016 traductions**, vérifiées par `test-i18n.mjs` avant tout
+**1 315 chaînes × 7 langues = 9 205 traductions**, vérifiées par `test-i18n.mjs` avant tout
 déploiement : couverture complète, aucune traduction vide, substitutions `{0}` préservées,
 aucune clé orpheline, et aucune écriture étrangère glissée dans une langue.
 `tools/strings.mjs` **extrait l'inventaire du code lui-même** (données
@@ -105,6 +105,27 @@ de son année.
   le **combustible** (variable, au MWh soutiré : gaz $70/MWh, réseau $78, solaire $0) et
   l'**abonnement réseau** proportionnel à la **puissance souscrite** ($60/MW/jour).
   Le mix est servi en **ordre de mérite** (le moins cher d'abord).
+- **Où part le mégawatt — PUE et récapitulatif du site.** La consommation se sépare en deux
+  natures, selon une règle unique : *est-ce que ça calcule ou fait circuler des bits ?*
+  - La **charge informatique** réunit les **cartes**, les **serveurs** (châssis, ventilation,
+    alimentations), les **baies** (PDU, switch) et le **réseau de données**. Ce dernier ne
+    s'achète pas — on ne commande pas un switch, on en a un parce qu'on a des baies : sa
+    consommation est **interpolée** sur les trois échelles qui existent vraiment, le port
+    top-of-rack **par serveur** (60 W), le switch **par baie** (350 W), le cœur et
+    l'interconnexion **par salle** (6 kW). Il pèse ~5 % de la charge dans une salle pleine,
+    bien davantage dans une salle vide : remplir ses salles paie.
+  - Les **auxiliaires** — **refroidissement** (62 %), **alimentation électrique** (24 %),
+    **ventilation** (9 %), **éclairage** (5 %) — sont dérivés du **PUE**, donc strictement
+    proportionnels à ce qui est réellement hébergé. La salle n'a plus de forfait en dur : une
+    salle vide ne coûte presque rien, une salle pleine coûte son froid.
+  - Le **PUE** part à **1,58** (la moyenne du secteur en 2016) et se gagne par **tranches de
+    0,02, une par an** : le free cooling, le confinement d'allées, l'eau tempérée puis
+    l'immersion se déploient à l'échelle d'une tranche de travaux, pas d'un clic. **Plancher à
+    1,10** — les meilleurs exploitants y sont, et personne ne descend en dessous : la chaleur
+    doit bien sortir. Une tranche retire des mégawatts à payer **sans rien retirer au calcul**.
+  - Une **boîte récapitulative** dans le panneau Énergie détaille les onze lignes, en **phase 1
+    comme en phase 2**. Le rapport `auxiliaires / charge informatique` y vaut exactement
+    `PUE − 1` — un test le vérifie.
 - **Inflation simulée** (taux annuels calqués sur le CPI réel : 8 % en 2022…) : prix,
   salaires, loyers, énergie et tarifs acceptés par le marché suivent l'indice — **mais pas
   votre trésorerie**. Dormir sur son cash coûte du pouvoir d'achat.
@@ -658,10 +679,19 @@ réclamer. On demandait au joueur de payer dans une devise qu'il ne voyait plus.
 - Les **directives permanentes** se règlent maintenant en **matière**, exprimée en fraction du
   stock, comme les crises et la surveillance. Un montant absolu n'aurait aucun sens sur une
   grandeur qui court de 10¹⁸ à 10⁵².
-- Les panneaux **Calcul** et **Énergie** disparaissent après la bascule. Ils n'affichaient plus
-  que des prix en dollars pour des achats devenus vains : mesuré, **mille des meilleures cartes
-  ajouteraient 0,00003 %** du compute, l'ASI auto-construisant ses wafers, et l'énergie
-  s'auto-échelonne.
+- Le panneau **Calcul** disparaît après la bascule : mesuré, **mille des meilleures cartes
+  ajouteraient 0,00003 %** du compute, l'ASI auto-construisant ses wafers.
+- Le panneau **Énergie**, lui, **reste** — parce que l'énergie, elle, compte encore.
+  La capacité ne s'auto-échelonne plus gratuitement : l'essaim **bâtit sa propre production, et
+  il la bâtit avec de la matière**, à **110 tonnes le mégawatt**. Le frein n'est pas le stock
+  mais le **débit** : au plus **35 % du flux de récolte** part en centrales. Sans récolte, pas
+  de centrale ; sans centrale, le throttling mord et **la récolte elle-même ralentit** — jusqu'à
+  un plancher de 25 %, pour qu'une coupure coûte cher sans jamais fermer la partie.
+  Les sources s'achètent alors **en matière** (proportionnellement à leur puissance : une
+  tranche de fusion de 5 GW n'est pas une ferme solaire de 3 MW), et la liste se réduit à ce qui
+  pèse — proposer un raccordement de 10 kW à un site de 271 MW est du bruit.
+  On entre en phase 2 **avec les lumières allumées** : le parc hérité est alimenté, tout ce qui
+  vient après se paie.
 - Le **prix accepté par le marché** n'est plus affiché : il ne veut plus rien dire.
 
 Un test balaie l'interface rendue en phase 2 et échoue si le moindre élément de prix affiche

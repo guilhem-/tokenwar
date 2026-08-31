@@ -2169,12 +2169,13 @@ await step('phase 2+ : plus rien ne se paie ni ne s affiche en dollars', () => {
   game.state.addendum = true; game.state.directivesPaid = 2;
   ui.onPhaseChange(2); ui.render(true);
 
-  // les panneaux devenus vestigiaux sont masqués
-  for (const id of ['compute', 'energy']) {
-    const p = dom.window.document.getElementById('panel-' + id);
-    if (!p.classList.contains('hidden')) throw new Error('le panneau ' + id + ' reste visible en phase 2');
-  }
-  // et ils le sont pour une bonne raison : acheter n y change plus rien
+  // le panneau CALCUL est vestigial et masqué : acheter des cartes n y change plus rien.
+  // Le panneau ÉNERGIE, lui, RESTE — la capacité ne s auto-échelonne plus, elle se
+  // bâtit avec de la matière — mais il ne doit plus afficher un seul dollar.
+  if (!dom.window.document.getElementById('panel-compute').classList.contains('hidden'))
+    throw new Error('le panneau compute reste visible en phase 2');
+  if (dom.window.document.getElementById('panel-energy').classList.contains('hidden'))
+    throw new Error('l énergie se paie encore en phase 2 : son panneau ne doit pas être masqué');
   game.state.gpuCounts = { wafer: 3e9 };
   const avant = game.computeRaw();
   const meilleure = GPUS.filter(x => game.canBuyGPU(x.id)).sort((a, b) => b.perf - a.perf)[0];
@@ -2305,6 +2306,216 @@ await step('emprise : le panneau montre la chaîne entière, et s efface en phas
   if (!ui.el.upliftAskBody.textContent.trim()) throw new Error('la demande est vide');
   if (!ui.el.upliftSteps.querySelectorAll('.is-pending').length) throw new Error('l étape en attente n est pas marquée');
   game.state.phase = 1; game.state.uplift = null;
+});
+
+// ---------------------------------------------------------------------
+//  ÉNERGIE : où part réellement le mégawatt
+// ---------------------------------------------------------------------
+const parcType = () => {
+  game.state.gpuCounts = { a100: 100 };
+  game.state.infraCounts = { realestate: 1, datacenter: 2, rack: 8, server: 40 };
+};
+
+await step('PUE : le rapport auxiliaires / charge informatique EST le PUE', () => {
+  parcType();
+  game.state.pueSteps = 0;
+  const b = game.energyBreakdown();
+  if (Math.abs(b.pue - data.PUE_START) > 1e-9) throw new Error('le PUE de départ n est pas celui des données');
+  if (Math.abs(b.aux / b.it - (b.pue - 1)) > 1e-9)
+    throw new Error(`aux/it = ${b.aux / b.it} au lieu de ${b.pue - 1}`);
+  // la charge informatique est bien la somme de ses quatre postes
+  if (Math.abs(b.it - (b.gpu + b.server + b.rack + b.net)) > 1e-9)
+    throw new Error('la charge informatique ne recompose pas ses postes');
+  if (Math.abs(b.total - (b.it + b.aux + b.site)) > 1e-9)
+    throw new Error('le total ne recompose pas ses trois natures');
+  if (Math.abs(game.energyUse() - b.total) > 1e-12)
+    throw new Error('energyUse et le récapitulatif ne disent pas la même chose');
+});
+
+await step('PUE : les auxiliaires se répartissent entièrement en quatre postes', () => {
+  const somme = data.PUE_SPLIT.reduce((a, p) => a + p.share, 0);
+  if (Math.abs(somme - 1) > 1e-9) throw new Error(`les parts font ${somme} au lieu de 1`);
+  for (const p of data.PUE_SPLIT) if (!(p.share > 0)) throw new Error(`part nulle pour ${p.id}`);
+});
+
+await step('PUE : une tranche par an, 0,02 à chaque fois, jamais sous le plancher', () => {
+  parcType();
+  game.state.pueSteps = 0; game.state.pueYear = null;
+  game.state.money = 1e12;
+  const avant = game.pue();
+  if (!game.canImprovePue()) throw new Error('la première tranche devrait être offerte');
+  game.improvePue();
+  if (Math.abs(avant - game.pue() - data.PUE_STEP) > 1e-9)
+    throw new Error(`une tranche gagne ${avant - game.pue()} au lieu de ${data.PUE_STEP}`);
+  // deuxième tranche la même année : refusée
+  if (game.canImprovePue()) throw new Error('deux tranches la même année ne devraient pas passer');
+  if (game.improvePue()) throw new Error('improvePue a accepté une seconde tranche dans l année');
+  // l année suivante : de nouveau possible
+  game.state.playSeconds += data.SECONDS_PER_YEAR;
+  if (!game.canImprovePue()) throw new Error('la tranche suivante devrait rouvrir l année d après');
+  // et on ne descend jamais sous le plancher
+  game.state.pueSteps = 999;
+  if (Math.abs(game.pue() - data.PUE_FLOOR) > 1e-9)
+    throw new Error(`le PUE tombe à ${game.pue()} alors que le plancher est ${data.PUE_FLOOR}`);
+  if (!game.pueMaxed()) throw new Error('le plancher devrait être signalé comme atteint');
+  if (game.canImprovePue()) throw new Error('on ne devrait plus rien pouvoir améliorer au plancher');
+  game.state.pueSteps = 0; game.state.pueYear = null;
+});
+
+await step('PUE : améliorer le site retire des MW sans toucher au calcul', () => {
+  parcType();
+  game.state.pueSteps = 0; game.state.pueYear = null; game.state.money = 1e12;
+  const a = game.energyBreakdown();
+  game.improvePue();
+  const b = game.energyBreakdown();
+  if (Math.abs(a.it - b.it) > 1e-12) throw new Error('la charge informatique a bougé : ce n est pas ce que fait le PUE');
+  if (!(b.total < a.total)) throw new Error('améliorer le PUE devrait faire baisser la facture');
+  if (!(b.aux < a.aux)) throw new Error('ce sont les auxiliaires qui doivent baisser');
+  game.state.pueSteps = 0; game.state.pueYear = null;
+});
+
+await step('réseau : sa consommation est interpolée depuis le parc, à trois échelles', () => {
+  game.state.gpuCounts = {}; game.state.infraCounts = {};
+  game.state.rentedDC = 0; game.state.rentedSpace = 0;
+  if (game.energyBreakdown().net !== 0) throw new Error('sans parc, pas de réseau');
+  game.state.infraCounts = { server: 1 };
+  const s1 = game.energyBreakdown().net;
+  game.state.infraCounts = { server: 2 };
+  const s2 = game.energyBreakdown().net;
+  if (Math.abs((s2 - s1) - data.NETWORK.perServer) > 1e-12) throw new Error('un serveur de plus ne coûte pas son port');
+  game.state.infraCounts = { server: 2, rack: 1 };
+  const r1 = game.energyBreakdown().net;
+  if (Math.abs((r1 - s2) - data.NETWORK.perRack) > 1e-12) throw new Error('une baie de plus ne coûte pas son switch');
+  game.state.infraCounts = { server: 2, rack: 1, datacenter: 1 };
+  const d1 = game.energyBreakdown().net;
+  if (Math.abs((d1 - r1) - data.NETWORK.perDC) > 1e-12) throw new Error('une salle de plus ne coûte pas son cœur de réseau');
+  // le réseau est une charge INFORMATIQUE : il compte au dénominateur du PUE
+  const b = game.energyBreakdown();
+  if (!(b.net > 0) || b.it < b.net) throw new Error('le réseau devrait être compté dans la charge informatique');
+});
+
+await step('serveurs et baies consomment, la salle n a plus de forfait en dur', () => {
+  const srv = data.INFRA.find(x => x.id === 'server');
+  const rack = data.INFRA.find(x => x.id === 'rack');
+  const dc = data.INFRA.find(x => x.id === 'datacenter');
+  if (!(srv.energy > 0)) throw new Error('un serveur doit consommer');
+  if (!(rack.energy > 0)) throw new Error('une baie doit consommer');
+  if (dc.energy) throw new Error('la salle ne doit plus avoir de forfait fixe : ses auxiliaires viennent du PUE');
+  // une salle vide ne coûte donc presque rien, une salle pleine coûte son froid
+  game.state.gpuCounts = {}; game.state.infraCounts = { realestate: 1, datacenter: 1 };
+  const vide = game.energyBreakdown();
+  game.state.gpuCounts = { a100: 500 };
+  const pleine = game.energyBreakdown();
+  if (!(pleine.aux > vide.aux * 10)) throw new Error('les auxiliaires devraient suivre la charge hébergée');
+});
+
+await step('phase 2 : produire de l énergie consomme de la matière', () => {
+  game.state.phase = 2;
+  game.state.money = 0;
+  game.state.matter = 1e18;
+  const src = data.ENERGY.find(e => game.dateUnlocked(e) && (!e.phase || game.phase >= e.phase));
+  const avant = game.state.matter;
+  if (!game.canBuyEnergy(src)) throw new Error('avec de la matière, la source devrait être achetable sans dollars');
+  if (!game.buyEnergy(src.id)) throw new Error('l achat a échoué alors que la matière suffit');
+  if (!(game.state.matter < avant)) throw new Error('la source n a rien prélevé sur le stock de matière');
+  if (game.state.money !== 0) throw new Error('la matière ne doit pas créer de dollars');
+  // une source puissante coûte plus de matière qu une petite
+  const petite = data.ENERGY.reduce((a, b) => (b.mw < a.mw ? b : a));
+  const grosse = data.ENERGY.reduce((a, b) => (b.mw > a.mw ? b : a));
+  if (!(game.energyMatterPart(grosse) > game.energyMatterPart(petite)))
+    throw new Error('la matière demandée devrait suivre la puissance installée');
+  // et l étiquette affichée est bien libellée en matière, pas en dollars
+  if (game.energyLabel(src).includes('$')) throw new Error('le prix s affiche encore en dollars en phase 2');
+  game.state.phase = 1; game.state.matter = 0;
+});
+
+await step('phase 2 : la capacité qui manque se prélève sur le stock, en continu', () => {
+  game.state.phase = 2;
+  game.state.matter = 1e18;
+  game.state.gpuCounts = { a100: 100 };
+  game.state.infraCounts = { realestate: 1, datacenter: 2, rack: 8, server: 40 };
+  game.state.energyCap = 0;                 // tout est à bâtir
+  game.state.rates.matter = 1e6;            // la récolte tourne : elle finance
+  const avant = game.state.matter;
+  game.tick(1);
+  if (!(game.state.energyCap > 0)) throw new Error('l essaim devrait bâtir de la capacité');
+  if (!(game.state.matter < avant)) throw new Error('bâtir la capacité devrait prélever de la matière');
+  if (!(game.state.rates.energyMatter > 0)) throw new Error('le prélèvement devrait être exposé pour l affichage');
+  // ce qui est bâti correspond exactement à ce qui a été prélevé
+  if (Math.abs(game.state.energyCap - game.state.rates.energyMatter / data.ENERGY_MATTER_PER_MW) > 1e-6)
+    throw new Error('les MW bâtis ne correspondent pas à la matière dépensée');
+  // SANS RÉCOLTE, pas de centrale : c est le DÉBIT qui freine, pas le stock.
+  // Un prélèvement proportionnel au stock serait toujours payable et ne
+  // freinerait jamais rien — c est tout l intérêt de passer par le flux.
+  game.state.energyCap = 0; game.state.matter = 1e18; game.state.rates.matter = 0;
+  const stock = game.state.matter;
+  game.tick(1);
+  if (game.state.energyCap > 0) throw new Error('sans récolte, la capacité ne devrait pas se bâtir');
+  if (game.state.matter > stock) { /* la récolte du tick a repris : normal */ }
+  game.state.phase = 1;
+});
+
+
+await step('phase 2 : sans courant, la récolte tombe mais ne meurt jamais', () => {
+  game.state.phase = 2;
+  game.state.gpuCounts = { a100: 100 };
+  game.state.infraCounts = { realestate: 1, datacenter: 2, rack: 8, server: 40 };
+  game.state.matter = 1e12; game.state.alloc = { serve:0.15, research:0.1, improve:0.25, harvest:0.5 };
+  game.state.energyCap = 1e9;               // largement alimenté
+  game.state.rates.matter = 0;
+  game.tick(1);
+  const plein = game.state.rates.matter;
+  game.state.energyCap = 1e-9;              // coupure quasi totale
+  game.state.rates.matter = 0;
+  game.tick(1);
+  const coupe = game.state.rates.matter;
+  if (!(coupe < plein)) throw new Error('une coupure devrait faire chuter la récolte');
+  if (!(coupe > 0)) throw new Error('une coupure ne doit jamais arrêter la récolte : ce serait une impasse');
+  const rapport = coupe / plein;
+  if (Math.abs(rapport - data.HARVEST_POWER_FLOOR) > 0.02)
+    throw new Error(`la récolte tombe à ${rapport.toFixed(3)} au lieu du plancher ${data.HARVEST_POWER_FLOOR}`);
+  game.state.phase = 1;
+});
+
+await step('bascule en phase 2 : on entre avec les lumières allumées', () => {
+  game.state.phase = 1;
+  game.state.gpuCounts = { a100: 100 };
+  game.state.infraCounts = { realestate: 1, datacenter: 2, rack: 8, server: 40 };
+  game.state.energyCap = 0;
+  game.enterPhase(2);
+  if (!(game.state.energyCap >= game.energyUse())) throw new Error('la bascule laisse le parc hors tension');
+  game.state.phase = 1;
+});
+
+await step('récap énergie : la boîte détaille le site en phases 1 et 2, pas au-delà', () => {
+  game.state.phase = 1;
+  parcType();
+  game.state.pueSteps = 0;
+  ui.render(true);
+  if (ui.el.energyMix.classList.contains('hidden')) throw new Error('la boîte devrait s afficher en phase 1');
+  const lignes = ui.el.mixAuxRows.querySelectorAll('.mix-row');
+  if (lignes.length !== data.PUE_SPLIT.length)
+    throw new Error(`${lignes.length} poste(s) d auxiliaires au lieu de ${data.PUE_SPLIT.length}`);
+  for (const el of [ui.el.mixIt, ui.el.mixGpu, ui.el.mixServer, ui.el.mixRack, ui.el.mixNet,
+                    ui.el.mixAux, ui.el.mixSite, ui.el.mixTotal])
+    if (!el.textContent.trim() || el.textContent === '—') throw new Error('une ligne du récapitulatif est vide');
+  if (!ui.el.mixPue.textContent.startsWith('1.')) throw new Error('le PUE n est pas affiché');
+  if (!ui.el.mixMatterRow.classList.contains('hidden'))
+    throw new Error('la ligne matière n a rien à faire en phase 1');
+  // on passe par la VRAIE bascule : c'est elle qui montre et cache les panneaux.
+  // En interrogeant seulement state.phase, on ne voyait pas que le panneau
+  // Énergie tout entier était masqué en phase 2 — la boîte était correcte et
+  // invisible.
+  game.state.matter = 1e12; game.enterPhase(2); game.state.phase = 2; ui.render(true);
+  if (ui.el.panelEnergy.classList.contains('hidden'))
+    throw new Error('l énergie se paie encore en phase 2 : le panneau doit rester');
+  if (ui.el.energyMix.classList.contains('hidden')) throw new Error('la boîte devrait rester en phase 2');
+  if (ui.el.mixMatterRow.classList.contains('hidden'))
+    throw new Error('la ligne matière devrait s afficher en phase 2');
+  game.enterPhase(3); game.state.phase = 3; ui.render(true);
+  if (!ui.el.panelEnergy.classList.contains('hidden'))
+    throw new Error('plus de site à exploiter en phase 3 : le panneau devrait disparaître');
+  game.state.phase = 1; game.enterPhase(1);
 });
 
 // save/load

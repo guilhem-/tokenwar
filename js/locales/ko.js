@@ -802,6 +802,14 @@ export default {
     '모든 것이 광상이다. 조립체는 더 이상 광석을 찾지 않는다. 거기 있는 것을, 낼 수 있는 속도로 처리할 뿐이다.',
   'La distinction entre un gisement et un paysage a cessé d’exister.':
     '광상과 풍경 사이의 구별은 더 이상 존재하지 않는다.',
+  'Refroidissement':
+    '냉각',
+  'Alimentation électrique':
+    '전원 공급',
+  'Ventilation':
+    '환기',
+  'Éclairage':
+    '조명',
   'Croûte accessible':
     '접근 가능한 지각',
   'Manteau supérieur':
@@ -1316,6 +1324,14 @@ export default {
     '⚡ 에너지 비용:',
   'le capex est un coût unique, payé à la commande. L’exploitation (O&M) est un coût fixe journalier, dû même à l’arrêt. Le combustible est variable, facturé au MWh soutiré. L’abonnement réseau dépend de la puissance souscrite.':
     '초기 투자는 주문할 때 한 번 내는 비용이다. 운영(O&M)은 멈춰 있어도 나가는 하루 고정비다. 연료는 실제로 끌어 쓴 MWh에 따르는 변동비다. 계통 기본요금은 계약 전력에 달려 있다.',
+  '🌡️ Où part le mégawatt :':
+    '🌡️ 메가와트는 어디로 가는가:',
+  'la boîte du panneau Énergie sépare la charge informatique — cartes, serveurs, baies et réseau de données — des auxiliaires du datacenter : refroidissement, alimentation électrique, ventilation, éclairage. Le rapport entre les deux est le PUE. Le réseau ne s’achète pas : sa consommation se déduit du parc, un port par serveur, un switch par baie, un cœur par salle. Une salle vide ne coûte presque rien, une salle pleine coûte son froid : remplir ses salles paie.':
+    '에너지 패널의 이 상자는 전산 부하 — 카드, 서버, 랙, 데이터망 — 와 전산실 부대 설비, 곧 냉각·전원 공급·환기·조명을 갈라 보여 준다. 둘의 비가 곧 PUE다. 데이터망은 사는 것이 아니다. 그 소비는 장비에서 따라 나온다. 서버 한 대에 포트 하나, 랙 한 대에 스위치 하나, 방 하나에 코어 한 벌. 빈 방은 거의 돈이 들지 않고, 꽉 찬 방은 냉각에 든다. 방을 채우는 쪽이 이득이다.',
+  '❄️ Rendement du site (PUE) :':
+    '❄️ 사이트 효율(PUE):',
+  'il démarre à 1,58 et se gagne par tranches de 0,02, une par an — free cooling, confinement d’allées, eau tempérée, immersion. Chaque tranche retire des mégawatts à payer sans rien retirer au calcul. Le plancher est 1,10 : la chaleur doit bien sortir.':
+    '1.58에서 시작해 한 해에 한 차례씩 0.02를 번다 — 외기 냉각, 통로 밀폐, 온수 냉각, 액침. 어느 차례든 연산에서는 아무것도 빼앗지 않으면서 고지서에서 메가와트를 빼앗는다. 하한은 1.10이다. 열은 어딘가로 빠져나가야 한다.',
   '🏗️ Délais :':
     '🏗️ 공기:',
   'rien n’est instantané. Chaque commande part en chantier (badge ⏳) pour une durée proportionnelle à sa complexité : quelques secondes pour une carte, plusieurs mois de simulation pour un datacenter ou un réacteur. L’emplacement est réservé dès la commande.':
@@ -1824,6 +1840,8 @@ export default {
     '전환 +50%, 90초 동안.',
   'Livraison annulée : plus d’emplacement libre pour {0}. Commande remboursée ({1}).':
     '인도 취소: {0}을(를) 넣을 자리가 없습니다. 주문 환불 ({1}).',
+  'Rendement du site amélioré : PUE {0}.':
+    '사이트 효율 개선: PUE {0}.',
   'Les salaires ne sont plus payés. Passé 30 jours d’arriérés, l’équipe commencera à partir.':
     '급여가 더 이상 지급되지 않습니다. 30일이 밀리면 팀이 떠나기 시작합니다.',
   '⚠️ Salaires impayés':
@@ -2010,6 +2028,10 @@ export default {
     '저장을 불러왔습니다',
   'TokenWar — Le Jeu du Token':
     'TokenWar — 토큰 전쟁',
+  'Une seule tranche par an':
+    '개보수는 한 해에 한 차례만',
+  'Ressources insuffisantes':
+    '자원이 부족합니다',
   'Palier d’extraction ouvert':
     '채굴 단계 개방',
   'Recherche insuffisante':
@@ -2186,8 +2208,6 @@ export default {
     '{0}일 체불 — 팀이 떠나고 있다',
   'Modèle pas encore disponible ({0})':
     '아직 나오지 않은 모델 ({0})',
-  'Ressources insuffisantes':
-    '자원이 부족합니다',
   'Service (tokens)':
     '서비스 (토큰)',
   'Recherche':
@@ -2240,6 +2260,14 @@ export default {
     '반복: {0}',
   'aucun coût récurrent':
     '반복 비용 없음',
+  'Améliorer : {0} → {1} · {2}':
+    '개선: {0} → {1} · {2}',
+  'prochaine tranche l’an prochain':
+    '다음 개보수는 내년에',
+  'une tranche par an, plancher {0}':
+    '한 해에 한 차례, 하한 {0}',
+  'plancher atteint : la chaleur doit bien sortir':
+    '하한 도달: 열은 어딘가로 빠져나가야 한다',
   'intégration':
     '통합 중',
   'disponible':
@@ -2516,6 +2544,26 @@ export default {
     'GPU 자리',
   'Charge réseau':
     '계통 부하',
+  'Charge informatique':
+    '전산 부하',
+  'Cartes':
+    '카드',
+  'Serveurs':
+    '서버',
+  'Baies':
+    '랙',
+  'Réseau de données':
+    '데이터망',
+  'Auxiliaires':
+    '부대 설비',
+  'Bâtiment':
+    '건물',
+  'Total site':
+    '사이트 합계',
+  'Construction de capacité':
+    '용량 건설',
+  'Rendement du site (PUE)':
+    '사이트 효율(PUE)',
   'Où envoyer l’essaim':
     '군집을 어디로 보낼까',
   'Grands programmes':
@@ -2564,6 +2612,12 @@ export default {
     '현금이 없으면 급여가 지급되지 않습니다. 30일이 밀리면 팀이 떠나기 시작합니다.',
   'L’argent perd de sa valeur : les prix et les salaires suivent l’indice, pas votre trésorerie.':
     '돈은 가치를 잃습니다: 가격과 급여는 지수를 따르지만, 당신의 현금은 그렇지 않습니다.',
+  'Ports top-of-rack, switches de baie, cœur de réseau et interconnexion : le réseau ne s’achète pas, il vient avec le parc.':
+    '랙 상단 포트, 랙 스위치, 코어와 상호연결. 이것은 사는 것이 아니라, 장비를 갖추면 따라온다.',
+  'Tout ce qui ne calcule pas mais qu’il faut alimenter pour que le calcul tienne. Le PUE est le rapport entre le total du site et cette charge informatique.':
+    '연산은 하지 않지만 연산이 버티도록 전기를 대야 하는 모든 것. PUE는 사이트 합계를 이 전산 부하로 나눈 비다.',
+  'L’essaim bâtit sa propre production, et il la bâtit avec de la matière : ce qui part en centrales ne part pas en calcul.':
+    '무리는 제 발전 설비를 짓는다. 그것을 물질로 짓는다 — 발전소로 간 몫은 연산으로 가지 않는다.',
   'Langue':
     '언어',
   'Vitesse de simulation':
