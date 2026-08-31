@@ -85,11 +85,16 @@ function bot() {
   // chaîne d'hébergement : garder des emplacements GPU libres devant soi
   const ensureHosting = () => {
     let guard = 0;
-    // on raisonne en capacité PRÉVUE (chantiers compris) pour ne pas sur-commander
-    while (guard++ < 800 && g.hostingActive() && g.plannedFreeSlots('gpu') < 16) {
-      let target = g.freeSlots('server') >= 1 ? 'server'
-        : g.freeSlots('rack') >= 1 ? 'rack'
-        : g.freeSlots('datacenter') >= 1 ? 'datacenter' : 'realestate';
+    // On raisonne en capacité PRÉVUE (chantiers compris) à CHAQUE niveau, pas
+    // seulement pour les GPU. Avec les emplacements RÉELS, un bâtiment encore
+    // en chantier n'offre aucune place de datacenter : le bot retombait sur
+    // « realestate » et en commandait des centaines d'affilée en attendant la
+    // livraison du premier. Les chantiers s'empilaient, pendingCount est
+    // linéaire, et la boucle finissait par tourner sans jamais avancer.
+    while (guard++ < 200 && g.hostingActive() && g.plannedFreeSlots('gpu') < 16) {
+      let target = g.plannedFreeSlots('server') >= 1 ? 'server'
+        : g.plannedFreeSlots('rack') >= 1 ? 'rack'
+        : g.plannedFreeSlots('datacenter') >= 1 ? 'datacenter' : 'realestate';
       const item = INFRA.find(x => x.id === target);
       if (s.money - reserve < g.infraCost(item)) break;
       if (!g.buyInfra(target)) break;
@@ -97,6 +102,13 @@ function bot() {
   };
   let safety = 0;
   while (safety++ < 600) {
+    // Tant que l'hébergement n'est pas actif, rien ne borne le nombre de cartes :
+    // ni emplacement, ni énergie (une carte EN CHANTIER ne consomme pas encore,
+    // donc energyThrottle ne voit pas celles qu'on vient de commander). Le bot
+    // vidait sa trésorerie en milliers de cartes livrables plus tard, la file de
+    // chantiers gonflait, et pendingCount — linéaire — étranglait le moteur.
+    // Un joueur commande une file courte et attend les livraisons : ici aussi.
+    if (g.pendingCount('gpu') >= 32) break;
     // ne pas sur-produire : au-delà de ~2× la demande, les tokens seraient perdus
     const prodNow = g.computeEffective() * s.alloc.serve * g.model.throughput;
     if (g.phase < 2 && prodNow > g.demandPerSec() * 2) break;
@@ -157,6 +169,13 @@ while (t < MAX_T && !stub.ended) {
     if (!isFinite(s[k])) { console.log(`!! ${k} = ${s[k]} à t=${t.toFixed(0)}s`); badNum = true; }
   }
   if (badNum) break;
+  // Emballement des chantiers : pendingCount parcourt la liste, donc une file
+  // qui gonfle ralentit tout le moteur au carré. Mieux vaut échouer bruyamment
+  // que tourner huit heures sans écrire une ligne.
+  if (s.builds.length > 2000) {
+    console.log(`!! ${s.builds.length} chantiers en file à t=${t.toFixed(0)}s — commande en boucle`);
+    badNum = true; break;
+  }
   if (game.phase >= 2 && t - lastReport >= 10) {
     lastReport = t;
     const s2 = game.state;
