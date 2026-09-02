@@ -15,12 +15,16 @@ import { MODELS, GPUS, ENERGY, PROJECTS, EVENTS, INFRA, EARTH_MASS, UNIVERSE_MAS
          HAZARD_RATE, HAZARD_SHIELD, UPLIFT, UPLIFT_MIN, UPLIFT_MAX, UPLIFT_BASE, EXTRACTION, EXTRACT_FLOOR, EXTRACT_FADE, OPTIM_MATTER, DIRECTIVE_MATTER,
          DESTINATIONS, DEST_DURATION, DEST_CHOICES,
          NETWORK, PUE_START, PUE_FLOOR, PUE_STEP, PUE_COST, PUE_MULT, PUE_MATTER,
-         ENERGY_MATTER_PART_PER_MW, ENERGY_MATTER_PER_MW, PHASE2_ENERGY_SHARE,
+         ENERGY_MATTER_PART_PER_MW, ENERGY_MATTER_PER_MW, PHASE2_ENERGY_SHARE, LOG_MAX,
          HARVEST_POWER_FLOOR } from './data.js';
 import { clamp, fmtPower, fmtMoney, fmtMass, pct } from './util.js';
 import { t, td, months as i18nMonths, intlLocale, decimalSep } from './i18n.js';
 
 const SAVE_KEY = 'tokenwar_save_v1';
+// nombre d'événements réellement porteurs de choix — calculé une fois
+let _dirCap = null;
+const dirCap = () => (_dirCap != null ? _dirCap
+  : (_dirCap = EVENTS.filter(e => e.choices && e.choices.length).length));
 const SAVE_VERSION = 5;   // incrémenter à chaque changement de format ; sanitize() gère les migrations douces
 
 // Levées de fonds (analogue du « Trust ») : déblocages par paliers de tokens
@@ -113,6 +117,7 @@ export class Game {
     s.energyCounts = {};
     s.energyCap = BASE_GRID_MW; // rien : il faut se raccorder avant de calculer
     s.baseGridMW = BASE_GRID_MW; // marqueur de règle : permet de migrer les vieilles sauvegardes
+    s.log = [];              // le journal, du plus récent au plus ancien
     s.pueSteps = 0;          // tranches d'amélioration du rendement du site posées
     s.pueYear = null;        // année de la dernière tranche : une seule par an
     s.unpaidDays = 0;        // jours d'arriérés de salaire (30 → les gens partent)
@@ -217,7 +222,19 @@ export class Game {
     return !item.year || this.simYear() >= item.year;
   }
   toast(msg, kind = 'info') { this.ui && this.ui.toast(msg, kind); }
-  log(msg, kind = 'info') { this.ui && this.ui.log(msg, kind); }
+  // Le journal FAIT PARTIE de la partie. Il ne vivait que dans le DOM : rouvrir
+  // une sauvegarde rendait un journal vide, et tout ce qui vous était arrivé
+  // — démissions, incidents, percées, livraisons annulées — disparaissait sans
+  // que rien ne le signale. Il est désormais enregistré comme le reste.
+  log(msg, kind = 'info') {
+    const s = this.state;
+    if (s) {
+      if (!Array.isArray(s.log)) s.log = [];
+      s.log.unshift({ msg: String(msg), kind, at: Date.now() });
+      if (s.log.length > LOG_MAX) s.log.length = LOG_MAX;
+    }
+    this.ui && this.ui.log(msg, kind);
+  }
 
   // =================================================================
   //  INFLATION — la valeur de l'argent se dégrade avec les années.
@@ -1954,10 +1971,11 @@ export class Game {
   // cran de plus (250k, 500k, 750k…), inflation comprise. Le total est plafonné
   // au nombre d'événements réellement porteurs de choix : au-delà, il n'y aurait
   // plus rien à mémoriser — on ne vend pas une place qui ne servira jamais.
-  directiveCap() {
-    if (this._dirCap == null) this._dirCap = EVENTS.filter(e => e.choices && e.choices.length).length;
-    return this._dirCap;
-  }
+  // Le plafond ne dépend que des DONNÉES : c'est une constante, mémorisée au
+  // niveau du module. Sur l'instance, c'était un champ de plus hors de `state`
+  // — inoffensif ici, mais c'est la porte par laquelle un vrai morceau de
+  // partie finit un jour par échapper à la sauvegarde.
+  directiveCap() { return dirCap(); }
   addendumCost() { return this.moneyCost(ADDENDUM.cost * ((this.state.directivesPaid || 0) + 1)); }
   directiveSlots() { return this.state.directivesPaid || 0; }
   directivesUsed() { return Object.keys(this.state.autoChoices).length; }

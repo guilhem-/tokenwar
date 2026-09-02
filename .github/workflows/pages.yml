@@ -48,6 +48,12 @@ jobs:
           npm install jsdom --no-save --no-audit --no-fund
           node test-ui.mjs
 
+      - name: Test sauvegarde / restauration
+        timeout-minutes: 10
+        # joue une vraie partie à l'écran et compare, à six instants, l'état ET
+        # l'écran d'une session rouverte à ceux de la session qui a joué
+        run: node test-save.mjs > save.log 2>&1 || (tail -30 save.log; exit 1)
+
       - name: Test simulation (partie complète)
         timeout-minutes: 15
         # pas de pipe direct : il masquerait le code de sortie du simulateur

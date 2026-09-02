@@ -4,12 +4,12 @@
 import { MODELS, GPUS, ENERGY, PROJECTS, PROBE_SPECS, INFRA, EMPLOYEES, COLO, AUTOMATIONS, ACHIEVEMENTS, ADDENDUM, SPACE_DC, UNIVERSE_MASS, OPTIMS, HELP, PROGRAMS, SOVEREIGN,
          CRISIS_DURATION, IDLE_DELAY, UNPAID_QUIT_DAYS, GAME_SPEEDS, LOANS,
          WATCHDOGS, WATCHDOG_DELAY, WATCHDOG_SHARE, DIRECTIVE_MATTER, OPTIM_MATTER,
-         UPLIFT, PUE_SPLIT, PUE_STEP, PUE_FLOOR, PUE_MATTER } from './data.js';
+         UPLIFT, PUE_SPLIT, PUE_STEP, PUE_FLOOR, PUE_MATTER, LOG_MAX } from './data.js';
 import { FUNDING } from './game.js';
 import { Cinematic } from './ending.js';
 import { IdleFX } from './fx.js';
 import { fmt, fmtMoney, fmtMass, fmtPrice, fmtPower, fmtFull, fmtDigits, pct, clamp } from './util.js';
-import { t, td, LANGS, lang, setLang, needsPicker, onChange } from './i18n.js';
+import { t, td, LANGS, lang, setLang, needsPicker, onChange, intlLocale } from './i18n.js';
 
 const $ = id => document.getElementById(id);
 const AUTO_MIN_OWNED = 20;   // seuil d'apparition du bouton ⟳ auto (même palier que ×10)
@@ -132,6 +132,7 @@ export class UI {
     this.onPhaseChange(game.phase);
     this.fillHelp();
     this.rebuildHeadlines();
+    this.rebuildLog();          // le journal enregistré, remis à l'écran
     if (game.state.crisis) this.onCrisis(game.crisisDef());   // incident repris d'une sauvegarde
     this.render(true);
   }
@@ -704,6 +705,7 @@ export class UI {
     this.buildStaticRows();
     this.buildTrainRow();
     this.rebuildHeadlines();
+    this.rebuildLog();          // nouvelle partie : le journal repart vide
     this.el.endingScreen.classList.add('hidden');
     this.render(true);
   }
@@ -2315,13 +2317,23 @@ export class UI {
     this.el.toastContainer.appendChild(t);
     setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 400); }, 3200);
   }
-  log(msg, kind = 'info') {
+  // `at` : l'heure à laquelle la ligne a été écrite. En jeu c'est maintenant ;
+  // à la relecture d'une sauvegarde, c'est celle qui a été enregistrée — une
+  // ligne d'hier ne doit pas s'afficher à l'heure d'ouverture d'aujourd'hui.
+  log(msg, kind = 'info', at = Date.now()) {
     const e = document.createElement('div');
     e.className = 'log-entry ' + kind;
-    const t = new Date().toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' });
+    const t = new Date(at).toLocaleTimeString(intlLocale(), { hour: '2-digit', minute: '2-digit' });
     e.innerHTML = `<span class="log-time num">${t}</span> ${msg}`;
     this.el.log.prepend(e);
-    while (this.el.log.children.length > 60) this.el.log.lastChild.remove();
+    while (this.el.log.children.length > LOG_MAX) this.el.log.lastChild.remove();
+  }
+  // Rejoue le journal enregistré. L'état garde le plus récent en tête ; on
+  // réinsère de l'ancien vers le récent pour que prepend rétablisse l'ordre.
+  rebuildLog() {
+    this.el.log.innerHTML = '';
+    const lignes = (this.game.state && this.game.state.log) || [];
+    for (let i = lignes.length - 1; i >= 0; i--) this.log(lignes[i].msg, lignes[i].kind, lignes[i].at);
   }
 
   fillHelp() {

@@ -211,6 +211,11 @@ export const NETWORK = { perServer: 0.00006, perRack: 0.00035, perDC: 0.006 };
 //  AN : le froid libre, le confinement d'allées, l'eau tempérée puis
 //  l'immersion se déploient à l'échelle d'une tranche de travaux, pas d'un clic.
 // ---------------------------------------------------------------------
+// Le journal garde les 60 dernières lignes — la même limite dans l'état et à
+// l'écran, sinon rouvrir une sauvegarde afficherait plus (ou moins) que ce
+// qu'on avait sous les yeux.
+export const LOG_MAX = 60;
+
 export const PUE_START = 1.58;
 export const PUE_FLOOR = 1.10;
 export const PUE_STEP  = 0.02;

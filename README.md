@@ -723,10 +723,46 @@ js/main.js        boucle de jeu, vitesse, autosave
 ```bash
 node test-sim.mjs    # partie complète en headless (équilibrage, NaN, code de sortie CI)
 node test-ui.mjs     # test de fumée de l'UI réelle via jsdom (40+ étapes)
+node test-save.mjs   # sauvegarde / restauration, état ET écran, à six instants
 node test-i18n.mjs   # couverture des 7 langues, substitutions, écritures
 ```
 
-`.github/workflows/tests.yml` rejoue ces trois suites à chaque push et sur les pull requests.
+`test-sim.mjs` et `test-save.mjs` jouent la **même** partie : le bot est dans
+`test-bot.mjs`, importé par les deux. Un test de restauration qui jouerait
+autrement ne prouverait rien sur la vraie partie.
+
+**Comment `test-save.mjs` cherche ce qui manque.** Il joue une partie complète
+avec l'interface réelle rendue en continu — c'est ce qui en fait une référence :
+un écran qui saute d'un état à l'autre garde des restes du précédent. À six
+instants (les premiers gestes, la startup équipée, le passage à l'échelle, la
+fin de la phase 1, l'autonomie, l'expansion cosmique) il :
+
+1. **compare l'état entier**, clé par clé, par un diff récursif. Aucune liste de
+   ce qu'il faut vérifier : il vérifie tout, et n'excuse que ce que le
+   chargement remet volontairement à zéro (la grâce d'entrée de partie,
+   l'horodatage). Un champ ajouté demain est couvert sans qu'on y pense ;
+2. vérifie que **recharger ne change rien au déroulement** — deux parties issues
+   du même disque, le hasard semé des deux côtés pour que la comparaison ait un
+   sens, doivent tourner à l'identique ;
+3. refuse toute valeur que **JSON ne sait pas écrire** (`Infinity`, `NaN`,
+   `undefined`, `Map`) : elles deviendraient `null` et `sanitize()` les
+   remplacerait par un défaut, silencieusement ;
+4. refuse tout champ vivant **hors de `state`** — la fuite la plus facile à
+   commettre, et celle qu'aucun diff d'état ne peut voir ;
+5. compare enfin **ce que l'écran raconte** : décor de phase, panneaux
+   réellement visibles, compteurs de l'en-tête, et le texte de chaque panneau —
+   en ne lisant que ce qui est visible, car une ligne masquée garde l'affichage
+   qu'elle avait la dernière fois qu'on l'a écrite.
+
+C'est le point 5 qui a trouvé le vrai défaut : le **journal ne vivait que dans
+le DOM**. Rouvrir une sauvegarde rendait un journal vide — démissions,
+incidents, percées, livraisons annulées, tout effacé sans que rien ne le
+signale. Il est désormais dans l'état, plafonné aux 60 dernières lignes, avec
+l'heure à laquelle chaque ligne a été écrite ; `rebuildLog()` le remet à
+l'écran à l'ouverture. Le moteur, lui, restituait déjà tout le reste.
+
+`.github/workflows/pages.yml` rejoue ces quatre suites à chaque push et sur les
+pull requests, avant tout déploiement.
 
 ### Déploiement
 
